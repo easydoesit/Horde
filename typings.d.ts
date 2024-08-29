@@ -1,0 +1,1 @@
+export type GameStateT = 'START_SCREEN' | 'PLAY_MODE' | 'END_SCREEN';
