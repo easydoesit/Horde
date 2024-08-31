@@ -24,7 +24,7 @@ export class StartScreen extends Scene {
         camera.setTarget(Vector3.Zero());
 
         //--GUI--
-        const guiMenu = AdvancedDynamicTexture.CreateFullscreenUI("PLAYMODEUI");
+        const guiMenu = AdvancedDynamicTexture.CreateFullscreenUI("StartUI");
         //guiMenu.idealHeight = 720;
 
         const rectWrapper = new Rectangle('wrappper');
@@ -46,7 +46,7 @@ export class StartScreen extends Scene {
         startBtn.onPointerDownObservable.add(() => {
             this.detachControl();
             
-            this._app.switchScene(this._app.playMode);
+            this._app.switchScene(this._app.plains);
 
         });
 

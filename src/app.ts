@@ -6,7 +6,7 @@ import { Engine, Scene } from "@babylonjs/core";
 import showBabInspector from "./debug/inspector";
 import createCanvas from "./canvas/createCanvas";
 import { StartScreen } from "./scenes/start_screen";
-import { Playmode } from "./scenes/play_mode";
+import { Plains } from "./scenes/plains";
 import { GameState } from "./gameControl/gameState";
 
 export class App {
@@ -17,7 +17,7 @@ export class App {
 
     public gameState:GameState;
     public startScrean:Scene;
-    public playMode:Scene;
+    public plains:Scene;
 
 
     constructor() {
@@ -29,7 +29,7 @@ export class App {
 
         //sceneList
         this.startScrean = new StartScreen(this, this._engine);
-        this.playMode = new Playmode(this, this._engine)
+        this.plains = new Plains(this, this._engine)
 
         // run the main render loop
         this._main();
