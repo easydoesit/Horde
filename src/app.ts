@@ -17,8 +17,8 @@ export class App {
     private _inspector:BabInspector;
 
     public gameState:GameState;
-    public startScrean:Scene;
-    public plains:Scene;
+    public startScrean:StartScreen;
+    public playMode:PlayMode;
 
     constructor() {
         // create the canvas html element and attach it to the webpage
@@ -29,7 +29,7 @@ export class App {
 
         //sceneList
         this.startScrean = new StartScreen(this, this._engine);
-        this.plains = new PlayMode(this, this._engine);
+        this.playMode = new PlayMode(this, this._engine);
 
         // run the main render loop
         this._main();

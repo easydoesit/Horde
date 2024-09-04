@@ -39,7 +39,7 @@ export class GUIStartScreen {
           startBtn.onPointerDownObservable.add(() => {
               this._scene.detachControl();
               
-              this._app.switchScene(this._app.plains);
+              this._app.switchScene(this._app.playMode);
   
           });
           

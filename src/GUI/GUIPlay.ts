@@ -1,15 +1,17 @@
 import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@babylonjs/gui";
-import { Scene } from "@babylonjs/core";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { Farmer } from "../models_characters/farmer";
-import { App } from "../app";
 import { PlayMode } from "../scenes/playmode";
+import { farmerBaseValue } from "../utils/MATHCONSTANTS";
 
 export class GUIPlay {
     public gameGUI:AdvancedDynamicTexture;
     public farmerCountTextBlock:TextBlock;
     public totalGoldPerSecondTextBlock:TextBlock;
     public totalGoldTextBlock:TextBlock;
+    public farmerCount:number;
+    public totalGold:number;
+    public totalGoldPerSecond:number;
 
     private _scene:PlayMode;
     
@@ -20,6 +22,11 @@ export class GUIPlay {
     constructor(scene:PlayMode) {
         this._scene = scene;
         
+        this.farmerCount = 0
+        this.totalGold = 0;
+        this.totalGoldPerSecond = 0;
+
+
         this.gameGUI = AdvancedDynamicTexture.CreateFullscreenUI('GameGui')
         this.gameGUI.idealHeight = 1080;
         this.gameGUI.idealWidth = 1920;
@@ -43,14 +50,15 @@ export class GUIPlay {
 
         clickerBtn.onPointerDownObservable.add(() => {
             //do the math
-            this._scene.mathCycle.farmerCount = this._makeFarmer(this._scene.mathCycle.farmerCount);
-            this._scene.mathCycle.totalGoldPerSecond = this._scene.mathCycle.farmerMultiplyer(this._scene.mathCycle.farmerCount);
+            this.farmerCount = this._makeFarmer(this.farmerCount);
+            this.totalGoldPerSecond = this._farmerMultiplyer(this.farmerCount);
+            
             //update the display
-            this.farmerCountTextBlock.text = `${this._scene.mathCycle.farmerCount}`;
-            this.totalGoldPerSecondTextBlock.text = `${this._scene.mathCycle.totalGoldPerSecond}`
+            this.farmerCountTextBlock.text = `${this.farmerCount}`;
+            this.totalGoldPerSecondTextBlock.text = `${this.totalGoldPerSecond}`
         });
 
-        this.farmerCountTextBlock = new TextBlock('FarmerCount', `${this._scene.mathCycle.farmerCount}`);
+        this.farmerCountTextBlock = new TextBlock('FarmerCount', `${this.farmerCount}`);
         this.farmerCountTextBlock.fontFamily = GUIFONT1;
         this.farmerCountTextBlock.width = 200;
         this.farmerCountTextBlock.top = -460;
@@ -66,7 +74,7 @@ export class GUIPlay {
         this._textBlockFarmer.color = 'white';
         this._playScreenWrapper.addControl(this._textBlockFarmer);
 
-        this.totalGoldPerSecondTextBlock = new TextBlock('TotalGoldPerSecond', `${this._scene.mathCycle.totalGoldPerSecond}`);
+        this.totalGoldPerSecondTextBlock = new TextBlock('TotalGoldPerSecond', `${this.totalGoldPerSecond}`);
         this.totalGoldPerSecondTextBlock.fontFamily =GUIFONT1;
         this.totalGoldPerSecondTextBlock.width = 200;
         this.totalGoldPerSecondTextBlock.top = -440;
@@ -81,7 +89,7 @@ export class GUIPlay {
         this._textBlockGoldPerSecond.color = 'white';
         this._playScreenWrapper.addControl(this._textBlockGoldPerSecond);    
         
-        this.totalGoldTextBlock = new TextBlock('TotalGold', `${this._scene.mathCycle.totalGold}`);
+        this.totalGoldTextBlock = new TextBlock('TotalGold', `${this.totalGold}`);
         this.totalGoldTextBlock.fontFamily = GUIFONT1;
         this.totalGoldTextBlock.width = 200;
         this.totalGoldTextBlock.top = -420;
@@ -97,13 +105,34 @@ export class GUIPlay {
         textBlockGold.color = 'white';
         this._playScreenWrapper.addControl(textBlockGold);
 
+        this._scene.onBeforeRenderObservable.add(() => {
+  
+            //console.log('test', roundedTotalGold);
+            this.totalGoldTextBlock.text = `${this._finalMath()}`;
+
+        })
+
+    }
+
+    private _finalMath() {
+        this.totalGold = this.totalGold + (this.totalGoldPerSecond * (this._scene.getEngine().getDeltaTime()/1000));
+            
+        let roundedTotalGold = Math.round(this.totalGold * 1000) / 1000;
+
+        return roundedTotalGold;
     }
 
     private _makeFarmer(currentCount:number) {
-
+        //this creates the gamepiece
         new Farmer(currentCount.toLocaleString(), this._scene);
-
+        //this ups the count;
         return currentCount + 1;
 
+    }
+
+    private _farmerMultiplyer(farmerCount:number) {
+
+        return Math.round((farmerCount * farmerBaseValue) * 1000) /1000;
+    
     }
 }

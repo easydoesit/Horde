@@ -1,10 +1,11 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight } from "@babylonjs/core";
 
+//classes
 import { App } from "../app";
 import { GUIPlay } from "../GUI/GUIPlay";
-import { MathCycle } from "../cycles/mathCycle";
-
 import { GameStateT } from "../../typings";
+
+//gamepieces
 import { Hill } from "../models_structures/hill";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
 
@@ -13,7 +14,6 @@ export class PlayMode extends Scene {
     private _gameState:GameStateT;
     
     public gui:GUIPlay;
-    public mathCycle:MathCycle;
 
     constructor(app:App, engine:Engine) {
         super(engine);
@@ -32,14 +32,11 @@ export class PlayMode extends Scene {
         let camera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
         camera.setTarget(new Vector3(0,4,0));
 
-        //add the mathCycle
-        this.mathCycle = new MathCycle();
-        //
+        //the gui is currently where all the math is done.
         this.gui = new GUIPlay(this);
 
-
         //lights can be different for each scene
-        //TODO Make a Light Class and ShadowCLass that includes 
+        //TODO Make all the background art swappable. It's a small app.
         //all items in scene using scene.meshes
         const mainLight = new DirectionalLight('mainLight', new Vector3(1,-1,1),this);
 
