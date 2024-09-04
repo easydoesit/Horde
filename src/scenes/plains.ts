@@ -7,6 +7,7 @@ import { GUIPlayMode } from "../GUI/gui_playmode";
 import { GameStateT } from "../../typings";
 import { Hill } from "../models_structures/hill";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
+import { Farmer } from "../models_characters/farmer";
 
 export class Plains extends Scene {
     private _app:App;
@@ -40,6 +41,7 @@ export class Plains extends Scene {
 
         //load the background
         const background = new PlainsBackground(this);
+
 
         //--GUI--
         const guiPlayMode = new GUIPlayMode(this);

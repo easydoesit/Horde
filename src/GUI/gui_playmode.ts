@@ -2,9 +2,13 @@ import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@
 import { Scene } from "@babylonjs/core";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { farmerBaseValue, wheatValue, wheatValueMax } from "../utils/MATHCONSTANTS";
+import { Farmer } from "../models_characters/farmer";
 
-export class GUIPlayMode{
-    public gameGUI:AdvancedDynamicTexture
+
+export class GUIPlayMode {
+    public gameGUI:AdvancedDynamicTexture;
+    private _scene:Scene;
+
     
     constructor(scene:Scene) {
 
@@ -14,6 +18,7 @@ export class GUIPlayMode{
         let totalGold = 0;
         let wheatImprovements = 0;
 
+        this._scene = scene;
         this.gameGUI = AdvancedDynamicTexture.CreateFullscreenUI('GameGui')
         this.gameGUI.idealHeight = 1080;
         this.gameGUI.idealWidth = 1920;
@@ -104,6 +109,8 @@ export class GUIPlayMode{
     }
 
     private _makeFarmer(currentCount:number) {
+
+        new Farmer(currentCount.toLocaleString(), this._scene);
 
         return currentCount + 1;
 

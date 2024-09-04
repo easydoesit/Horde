@@ -3,7 +3,7 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import { Engine, Scene } from "@babylonjs/core";
 
-import showBabInspector from "./debug/inspector";
+import {BabInspector} from "./debug/inspector";
 import createCanvas from "./canvas/createCanvas";
 import { StartScreen } from "./scenes/start_screen";
 import { Plains } from "./scenes/plains";
@@ -14,10 +14,12 @@ export class App {
     private _engine:Engine;
     private _scene:Scene;
     private _canvas: HTMLCanvasElement;
+    private _inspector:BabInspector;
 
     public gameState:GameState;
     public startScrean:Scene;
     public plains:Scene;
+
 
 
     constructor() {
@@ -45,8 +47,7 @@ export class App {
         // set the initial gameState
         this.gameState = new GameState('START_SCREEN');
          
-        // hide/show the Inspector
-         showBabInspector(this._scene);
+        this._inspector = new BabInspector(this._scene);
         
          //run the render loop
         this._engine.runRenderLoop(() => {
@@ -66,6 +67,7 @@ export class App {
         }
 
         this._scene = newScene;
+        this._inspector = new BabInspector(this._scene);
     }
 
     ///

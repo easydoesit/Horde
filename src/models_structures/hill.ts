@@ -7,11 +7,11 @@ export class Hill extends TransformNode {
         super('hill', scene);
         this.position = new Vector3(0,0,0);
 
-        this.initilize();
+        this.initialize();
 
     }
 
-    public async initilize():Promise<void>{
+    public async initialize():Promise<void>{
         this.model = await this.createHill();
         this.model.root.parent = this;
 
