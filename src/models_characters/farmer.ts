@@ -19,7 +19,6 @@ export class Farmer extends TransformNode{
 
         const path = await this._createAnimationPath();
 
-        console.log(this.model);
     }
 
     async createFarmer():Promise<{root:AbstractMesh, allMeshes:AbstractMesh[]}>{

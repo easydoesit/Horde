@@ -6,7 +6,7 @@ import { Engine, Scene } from "@babylonjs/core";
 import {BabInspector} from "./debug/inspector";
 import createCanvas from "./canvas/createCanvas";
 import { StartScreen } from "./scenes/start_screen";
-import { Plains } from "./scenes/plains";
+import { PlayMode } from "./scenes/playmode";
 import { GameState } from "./gameControl/gameState";
 
 export class App {
@@ -20,8 +20,6 @@ export class App {
     public startScrean:Scene;
     public plains:Scene;
 
-
-
     constructor() {
         // create the canvas html element and attach it to the webpage
         this._canvas = createCanvas();
@@ -31,7 +29,7 @@ export class App {
 
         //sceneList
         this.startScrean = new StartScreen(this, this._engine);
-        this.plains = new Plains(this, this._engine)
+        this.plains = new PlayMode(this, this._engine);
 
         // run the main render loop
         this._main();
@@ -46,9 +44,9 @@ export class App {
         
         // set the initial gameState
         this.gameState = new GameState('START_SCREEN');
-         
+        // add the inspector
         this._inspector = new BabInspector(this._scene);
-        
+
          //run the render loop
         this._engine.runRenderLoop(() => {
 
@@ -69,6 +67,8 @@ export class App {
         this._scene = newScene;
         this._inspector = new BabInspector(this._scene);
     }
+
+
 
     ///
 }

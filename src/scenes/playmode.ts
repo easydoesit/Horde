@@ -1,23 +1,24 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight } from "@babylonjs/core";
-import { AdvancedDynamicTexture,  Button, Rectangle, Control,} from "@babylonjs/gui";
 
 import { App } from "../app";
-import { GUIPlayMode } from "../GUI/gui_playmode";
+import { GUIPlay } from "../GUI/GUIPlay";
+import { MathCycle } from "../cycles/mathCycle";
 
 import { GameStateT } from "../../typings";
 import { Hill } from "../models_structures/hill";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
-import { Farmer } from "../models_characters/farmer";
 
-export class Plains extends Scene {
+export class PlayMode extends Scene {
     private _app:App;
     private _gameState:GameStateT;
-    private _GUI:GUIPlayMode;
+    
+    public gui:GUIPlay;
+    public mathCycle:MathCycle;
 
     constructor(app:App, engine:Engine) {
         super(engine);
         this._app = app;
-        this._gameState = 'PLAINS'
+        this._gameState = 'PLAY_MODE';
         
         this._initialize(engine);
 
@@ -31,6 +32,12 @@ export class Plains extends Scene {
         let camera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
         camera.setTarget(new Vector3(0,4,0));
 
+        //add the mathCycle
+        this.mathCycle = new MathCycle();
+        //
+        this.gui = new GUIPlay(this);
+
+
         //lights can be different for each scene
         //TODO Make a Light Class and ShadowCLass that includes 
         //all items in scene using scene.meshes
@@ -42,15 +49,13 @@ export class Plains extends Scene {
         //load the background
         const background = new PlainsBackground(this);
 
-
-        //--GUI--
-        const guiPlayMode = new GUIPlayMode(this);
-
         //--SCENE FINISHED LOADING--
         
         await this.whenReadyAsync();
-        this._app.gameState.state = this._gameState;
-        engine.hideLoadingUI();
+          //change the gameState
+          this._app.gameState.state = this._gameState;
+          //change the GUI
+          engine.hideLoadingUI();
 
     }
 

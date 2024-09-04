@@ -1,1 +1,1 @@
-export type GameStateT = 'START_SCREEN' | 'PLAINS'| 'FOREST'| 'TUNDRA'| 'SWAMP'| 'MOUNTAINS'| 'COAST'| 'OASIS'| 'WATERFALL'| 'SKY'| 'MOON'| 'WORMHOLE' | 'END_SCREEN';
+export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
