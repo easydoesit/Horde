@@ -1,0 +1,131 @@
+import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@babylonjs/gui";
+import { GUIFONT1 } from "../utils/CONSTANTS";
+import { GUIPlay } from "./GUIPlay";
+
+
+export class UpgradeSection {
+    private _wrapperUpgradeContainer:Rectangle;
+    private _textBlockUpgradeTitle:TextBlock;
+    private _textBlockUpgradeInstruction:TextBlock;
+    private _upgradeBarWrapper:Rectangle;
+    private _upgradeBtn:Button;
+    private _upgradeBar:Rectangle;
+
+    private _name:string;
+    private _instruction:string;
+    private _valueIncrease:number;
+    private _numberOfValues:number;
+    private _higherContainer: Rectangle | AdvancedDynamicTexture;
+    private _gui:GUIPlay;
+    private _currentValueIncrement:number;
+
+    constructor(name:string, instruction:string, valueIncrease:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, gui:GUIPlay, callback:any) {
+        this._name = name;
+        this._instruction = instruction;
+        this._valueIncrease = valueIncrease;
+        this._numberOfValues = numberOfValues;
+        this._higherContainer = higherContainer;  
+        this._gui = gui;
+        this._currentValueIncrement = 0;
+
+        this._wrapperUpgradeContainer = new Rectangle('wrapperUpgradeBar');
+        this._wrapperUpgradeContainer.width = .95;
+        this._wrapperUpgradeContainer.height = .1;
+        this._wrapperUpgradeContainer.background = 'blue';
+        this._wrapperUpgradeContainer.color = 'white';
+        this._wrapperUpgradeContainer.thickness = 0;
+        this._wrapperUpgradeContainer.top = - 320;
+        this._higherContainer.addControl(this._wrapperUpgradeContainer);
+
+        this._textBlockUpgradeTitle = new TextBlock(this._name, this._name);
+        this._textBlockUpgradeTitle.fontFamily = GUIFONT1;
+        this._textBlockUpgradeTitle.color = 'white';
+        this._textBlockUpgradeTitle.top = -35;
+        this._wrapperUpgradeContainer.addControl(this._textBlockUpgradeTitle);
+
+        this._textBlockUpgradeInstruction = new TextBlock(this._instruction, this._instruction);
+        this._textBlockUpgradeInstruction.fontFamily = GUIFONT1;
+        this._textBlockUpgradeInstruction.color = 'white';
+        this._textBlockUpgradeInstruction.top = -15;
+        this._wrapperUpgradeContainer.addControl(this._textBlockUpgradeInstruction);
+
+        this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', 'upgrade');
+        this._upgradeBtn.background = 'Green';
+        this._upgradeBtn.width = .1;
+        this._upgradeBtn.height = 1;
+        this._upgradeBtn.thickness = 0;
+        this._upgradeBtn.left = 0;
+        this._upgradeBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+       
+        this._wrapperUpgradeContainer.addControl(this._upgradeBtn);
+
+        this._upgradeBtn.onPointerDownObservable.add(() => {
+            //change the size of the upgrade bar
+            const cleanString = this._cleanString(this._upgradeBar.width);
+            const sizeAsFloat = this._makeFloatDivideBy100(cleanString);
+
+            if (sizeAsFloat < 1) {
+                const newSize = this.calcBarSegment(sizeAsFloat, this._numberOfValues);
+                console.log(newSize);
+                this._upgradeBar.width = newSize;
+                this._currentValueIncrement += 1;
+                
+                if (newSize >= 1) {
+                    this._upgradeBtn.isEnabled = false;
+                }
+            }
+
+            callback();
+        
+        });
+
+        this._upgradeBarWrapper = new Rectangle('upgradeBarWrapper');
+        this._upgradeBarWrapper.background = 'lightblue';
+        this._upgradeBarWrapper.height = .2;
+        this._upgradeBarWrapper.width = .88;
+        this._upgradeBarWrapper.left = -55;
+        this._upgradeBarWrapper.top = 20;
+        this._upgradeBarWrapper.thickness = 0;
+        this._wrapperUpgradeContainer.addControl(this._upgradeBarWrapper);
+
+        this._upgradeBar = new Rectangle('upgradeBar');
+        this._upgradeBar.background = 'green';
+        this._upgradeBar.height = 1;
+        this._upgradeBar.width = 0;
+        this._upgradeBar.left = 0;
+        this._upgradeBar.thickness = 0;
+        this._upgradeBar.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this._upgradeBarWrapper.addControl(this._upgradeBar);
+        
+
+    }
+
+    private calcBarSegment(currentSize:number, numberOfValues:number) {
+        console.log('called');    
+        const amountToAdd = 1 / this._numberOfValues;
+        
+        const finalSize = currentSize + amountToAdd;
+
+        return finalSize;
+    
+    }
+
+    private _cleanString(string:string | number) {
+        const makeSizeString = string.toString(); 
+        const cleanString = makeSizeString.replace(/\%/g, '');
+        let finalNumber = parseFloat(cleanString);
+    
+        if (!finalNumber) {
+            finalNumber = 0;
+        }
+    
+       return finalNumber;
+    }
+    
+    private _makeFloatDivideBy100(number:number) {
+        return number/100;
+    }
+
+    
+
+}
