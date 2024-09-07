@@ -8,6 +8,7 @@ import { GameStateT } from "../../typings";
 //gamepieces
 import { Hill } from "../models_structures/hill";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
+import { FarmLand01 } from "../models_structures/farmland01";
 
 export class PlayMode extends Scene {
     private _app:App;
@@ -39,9 +40,12 @@ export class PlayMode extends Scene {
         //TODO Make all the background art swappable. It's a small app.
         //all items in scene using scene.meshes
         const mainLight = new DirectionalLight('mainLight', new Vector3(1,-1,1),this);
-
+        mainLight.intensity = 2;
+        
         //load the hill - required in all scenes
         const hill = new Hill(this);
+        //load the starting Farm
+        const farmLand01 = new FarmLand01(this);
 
         //load the background
         const background = new PlainsBackground(this);

@@ -5,7 +5,7 @@ export const farmerBaseValue = 0.001; //base amount of gold persecond
 
 export const wheatUpgradeValue = 0.05; //5%
 export const wheatUpgradesMax  = 10; //multiplier of maximum improvement to wheatvalue
-export const wheatUpgradeCost = (iteration:number) => {
+export const wheatUpgradeCostGold = (iteration:number) => {
     
     // Coefficients from the quartic equation
     const a = 0.005;

@@ -1,6 +1,7 @@
 import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { GUIPlay } from "./GUIPlay";
+import { PlayMode } from "../scenes/playmode";
 
 
 export class UpgradeSection {
@@ -9,24 +10,28 @@ export class UpgradeSection {
     private _textBlockUpgradeInstruction:TextBlock;
     private _upgradeBarWrapper:Rectangle;
     private _upgradeBtn:Button;
+    private _upgradeBtnCostText:TextBlock;
     private _upgradeBar:Rectangle;
 
     private _name:string;
     private _instruction:string;
-    private _valueIncrease:number;
-    private _numberOfValues:number;
+    private _maxNumOfValues:number;
     private _higherContainer: Rectangle | AdvancedDynamicTexture;
     private _gui:GUIPlay;
-    private _currentValueIncrement:number;
+    private _scene:PlayMode;
+    public upgradeAble:boolean;
+    
+    public cost:number;
 
-    constructor(name:string, instruction:string, valueIncrease:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, gui:GUIPlay, callback:any) {
+    constructor(name:string, instruction:string, initialCost:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, gui:GUIPlay, scene:PlayMode, callback:any) {
         this._name = name;
         this._instruction = instruction;
-        this._valueIncrease = valueIncrease;
-        this._numberOfValues = numberOfValues;
+        this._maxNumOfValues = numberOfValues;
         this._higherContainer = higherContainer;  
         this._gui = gui;
-        this._currentValueIncrement = 0;
+        this.cost = initialCost;
+        this._scene = scene;
+        this.upgradeAble = false;
 
         this._wrapperUpgradeContainer = new Rectangle('wrapperUpgradeBar');
         this._wrapperUpgradeContainer.width = .95;
@@ -49,35 +54,44 @@ export class UpgradeSection {
         this._textBlockUpgradeInstruction.top = -15;
         this._wrapperUpgradeContainer.addControl(this._textBlockUpgradeInstruction);
 
-        this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', 'upgrade');
+        this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', `upgrade`);
+        this._upgradeBtn.fontFamily = GUIFONT1;
         this._upgradeBtn.background = 'Green';
         this._upgradeBtn.width = .1;
         this._upgradeBtn.height = 1;
         this._upgradeBtn.thickness = 0;
         this._upgradeBtn.left = 0;
         this._upgradeBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-       
+        this._upgradeBtn.isEnabled = false;
+
         this._wrapperUpgradeContainer.addControl(this._upgradeBtn);
+        
 
         this._upgradeBtn.onPointerDownObservable.add(() => {
             //change the size of the upgrade bar
             const cleanString = this._cleanString(this._upgradeBar.width);
             const sizeAsFloat = this._makeFloatDivideBy100(cleanString);
-
-            if (sizeAsFloat < 1) {
-                const newSize = this.calcBarSegment(sizeAsFloat, this._numberOfValues);
-                console.log(newSize);
-                this._upgradeBar.width = newSize;
-                this._currentValueIncrement += 1;
-                
-                if (newSize >= 1) {
-                    this._upgradeBtn.isEnabled = false;
+            if (this.upgradeAble) {
+                this._upgradeBtn.isEnabled = true;
+                if (sizeAsFloat < 1) {
+                    const newSize = this.calcBarSegment(sizeAsFloat, this._maxNumOfValues);
+                    console.log(newSize);
+                    this._upgradeBar.width = newSize;
+                    
+                    if (newSize >= 1) {
+                        this._upgradeBtn.isEnabled = false;
+                    }
                 }
-            }
 
-            callback();
-        
+                callback();
+            } 
         });
+
+        this._upgradeBtnCostText = new TextBlock(`${this._name}_cost`, `${this.cost}g`);
+        this._upgradeBtnCostText.fontFamily = GUIFONT1;
+        this._upgradeBtnCostText.top = 20;
+        this._upgradeBtn.addControl(this._upgradeBtnCostText);
+        
 
         this._upgradeBarWrapper = new Rectangle('upgradeBarWrapper');
         this._upgradeBarWrapper.background = 'lightblue';
@@ -96,13 +110,19 @@ export class UpgradeSection {
         this._upgradeBar.thickness = 0;
         this._upgradeBar.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         this._upgradeBarWrapper.addControl(this._upgradeBar);
-        
+
+        //GameLoop
+        this._scene.onBeforeRenderObservable.add(() => {
+            
+            this._upgradeBtnCostText.text = `${this.cost}g`;
+            this._makeButtonEnabled();
+        })
 
     }
 
     private calcBarSegment(currentSize:number, numberOfValues:number) {
         console.log('called');    
-        const amountToAdd = 1 / this._numberOfValues;
+        const amountToAdd = 1 / this._maxNumOfValues;
         
         const finalSize = currentSize + amountToAdd;
 
@@ -126,6 +146,14 @@ export class UpgradeSection {
         return number/100;
     }
 
+    private _makeButtonEnabled() {
+        
+        if (this.upgradeAble) {
+            this._upgradeBtn.isEnabled = true;
+        } else {
+            this._upgradeBtn.isEnabled = false;
+        }
+    }
     
 
 }

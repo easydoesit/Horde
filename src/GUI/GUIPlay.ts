@@ -2,7 +2,7 @@ import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { Farmer } from "../models_characters/farmer";
 import { PlayMode } from "../scenes/playmode";
-import { farmerBaseValue, wheatUpgradesMax, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
+import { farmerBaseValue, wheatUpgradesMax, wheatUpgradeValue, wheatUpgradeCostGold } from "../utils/MATHCONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
 
 export class GUIPlay {
@@ -10,7 +10,12 @@ export class GUIPlay {
     public farmerCount:number;
     public totalGold:number;
     public totalGoldPerSecond:number;
+    
+    //wheat
     public wheatValue:number;
+    private _wheatValueIncrement:number;
+    private _costOfWheat:number;
+    public wheatUpgradeable:boolean;
 
     private _scene:PlayMode;
     
@@ -42,7 +47,10 @@ export class GUIPlay {
 
         //upgrades
         this.wheatValue = 0;
-
+        this._wheatValueIncrement = 1;
+        //this sets the initial cost.
+        this._costOfWheat = Math.round(wheatUpgradeCostGold(this._wheatValueIncrement)*1000)/1000;
+        this.wheatUpgradeable = false;
 
         this._gameGUI = AdvancedDynamicTexture.CreateFullscreenUI('GameGui')
         this._gameGUI.idealHeight = 1080;
@@ -160,7 +168,7 @@ export class GUIPlay {
         this._playGUIWrapperUpgrade.isVisible = false;
 
         this._closeUpgrades = Button.CreateSimpleButton('closeUpgrades', 'close');
-        this._closeUpgrades.fontFamily =GUIFONT1;
+        this._closeUpgrades.fontFamily = GUIFONT1;
         this._closeUpgrades.left = 430;
         this._closeUpgrades.top = -430;
         this._closeUpgrades.width = .075;
@@ -177,16 +185,21 @@ export class GUIPlay {
         
         });
         //this creates the wheat Upgrade section on the GUI
-        this._wheatUpgrade = new UpgradeSection('Wheat', 'adds 5% gold/second', wheatUpgradeValue, wheatUpgradesMax, this._playGUIWrapperUpgrade, this, this._wheatValueChange.bind(this));
+        this._wheatUpgrade = new UpgradeSection('Wheat', 'adds 5% gold/second', this._costOfWheat, wheatUpgradesMax, this._playGUIWrapperUpgrade, this, this._scene, this._wheatValueChange.bind(this));
 
         //GameLoop
         this._scene.onBeforeRenderObservable.add(() => {
-            console.log('full G/S', this.totalGoldPerSecond);
-            console.log('wheatValue', this.wheatValue);
-            
+            // console.log('full G/S', this.totalGoldPerSecond);
+            // console.log('wheatValue', this.wheatValue);
+            //gold
             this._totalGoldTextBlock.text = `${this._finalMath()}`;
             this._farmerCountTextBlock.text = `${this.farmerCount}`;
-            this._totalGoldPerSecondTextBlock.text = `${this.totalGoldPerSecond}`
+            this._totalGoldPerSecondTextBlock.text = `${this.totalGoldPerSecond}`;
+
+            //wheat
+            this.wheatUpgradeable = this._wheatUpgradeAllowed();
+            this._wheatUpgrade.upgradeAble = this.wheatUpgradeable;
+            console.log(this.wheatUpgradeable);
 
         })
 
@@ -235,15 +248,35 @@ export class GUIPlay {
     
     }
 
+    //wheat
+
+    private _wheatUpgradeAllowed() {
+        if (this.totalGold > this._costOfWheat) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private _wheatValueChange() {
 
         if (this.wheatValue < wheatUpgradeValue * wheatUpgradesMax) {
+            if (this.totalGold > this._costOfWheat) {
             
+            //apply the value increases
             this.wheatValue = Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
+            this.totalGoldPerSecond = Math.round(this.increaseGoldPerSecond() * 10000)/10000;
+            
+            //use gold
+            this.totalGold = this.totalGold - this._costOfWheat;
 
-            this.totalGoldPerSecond  = Math.round(this.increaseGoldPerSecond() * 10000)/10000;
-        
+            //apply cost change
+            this._wheatValueIncrement += 1;
+            this._costOfWheat = Math.round(wheatUpgradeCostGold(this._wheatValueIncrement)* 1000)/1000;
+            this._wheatUpgrade.cost = this._costOfWheat;
+
+            }
+
         }
         
     }
