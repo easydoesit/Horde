@@ -5,7 +5,7 @@ import { PlayMode } from "../scenes/playmode";
 
 
 export class UpgradeSection {
-    private _wrapperUpgradeContainer:Rectangle;
+    public wrapperUpgradeContainer:Rectangle;
     private _textBlockUpgradeTitle:TextBlock;
     private _textBlockUpgradeInstruction:TextBlock;
     private _upgradeBarWrapper:Rectangle;
@@ -19,40 +19,42 @@ export class UpgradeSection {
     private _higherContainer: Rectangle | AdvancedDynamicTexture;
     private _gui:GUIPlay;
     private _scene:PlayMode;
+    private _guiVertPosition:number;
     public upgradeAble:boolean;
     
     public cost:number;
 
-    constructor(name:string, instruction:string, initialCost:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, gui:GUIPlay, scene:PlayMode, callback:any) {
+    constructor(name:string, instruction:string, initialCost:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any) {
         this._name = name;
         this._instruction = instruction;
         this._maxNumOfValues = numberOfValues;
-        this._higherContainer = higherContainer;  
+        this._higherContainer = higherContainer;
+        this._guiVertPosition = guiVertPosition;  
         this._gui = gui;
         this.cost = initialCost;
         this._scene = scene;
         this.upgradeAble = false;
 
-        this._wrapperUpgradeContainer = new Rectangle('wrapperUpgradeBar');
-        this._wrapperUpgradeContainer.width = .95;
-        this._wrapperUpgradeContainer.height = .1;
-        this._wrapperUpgradeContainer.background = 'blue';
-        this._wrapperUpgradeContainer.color = 'white';
-        this._wrapperUpgradeContainer.thickness = 0;
-        this._wrapperUpgradeContainer.top = - 320;
-        this._higherContainer.addControl(this._wrapperUpgradeContainer);
+        this.wrapperUpgradeContainer = new Rectangle('wrapperUpgradeBar');
+        this.wrapperUpgradeContainer.width = .95;
+        this.wrapperUpgradeContainer.height = .1;
+        this.wrapperUpgradeContainer.background = 'blue';
+        this.wrapperUpgradeContainer.color = 'white';
+        this.wrapperUpgradeContainer.thickness = 0;
+        this.wrapperUpgradeContainer.top = this._guiVertPosition;
+        this._higherContainer.addControl(this.wrapperUpgradeContainer);
 
         this._textBlockUpgradeTitle = new TextBlock(this._name, this._name);
         this._textBlockUpgradeTitle.fontFamily = GUIFONT1;
         this._textBlockUpgradeTitle.color = 'white';
         this._textBlockUpgradeTitle.top = -35;
-        this._wrapperUpgradeContainer.addControl(this._textBlockUpgradeTitle);
+        this.wrapperUpgradeContainer.addControl(this._textBlockUpgradeTitle);
 
         this._textBlockUpgradeInstruction = new TextBlock(this._instruction, this._instruction);
         this._textBlockUpgradeInstruction.fontFamily = GUIFONT1;
         this._textBlockUpgradeInstruction.color = 'white';
         this._textBlockUpgradeInstruction.top = -15;
-        this._wrapperUpgradeContainer.addControl(this._textBlockUpgradeInstruction);
+        this.wrapperUpgradeContainer.addControl(this._textBlockUpgradeInstruction);
 
         this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', `upgrade`);
         this._upgradeBtn.fontFamily = GUIFONT1;
@@ -64,7 +66,7 @@ export class UpgradeSection {
         this._upgradeBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this._upgradeBtn.isEnabled = false;
 
-        this._wrapperUpgradeContainer.addControl(this._upgradeBtn);
+        this.wrapperUpgradeContainer.addControl(this._upgradeBtn);
         
 
         this._upgradeBtn.onPointerDownObservable.add(() => {
@@ -82,8 +84,10 @@ export class UpgradeSection {
                         this._upgradeBtn.isEnabled = false;
                     }
                 }
-
-                callback();
+                
+                if (callback) {
+                    callback();
+                }
             } 
         });
 
@@ -100,7 +104,7 @@ export class UpgradeSection {
         this._upgradeBarWrapper.left = -55;
         this._upgradeBarWrapper.top = 20;
         this._upgradeBarWrapper.thickness = 0;
-        this._wrapperUpgradeContainer.addControl(this._upgradeBarWrapper);
+        this.wrapperUpgradeContainer.addControl(this._upgradeBarWrapper);
 
         this._upgradeBar = new Rectangle('upgradeBar');
         this._upgradeBar.background = 'green';

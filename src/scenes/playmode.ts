@@ -1,4 +1,4 @@
-import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight } from "@babylonjs/core";
+import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
 
 //classes
 import { App } from "../app";
@@ -15,6 +15,7 @@ export class PlayMode extends Scene {
     private _gameState:GameStateT;
     
     public gui:GUIPlay;
+    public mainCamera:FreeCamera;
 
     constructor(app:App, engine:Engine) {
         super(engine);
@@ -30,8 +31,8 @@ export class PlayMode extends Scene {
         this.clearColor = new Color4(0.15, 0.15, 0.15, 1);
 
         //temp camera for now TODO - MAKE GAME CAMERA
-        let camera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
-        camera.setTarget(new Vector3(0,4,0));
+        this.mainCamera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
+        this.mainCamera.setTarget(new Vector3(0,4,0));
 
         //the gui is currently where all the math is done.
         this.gui = new GUIPlay(this);
@@ -45,7 +46,22 @@ export class PlayMode extends Scene {
         //load the hill - required in all scenes
         const hill = new Hill(this);
         //load the starting Farm
-        const farmLand01 = new FarmLand01(this);
+        const farmland01 = new FarmLand01(this);
+  
+        //the gui needs to know the number of farms for math.
+        
+        //interact with the farmland
+        this.onPointerDown = function castRay() {
+            const ray = this.createPickingRay(this.pointerX, this.pointerY, Matrix.Identity(), this.mainCamera);
+
+            const hit = this.pickWithRay(ray);
+
+            if (hit.pickedMesh === farmland01.model.allMeshes[0]) {
+                console.log('FarmClicked');
+                this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
+            }
+        }
+
 
         //load the background
         const background = new PlainsBackground(this);

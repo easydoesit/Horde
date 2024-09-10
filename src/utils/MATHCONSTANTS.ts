@@ -20,15 +20,21 @@ export const wheatUpgradeCostGold = (iteration:number) => {
 
 
 //Farms
-export const farmCost = (numberOfFarms:number) => {
-    const result = numberOfFarms ** numberOfFarms;
+export const farmUpgradeMax = 5;
 
-    return result;
+export const maxFarmersPerStartFarm = 120;
+
+export const farmCost = 27.71;
+
+export const farmUpgradeCost = (numberOfUpgrades:number) => {
+    const a = 2.01;
+    const b = 4.77;
+    return a * Math.exp(b * numberOfUpgrades);
 }
 
-//Harvest
-const harvestValue = 0.08;
+export const farmersMax = (currentFarmUpgradeAmount:number) => {
+    const a = 2.35;
+    const baseFarmerMultiplyer = 120;
 
-export const harvestSpeed = (numUpgrades:number) => {
-    const result = numUpgrades * harvestValue;
-}
+    return currentFarmUpgradeAmount * a * baseFarmerMultiplyer;
+} 
