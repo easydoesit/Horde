@@ -8,7 +8,8 @@ import { GameStateT } from "../../typings";
 //gamepieces
 import { Hill } from "../models_structures/hill";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
-import { FarmLand01 } from "../models_structures/farmland01";
+import { FarmLand } from "../models_structures/farmLand";
+import { FarmHouse } from "../models_structures/farmHouse";
 
 export class PlayMode extends Scene {
     private _app:App;
@@ -16,6 +17,13 @@ export class PlayMode extends Scene {
     
     public gui:GUIPlay;
     public mainCamera:FreeCamera;
+
+    //gamepieces 
+    private _hill:Hill;
+    //interacative
+    public farmLand:FarmLand;
+    //for cloning
+    public farmHouse:FarmHouse;
 
     constructor(app:App, engine:Engine) {
         super(engine);
@@ -44,19 +52,25 @@ export class PlayMode extends Scene {
         mainLight.intensity = 2;
         
         //load the hill - required in all scenes
-        const hill = new Hill(this);
+        this._hill = new Hill(this);
         //load the starting Farm
-        const farmland01 = new FarmLand01(this);
-  
+        this.farmLand = new FarmLand('FarmLand01', this, new Vector3(-5,0.67,-1.5));
+        console.log(this.farmLand);
+        
+        //load all models but position them off screen for faster loading times.
+        this.farmHouse = new FarmHouse('FarmHouseBase',this);
+        this.farmHouse.position = new Vector3(0,-10,0);
+
+
         //the gui needs to know the number of farms for math.
         
-        //interact with the farmland
+        //interact with the farmLand
         this.onPointerDown = function castRay() {
             const ray = this.createPickingRay(this.pointerX, this.pointerY, Matrix.Identity(), this.mainCamera);
 
             const hit = this.pickWithRay(ray);
 
-            if (hit.pickedMesh === farmland01.model.allMeshes[0]) {
+            if (hit.pickedMesh === this.farmLand.model.allMeshes[0]) {
                 console.log('FarmClicked');
                 this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
             }

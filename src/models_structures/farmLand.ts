@@ -1,13 +1,15 @@
 import { AbstractMesh, TransformNode, Vector3, SceneLoader} from "@babylonjs/core";
 import { PlayMode } from "../scenes/playmode";
 
-export class FarmLand01 extends TransformNode {
+export class FarmLand extends TransformNode {
        public model:{root:AbstractMesh, allMeshes:AbstractMesh[]}
+       public farmHousePos:Vector3;
 
-    constructor(scene:PlayMode) {
-        super('FarmGround01', scene);
+    constructor(name:string, scene:PlayMode, farmHousePos:Vector3) {
+        super(name, scene);
         this.position = new Vector3(0,0,0);
-        
+        this.farmHousePos = farmHousePos;
+
         this.initialize();
 
     }

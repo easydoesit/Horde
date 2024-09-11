@@ -1,19 +1,22 @@
 import { farmUpgradeCost, farmersMax, farmUpgradeMax } from "../utils/MATHCONSTANTS";
+import { FarmLand } from "../models_structures/farmLand";
 
 export class FarmState {
     public name:string;
     public farmersMax:number;
     public farmUpgradeCost:number;
     public farmersNextMax:number | string;
+    public gamePiece:FarmLand['name'];
 
     public upgradeLevel:number;
 
-    constructor(name: string) {
+    constructor(name: string, gamePieceName:FarmLand['name']) {
         this.name = name;
         this.upgradeLevel = 1;
         this.farmersMax = Math.round(farmersMax(this.upgradeLevel));
         this.farmersNextMax = this._checkNextUpgrade();
         this.farmUpgradeCost = Math.round(farmUpgradeCost(this.upgradeLevel));
+        this.gamePiece = gamePieceName;
     }
 
     private _checkNextUpgrade() {
@@ -22,6 +25,14 @@ export class FarmState {
         } else {
             return "Maxed out!"
         }
+    }
+
+    public changeState() {
+        console.log('changeStateCalled');
+        this.upgradeLevel += 1;
+        this.farmersMax = Math.round(farmersMax(this.upgradeLevel));
+        this.farmersNextMax = this._checkNextUpgrade();
+        this.farmUpgradeCost = Math.round(farmUpgradeCost(this.upgradeLevel));
     }
 
 }

@@ -2,9 +2,11 @@ import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { Farmer } from "../models_characters/farmer";
 import { PlayMode } from "../scenes/playmode";
-import { farmerBaseValue, wheatUpgradesMax, wheatUpgradeValue, wheatUpgradeCostGold, farmCost, farmersMax, farmUpgradeCost, farmUpgradeMax } from "../utils/MATHCONSTANTS";
+import { startingFarmers, startingGold, farmerBaseValue, wheatUpgradesMax, wheatUpgradeValue, wheatUpgradeCostGold, farmCost, farmersMax, farmUpgradeCost, farmUpgradeMax } from "../utils/MATHCONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
 import { FarmState } from "./farmState";
+import { FarmHouse } from "../models_structures/farmHouse";
+import { FarmLand } from "../models_structures/farmLand";
 
 export class GUIPlay {
     //Math
@@ -18,13 +20,11 @@ export class GUIPlay {
     private _costOfWheat:number;
 
     //farmers
+    public runningFarmers:number;
     private _farmersMax:number;
 
     public farm01:FarmState;
     public farmStates:FarmState[];
-    // private _farm01ValueIncrement:number;
-    // private _costOfFarm01Upgrade:number;
-    // public farm01Upgradable:boolean;
 
     private _scene:PlayMode;
     
@@ -58,8 +58,8 @@ export class GUIPlay {
     
     constructor(scene:PlayMode) {
         this._scene = scene;
-        this.farmerCount = 0
-        this.totalGold = 0;
+        this.farmerCount = startingFarmers;
+        this.totalGold = startingGold;
         this.totalGoldPerSecond = 0;
 
         //upgrades
@@ -70,12 +70,13 @@ export class GUIPlay {
         this._costOfWheat = Math.round(wheatUpgradeCostGold(this._wheatValueIncrement)*1000)/1000;
         
         //farms
-        this.farm01 = new FarmState('Farm01',);
+        this.farm01 = new FarmState('Farm01', 'FarmLand01');
         this.farmStates = [];
         this.farmStates.push(this.farm01);
         this._farmUpgrades = [];
 
         //farmers
+        this.runningFarmers = 0;
         this._farmersMax = this._finalFarmerMaxMath();
         
         //GUI
@@ -212,7 +213,7 @@ export class GUIPlay {
         
         });
         //this creates the wheat Upgrade section on the GUI
-        this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this._playGUIWrapperUpgrade, -320, this, this._scene, this._wheatValueChange.bind(this));
+        this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this._playGUIWrapperUpgrade, -320, this, this._scene, () => this._wheatValueChange);
 
         //landUpgrades
         //this is the GUI that Appears whn you click on the Land to upgrade
@@ -249,7 +250,7 @@ export class GUIPlay {
         this.playGUIWrapperFarmUpgrade.addControl(this._farmersMaxTextBox);
 
         //this creates the farm Upgrade section on the GUI
-        this._farmUpgrade01 = new UpgradeSection('FarmLand 1 Upgrade', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -320, this, this._scene, this._farmUpGradeChange.bind(this));
+        this._farmUpgrade01 = new UpgradeSection('FarmLand 1 Upgrade', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -320, this, this._scene, () => this._farmUpGradeChange(this.farm01));
         this._farmUpgrades.push(this._farmUpgrade01);
 
         //this._farmUpgrade02 = new UpgradeSection('FarmUpgrade02', 'allows 250 more farmers', this._costOfWheat, wheatUpgradesMax, this.playGUIWrapperFarmUpgrade, -200, this, this._scene, this._wheatValueChange.bind(this));
@@ -264,9 +265,6 @@ export class GUIPlay {
             this._farmerCountTextBlock.text = `${this.farmerCount}`;
             this._totalGoldPerSecondTextBlock.text = `${this.totalGoldPerSecond}`;
 
-            //farmersMax
-            this._farmersMax = this._finalFarmerMaxMath();
-
             //wheat
             this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
 
@@ -280,15 +278,13 @@ export class GUIPlay {
     }
 
     private _clickFunction(){
-           
-        //make a farmer and increase the count
-        this._makeFarmer(this.farmerCount);
-        //this.farmerCount = this._increaseFarmerCount();
-        
-        //up the Goldpersecond
-        // this.totalGoldPerSecond = Math.round(this.increaseGoldPerSecond()*10000)/10000;
-        
 
+        if(this.farmerCount + this.runningFarmers < this._farmersMax) {
+            //make a farmer and increase the count
+            this._makeFarmer(this.farmerCount);
+            this.runningFarmers += 1;
+        }
+        
     }
 
     //math functions
@@ -375,10 +371,37 @@ export class GUIPlay {
             }
         }
     }
+    //callback
+    private _farmUpGradeChange(farmState:FarmState, ) {
 
-    private _farmUpGradeChange(farm:FarmState) {
-        //upgrade the farm in the scene.
+        switch(farmState.upgradeLevel) {
+            case 1: {
+            
+                const farmland = this._scene.getNodeByName(farmState.gamePiece)as FarmLand;
+                const position = farmland.farmHousePos;
+                
+                //upgrade the farm in the scene.
+                const farmHouse = this._scene.farmHouse.clone(`${farmState.gamePiece}_FarmHouse`,null,null);
+                farmHouse.position = position;
+
+            }
+            break;
+        }
+       
+        //use gold
+        this.totalGold = this.totalGold - farmState.farmUpgradeCost;
+
+        //upgrade the State
+        farmState.changeState();
+        console.log(farmState);
+
+        //apply cost Changes
+        this._farmersMax = this._finalFarmerMaxMath();
+        this._farmersMaxTextBox.text = `Max Famers: ${this._farmersMax}`;
+        this._farmUpgrade01.cost = farmState.farmUpgradeCost;
+        
     } 
+
 
     //GUI functions
     public showUpgrades(wrapper:Rectangle) {

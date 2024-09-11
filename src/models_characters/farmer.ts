@@ -76,6 +76,7 @@ export class Farmer extends TransformNode{
             this.dispose();
             
             this._gui.farmerCount = this._gui.increaseFarmerCount();
+            this._gui.runningFarmers -= 1;
 
             //up the Goldpersecond
             this._gui.totalGoldPerSecond = Math.round(this._gui.increaseGoldPerSecond()*10000)/10000;

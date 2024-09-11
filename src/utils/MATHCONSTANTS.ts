@@ -1,4 +1,8 @@
+//gold
+export const startingGold = 800;
+
 //Farmers
+export const startingFarmers = 260;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
 
 //Wheat
@@ -21,8 +25,6 @@ export const wheatUpgradeCostGold = (iteration:number) => {
 
 //Farms
 export const farmUpgradeMax = 5;
-
-export const maxFarmersPerStartFarm = 120;
 
 export const farmCost = 27.71;
 
