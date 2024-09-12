@@ -12,7 +12,7 @@ export class FarmState {
 
     constructor(name: string, gamePieceName:FarmLand['name']) {
         this.name = name;
-        this.upgradeLevel = 1;
+        this.upgradeLevel = 0;
         this.farmersMax = Math.round(farmersMax(this.upgradeLevel));
         this.farmersNextMax = this._checkNextUpgrade();
         this.farmUpgradeCost = Math.round(farmUpgradeCost(this.upgradeLevel));

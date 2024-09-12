@@ -7,14 +7,14 @@ import { PlayMode } from "../scenes/playmode";
 export class UpgradeSection {
     public wrapperUpgradeContainer:Rectangle;
     private _textBlockUpgradeTitle:TextBlock;
-    private _textBlockUpgradeInstruction:TextBlock;
+    public textBlockUpgradeInstruction:TextBlock;
     private _upgradeBarWrapper:Rectangle;
     private _upgradeBtn:Button;
     private _upgradeBtnCostText:TextBlock;
     private _upgradeBar:Rectangle;
 
     private _name:string;
-    private _instruction:string;
+    public instruction:string;
     private _maxNumOfValues:number;
     private _higherContainer: Rectangle | AdvancedDynamicTexture;
     private _gui:GUIPlay;
@@ -26,7 +26,7 @@ export class UpgradeSection {
 
     constructor(name:string, instruction:string, initialCost:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any) {
         this._name = name;
-        this._instruction = instruction;
+        this.instruction = instruction;
         this._maxNumOfValues = numberOfValues;
         this._higherContainer = higherContainer;
         this._guiVertPosition = guiVertPosition;  
@@ -50,11 +50,11 @@ export class UpgradeSection {
         this._textBlockUpgradeTitle.top = -35;
         this.wrapperUpgradeContainer.addControl(this._textBlockUpgradeTitle);
 
-        this._textBlockUpgradeInstruction = new TextBlock(this._instruction, this._instruction);
-        this._textBlockUpgradeInstruction.fontFamily = GUIFONT1;
-        this._textBlockUpgradeInstruction.color = 'white';
-        this._textBlockUpgradeInstruction.top = -15;
-        this.wrapperUpgradeContainer.addControl(this._textBlockUpgradeInstruction);
+        this.textBlockUpgradeInstruction = new TextBlock(this.instruction, this.instruction);
+        this.textBlockUpgradeInstruction.fontFamily = GUIFONT1;
+        this.textBlockUpgradeInstruction.color = 'white';
+        this.textBlockUpgradeInstruction.top = -15;
+        this.wrapperUpgradeContainer.addControl(this.textBlockUpgradeInstruction);
 
         this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', `upgrade`);
         this._upgradeBtn.fontFamily = GUIFONT1;
