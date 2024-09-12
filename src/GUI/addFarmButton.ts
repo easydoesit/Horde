@@ -13,7 +13,7 @@ export class ButtonAddFarm extends Button{
 
     private _text:TextBlock;
 
-    constructor(name:string, guiVertPosition:number, upgradeSection:UpgradeSection, farmState:FarmState, gui:GUIPlay) {
+    constructor(name:string, guiVertPosition:number, upgradeSection:UpgradeSection, farmState:FarmState, gui:GUIPlay, nextButton:string | null) {
         super(name);
         console.log(farmState);
         this._guiVertPosition = guiVertPosition;
@@ -52,8 +52,15 @@ export class ButtonAddFarm extends Button{
                     upgradeSection.instruction = `next Uprade allows ${farmState.farmersNextMax} total farmers on this land`;
                     upgradeSection.textBlockUpgradeInstruction.text = upgradeSection.instruction;
 
+                    
                     //show the Section
                     upgradeSection.wrapperUpgradeContainer.isVisible = true;
+                    
+                    if(nextButton) {
+                    //reveal the next button
+                    const searchedButton = gui.playGUIWrapperFarmUpgrade.getChildByName(nextButton) as ButtonAddFarm;
+                    searchedButton.isVisible = true;
+                    }
                 }
             }
             

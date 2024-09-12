@@ -1,5 +1,5 @@
 //gold
-export const startingGold = 0;
+export const startingGold = 200;
 
 //Farmers
 export const startingFarmers = 260;

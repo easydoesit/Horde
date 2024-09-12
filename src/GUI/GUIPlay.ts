@@ -267,25 +267,30 @@ export class GUIPlay {
         this._farmUpgrade02 = new UpgradeSection('FarmLand 2 Upgrade', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this._scene, () => this._farmUpGradeChange(this.farm02));
         this._farmUpgrade02.wrapperUpgradeContainer.isVisible = false;
         
-        this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade02);
+        this._farmUpgrade03 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this._scene, () => this._farmUpGradeChange(this.farm03));
+        this._farmUpgrade03.wrapperUpgradeContainer.isVisible = false;
+
+        this._farmUpgrade04 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this._scene, () => this._farmUpGradeChange(this.farm04));
+        this._farmUpgrade04.wrapperUpgradeContainer.isVisible = false;
+        this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade01, this._farmUpgrade03, this._farmUpgrade04);
         
         //ADDFarm Buttons.
         this._addFarmButtons =[];
 
-        this._addFarmUpgradeButton02 = new ButtonAddFarm('addFarmUpgrade_02', -200, this._farmUpgrade02, this.farm02, this);
+        this._addFarmUpgradeButton02 = new ButtonAddFarm('addFarmUpgrade_02', -200, this._farmUpgrade02, this.farm02, this, 'addFarmUpgrade_03' );
         this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton02);
 
-        // this._addFarmUpgradeButton03 = new ButtonAddFarm('addFarmUpgrade_03', -80);
-        // this._addFarmUpgradeButton03.isEnabled = false;
-        // this._addFarmUpgradeButton03.isVisible = false;
-        // this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton03);
+        this._addFarmUpgradeButton03 = new ButtonAddFarm('addFarmUpgrade_03', -80, this._farmUpgrade03, this.farm03, this, 'addFarmUpgrade_04');
+        this._addFarmUpgradeButton03.isEnabled = false;
+        this._addFarmUpgradeButton03.isVisible = false;
+        this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton03);
 
-        // this._addFarmUpgradeButton04 = new ButtonAddFarm('addFarmUpgrade_04', 40);
-        // this._addFarmUpgradeButton04.isEnabled = false;
-        // this._addFarmUpgradeButton04.isVisible = false;
-        // this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton04);
+        this._addFarmUpgradeButton04 = new ButtonAddFarm('addFarmUpgrade_04', 40,this._farmUpgrade04, this.farm04, this, null );
+        this._addFarmUpgradeButton04.isEnabled = false;
+        this._addFarmUpgradeButton04.isVisible = false;
+        this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton04);
 
-        this._addFarmButtons.push(this._addFarmUpgradeButton02);
+        this._addFarmButtons.push(this._addFarmUpgradeButton02, this._addFarmUpgradeButton03, this._addFarmUpgradeButton04);
 
         //GAMELOOP//
         this._scene.onBeforeRenderObservable.add(() => {
