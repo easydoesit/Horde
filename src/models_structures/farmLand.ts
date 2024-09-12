@@ -21,7 +21,7 @@ export class FarmLand extends TransformNode {
     }
 
     async createFarmGround01():Promise<{root:AbstractMesh, allMeshes:AbstractMesh[]}>{
-        const models = await SceneLoader.ImportMeshAsync('','./models/', 'farm_land_01.glb', this._scene);
+        const models = await SceneLoader.ImportMeshAsync('','./models/', 'farm_land.glb', this._scene);
         const root = models.meshes[0];
         const allMeshes = root.getChildMeshes();
 

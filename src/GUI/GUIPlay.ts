@@ -29,7 +29,7 @@ export class GUIPlay {
     public farm04:FarmState;
     public farmStates:FarmState[];
 
-    private _scene:PlayMode;
+    public scene:PlayMode;
     
     //GUI
     private _gameGUI:AdvancedDynamicTexture;
@@ -64,7 +64,7 @@ export class GUIPlay {
     private _addFarmButtons:ButtonAddFarm[];
     
     constructor(scene:PlayMode) {
-        this._scene = scene;
+        this.scene = scene;
         //game Start Stats
         this.farmerCount = startingFarmers;
         this.totalGold = startingGold;
@@ -225,7 +225,7 @@ export class GUIPlay {
         
         });
         //this creates the wheat Upgrade section on the GUI
-        this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this._playGUIWrapperUpgrade, -320, this, this._scene, () => this._wheatValueChange());
+        this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this._playGUIWrapperUpgrade, -320, this, this.scene, () => this._wheatValueChange());
 
         //landUpgrades
         //this is the GUI that Appears whn you click on the Land to upgrade
@@ -233,7 +233,7 @@ export class GUIPlay {
         this.playGUIWrapperFarmUpgrade.width = 0.5;
         this.playGUIWrapperFarmUpgrade.height= 1;
         this.playGUIWrapperFarmUpgrade.thickness = 1;
-        this.playGUIWrapperFarmUpgrade.background = 'brown';
+        //this.playGUIWrapperFarmUpgrade.background = 'brown';
         this._gameGUI.addControl(this.playGUIWrapperFarmUpgrade);
         //hide this Wrapper to start
         this.playGUIWrapperFarmUpgrade.isVisible = false;
@@ -262,17 +262,17 @@ export class GUIPlay {
         this.playGUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
 
         //this creates the farm Upgrade section on the GUI
-        this._farmUpgrade01 = new UpgradeSection('FarmLand 1 Upgrade', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -320, this, this._scene, () => this._farmUpGradeChange(this.farm01));
+        this._farmUpgrade01 = new UpgradeSection('FarmLand 1 Upgrade', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -320, this, this.scene, () => this._farmUpGradeChange(this.farm01));
         
-        this._farmUpgrade02 = new UpgradeSection('FarmLand 2 Upgrade', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this._scene, () => this._farmUpGradeChange(this.farm02));
+        this._farmUpgrade02 = new UpgradeSection('FarmLand 2 Upgrade', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farm02));
         this._farmUpgrade02.wrapperUpgradeContainer.isVisible = false;
         
-        this._farmUpgrade03 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this._scene, () => this._farmUpGradeChange(this.farm03));
+        this._farmUpgrade03 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farm03));
         this._farmUpgrade03.wrapperUpgradeContainer.isVisible = false;
 
-        this._farmUpgrade04 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this._scene, () => this._farmUpGradeChange(this.farm04));
+        this._farmUpgrade04 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farm04));
         this._farmUpgrade04.wrapperUpgradeContainer.isVisible = false;
-        this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade01, this._farmUpgrade03, this._farmUpgrade04);
+        this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade02, this._farmUpgrade03, this._farmUpgrade04);
         
         //ADDFarm Buttons.
         this._addFarmButtons =[];
@@ -293,7 +293,7 @@ export class GUIPlay {
         this._addFarmButtons.push(this._addFarmUpgradeButton02, this._addFarmUpgradeButton03, this._addFarmUpgradeButton04);
 
         //GAMELOOP//
-        this._scene.onBeforeRenderObservable.add(() => {
+        this.scene.onBeforeRenderObservable.add(() => {
 
             //gold
             this._totalGoldTextBlock.text = `${this._finalGoldMath()}`;
@@ -334,7 +334,7 @@ export class GUIPlay {
     //All math should go in finalMath
     private _finalGoldMath() {
         
-        this.totalGold = this.totalGold + (this.totalGoldPerSecond * (this._scene.getEngine().getDeltaTime()/1000));
+        this.totalGold = this.totalGold + (this.totalGoldPerSecond * (this.scene.getEngine().getDeltaTime()/1000));
             
         let roundedTotalGold = Math.round(this.totalGold * 1000) / 1000;
 
@@ -421,15 +421,16 @@ export class GUIPlay {
         switch(farmState.upgradeLevel) {
             case 1: {
             
-                const farmland = this._scene.getNodeByName(farmState.gamePiece)as FarmLand;
+                const farmland = this.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
                 const position = farmland.farmHousePos;
                 
                 //upgrade the farm in the scene.
-                const farmHouse = this._scene.farmHouse.clone(`${farmState.gamePiece}_FarmHouse`,null,null);
+                const farmHouse = this.scene.farmHouse.clone(`${farmState.gamePieceName}_FarmHouse`,null,null);
                 farmHouse.position = position;
 
             }
             break;
+            //Other Upgrades go here.
         }
        
         //use gold
@@ -469,7 +470,7 @@ export class GUIPlay {
     //Game interaction functions
     private _makeFarmer(currentCount:number) {
         
-        new Farmer(currentCount.toLocaleString(), this._scene, this);
+        new Farmer(currentCount.toLocaleString(), this.scene, this);
 
     }
 

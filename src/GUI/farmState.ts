@@ -6,7 +6,7 @@ export class FarmState {
     public farmersMax:number;
     public farmUpgradeCost:number;
     public farmersNextMax:number | string;
-    public gamePiece:FarmLand['name'];
+    public gamePieceName:FarmLand['name'];
 
     public upgradeLevel:number;
 
@@ -16,7 +16,7 @@ export class FarmState {
         this.farmersMax = Math.round(farmersMax(this.upgradeLevel));
         this.farmersNextMax = this._checkNextUpgrade();
         this.farmUpgradeCost = Math.round(farmUpgradeCost(this.upgradeLevel));
-        this.gamePiece = gamePieceName;
+        this.gamePieceName = gamePieceName;
     }
 
     private _checkNextUpgrade() {

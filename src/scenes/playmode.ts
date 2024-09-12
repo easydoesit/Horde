@@ -21,7 +21,10 @@ export class PlayMode extends Scene {
     //gamepieces 
     private _hill:Hill;
     //interacative
-    public farmLand:FarmLand;
+    public farmLand01:FarmLand;
+    public farmLand02:FarmLand;
+    public farmLand03:FarmLand;
+    public farmLand04:FarmLand;
     //for cloning
     public farmHouse:FarmHouse;
 
@@ -53,16 +56,23 @@ export class PlayMode extends Scene {
         
         //load the hill - required in all scenes
         this._hill = new Hill(this);
-        //load the starting Farm
-        this.farmLand = new FarmLand('FarmLand01', this, new Vector3(-5,0.67,-1.5));
-        console.log(this.farmLand);
+        //load the entry level farms
+        this.farmLand01 = new FarmLand('FarmLand01', this, new Vector3(-10,1.25,-4));
+        this.farmLand01.position = new Vector3(0,.5,-4);
+        
+        //these start out of view
+        this.farmLand02 = new FarmLand('FarmLand02', this, new Vector3(-10,1.25,4));
+        this.farmLand02.position = new Vector3(0,-10,4);
+
+        this.farmLand03 = new FarmLand('FarmLand03', this, new Vector3(-10,1.25,-10));
+        this.farmLand03.position = new Vector3(0,-10,-12);
+
+        this.farmLand04 = new FarmLand('FarmLand04', this, new Vector3(-10,1.25,10));
+        this.farmLand04.position = new Vector3(0,-10,12);
         
         //load all models but position them off screen for faster loading times.
         this.farmHouse = new FarmHouse('FarmHouseBase',this);
         this.farmHouse.position = new Vector3(0,-10,0);
-
-
-        //the gui needs to know the number of farms for math.
         
         //interact with the farmLand
         this.onPointerDown = function castRay() {
@@ -70,7 +80,7 @@ export class PlayMode extends Scene {
 
             const hit = this.pickWithRay(ray);
 
-            if (hit.pickedMesh === this.farmLand.model.allMeshes[0]) {
+            if (hit.pickedMesh === this.farmLand01.model.allMeshes[0] || hit.pickedMesh === this.farmLand02.model.allMeshes[0] ) {
                 console.log('FarmClicked');
                 this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
             }

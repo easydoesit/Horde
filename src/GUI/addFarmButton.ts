@@ -4,6 +4,8 @@ import { UpgradeSection } from "./upgradeSection";
 import { FarmState } from "./farmState";
 import { GUIPlay } from "./GUIPlay";
 import { farmCost } from "../utils/MATHCONSTANTS";
+import { FarmLand } from "../models_structures/farmLand";
+import { Vector3 } from "@babylonjs/core";
 
 export class ButtonAddFarm extends Button{
     private _guiVertPosition:number;
@@ -12,6 +14,7 @@ export class ButtonAddFarm extends Button{
     public visible:boolean;
 
     private _text:TextBlock;
+    private _costText:TextBlock;
 
     constructor(name:string, guiVertPosition:number, upgradeSection:UpgradeSection, farmState:FarmState, gui:GUIPlay, nextButton:string | null) {
         super(name);
@@ -30,15 +33,22 @@ export class ButtonAddFarm extends Button{
         this.isVisible = true;
 
         this._text = new TextBlock('AddFarm', 'Add Farm');
-
         this._text.fontFamily = GUIFONT1;
         this._text.color = 'white';
-
         this.addControl(this._text);
+
+        this._costText = new TextBlock('cost', `Cost: ${farmCost}g`);
+        this._costText.fontFamily = GUIFONT1;
+        this._costText.color = 'white';
+        this._costText.top = 20;
+
+        this.addControl(this._costText);
 
         this.onPointerDownObservable.add(() =>
             {
                 if (gui.totalGold > farmCost) {
+
+                    //GUI
                     //hide this button
                     this.isVisible = false;
                     
@@ -52,7 +62,6 @@ export class ButtonAddFarm extends Button{
                     upgradeSection.instruction = `next Uprade allows ${farmState.farmersNextMax} total farmers on this land`;
                     upgradeSection.textBlockUpgradeInstruction.text = upgradeSection.instruction;
 
-                    
                     //show the Section
                     upgradeSection.wrapperUpgradeContainer.isVisible = true;
                     
@@ -61,27 +70,18 @@ export class ButtonAddFarm extends Button{
                     const searchedButton = gui.playGUIWrapperFarmUpgrade.getChildByName(nextButton) as ButtonAddFarm;
                     searchedButton.isVisible = true;
                     }
+
+                    //SCENE
+                    //move the farm into view
+                    const farmLand = gui.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
+                    farmLand.position.y = .5;
+                    console.log(farmLand);
+
+
                 }
             }
             
         )
     }
 
-
- 
-    // public makeEnabled() {
-    //     if(this.available) {
-    //         this.isEnabled = true;
-    //     } else {
-    //         this.isEnabled = false;
-    //     }
-    // }
-
-    // public makeVisible() {
-    //     if (this.visible) {
-    //         this.isVisible = true;
-    //     } else {
-    //         this.isVisible = false;
-    //     }
-    // } 
 }
