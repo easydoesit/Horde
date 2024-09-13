@@ -46,12 +46,10 @@ export class GUIPlay {
     private _playGUIWrapperBottom:Rectangle;
     private _clickerBtn:Button;
 
-    private _playGUIWrapperUpgrade:Rectangle;
-    private _closeUpgrades:Button;
     private _wheatUpgrade:UpgradeSection;
  
-    public playGUIWrapperFarmUpgrade:Rectangle;
-    private _closeLandUpgrades:Button;
+    public GUIWrapperFarmUpgrade:Rectangle;
+    private _closeFarmUpgrades:Button;
     public farmersMaxTextBox:TextBlock;
     private _farmUpgrade01:UpgradeSection;
     private _farmUpgrade02:UpgradeSection;
@@ -62,7 +60,10 @@ export class GUIPlay {
     private _addFarmUpgradeButton03:ButtonAddFarm;
     private _addFarmUpgradeButton04:ButtonAddFarm;
     private _addFarmButtons:ButtonAddFarm[];
-    
+
+    public GUIWrapperBlackSmithUpgrade:Rectangle;
+    private _closeBlackSmithUpgrades:Button;
+
     constructor(scene:PlayMode) {
         this.scene = scene;
         //game Start Stats
@@ -152,23 +153,6 @@ export class GUIPlay {
         this._textBlockGold.color = 'white';
         this._playGUIWrapperTop.addControl(this._textBlockGold);
 
-        // this._openUpgrades = Button.CreateSimpleButton('openUpgrades', 'Upgrades');
-        // this._openUpgrades.fontFamily =GUIFONT1;
-        // this._openUpgrades.left = -600;
-        // this._openUpgrades.width = .15;
-        // this._openUpgrades.height = .75;
-        // this._openUpgrades.background = 'red';
-        // this._openUpgrades.color= 'white';
-        // this._playGUIWrapperTop.addControl(this._openUpgrades);
-
-        // this._openUpgrades.onPointerDownObservable.add(() => {
-            
-        //     this.showUpgrades(this._playGUIWrapperUpgrade);
-        //     this._openUpgrades.isVisible = false;
-        
-        // });
-        
-
          //Bottom
         //playGUIBottom
         this._playGUIWrapperBottom = new Rectangle('playGUIWrapperBottom');
@@ -196,59 +180,30 @@ export class GUIPlay {
         
         });
 
-        ///Upgrade
-        //playGUIUpgrade
-        // this._playGUIWrapperUpgrade = new Rectangle('playGUIWrapperUpgrade');
-        // this._playGUIWrapperUpgrade.width = 0.5;
-        // this._playGUIWrapperUpgrade.height= 1;
-        // this._playGUIWrapperUpgrade.thickness = 1;
-        // this._playGUIWrapperUpgrade.background = 'white';
-        // this._gameGUI.addControl(this._playGUIWrapperUpgrade);
-
-        // this._playGUIWrapperUpgrade.isVisible = false;
-
-        // this._closeUpgrades = Button.CreateSimpleButton('closeUpgrades', 'close');
-        // this._closeUpgrades.fontFamily = GUIFONT1;
-        // this._closeUpgrades.left = 430;
-        // this._closeUpgrades.top = -430;
-        // this._closeUpgrades.width = .075;
-        // this._closeUpgrades.height = .075;
-        // this._closeUpgrades.background = 'red';
-        // this._closeUpgrades.color= 'white';
-        // this._playGUIWrapperUpgrade.addControl(this._closeUpgrades);
-
-        // this._closeUpgrades.onPointerDownObservable.add(() => {
-            
-        //     this._openUpgrades.isVisible = true;
-        //     this.hideUpgrades(this._playGUIWrapperUpgrade);
-            
-        
-        // });
-
         //landUpgrades
         //this is the GUI that Appears whn you click on the Land to upgrade
-        this.playGUIWrapperFarmUpgrade = new Rectangle('playGUIWrapperUpgrade');
-        this.playGUIWrapperFarmUpgrade.width = 0.5;
-        this.playGUIWrapperFarmUpgrade.height= 1;
-        this.playGUIWrapperFarmUpgrade.thickness = 1;
-        this.playGUIWrapperFarmUpgrade.background = 'brown';
-        this._gameGUI.addControl(this.playGUIWrapperFarmUpgrade);
+        this.GUIWrapperFarmUpgrade = new Rectangle('playGUIWrapperUpgrade');
+        this.GUIWrapperFarmUpgrade.width = 0.5;
+        this.GUIWrapperFarmUpgrade.height= 1;
+        this.GUIWrapperFarmUpgrade.thickness = 1;
+        this.GUIWrapperFarmUpgrade.background = 'brown';
+        this._gameGUI.addControl(this.GUIWrapperFarmUpgrade);
         //hide this Wrapper to start
-        this.playGUIWrapperFarmUpgrade.isVisible = false;
+        this.GUIWrapperFarmUpgrade.isVisible = false;
         
-        this._closeLandUpgrades = Button.CreateSimpleButton('closeUpgrades', 'close');
-        this._closeLandUpgrades.fontFamily = GUIFONT1;
-        this._closeLandUpgrades.left = 430;
-        this._closeLandUpgrades.top = -430;
-        this._closeLandUpgrades.width = .075;
-        this._closeLandUpgrades.height = .075;
-        this._closeLandUpgrades.background = 'red';
-        this._closeLandUpgrades.color= 'white';
-        this.playGUIWrapperFarmUpgrade.addControl(this._closeLandUpgrades);
+        this._closeFarmUpgrades = Button.CreateSimpleButton('closeUpgrades', 'close');
+        this._closeFarmUpgrades.fontFamily = GUIFONT1;
+        this._closeFarmUpgrades.left = 430;
+        this._closeFarmUpgrades.top = -430;
+        this._closeFarmUpgrades.width = .075;
+        this._closeFarmUpgrades.height = .075;
+        this._closeFarmUpgrades.background = 'red';
+        this._closeFarmUpgrades.color= 'white';
+        this.GUIWrapperFarmUpgrade.addControl(this._closeFarmUpgrades);
 
-        this._closeLandUpgrades.onPointerDownObservable.add(() => {
+        this._closeFarmUpgrades.onPointerDownObservable.add(() => {
             
-            this.hideUpgrades(this.playGUIWrapperFarmUpgrade);
+            this.hideUpgrades(this.GUIWrapperFarmUpgrade);
         
         });
 
@@ -257,21 +212,21 @@ export class GUIPlay {
         this.farmersMaxTextBox.top = -430;
         this.farmersMaxTextBox.width = .3;
         this.farmersMaxTextBox.color= 'white';
-        this.playGUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
+        this.GUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
 
          //this creates the wheat Upgrade section on the GUI
-         this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this.playGUIWrapperFarmUpgrade, -320, this, this.scene, () => this._wheatValueChange());
+         this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this.GUIWrapperFarmUpgrade, -320, this, this.scene, () => this._wheatValueChange());
 
         //this creates the farm Upgrade section on the GUI
-        this._farmUpgrade01 = new UpgradeSection('farmUpgrade01', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farm01, this._farmUpgrade01));
+        this._farmUpgrade01 = new UpgradeSection('farmUpgrade01', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farm01, this._farmUpgrade01));
         
-        this._farmUpgrade02 = new UpgradeSection('farmUpgrade02', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farm02, this._farmUpgrade02));
+        this._farmUpgrade02 = new UpgradeSection('farmUpgrade02', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farm02, this._farmUpgrade02));
         this._farmUpgrade02.wrapperUpgradeContainer.isVisible = false;
         
-        this._farmUpgrade03 = new UpgradeSection('farmUpgrade03', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farm03, this._farmUpgrade03));
+        this._farmUpgrade03 = new UpgradeSection('farmUpgrade03', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farm03, this._farmUpgrade03));
         this._farmUpgrade03.wrapperUpgradeContainer.isVisible = false;
 
-        this._farmUpgrade04 = new UpgradeSection('farmUpgrade04', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 160, this, this.scene, () => this._farmUpGradeChange(this.farm04, this._farmUpgrade04));
+        this._farmUpgrade04 = new UpgradeSection('farmUpgrade04', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 160, this, this.scene, () => this._farmUpGradeChange(this.farm04, this._farmUpgrade04));
         this._farmUpgrade04.wrapperUpgradeContainer.isVisible = false;
         this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade02, this._farmUpgrade03, this._farmUpgrade04);
         
@@ -279,19 +234,48 @@ export class GUIPlay {
         this._addFarmButtons =[];
 
         this._addFarmUpgradeButton02 = new ButtonAddFarm('addFarmUpgrade_02', -80, this._farmUpgrade02, this.farm02, this, 'addFarmUpgrade_03' );
-        this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton02);
+        this.GUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton02);
 
         this._addFarmUpgradeButton03 = new ButtonAddFarm('addFarmUpgrade_03', 40, this._farmUpgrade03, this.farm03, this, 'addFarmUpgrade_04');
         this._addFarmUpgradeButton03.isEnabled = false;
         this._addFarmUpgradeButton03.isVisible = false;
-        this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton03);
+        this.GUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton03);
 
         this._addFarmUpgradeButton04 = new ButtonAddFarm('addFarmUpgrade_04', 160,this._farmUpgrade04, this.farm04, this, null );
         this._addFarmUpgradeButton04.isEnabled = false;
         this._addFarmUpgradeButton04.isVisible = false;
-        this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton04);
+        this.GUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton04);
 
         this._addFarmButtons.push(this._addFarmUpgradeButton02, this._addFarmUpgradeButton03, this._addFarmUpgradeButton04);
+
+        //blackSmith Upgrades
+        // //this is the GUI that Appears whn you click on the Land to upgrade
+        // this.GUIWrapperBlackSmithUpgrade = new Rectangle('GUIWrapperBlackSmithUpgrade');
+        // this.GUIWrapperBlackSmithUpgrade.width = 0.5;
+        // this.GUIWrapperBlackSmithUpgrade.height= 1;
+        // this.GUIWrapperBlackSmithUpgrade.thickness = 1;
+        // this.GUIWrapperBlackSmithUpgrade.background = 'brown';
+        // this._gameGUI.addControl(this.GUIWrapperBlackSmithUpgrade);
+        // //hide this Wrapper to start
+        // this.GUIWrapperBlackSmithUpgrade.isVisible = false;
+        
+        // this._closeBlackSmithUpgrades = Button.CreateSimpleButton('closeUpgrades', 'close');
+        // this._closeBlackSmithUpgrades.fontFamily = GUIFONT1;
+        // this._closeBlackSmithUpgrades.left = 430;
+        // this._closeBlackSmithUpgrades.top = -430;
+        // this._closeBlackSmithUpgrades.width = .075;
+        // this._closeBlackSmithUpgrades.height = .075;
+        // this._closeBlackSmithUpgrades.background = 'red';
+        // this._closeBlackSmithUpgrades.color= 'white';
+        // this.GUIWrapperFarmUpgrade.addControl(this._closeBlackSmithUpgrades);
+
+        // this._closeBlackSmithUpgrades.onPointerDownObservable.add(() => {
+            
+        //     this.hideUpgrades(this.GUIWrapperBlackSmithUpgrade);
+        
+        // });
+
+
 
         //GAMELOOP//
         this.scene.onBeforeRenderObservable.add(() => {

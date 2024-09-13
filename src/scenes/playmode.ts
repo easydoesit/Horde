@@ -10,6 +10,7 @@ import { Hill } from "../models_structures/hill";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
 import { FarmLand } from "../models_structures/farmLand";
 import { FarmHouse } from "../models_structures/farmHouse";
+import { Castle01 } from "../models_structures/castle";
 
 export class PlayMode extends Scene {
     private _app:App;
@@ -20,6 +21,9 @@ export class PlayMode extends Scene {
 
     //gamepieces 
     private _hill:Hill;
+
+    public castle01:Castle01;
+
     //interacative
     public farmLand01:FarmLand;
     public farmLand02:FarmLand;
@@ -56,6 +60,23 @@ export class PlayMode extends Scene {
         
         //load the hill - required in all scenes
         this._hill = new Hill(this);
+
+        //load the starter Castle and position on hill
+        this.castle01 = new Castle01(this);
+        this.castle01.position = new Vector3(-.6, 6.5, -.2);
+
+        // //interact with the farmLand
+        // this.onPointerDown = function castRayCastle() {
+        //     const ray = this.createPickingRay(this.pointerX, this.pointerY, Matrix.Identity(), this.mainCamera);
+
+        //     const hit = this.pickWithRay(ray);
+
+        //     if (hit.pickedMesh === this.castle01.model.allMeshes[0]) {
+        //         console.log('CastleClicked');
+        //         //this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
+        //     }
+        // }
+
         //load the entry level farms
         this.farmLand01 = new FarmLand('FarmLand01', this, new Vector3(-10,1.25,-4));
         this.farmLand01.position = new Vector3(0,.5,-4);
@@ -73,8 +94,11 @@ export class PlayMode extends Scene {
         //load all models but position them off screen for faster loading times.
         this.farmHouse = new FarmHouse('FarmHouseBase',this);
         this.farmHouse.position = new Vector3(0,-10,0);
-        
-        //interact with the farmLand
+
+        //load the background
+        const background = new PlainsBackground(this);
+
+        //interact with the scene
         this.onPointerDown = function castRay() {
             const ray = this.createPickingRay(this.pointerX, this.pointerY, Matrix.Identity(), this.mainCamera);
 
@@ -82,13 +106,14 @@ export class PlayMode extends Scene {
 
             if (hit.pickedMesh === this.farmLand01.model.allMeshes[0] || hit.pickedMesh === this.farmLand02.model.allMeshes[0] ) {
                 console.log('FarmClicked');
-                this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
+                this.gui.showUpgrades(this.gui.GUIWrapperFarmUpgrade);
+            }
+
+            if (hit.pickedMesh === this.castle01.model.allMeshes[0]) {
+                console.log('CastleClicked');
+                //this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
             }
         }
-
-
-        //load the background
-        const background = new PlainsBackground(this);
 
         //--SCENE FINISHED LOADING--
         

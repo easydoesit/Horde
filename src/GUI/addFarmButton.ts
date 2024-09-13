@@ -67,7 +67,7 @@ export class ButtonAddFarm extends Button{
                     
                     if(nextButton) {
                     //reveal the next button
-                    const searchedButton = gui.playGUIWrapperFarmUpgrade.getChildByName(nextButton) as ButtonAddFarm;
+                    const searchedButton = gui.GUIWrapperFarmUpgrade.getChildByName(nextButton) as ButtonAddFarm;
                     searchedButton.isVisible = true;
                     }
 
