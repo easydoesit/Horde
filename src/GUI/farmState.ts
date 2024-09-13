@@ -29,7 +29,6 @@ export class FarmState {
     }
 
     public changeState() {
-        console.log('changeStateCalled');
         this.upgradeLevel += 1;
         this.farmersMax = Math.round(farmersMax(this.upgradeLevel));
         this.farmersNextMax = this._checkNextUpgrade();

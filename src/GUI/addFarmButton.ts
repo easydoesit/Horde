@@ -18,7 +18,7 @@ export class ButtonAddFarm extends Button{
 
     constructor(name:string, guiVertPosition:number, upgradeSection:UpgradeSection, farmState:FarmState, gui:GUIPlay, nextButton:string | null) {
         super(name);
-        console.log(farmState);
+
         this._guiVertPosition = guiVertPosition;
         this.available = false;
         this.visible = false;
@@ -75,7 +75,7 @@ export class ButtonAddFarm extends Button{
                     //move the farm into view
                     const farmLand = gui.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
                     farmLand.position.y = .5;
-                    console.log(farmLand);
+                 
 
 
                 }

@@ -383,7 +383,7 @@ export class GUIPlay {
     }
     //wheat Callback
     private _wheatValueChange() {
-        console.log("wheatValueChange CAlled");
+       
         if (this.wheatValue < wheatUpgradeValue * wheatUpgradesMax) {
             if (this.totalGold > this._costOfWheat) {
             
@@ -439,7 +439,7 @@ export class GUIPlay {
 
         //upgrade the State
         farmState.changeState();
-        console.log(farmState.farmersNextMax);
+      
         //apply cost Changes
         this.farmersMax = this.finalFarmerMaxMath();
         this.farmersMaxTextBox.text = `Max Famers: ${this.farmersMax}`;
