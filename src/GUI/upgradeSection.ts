@@ -13,7 +13,7 @@ export class UpgradeSection {
     private _upgradeBtnCostText:TextBlock;
     private _upgradeBar:Rectangle;
 
-    private _name:string;
+    public name:string;
     public instruction:string;
     private _maxNumOfValues:number;
     private _higherContainer: Rectangle | AdvancedDynamicTexture;
@@ -25,7 +25,7 @@ export class UpgradeSection {
     public cost:number;
 
     constructor(name:string, instruction:string, initialCost:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any) {
-        this._name = name;
+        this.name = name;
         this.instruction = instruction;
         this._maxNumOfValues = numberOfValues;
         this._higherContainer = higherContainer;
@@ -44,7 +44,7 @@ export class UpgradeSection {
         this.wrapperUpgradeContainer.top = this._guiVertPosition;
         this._higherContainer.addControl(this.wrapperUpgradeContainer);
 
-        this._textBlockUpgradeTitle = new TextBlock(this._name, this._name);
+        this._textBlockUpgradeTitle = new TextBlock(this.name, this.name);
         this._textBlockUpgradeTitle.fontFamily = GUIFONT1;
         this._textBlockUpgradeTitle.color = 'white';
         this._textBlockUpgradeTitle.top = -35;
@@ -91,7 +91,7 @@ export class UpgradeSection {
             } 
         });
 
-        this._upgradeBtnCostText = new TextBlock(`${this._name}_cost`, `${this.cost}g`);
+        this._upgradeBtnCostText = new TextBlock(`${this.name}_cost`, `${this.cost}g`);
         this._upgradeBtnCostText.fontFamily = GUIFONT1;
         this._upgradeBtnCostText.top = 20;
         this._upgradeBtn.addControl(this._upgradeBtnCostText);

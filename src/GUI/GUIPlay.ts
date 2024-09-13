@@ -233,7 +233,7 @@ export class GUIPlay {
         this.playGUIWrapperFarmUpgrade.width = 0.5;
         this.playGUIWrapperFarmUpgrade.height= 1;
         this.playGUIWrapperFarmUpgrade.thickness = 1;
-        //this.playGUIWrapperFarmUpgrade.background = 'brown';
+        this.playGUIWrapperFarmUpgrade.background = 'brown';
         this._gameGUI.addControl(this.playGUIWrapperFarmUpgrade);
         //hide this Wrapper to start
         this.playGUIWrapperFarmUpgrade.isVisible = false;
@@ -262,15 +262,15 @@ export class GUIPlay {
         this.playGUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
 
         //this creates the farm Upgrade section on the GUI
-        this._farmUpgrade01 = new UpgradeSection('FarmLand 1 Upgrade', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -320, this, this.scene, () => this._farmUpGradeChange(this.farm01));
+        this._farmUpgrade01 = new UpgradeSection('farmUpgrade01', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -320, this, this.scene, () => this._farmUpGradeChange(this.farm01, this._farmUpgrade01));
         
-        this._farmUpgrade02 = new UpgradeSection('FarmLand 2 Upgrade', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farm02));
+        this._farmUpgrade02 = new UpgradeSection('farmUpgrade02', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farm02, this._farmUpgrade02));
         this._farmUpgrade02.wrapperUpgradeContainer.isVisible = false;
         
-        this._farmUpgrade03 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farm03));
+        this._farmUpgrade03 = new UpgradeSection('farmUpgrade03', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farm03, this._farmUpgrade03));
         this._farmUpgrade03.wrapperUpgradeContainer.isVisible = false;
 
-        this._farmUpgrade04 = new UpgradeSection('FarmLand 3 Upgrade', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farm04));
+        this._farmUpgrade04 = new UpgradeSection('farmUpgrade04', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farm04, this._farmUpgrade04));
         this._farmUpgrade04.wrapperUpgradeContainer.isVisible = false;
         this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade02, this._farmUpgrade03, this._farmUpgrade04);
         
@@ -416,8 +416,8 @@ export class GUIPlay {
     }
     
     //farmcallback
-    private _farmUpGradeChange(farmState:FarmState, ) {
-
+    private _farmUpGradeChange(farmState:FarmState, farmSection:UpgradeSection) {
+        
         switch(farmState.upgradeLevel) {
             case 1: {
             
@@ -438,12 +438,13 @@ export class GUIPlay {
 
         //upgrade the State
         farmState.changeState();
-
+        console.log(farmState.farmersNextMax);
         //apply cost Changes
         this.farmersMax = this.finalFarmerMaxMath();
         this.farmersMaxTextBox.text = `Max Famers: ${this.farmersMax}`;
-        this._farmUpgrade01.cost = farmState.farmUpgradeCost;
-        
+        farmSection.cost = farmState.farmUpgradeCost;
+        farmSection.instruction = `next Uprade allows ${farmState.farmersNextMax} total farmers on this land`
+        farmSection.textBlockUpgradeInstruction.text = farmSection.instruction;
     }
 
     //GUI functions

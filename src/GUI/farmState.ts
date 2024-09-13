@@ -1,5 +1,6 @@
 import { farmUpgradeCost, farmersMax, farmUpgradeMax } from "../utils/MATHCONSTANTS";
 import { FarmLand } from "../models_structures/farmLand";
+import { UpgradeSection } from "./upgradeSection";
 
 export class FarmState {
     public name:string;
