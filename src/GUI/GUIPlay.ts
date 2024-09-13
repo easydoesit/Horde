@@ -152,21 +152,21 @@ export class GUIPlay {
         this._textBlockGold.color = 'white';
         this._playGUIWrapperTop.addControl(this._textBlockGold);
 
-        this._openUpgrades = Button.CreateSimpleButton('openUpgrades', 'Upgrades');
-        this._openUpgrades.fontFamily =GUIFONT1;
-        this._openUpgrades.left = -600;
-        this._openUpgrades.width = .15;
-        this._openUpgrades.height = .75;
-        this._openUpgrades.background = 'red';
-        this._openUpgrades.color= 'white';
-        this._playGUIWrapperTop.addControl(this._openUpgrades);
+        // this._openUpgrades = Button.CreateSimpleButton('openUpgrades', 'Upgrades');
+        // this._openUpgrades.fontFamily =GUIFONT1;
+        // this._openUpgrades.left = -600;
+        // this._openUpgrades.width = .15;
+        // this._openUpgrades.height = .75;
+        // this._openUpgrades.background = 'red';
+        // this._openUpgrades.color= 'white';
+        // this._playGUIWrapperTop.addControl(this._openUpgrades);
 
-        this._openUpgrades.onPointerDownObservable.add(() => {
+        // this._openUpgrades.onPointerDownObservable.add(() => {
             
-            this.showUpgrades(this._playGUIWrapperUpgrade);
-            this._openUpgrades.isVisible = false;
+        //     this.showUpgrades(this._playGUIWrapperUpgrade);
+        //     this._openUpgrades.isVisible = false;
         
-        });
+        // });
         
 
          //Bottom
@@ -198,34 +198,32 @@ export class GUIPlay {
 
         ///Upgrade
         //playGUIUpgrade
-        this._playGUIWrapperUpgrade = new Rectangle('playGUIWrapperUpgrade');
-        this._playGUIWrapperUpgrade.width = 0.5;
-        this._playGUIWrapperUpgrade.height= 1;
-        this._playGUIWrapperUpgrade.thickness = 1;
-        this._playGUIWrapperUpgrade.background = 'white';
-        this._gameGUI.addControl(this._playGUIWrapperUpgrade);
+        // this._playGUIWrapperUpgrade = new Rectangle('playGUIWrapperUpgrade');
+        // this._playGUIWrapperUpgrade.width = 0.5;
+        // this._playGUIWrapperUpgrade.height= 1;
+        // this._playGUIWrapperUpgrade.thickness = 1;
+        // this._playGUIWrapperUpgrade.background = 'white';
+        // this._gameGUI.addControl(this._playGUIWrapperUpgrade);
 
-        this._playGUIWrapperUpgrade.isVisible = false;
+        // this._playGUIWrapperUpgrade.isVisible = false;
 
-        this._closeUpgrades = Button.CreateSimpleButton('closeUpgrades', 'close');
-        this._closeUpgrades.fontFamily = GUIFONT1;
-        this._closeUpgrades.left = 430;
-        this._closeUpgrades.top = -430;
-        this._closeUpgrades.width = .075;
-        this._closeUpgrades.height = .075;
-        this._closeUpgrades.background = 'red';
-        this._closeUpgrades.color= 'white';
-        this._playGUIWrapperUpgrade.addControl(this._closeUpgrades);
+        // this._closeUpgrades = Button.CreateSimpleButton('closeUpgrades', 'close');
+        // this._closeUpgrades.fontFamily = GUIFONT1;
+        // this._closeUpgrades.left = 430;
+        // this._closeUpgrades.top = -430;
+        // this._closeUpgrades.width = .075;
+        // this._closeUpgrades.height = .075;
+        // this._closeUpgrades.background = 'red';
+        // this._closeUpgrades.color= 'white';
+        // this._playGUIWrapperUpgrade.addControl(this._closeUpgrades);
 
-        this._closeUpgrades.onPointerDownObservable.add(() => {
+        // this._closeUpgrades.onPointerDownObservable.add(() => {
             
-            this._openUpgrades.isVisible = true;
-            this.hideUpgrades(this._playGUIWrapperUpgrade);
+        //     this._openUpgrades.isVisible = true;
+        //     this.hideUpgrades(this._playGUIWrapperUpgrade);
             
         
-        });
-        //this creates the wheat Upgrade section on the GUI
-        this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this._playGUIWrapperUpgrade, -320, this, this.scene, () => this._wheatValueChange());
+        // });
 
         //landUpgrades
         //this is the GUI that Appears whn you click on the Land to upgrade
@@ -261,31 +259,34 @@ export class GUIPlay {
         this.farmersMaxTextBox.color= 'white';
         this.playGUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
 
+         //this creates the wheat Upgrade section on the GUI
+         this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, wheatUpgradesMax, this.playGUIWrapperFarmUpgrade, -320, this, this.scene, () => this._wheatValueChange());
+
         //this creates the farm Upgrade section on the GUI
-        this._farmUpgrade01 = new UpgradeSection('farmUpgrade01', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -320, this, this.scene, () => this._farmUpGradeChange(this.farm01, this._farmUpgrade01));
+        this._farmUpgrade01 = new UpgradeSection('farmUpgrade01', `next Uprade allows ${this.farm01.farmersNextMax} total farmers on this land`, this.farm01.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farm01, this._farmUpgrade01));
         
-        this._farmUpgrade02 = new UpgradeSection('farmUpgrade02', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farm02, this._farmUpgrade02));
+        this._farmUpgrade02 = new UpgradeSection('farmUpgrade02', `next Uprade allows ${this.farm02.farmersNextMax} total farmers on this land`, this.farm02.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farm02, this._farmUpgrade02));
         this._farmUpgrade02.wrapperUpgradeContainer.isVisible = false;
         
-        this._farmUpgrade03 = new UpgradeSection('farmUpgrade03', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farm03, this._farmUpgrade03));
+        this._farmUpgrade03 = new UpgradeSection('farmUpgrade03', `next Uprade allows ${this.farm03.farmersNextMax} total farmers on this land`, this.farm03.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farm03, this._farmUpgrade03));
         this._farmUpgrade03.wrapperUpgradeContainer.isVisible = false;
 
-        this._farmUpgrade04 = new UpgradeSection('farmUpgrade04', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farm04, this._farmUpgrade04));
+        this._farmUpgrade04 = new UpgradeSection('farmUpgrade04', `next Uprade allows ${this.farm04.farmersNextMax} total farmers on this land`, this.farm04.farmUpgradeCost, farmUpgradeMax, this.playGUIWrapperFarmUpgrade, 160, this, this.scene, () => this._farmUpGradeChange(this.farm04, this._farmUpgrade04));
         this._farmUpgrade04.wrapperUpgradeContainer.isVisible = false;
         this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade02, this._farmUpgrade03, this._farmUpgrade04);
         
         //ADDFarm Buttons.
         this._addFarmButtons =[];
 
-        this._addFarmUpgradeButton02 = new ButtonAddFarm('addFarmUpgrade_02', -200, this._farmUpgrade02, this.farm02, this, 'addFarmUpgrade_03' );
+        this._addFarmUpgradeButton02 = new ButtonAddFarm('addFarmUpgrade_02', -80, this._farmUpgrade02, this.farm02, this, 'addFarmUpgrade_03' );
         this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton02);
 
-        this._addFarmUpgradeButton03 = new ButtonAddFarm('addFarmUpgrade_03', -80, this._farmUpgrade03, this.farm03, this, 'addFarmUpgrade_04');
+        this._addFarmUpgradeButton03 = new ButtonAddFarm('addFarmUpgrade_03', 40, this._farmUpgrade03, this.farm03, this, 'addFarmUpgrade_04');
         this._addFarmUpgradeButton03.isEnabled = false;
         this._addFarmUpgradeButton03.isVisible = false;
         this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton03);
 
-        this._addFarmUpgradeButton04 = new ButtonAddFarm('addFarmUpgrade_04', 40,this._farmUpgrade04, this.farm04, this, null );
+        this._addFarmUpgradeButton04 = new ButtonAddFarm('addFarmUpgrade_04', 160,this._farmUpgrade04, this.farm04, this, null );
         this._addFarmUpgradeButton04.isEnabled = false;
         this._addFarmUpgradeButton04.isVisible = false;
         this.playGUIWrapperFarmUpgrade.addControl(this._addFarmUpgradeButton04);
