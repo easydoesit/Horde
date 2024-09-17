@@ -10,28 +10,33 @@ export class UpgradeSection {
     public textBlockUpgradeInstruction:TextBlock;
     private _upgradeBarWrapper:Rectangle;
     private _upgradeBtn:Button;
-    private _upgradeBtnCostText:TextBlock;
+    private _upgradeBtnCostText01:TextBlock;
+    private _upgradeBtnCostText02:TextBlock;
     private _upgradeBar:Rectangle;
 
     public name:string;
     public instruction:string;
-    private _maxNumOfValues:number;
+    private _maxNumOfUpgrades:number;
     private _higherContainer: Rectangle | AdvancedDynamicTexture;
     private _gui:GUIPlay;
     private _scene:PlayMode;
     private _guiVertPosition:number;
     public upgradeAble:boolean;
     
-    public cost:number;
+    public goldCost:number;
+    public otherCost:[name:string, cost:number];
 
-    constructor(name:string, instruction:string, initialCost:number, numberOfValues:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any) {
+    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any) {
         this.name = name;
         this.instruction = instruction;
-        this._maxNumOfValues = numberOfValues;
+        this._maxNumOfUpgrades = maxNumberOfUpgrades;
         this._higherContainer = higherContainer;
         this._guiVertPosition = guiVertPosition;  
         this._gui = gui;
-        this.cost = initialCost;
+        this.goldCost = goldCost;
+        if (otherCost) {
+            this.otherCost = otherCost;
+        }
         this._scene = scene;
         this.upgradeAble = false;
 
@@ -68,7 +73,6 @@ export class UpgradeSection {
 
         this.wrapperUpgradeContainer.addControl(this._upgradeBtn);
         
-
         this._upgradeBtn.onPointerDownObservable.add(() => {
             //change the size of the upgrade bar
             const cleanString = this._cleanString(this._upgradeBar.width);
@@ -76,7 +80,7 @@ export class UpgradeSection {
             if (this.upgradeAble) {
                 this._upgradeBtn.isEnabled = true;
                 if (sizeAsFloat < 1) {
-                    const newSize = this.calcBarSegment(sizeAsFloat, this._maxNumOfValues);
+                    const newSize = this.calcBarSegment(sizeAsFloat, this._maxNumOfUpgrades);
                     console.log(newSize);
                     this._upgradeBar.width = newSize;
                     
@@ -91,11 +95,17 @@ export class UpgradeSection {
             } 
         });
 
-        this._upgradeBtnCostText = new TextBlock(`${this.name}_cost`, `${this.cost}g`);
-        this._upgradeBtnCostText.fontFamily = GUIFONT1;
-        this._upgradeBtnCostText.top = 20;
-        this._upgradeBtn.addControl(this._upgradeBtnCostText);
-        
+        this._upgradeBtnCostText01 = new TextBlock(`${this.name}_cost`, `${this.goldCost}g`);
+        this._upgradeBtnCostText01.fontFamily = GUIFONT1;
+        this._upgradeBtnCostText01.top = 20;
+        this._upgradeBtn.addControl(this._upgradeBtnCostText01);
+
+        if (this.otherCost) {
+            this._upgradeBtnCostText02 = new TextBlock(`otherCost`, `+ ${this.otherCost[1]} ${this.otherCost[0]}`);
+            this._upgradeBtnCostText02.fontFamily = GUIFONT1;
+            this._upgradeBtnCostText02.top = 40;
+            this._upgradeBtn.addControl(this._upgradeBtnCostText02);
+        }
 
         this._upgradeBarWrapper = new Rectangle('upgradeBarWrapper');
         this._upgradeBarWrapper.background = 'lightblue';
@@ -118,15 +128,18 @@ export class UpgradeSection {
         //GameLoop
         this._scene.onBeforeRenderObservable.add(() => {
             
-            this._upgradeBtnCostText.text = `${this.cost}g`;
+            this._upgradeBtnCostText01.text = `${this.goldCost}g`;
+            if(this.otherCost) {
+                this._upgradeBtnCostText02.text = `${this.otherCost[1]} ${this.otherCost[0]}`;
+            }
             this._makeButtonEnabled();
         })
 
     }
 
-    private calcBarSegment(currentSize:number, numberOfValues:number) {
+    private calcBarSegment(currentSize:number, maxNumberOfUpgrades:number) {
         console.log('called');    
-        const amountToAdd = 1 / this._maxNumOfValues;
+        const amountToAdd = 1 / this._maxNumOfUpgrades;
         
         const finalSize = currentSize + amountToAdd;
 

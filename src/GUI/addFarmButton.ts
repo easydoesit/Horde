@@ -5,7 +5,6 @@ import { FarmState } from "./farmState";
 import { GUIPlay } from "./GUIPlay";
 import { farmCost } from "../utils/MATHCONSTANTS";
 import { FarmLand } from "../models_structures/farmLand";
-import { Vector3 } from "@babylonjs/core";
 
 export class ButtonAddFarm extends Button{
     private _guiVertPosition:number;
@@ -51,6 +50,9 @@ export class ButtonAddFarm extends Button{
                     //GUI
                     //hide this button
                     this.isVisible = false;
+
+                    //hide this gui so we see the farm
+                    gui.GUIWrapperFarmUpgrade.isVisible = false;
                     
                     //upgrade the state
                     farmState.changeState();
@@ -58,10 +60,12 @@ export class ButtonAddFarm extends Button{
                     //apply the cost changes
                     gui.farmersMax = gui.finalFarmerMaxMath();
                     gui.farmersMaxTextBox.text = `Max Famers: ${gui.farmersMax}`
-                    upgradeSection.cost = farmState.farmUpgradeCost;
+                    
+                    //upgrade section info
+                    upgradeSection.goldCost = farmState.farmUpgradeCost;
                     upgradeSection.instruction = `next Uprade allows ${farmState.farmersNextMax} total farmers on this land`;
                     upgradeSection.textBlockUpgradeInstruction.text = upgradeSection.instruction;
-
+                    
                     //show the Section
                     upgradeSection.wrapperUpgradeContainer.isVisible = true;
                     
@@ -74,6 +78,7 @@ export class ButtonAddFarm extends Button{
                     //SCENE
                     //move the farm into view
                     const farmLand = gui.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
+                    console.log(farmLand);
                     farmLand.position.y = .5;
                  
 

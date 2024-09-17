@@ -7,7 +7,6 @@ export class FarmLand extends TransformNode {
 
     constructor(name:string, scene:PlayMode, farmHousePos:Vector3) {
         super(name, scene);
-        this.position = new Vector3(0,0,0);
         this.farmHousePos = farmHousePos;
 
         this.initialize();

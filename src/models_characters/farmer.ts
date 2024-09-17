@@ -20,7 +20,7 @@ export class Farmer extends TransformNode{
         this.model = await this.createFarmer();
         this.model.root.parent = this;
 
-        const path = await this._createAnimationPath();
+        const path = await this._createCastletoFarmAnimationPath();
 
     }
 
@@ -36,7 +36,7 @@ export class Farmer extends TransformNode{
         }
     }
 
-    private async _createAnimationPath():Promise<void> {
+    private async _createCastletoFarmAnimationPath():Promise<void> {
         //simple path
         const catmullRom = Curve3.CreateCatmullRomSpline(
             [
