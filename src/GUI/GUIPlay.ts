@@ -10,6 +10,7 @@ import { ButtonAddFarm } from "./addFarmButton";
 import { ButtonAddMine } from "./addMineButton";
 import { UpgradeWindow } from "./upgradeWindows";
 import { MineState } from "./mineState";
+import { Miner } from "../models_characters/miner";
 
 export class GUIPlay {
     //Math
@@ -419,6 +420,8 @@ export class GUIPlay {
         farmSection.goldCost = farmState.farmUpgradeCost;
         farmSection.instruction = `next Uprade allows ${farmState.farmersNextMax} total farmers on this land`
         farmSection.textBlockUpgradeInstruction.text = farmSection.instruction;
+
+
     }
 
     //mine
@@ -457,6 +460,9 @@ export class GUIPlay {
         this._mineUpgradeSection.goldCost = this.mineState.upgradeCostGold;
         this._mineUpgradeSection.otherCost[1] = this.mineState.upgradeCostFarmers;
 
+        //animate the Miners
+        this._makeMiner(1);
+
     }
 
     //GUI functions
@@ -476,5 +482,9 @@ export class GUIPlay {
         new Farmer(currentCount.toLocaleString(), this.scene, this);
 
     }
+    
+    private _makeMiner(currentCount:number){
+        new Miner(currentCount.toLocaleString(), this.scene, this);
+    } 
 
 }

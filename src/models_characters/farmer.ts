@@ -1,9 +1,10 @@
 import { AbstractMesh, TransformNode, Vector3, Scene, SceneLoader, Curve3, Mesh, LinesMesh, MeshBuilder, Path3D, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
+import { FarmHouse01Pos } from "../utils/CONSTANTS";
 
 export class Farmer extends TransformNode{
-    public model:{root:AbstractMesh, allMeshes:AbstractMesh[]}
+    public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
     private _gui:GUIPlay;
 
     constructor(name:string, scene:Scene, gui:GUIPlay) {
@@ -45,7 +46,7 @@ export class Farmer extends TransformNode{
                 new Vector3(-3.7859, 2.5797, -1.9741),
                 new Vector3(-4.064, 2.0743, 1.3783),
                 new Vector3(-4.9398, 1.318, -0.38271),
-                new Vector3(-5.9045, 0.667, 0.86373)
+                FarmHouse01Pos,
             ],
             3
         )
@@ -57,6 +58,7 @@ export class Farmer extends TransformNode{
         //transfrom the curves into a proper 3D path
         const farmersPath = new Path3D(catmullRom.getPoints());
         const farmersPathCurve = farmersPath.getCurve();
+        
         //create the animation
         const frameRate = 60;
         const pathFollowAnim = new Animation('farmerPosition', 'position',frameRate * 3 , Animation.ANIMATIONTYPE_VECTOR3)

@@ -1,4 +1,6 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
+import { FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos } from "../utils/CONSTANTS";
+
 
 //classes
 import { App } from "../app";
@@ -72,17 +74,17 @@ export class PlayMode extends Scene {
         this.castle01.position = new Vector3(-.6, 6.5, -.2);
 
         //load the entry level farms
-        this.farmLand01 = new FarmLand('FarmLand01', this, new Vector3(-10,1.25,-4));
+        this.farmLand01 = new FarmLand('FarmLand01', this, FarmHouse01Pos);
         this.farmLand01.position = new Vector3(0,.5,-4);
         
         //these start out of view
-        this.farmLand02 = new FarmLand('FarmLand02', this, new Vector3(-10,1.25,4));
+        this.farmLand02 = new FarmLand('FarmLand02', this, FarmHouse02Pos);
         this.farmLand02.position = new Vector3(0,-10,4);
 
-        this.farmLand03 = new FarmLand('FarmLand03', this, new Vector3(-10,1.25,-10));
+        this.farmLand03 = new FarmLand('FarmLand03', this, FarmHouse03Pos);
         this.farmLand03.position = new Vector3(0,-10,-12);
 
-        this.farmLand04 = new FarmLand('FarmLand04', this, new Vector3(-10,1.25,10));
+        this.farmLand04 = new FarmLand('FarmLand04', this, FarmHouse04Pos);
         this.farmLand04.position = new Vector3(0,-10,12);
 
         this.mine01 = new Mine01('Mine01', this);    
