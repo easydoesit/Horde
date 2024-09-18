@@ -1,17 +1,18 @@
 import { AbstractMesh, TransformNode, Vector3, Scene, SceneLoader, Curve3, Mesh, LinesMesh, MeshBuilder, Path3D, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
-import { FarmHouse01Pos } from "../utils/CONSTANTS";
+import { FarmHouse01Pos, CastleToFarmPath } from "../utils/CONSTANTS";
+import { createCurve, createAnimationPath, showPath} from "../utils/animations";
 
 export class Farmer extends TransformNode{
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
     private _gui:GUIPlay;
+    private _animations:Animation[];
 
     constructor(name:string, scene:Scene, gui:GUIPlay) {
         super(`farmer_${name}`, scene);
-        //the start position also used in animation
-        this.position = new Vector3(-2.8552, 6.0224, -0.29624);
         this._gui = gui;
+        this._animations = [];
 
         this.initialize();
 
@@ -21,7 +22,14 @@ export class Farmer extends TransformNode{
         this.model = await this.createFarmer();
         this.model.root.parent = this;
 
-        const path = await this._createCastletoFarmAnimationPath();
+        let path:Vector3[];
+        let curve:Curve3;
+        let name:string;
+
+        curve = await createCurve(CastleToFarmPath);
+        name = `pathOf${this.name}`;
+        path = createAnimationPath(curve);
+        this._makeAnimation(path,curve);
 
     }
 
@@ -37,55 +45,34 @@ export class Farmer extends TransformNode{
         }
     }
 
-    private async _createCastletoFarmAnimationPath():Promise<void> {
-        //simple path
-        const catmullRom = Curve3.CreateCatmullRomSpline(
-            [
-                this.position,
-                new Vector3(-2.3188, 5.3886, 0.96662),
-                new Vector3(-3.7859, 2.5797, -1.9741),
-                new Vector3(-4.064, 2.0743, 1.3783),
-                new Vector3(-4.9398, 1.318, -0.38271),
-                FarmHouse01Pos,
-            ],
-            3
-        )
-        //DEBUG visualize the path
-        if (DEBUGMODE) {
-        const visualFarmerPath = MeshBuilder.CreateLines('lines', {points:catmullRom.getPoints()})
-        }
+    private _makeAnimation(path:Vector3[], curve:Curve3) {
+        let debugPath:LinesMesh;
 
-        //transfrom the curves into a proper 3D path
-        const farmersPath = new Path3D(catmullRom.getPoints());
-        const farmersPathCurve = farmersPath.getCurve();
-        
-        //create the animation
+        if (DEBUGMODE) {
+            debugPath = showPath(curve);
+        }
         const frameRate = 60;
         const pathFollowAnim = new Animation('farmerPosition', 'position',frameRate * 3 , Animation.ANIMATIONTYPE_VECTOR3)
-        const pathFollowKeys = []
+        const pathFollowKeys = [];
 
-        for (let i = 0; i < farmersPathCurve.length; i++) {
-            const position = farmersPathCurve[i];
+        for (let i = 0; i < path.length; i++) {
+            const position = path[i];
             
             pathFollowKeys.push({frame: i * frameRate, value:position})
         }
-
-        pathFollowAnim.setKeys(pathFollowKeys);
     
+        pathFollowAnim.setKeys(pathFollowKeys);
+     
         this.animations.push(pathFollowAnim);
 
-        this._scene.beginAnimation(this, 0, frameRate*farmersPathCurve.length, false, 1, () =>{
+        this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
             
-            this._gui.farmerCount = this._gui.increaseFarmerCount();
-            this._gui.runningFarmers -= 1;
-
-            //up the Goldpersecond
-            this._gui.totalGoldPerSecond = Math.round(this._gui.increaseGoldPerSecond()*10000)/10000;
-
+            if(DEBUGMODE) {
+                debugPath.dispose();
+            }
         });
+
+
     }
-
-
-
 }

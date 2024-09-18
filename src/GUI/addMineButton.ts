@@ -4,8 +4,9 @@ import { UpgradeSection } from "./upgradeSection";
 import { MineState } from "./mineState";
 import { GUIPlay } from "./GUIPlay";
 import { mineUpgradeCostFarmers, mineUpgradeCostGold, oreUpgradeValue } from "../utils/MATHCONSTANTS";
-import { Mine01 } from "../models_structures/mine01";
+import { Mine } from "../models_structures/mine";
 import { Vector3 } from "@babylonjs/core";
+import { MinePos } from "../utils/CONSTANTS";
 
 export class ButtonAddMine extends Button {
     private _guiVertPosition:number;
@@ -65,6 +66,28 @@ export class ButtonAddMine extends Button {
 
                 //hide the GUI so we see the mine appear
                 gui.GUIWrapperCastleUpgrade.isVisible = false;
+                
+                  //Scene
+                //move the mine Into View
+                const mine = gui.scene.getNodeByName('Mine') as Mine;
+                mine.position.y = MinePos.y;
+
+                //add the miners
+                let count = gui.mineState.upgradeCostFarmers;
+                console.log('number of Miners', count);
+
+                const createMiners = () => {
+                    count -= 1;
+
+                    gui.makeMiner(count, 0);
+
+                    if( count <= 1 ) {
+                        clearInterval(intervalId);
+                    }
+                }
+                
+                const intervalId = setInterval(createMiners, 250);
+
 
                 //apply the cost changes
                 gui.farmerCount = gui.farmerCount - this._costFarmers;
@@ -77,14 +100,6 @@ export class ButtonAddMine extends Button {
                 upgradeSection.goldCost = mineState.upgradeCostGold;
                 upgradeSection.otherCost[1] = mineState.upgradeCostFarmers;
                 console.log("cost of gold", mineState.upgradeCostGold);
-
-                //Scene
-                //move the mine Into View
-                const mine = gui.scene.getNodeByName('Mine01') as Mine01;
-                mine.position.y = 11.25
-                console.log(mine);
-                //mineposition
-                mine.setEnabled(true);
             
                 console.log(mine.getAbsolutePosition())
             }

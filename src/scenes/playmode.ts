@@ -1,5 +1,5 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
-import { FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos } from "../utils/CONSTANTS";
+import { FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, MinePos } from "../utils/CONSTANTS";
 
 
 //classes
@@ -13,8 +13,8 @@ import { PlainsBackground } from "../models_backgrounds/plains_background";
 import { FarmLand } from "../models_structures/farmLand";
 import { FarmHouse } from "../models_structures/farmHouse";
 import { Castle01 } from "../models_structures/castle";
-import { Mine01 } from "../models_structures/mine01";
-import { Mine02 } from "../models_structures/mine02";
+import { Mine } from "../models_structures/mine";
+//import { Mine02 } from "../models_structures/mine02";
 
 export class PlayMode extends Scene {
     private _app:App;
@@ -34,8 +34,8 @@ export class PlayMode extends Scene {
     public farmLand03:FarmLand;
     public farmLand04:FarmLand;
     
-    public mine01:Mine01;
-    public mine02:Mine02;
+    public mine:Mine;
+    //public mine02:Mine02;
 
     //for cloning
     public farmHouse:FarmHouse;
@@ -66,7 +66,7 @@ export class PlayMode extends Scene {
         const mainLight = new DirectionalLight('mainLight', new Vector3(1,-1,1),this);
         mainLight.intensity = 2;
         
-        //load the hill - required in all scenes
+        //load the hill
         this._hill = new Hill(this);
 
         //load the starter Castle and position on hill
@@ -87,11 +87,8 @@ export class PlayMode extends Scene {
         this.farmLand04 = new FarmLand('FarmLand04', this, FarmHouse04Pos);
         this.farmLand04.position = new Vector3(0,-10,12);
 
-        this.mine01 = new Mine01('Mine01', this);    
-        this.mine01.position = new Vector3(-5,-10,1);
-
-        this.mine02 = new Mine02('Mine02', this);
-        this.mine02.position = new Vector3(-5, -10, 1);
+        this.mine = new Mine('Mine', this);    
+        this.mine.position = new Vector3(MinePos.x, MinePos.y - 10 , MinePos.z);
 
         //load all models but position them off screen for faster loading times.
         this.farmHouse = new FarmHouse('FarmHouseBase',this);
@@ -116,7 +113,9 @@ export class PlayMode extends Scene {
                 this.gui.showUpgrades(this.gui.GUIWrapperCastleUpgrade);
             }
 
-            if (hit.pickedMesh === this.mine01.model.allMeshes[0] || hit.pickedMesh === this.mine02.model.allMeshes[0] ) {
+
+
+            if (hit.pickedMesh === this.mine.clickBox.meshes.allMeshes[0]) {
                 console.log('Mine Clicked');
                 this.gui.showUpgrades(this.gui.wrapperMineUpgrade);
                 //this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
@@ -130,7 +129,6 @@ export class PlayMode extends Scene {
           this._app.gameState.state = this._gameState;
           //change the GUI
           engine.hideLoadingUI();
-          console.log(this.mine01.model);
 
     }
 

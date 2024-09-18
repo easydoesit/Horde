@@ -1,18 +1,28 @@
-import { AbstractMesh, TransformNode, Vector3, Scene, SceneLoader, Curve3, Mesh, LinesMesh, MeshBuilder, Path3D, Animation } from "@babylonjs/core";
+import { AbstractMesh, TransformNode, Vector3, SceneLoader, Curve3,LinesMesh, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 
-import { FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos } from "../utils/CONSTANTS";
+import { FarmToMinepath01, FarmToMinepath02,FarmToMinepath03,FarmToMinepath04 } from "../utils/CONSTANTS";
+
+import { createCurve, createAnimationPath, showPath} from "../utils/animations";
+import { PlayMode } from "../scenes/playmode";
 
 export class Miner extends TransformNode {
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
     private _gui:GUIPlay;
+    private _departFarm:number;
+    private _animations:Animation[];
+    public scene:PlayMode;
 
-    constructor(name:string, scene:Scene, gui:GUIPlay) {
+    constructor(name:string, scene:PlayMode, gui:GUIPlay, departFarm:number) {
         super(`miner_${name}`, scene);
+
+        console.log(this.name);
         //the start position also used in animation
-        this.position = new Vector3(-2.8552, 6.0224, -0.29624);
         this._gui = gui;
+        this._departFarm = departFarm;
+        this._animations = [];
+      
 
         this.initialize();
 
@@ -21,16 +31,42 @@ export class Miner extends TransformNode {
     public async initialize():Promise<void>{
         this.model = await this.createMiner();
         this.model.root.parent = this;
-
-        const path01 = await this._createFarm01toMineAnimationPath();
-        // const path02 = await this._createFarm02toMineAnimationPath();
-        // const path03 = await this._createFarm03toMineAnimationPath();
-        // const path04 = await this._createFarm04toMineAnimationPath();
-
+        
+        let path:Vector3[];
+        let curve:Curve3;
+        let name:string;
+        
+        
+        switch(this._departFarm) {
+            case 0:  {
+                curve = await createCurve(FarmToMinepath01)
+            }
+            break;
+            case 1: {
+                curve = await createCurve(FarmToMinepath02);
+                
+            }
+            break;
+            case 2:{
+                curve = await createCurve(FarmToMinepath03);
+                
+            }
+            break;
+            case 3: {
+                curve = await createCurve(FarmToMinepath04);
+                
+            }
+            break;
+        }
+        name = this._departFarm.toLocaleString();
+        path = createAnimationPath(curve);
+        //makeAnimation(name, path, curve, this._animations, this, this.scene);
+        this._makeAnimation(path,curve);
+        
     }
 
     async createMiner():Promise<{root:AbstractMesh, allMeshes:AbstractMesh[]}>{
-        const models = await SceneLoader.ImportMeshAsync('','./models/', 'miner.glb', this._scene)
+        const models = await SceneLoader.ImportMeshAsync('','./models/', 'miner.glb', this.scene)
         const root = models.meshes[0];
         const allMeshes = root.getChildMeshes();
 
@@ -41,48 +77,36 @@ export class Miner extends TransformNode {
         }
     }
 
-    private async _createFarm01toMineAnimationPath() {
-        const catmullRom = Curve3.CreateCatmullRomSpline (
-            [FarmHouse01Pos,
-                new Vector3(-4.9398, 1.318, -0.38271),
-            ],
-            3
-        )
 
-        //DEBUG visualize the path
+    private _makeAnimation(path:Vector3[], curve:Curve3) {
+        let debugPath:LinesMesh;
+
         if (DEBUGMODE) {
-        const visualMinerPath = MeshBuilder.CreateLines('lines', {points:catmullRom.getPoints()})
+            debugPath = showPath(curve);
         }
-
-        //transfrom the curves into a proper 3D path
-        const minersPath = new Path3D(catmullRom.getPoints());
-        const minersPathCurve = minersPath.getCurve();
-
-        //create the animation
         const frameRate = 60;
         const pathFollowAnim = new Animation('farmerPosition', 'position',frameRate * 3 , Animation.ANIMATIONTYPE_VECTOR3)
-        const pathFollowKeys = []
+        const pathFollowKeys = [];
 
-        for (let i = 0; i < minersPathCurve.length; i++) {
-            const position = minersPathCurve[i];
+        for (let i = 0; i < path.length; i++) {
+            const position = path[i];
             
             pathFollowKeys.push({frame: i * frameRate, value:position})
         }
- 
-         pathFollowAnim.setKeys(pathFollowKeys);
+    
+        pathFollowAnim.setKeys(pathFollowKeys);
      
-         this.animations.push(pathFollowAnim);
- 
-         this._scene.beginAnimation(this, 0, frameRate*minersPathCurve.length, false, 1, () =>{
-             this.dispose();
-             
-            //  this._gui.farmerCount = this._gui.increaseFarmerCount();
-            //  this._gui.runningFarmers -= 1;
- 
-            //  //up the Goldpersecond
-            //  this._gui.totalGoldPerSecond = Math.round(this._gui.increaseGoldPerSecond()*10000)/10000;
- 
-         });
-    }
+        this.animations.push(pathFollowAnim);
 
+        this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
+            this.dispose();
+            
+            if(DEBUGMODE) {
+                debugPath.dispose();
+            }
+        });
+
+        
+    
+    }
 }

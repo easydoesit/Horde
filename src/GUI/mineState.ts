@@ -8,6 +8,8 @@ export class MineState {
 
     constructor() {
         this.upgradeLevel = 0;
+        this.upgradeCostFarmers = Math.round(mineUpgradeCostFarmers(this.upgradeLevel));
+        this.upgradeCostGold = Math.round(mineUpgradeCostGold(this.upgradeLevel)*1000)/1000;
         
     }
 
@@ -16,7 +18,6 @@ export class MineState {
             this.upgradeLevel += 1;
             this.upgradeCostGold = Math.round(mineUpgradeCostGold(this.upgradeLevel)*1000)/1000;
             this.upgradeCostFarmers = Math.round(mineUpgradeCostFarmers(this.upgradeLevel));
-            console.log(this.upgradeCostFarmers);
         }
     }
 }
