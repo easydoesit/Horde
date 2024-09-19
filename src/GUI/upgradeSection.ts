@@ -81,7 +81,6 @@ export class UpgradeSection {
                 this._upgradeBtn.isEnabled = true;
                 if (sizeAsFloat < 1) {
                     const newSize = this.calcBarSegment(sizeAsFloat, this._maxNumOfUpgrades);
-                    console.log(newSize);
                     this._upgradeBar.width = newSize;
                     
                     if (newSize >= 1) {
@@ -137,8 +136,7 @@ export class UpgradeSection {
 
     }
 
-    private calcBarSegment(currentSize:number, maxNumberOfUpgrades:number) {
-        console.log('called');    
+    private calcBarSegment(currentSize:number, maxNumberOfUpgrades:number) {   
         const amountToAdd = 1 / this._maxNumOfUpgrades;
         
         const finalSize = currentSize + amountToAdd;

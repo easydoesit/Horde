@@ -4,7 +4,6 @@ import { Vector3, Curve3, Path3D, MeshBuilder } from "@babylonjs/core";
 export async function createCurve(pointsArray:Vector3[]) {
     const catmullRom = Curve3.CreateCatmullRomSpline (pointsArray,3
     )
-    console.log('catmullRom',catmullRom);
     return catmullRom;
 
 }
@@ -12,7 +11,6 @@ export async function createCurve(pointsArray:Vector3[]) {
 export function showPath(curve:Curve3) {
     //DEBUG visualize the path  TODO Move out of path creation
         const mesh = MeshBuilder.CreateLines('lines', {points:curve.getPoints()});
-        console.log('path', mesh.position);
         return mesh;
     }
 

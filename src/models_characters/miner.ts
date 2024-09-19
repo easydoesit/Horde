@@ -17,7 +17,6 @@ export class Miner extends TransformNode {
     constructor(name:string, scene:PlayMode, gui:GUIPlay, departFarm:number) {
         super(`miner_${name}`, scene);
 
-        console.log(this.name);
         //the start position also used in animation
         this._gui = gui;
         this._departFarm = departFarm;

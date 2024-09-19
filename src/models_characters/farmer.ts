@@ -1,7 +1,7 @@
 import { AbstractMesh, TransformNode, Vector3, Scene, SceneLoader, Curve3, Mesh, LinesMesh, MeshBuilder, Path3D, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
-import { FarmHouse01Pos, CastleToFarmPath } from "../utils/CONSTANTS";
+import { CastleToFarmPath } from "../utils/CONSTANTS";
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
 
 export class Farmer extends TransformNode{
@@ -67,6 +67,8 @@ export class Farmer extends TransformNode{
 
         this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
+
+            this._gui.farmerCount = this._gui.changeFarmerCount();
             
             if(DEBUGMODE) {
                 debugPath.dispose();

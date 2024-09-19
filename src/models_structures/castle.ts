@@ -20,7 +20,6 @@ export class Castle01 extends TransformNode {
         const models = await SceneLoader.ImportMeshAsync('','./models/', 'castle01.glb', this._scene);
         const root = models.meshes[0];
         const allMeshes = root.getChildMeshes();
-        console.log(allMeshes);
 
         return {
             root:root,

@@ -57,9 +57,6 @@ export class PlayMode extends Scene {
         this.mainCamera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
         this.mainCamera.setTarget(new Vector3(0,4,0));
 
-        //the gui is currently where all the math is done.
-        this.gui = new GUIPlay(this);
-
         //lights can be different for each scene
         //TODO Make all the background art swappable. It's a small app.
         //all items in scene using scene.meshes
@@ -129,6 +126,9 @@ export class PlayMode extends Scene {
           this._app.gameState.state = this._gameState;
           //change the GUI
           engine.hideLoadingUI();
+
+            //the gui is currently where all the math is done.
+            this.gui = new GUIPlay(this);
 
     }
 

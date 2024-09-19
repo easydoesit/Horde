@@ -29,7 +29,6 @@ export class Mine extends TransformNode {
         for (let i = 0; i <= this._importedModels.length - 1; i++ ) {
             let name = this._importedModels[i];
             name  = name.slice(0 , -4);
-            console.log('name:', name);
 
             const model = await this._createModel(name,this._importedModels[i]);
             model.meshes.root.parent = this;

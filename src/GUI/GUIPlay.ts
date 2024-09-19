@@ -11,6 +11,7 @@ import { ButtonAddMine } from "./addMineButton";
 import { UpgradeWindow } from "./upgradeWindows";
 import { MineState } from "./mineState";
 import { Miner } from "../models_characters/miner";
+import { InSceneGUI } from "./inSceneGUI";
 
 export class GUIPlay {
     //Math
@@ -74,6 +75,7 @@ export class GUIPlay {
     //mine
     public wrapperMineUpgrade:Rectangle;
     private _mineUpgradeSection:UpgradeSection;
+    public mineInSceneGUI:Rectangle;
 
     //blacksmith
     public GUIWrapperBlackSmithUpgrade:Rectangle;
@@ -249,6 +251,7 @@ export class GUIPlay {
         const oreValue = oreUpgradeValue * 100;
         this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.mineState.upgradeCostGold, ['farmers', this.mineState.upgradeCostFarmers], mineUpgradeMax, this.wrapperMineUpgrade, -320, this, this.scene, () => this._mineUpgradeChange());
 
+        this.mineInSceneGUI = new InSceneGUI('MineSceneGui', this, this.scene.mine);
 
         //blackSmith Upgrades
         //this is the GUI that Appears whn you click on the BlackSmith Building to upgrade
@@ -265,11 +268,13 @@ export class GUIPlay {
         //GAMELOOP//
         this.scene.onBeforeRenderObservable.add(() => {
 
-            //gold
-            this._totalGoldTextBlock.text = `${this._finalGoldMath()}`;
-            this._farmerCountTextBlock.text = `${this.farmerCount}`;
+            //goldperSecond
+            this.totalGoldPerSecond = this.changeGoldPerSecond();
             this._totalGoldPerSecondTextBlock.text = `${this.totalGoldPerSecond}`;
 
+            //gold
+            this._totalGoldTextBlock.text = `${this._finalGoldMath()}`;
+            this._farmerCountTextBlock.text = `${this.farmerCount}`; 
 
             //wheat
             this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
@@ -298,7 +303,7 @@ export class GUIPlay {
     private _clickFunction(){
 
         if(this.farmerCount + this.runningFarmers < this.farmersMax) {
-            //make a farmer and increase the count
+            //make a farmer and change the count
             this._makeFarmer(this.farmerCount);
             this.runningFarmers += 1;
         }
@@ -317,9 +322,9 @@ export class GUIPlay {
     
     }
 
-    public increaseGoldPerSecond() {
+    public changeGoldPerSecond() {
 
-        return (1 + this.wheatValue) * this._farmerMultiplyer(this.farmerCount);
+        return Math.round((1 + this.wheatValue) * this._farmerMultiplyer(this.farmerCount)* 1000) /1000;
 
 
     }
@@ -334,7 +339,7 @@ export class GUIPlay {
         return total;
     }
 
-    public increaseFarmerCount() {
+    public changeFarmerCount() {
 
         return this.farmerCount + 1;
 
@@ -361,9 +366,9 @@ export class GUIPlay {
         if (this.wheatValue < wheatUpgradeValue * wheatUpgradesMax) {
             if (this.totalGold > this._costOfWheat) {
             
-            //apply the value increases
+            //apply the value changes
             this.wheatValue = Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
-            this.totalGoldPerSecond = Math.round(this.increaseGoldPerSecond() * 10000)/10000;
+            this.totalGoldPerSecond = Math.round(this.changeGoldPerSecond() * 10000)/10000;
             
             //use gold
             this.totalGold = this.totalGold - this._costOfWheat;
@@ -440,6 +445,7 @@ export class GUIPlay {
         console.log('mineUpgradeChangeCalled');
 
         switch(this.mineState.upgradeLevel) {
+
             case 1 : {
                 //remove the old model from the scene
                 this.scene.mine.models[0].meshes.root.dispose();
@@ -449,6 +455,7 @@ export class GUIPlay {
                 } 
             }   
             break;
+        
         }
         
         //use gold
