@@ -24,6 +24,11 @@ export class GUIPlay {
     private _wheatValueIncrement:number;
     private _costOfWheat:number;
 
+    //ore
+    public totalOre:number;
+    public costOfOreGold:number;
+    public timeToMakeOre:number;
+
     //farmers
     public runningFarmers:number;
     public farmersMax:number;
@@ -36,8 +41,7 @@ export class GUIPlay {
 
     //mines
     public mineState:MineState;
-    public totalOre:number;
-
+ 
     public scene:PlayMode;
     
     //GUI
@@ -251,8 +255,8 @@ export class GUIPlay {
         const oreValue = oreUpgradeValue * 100;
         this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.mineState.upgradeCostGold, ['farmers', this.mineState.upgradeCostFarmers], mineUpgradeMax, this.wrapperMineUpgrade, -320, this, this.scene, () => this._mineUpgradeChange());
 
-        this.mineInSceneGUI = new InSceneGUI('MineSceneGui', this, this.scene.mine);
-
+        this.mineInSceneGUI = new InSceneGUI('MineSceneGui', this, this.scene.mine, this.mineState, 'Ore');
+        this.mineInSceneGUI.zIndex = -100;
         //blackSmith Upgrades
         //this is the GUI that Appears whn you click on the BlackSmith Building to upgrade
         this.GUIWrapperBlackSmithUpgrade = new UpgradeWindow('blackSmithUpgradeWindow', 'skyblue', this);
@@ -274,7 +278,10 @@ export class GUIPlay {
 
             //gold
             this._totalGoldTextBlock.text = `${this._finalGoldMath()}`;
-            this._farmerCountTextBlock.text = `${this.farmerCount}`; 
+            this._farmerCountTextBlock.text = `${this.farmerCount}`;
+
+            //ore
+            console.log(this.totalOre);
 
             //wheat
             this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
@@ -352,7 +359,6 @@ export class GUIPlay {
     }
 
     //wheat
-
     private _wheatUpgradeAllowed() {
         if (this.totalGold > this._costOfWheat) {
             return true;
@@ -360,6 +366,7 @@ export class GUIPlay {
             return false;
         }
     }
+    
     //wheat Callback
     private _wheatValueChange() {
        
@@ -526,7 +533,6 @@ export class GUIPlay {
         }
     }
     
-
     //Game interaction functions
     private _makeFarmer(currentCount:number) {
         

@@ -30,7 +30,7 @@ export class App {
         //sceneList
         this.startScrean = new StartScreen(this, this._engine);
         this.playMode = new PlayMode(this, this._engine);
-
+        this.playMode.detachControl();
         // run the main render loop
         this._main();
        
@@ -65,6 +65,7 @@ export class App {
         }
 
         this._scene = newScene;
+        this._scene.attachControl();
         this._inspector = new BabInspector(this._scene);
     }
 

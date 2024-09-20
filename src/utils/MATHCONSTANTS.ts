@@ -73,8 +73,26 @@ export const mineUpgradeCostFarmers = (numberOfUpgrades:number) => {
 
 export const ore = 0;
 export const oreUpgradeValue = 0.05; //percent
-export const costOfOreGold = 3;
+export const timeToMakeOre = (numberOfUpgrades:number) => {
+    
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 0;
+        
+        }
+        case 1:  {
+            return .25;
+        }
 
+        case 2: {
+            return .4;
+        }
+
+        case 3: {
+            return 1;
+        }
+    }
+}
 
 //BlackSmith
 export const blackSmithUpgradeMax = 3;
