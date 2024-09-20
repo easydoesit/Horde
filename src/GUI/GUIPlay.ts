@@ -15,10 +15,16 @@ import { InSceneGUI } from "./inSceneGUI";
 
 export class GUIPlay {
     //Math
-    public farmerCount:number;
+
+    //farmers
+    public totalFarmers:number;
+    public runningFarmers:number;
+    public farmersMax:number;
+   
+    //gold
     public totalGold:number;
     public totalGoldPerSecond:number;
-    
+
     //wheat
     public wheatValue:number;
     private _wheatValueIncrement:number;
@@ -29,10 +35,8 @@ export class GUIPlay {
     public costOfOreGold:number;
     public timeToMakeOre:number;
 
-    //farmers
-    public runningFarmers:number;
-    public farmersMax:number;
-
+    //structures
+    //farms
     public farmState01:FarmState;
     public farmState02:FarmState;
     public farmState03:FarmState;
@@ -47,14 +51,22 @@ export class GUIPlay {
     //GUI
     public gameGUI:AdvancedDynamicTexture;
     
+    //Top
     private _playGUIWrapperTop:Rectangle;
-    private _farmerCountTextBlock:TextBlock;
-    private _totalGoldPerSecondTextBlock:TextBlock;
-    private _totalGoldTextBlock:TextBlock;
-    private _textBlockGold:TextBlock
+    
     private _textBlockFarmer:TextBlock;
+    private _textBlockTotalFarmers:TextBlock;
+    
     private _textBlockGoldPerSecond:TextBlock;
+    private _totalGoldPerSecondTextBlock:TextBlock;
+   
+    private _textBlockGold:TextBlock
+    private _totalGoldTextBlock:TextBlock;
+    
+    private _textBlockOre:TextBlock;
+    private _textBlockTotalOre:TextBlock
 
+    //Bottom
     private _playGUIWrapperBottom:Rectangle;
     private _clickerBtn:Button;
     
@@ -87,9 +99,9 @@ export class GUIPlay {
     constructor(scene:PlayMode) {
         this.scene = scene;
         //game Start Stats
-        this.farmerCount = startingFarmers;
+        this.totalFarmers = startingFarmers;
         this.totalGold = startingGold;
-        this.totalGoldPerSecond = this.farmerCount/1000;
+        this.totalGoldPerSecond = this.totalFarmers/1000;
 
         //upgrades//
         //wheat
@@ -129,26 +141,27 @@ export class GUIPlay {
         this._playGUIWrapperTop.thickness = 1;
         this._playGUIWrapperTop.top = -400;
         this.gameGUI.addControl(this._playGUIWrapperTop);
-    
-        this._farmerCountTextBlock = new TextBlock('FarmerCount', `${this.farmerCount}`);
-        this._farmerCountTextBlock.fontFamily = GUIFONT1;
-        this._farmerCountTextBlock.width = 200;
-        this._farmerCountTextBlock.top = -30;
-        this._farmerCountTextBlock.left= -35;
-        this._farmerCountTextBlock.color = 'white';
-        this._playGUIWrapperTop.addControl(this._farmerCountTextBlock);
-        
-        //this should be replaced with an image
+
+        //FARMERS
+        this._textBlockTotalFarmers = new TextBlock('FarmerCount', `${this.totalFarmers}`);
+        this._textBlockTotalFarmers.fontFamily = GUIFONT1;
+        this._textBlockTotalFarmers.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this._textBlockTotalFarmers.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        this._textBlockTotalFarmers.top = 10;
+        this._textBlockTotalFarmers.left= 720;
+        this._textBlockTotalFarmers.color = 'white';
+        this._playGUIWrapperTop.addControl(this._textBlockTotalFarmers);
+
         this._textBlockFarmer = new TextBlock('farmer', 'farmers');
         this._textBlockFarmer.fontFamily = GUIFONT1;
         this._textBlockFarmer.top = -30;
         this._textBlockFarmer.left= 35;
         this._textBlockFarmer.color = 'white';
         this._playGUIWrapperTop.addControl(this._textBlockFarmer);
-
+        
+        //GOLD
         this._totalGoldPerSecondTextBlock = new TextBlock('TotalGoldPerSecond', `${this.totalGoldPerSecond}`);
         this._totalGoldPerSecondTextBlock.fontFamily =GUIFONT1;
-        this._totalGoldPerSecondTextBlock.width = 200;
         this._totalGoldPerSecondTextBlock.top = -10;
         this._totalGoldPerSecondTextBlock.left= -35;
         this._totalGoldPerSecondTextBlock.color = "white";
@@ -163,19 +176,34 @@ export class GUIPlay {
         
         this._totalGoldTextBlock = new TextBlock('TotalGold', `${this.totalGold}`);
         this._totalGoldTextBlock.fontFamily = GUIFONT1;
-        this._totalGoldTextBlock.width = 200;
         this._totalGoldTextBlock.top = 10;
-        this._totalGoldTextBlock.left= -35 ;
+        this._totalGoldTextBlock.left= 670;
         this._totalGoldTextBlock.color = 'white';
+        this._totalGoldTextBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         this._playGUIWrapperTop.addControl(this._totalGoldTextBlock);
 
-        //this should be replace by an image
-        this._textBlockGold = new TextBlock('gold', 'Gold');
+        this._textBlockGold = new TextBlock('gold', 'gold');
         this._textBlockGold.fontFamily = GUIFONT1;
         this._textBlockGold.top = 10;
         this._textBlockGold.left= 16;
         this._textBlockGold.color = 'white';
         this._playGUIWrapperTop.addControl(this._textBlockGold);
+        
+        //ORE
+        this._textBlockTotalOre = new TextBlock('TotalOre', `${this.totalOre}`);
+        this._textBlockTotalOre.fontFamily = GUIFONT1;
+        this._textBlockTotalOre.top = -30;
+        this._textBlockTotalOre.left= 940;
+        this._textBlockTotalOre.color = 'white';
+        this._textBlockTotalOre.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this._playGUIWrapperTop.addControl(this._textBlockTotalOre);
+
+        this._textBlockOre = new TextBlock('ore', 'ore');
+        this._textBlockOre.fontFamily = GUIFONT1;
+        this._textBlockOre.top = -30;
+        this._textBlockOre.left= 216;
+        this._textBlockOre.color = 'white';
+        this._playGUIWrapperTop.addControl(this._textBlockOre);
 
          //Bottom
         //playGUIBottom
@@ -278,11 +306,10 @@ export class GUIPlay {
 
             //gold
             this._totalGoldTextBlock.text = `${this._finalGoldMath()}`;
-            this._farmerCountTextBlock.text = `${this.farmerCount}`;
+            this._textBlockTotalFarmers.text = `${this.totalFarmers}`;
 
             //ore
-            console.log(this.totalOre);
-
+            this._textBlockTotalOre.text = `${this.totalOre}`;
             //wheat
             this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
 
@@ -309,9 +336,9 @@ export class GUIPlay {
 
     private _clickFunction(){
 
-        if(this.farmerCount + this.runningFarmers < this.farmersMax) {
+        if(this.totalFarmers + this.runningFarmers < this.farmersMax) {
             //make a farmer and change the count
-            this._makeFarmer(this.farmerCount);
+            this._makeFarmer(this.totalFarmers);
             this.runningFarmers += 1;
         }
         
@@ -331,7 +358,7 @@ export class GUIPlay {
 
     public changeGoldPerSecond() {
 
-        return Math.round((1 + this.wheatValue) * this._farmerMultiplyer(this.farmerCount)* 1000) /1000;
+        return Math.round((1 + this.wheatValue) * this._farmerMultiplyer(this.totalFarmers)* 1000) /1000;
 
 
     }
@@ -348,13 +375,13 @@ export class GUIPlay {
 
     public changeFarmerCount() {
 
-        return this.farmerCount + 1;
+        return this.totalFarmers + 1;
 
     }
 
-    private _farmerMultiplyer(farmerCount:number) {
+    private _farmerMultiplyer(totalFarmers:number) {
 
-        return Math.round((farmerCount * farmerBaseValue) * 1000) /1000;
+        return Math.round((totalFarmers * farmerBaseValue) * 1000) /1000;
     
     }
 
@@ -439,7 +466,7 @@ export class GUIPlay {
     //mine
     private _mineUpgradeAllow() {
         if(this.mineState.upgradeLevel < mineUpgradeMax) {
-            if(this.totalGold > this.mineState.upgradeCostGold && this.farmerCount > this.mineState.upgradeCostFarmers) {
+            if(this.totalGold > this.mineState.upgradeCostGold && this.totalFarmers > this.mineState.upgradeCostFarmers) {
                 return true;
             } else {
                 return false;
@@ -469,7 +496,7 @@ export class GUIPlay {
         this.totalGold = this.totalGold - this.mineState.upgradeCostGold;
 
         //use farmers
-        this.farmerCount = this.farmerCount = this.mineState.upgradeCostFarmers;
+        this.totalFarmers = this.totalFarmers = this.mineState.upgradeCostFarmers;
 
         //create and animate the Miners
 

@@ -40,9 +40,7 @@ export class InSceneGUI extends Rectangle {
         this._infoText.color = 'white';
         this._infoText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         this._infoText.top = -10;
-        
         this.addControl(this._infoText);
-
 
         this._animatedBarWrapper = new Rectangle('animatedBarWrapper');
         this._animatedBarWrapper.background = 'red';
@@ -65,24 +63,26 @@ export class InSceneGUI extends Rectangle {
             this._moveBar();
         })
 
+        //Register the callback with the state
         this._stateCallback.setOnStateChangeCallback(this.updateGUI.bind(this));
 
     }
-        private updateGUI(stateInfo: {speed:number}) {
-            this._speed = stateInfo.speed;
-            this._infoText.text = `${this._speed} ${this._itemBuilt}/second`;
+        
+    private updateGUI(stateInfo: {speed:number}) {
+        this._speed = stateInfo.speed;
+        this._infoText.text = `${this._speed} ${this._itemBuilt}/second`;
+    }
+
+    //costOfItem:number, otherCostofItem:number | null,
+    private _moveBar() {
+        if (this._animatedBar._width.value < 1) {
+            this._animatedBar.width = this._animatedBar._width.value + (this._speed * this._gui.scene.getEngine().getDeltaTime()/1000);
+        } else {
+            this._animatedBar.width = 0;
+            //add ore to the game.
+            this._gui.totalOre++;
         }
 
-        //costOfItem:number, otherCostofItem:number | null,
-        private _moveBar() {
-            if (this._animatedBar._width.value < 1) {
-                this._animatedBar.width = this._animatedBar._width.value + (this._speed * this._gui.scene.getEngine().getDeltaTime()/1000);
-            } else {
-                this._animatedBar.width = 0;
-                //add ore to the game.
-                this._gui.totalOre++;
-            }
-
-        }
+    }
 
 }

@@ -68,7 +68,7 @@ export class Farmer extends TransformNode{
         this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
 
-            this._gui.farmerCount = this._gui.changeFarmerCount();
+            this._gui.totalFarmers = this._gui.changeFarmerCount();
             
             if(DEBUGMODE) {
                 debugPath.dispose();

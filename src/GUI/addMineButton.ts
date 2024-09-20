@@ -5,7 +5,6 @@ import { MineState } from "./mineState";
 import { GUIPlay } from "./GUIPlay";
 import { mineUpgradeCostFarmers, mineUpgradeCostGold, oreUpgradeValue } from "../utils/MATHCONSTANTS";
 import { Mine } from "../models_structures/mine";
-import { Vector3 } from "@babylonjs/core";
 import { MinePos } from "../utils/CONSTANTS";
 
 export class ButtonAddMine extends Button {
@@ -32,7 +31,7 @@ export class ButtonAddMine extends Button {
         this.visible = false;
 
         this.top = this._guiVertPosition;
-        this.background = 'Red';
+        this.background = 'Green';
         this.width = .95;
         this.height = .1;
         this.thickness = 0;
@@ -58,7 +57,7 @@ export class ButtonAddMine extends Button {
         this.addControl(this._costFarmersText);
 
         this.onPointerDownObservable.add(() => {
-            if (gui.totalGold > this._costGold && gui.farmerCount > this._costFarmers) {
+            if (gui.totalGold > this._costGold && gui.totalFarmers > this._costFarmers) {
 
                 //GUI
                 //hide this button
@@ -90,7 +89,7 @@ export class ButtonAddMine extends Button {
 
 
                 //apply the cost changes
-                gui.farmerCount = gui.farmerCount - this._costFarmers;
+                gui.totalFarmers = gui.totalFarmers - this._costFarmers;
                 gui.totalGold =  gui.totalGold - this._costGold;
                 
                 //upgrade the state
