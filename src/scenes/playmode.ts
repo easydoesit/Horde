@@ -14,6 +14,8 @@ import { FarmLand } from "../models_structures/farmLand";
 import { FarmHouse } from "../models_structures/farmHouse";
 import { Castle01 } from "../models_structures/castle";
 import { Mine } from "../models_structures/mine";
+import { Dragon } from "../models_characters/dragon";
+import { Egg } from "../models_props/egg";
 //import { Mine02 } from "../models_structures/mine02";
 
 export class PlayMode extends Scene {
@@ -35,10 +37,13 @@ export class PlayMode extends Scene {
     public farmLand04:FarmLand;
     
     public mine:Mine;
-    //public mine02:Mine02;
 
     //for cloning
     public farmHouse:FarmHouse;
+
+    public dragon:Dragon;
+
+    public egg:Egg;
 
     constructor(app:App, engine:Engine) {
         super(engine);
@@ -62,9 +67,6 @@ export class PlayMode extends Scene {
         //all items in scene using scene.meshes
         const mainLight = new DirectionalLight('mainLight', new Vector3(1,-1,1),this);
         mainLight.intensity = 2;
-        
-        //load the hill
-        this._hill = new Hill(this);
 
         //load the starter Castle and position on hill
         this.castle01 = new Castle01(this);
@@ -91,6 +93,14 @@ export class PlayMode extends Scene {
         this.farmHouse = new FarmHouse('FarmHouseBase',this);
         this.farmHouse.position = new Vector3(0,-10,0);
 
+        //Characters TODO- Add them all so they should be cloned.
+        this.dragon = new Dragon('Dragon', this, this.gui);
+    
+        this.egg = new Egg('egg', this, this.gui, this.dragon);
+        
+        //load the hill
+        this._hill = new Hill(this);
+        
         //load the background
         const background = new PlainsBackground(this);
 
@@ -110,13 +120,16 @@ export class PlayMode extends Scene {
                 this.gui.showUpgrades(this.gui.GUIWrapperCastleUpgrade);
             }
 
-
-
             if (hit.pickedMesh === this.mine.clickBox.meshes.allMeshes[0]) {
                 console.log('Mine Clicked');
                 this.gui.showUpgrades(this.gui.wrapperMineUpgrade);
-                //this.gui.showUpgrades(this.gui.playGUIWrapperFarmUpgrade);
             }
+
+            if (hit.pickedMesh === this.dragon.model.allMeshes[0]) {
+                console.log('Dragon Clicked');
+                this.egg.runAnimation();
+            }
+
         }
 
         //--SCENE FINISHED LOADING--
@@ -127,8 +140,10 @@ export class PlayMode extends Scene {
           //change the GUI
           engine.hideLoadingUI();
 
-            //the gui is currently where all the math is done.
-            this.gui = new GUIPlay(this);
+        //the gui is currently where all the math is done.
+        this.gui = new GUIPlay(this);
+
+        console.log(this.dragon);
 
     }
 

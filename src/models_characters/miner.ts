@@ -17,14 +17,11 @@ export class Miner extends TransformNode {
     constructor(name:string, scene:PlayMode, gui:GUIPlay, departFarm:number) {
         super(`miner_${name}`, scene);
 
-        //the start position also used in animation
         this._gui = gui;
         this._departFarm = departFarm;
         this._animations = [];
       
-
         this.initialize();
-
     }
 
     public async initialize():Promise<void>{

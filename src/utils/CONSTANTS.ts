@@ -43,3 +43,18 @@ export const FarmToMinepath04 = [
     new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
     MinePos,
 ]
+
+export const DragonPath01 = [
+    new Vector3(-20,6, -5),
+    new Vector3(-16, 6, 0),
+    new Vector3(-20,6, 5),
+]
+
+export const eggFallPath = (dragonPosition:Vector3) => {
+    const path = [
+        dragonPosition,
+        new Vector3(dragonPosition.x, -10, dragonPosition.z)
+    ]
+    
+    return path;
+}
