@@ -1,7 +1,7 @@
 import { Button, TextBlock } from"@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
-import { MineState } from "./mineState";
+import { MineState } from "../gameControl/mineState";
 import { GUIPlay } from "./GUIPlay";
 import { mineUpgradeCostFarmers, mineUpgradeCostGold, oreUpgradeValue } from "../utils/MATHCONSTANTS";
 import { Mine } from "../models_structures/mine";

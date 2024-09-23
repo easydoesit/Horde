@@ -1,7 +1,7 @@
 import { Button, TextBlock } from"@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
-import { FarmState } from "./farmState";
+import { FarmState } from "../gameControl/farmState";
 import { GUIPlay } from "./GUIPlay";
 import { farmCost } from "../utils/MATHCONSTANTS";
 import { FarmLand } from "../models_structures/farmLand";
