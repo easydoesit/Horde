@@ -2,18 +2,23 @@ import { Scene } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Rectangle, Button, Control } from "@babylonjs/gui";
 
 import { App } from "../app";
+import { GameStateI, GameStateObserverI } from "../../typings";
+import { PlayMode } from "../scenes/playmode";
+import { GUIPlay } from "./GUIPlay";
 
-export class GUIStartScreen {
+export class GUIStartScreen implements GameStateObserverI {
     public gameGUI:AdvancedDynamicTexture;
 
     private _app:App;
     private _scene:Scene;
+
     private _startScreenWrapper:Rectangle;
 
     constructor(app:App, scene:Scene) {
         this._app = app;
         this._scene = scene;
 
+        this._app.gameState.attach(this);
 
         this.gameGUI = AdvancedDynamicTexture.CreateFullscreenUI('GameGui')
         this.gameGUI.idealHeight = 1080;
@@ -38,10 +43,24 @@ export class GUIStartScreen {
   
           startBtn.onPointerDownObservable.add(() => {
               this._scene.detachControl();
-              
-              this._app.switchScene(this._app.playMode);
-  
+              console.log('this was detached.');
+              this._app.gameState.setGameState('PLAY_MODE');
           });
-          
+
     }
+
+    public updateGameState(gamestate: GameStateI): void {
+           
+              if(this._app.gameState.state === 'PLAY_MODE') {
+                console.log('Game in Playmode');
+                const newScene = new PlayMode(this._app);
+                this._app.switchScene(newScene);
+                this._app.gui = new GUIPlay(this._app, newScene, this._app.gameState);
+                this._app.gameState.detach(this);
+            }
+
+
+
+    }
+    
 }

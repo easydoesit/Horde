@@ -12,8 +12,15 @@ import { UpgradeWindow } from "./upgradeWindows";
 import { MineState } from "./mineState";
 import { Miner } from "../models_characters/miner";
 import { InSceneGUI } from "./inSceneGUI";
+import { GameStateObserverI, GameStateI } from "../../typings";
+import { App } from "../app";
+import { StartScreen } from "../scenes/start_screen";
 
-export class GUIPlay {
+export class GUIPlay implements GameStateObserverI {
+    private _app:App;
+    private _gameState:GameStateI;
+    public scene:PlayMode;
+    
     //Math
 
     //farmers
@@ -46,8 +53,6 @@ export class GUIPlay {
     //mines
     public mineState:MineState;
  
-    public scene:PlayMode;
-    
     //GUI
     public gameGUI:AdvancedDynamicTexture;
     
@@ -96,7 +101,8 @@ export class GUIPlay {
     //blacksmith
     public GUIWrapperBlackSmithUpgrade:Rectangle;
 
-    constructor(scene:PlayMode) {
+    constructor(app:App, scene:PlayMode, gameState:GameStateI) {
+        this._app = app;
         this.scene = scene;
         //game Start Stats
         this.totalFarmers = startingFarmers;
@@ -569,6 +575,17 @@ export class GUIPlay {
     
     public makeMiner(currentCount:number, farmState:number){
         new Miner(currentCount.toLocaleString(), this.scene, this, farmState);
-    } 
+    }
+
+    public updateGameState(gamestate: GameStateI): void {
+        if(this._gameState.state === 'END_SCREEN') {
+          console.log('Game in EndScreen');
+          //this._app.switchScene(this._app.playMode);
+      }
+        if(this._gameState.state === 'START_SCREEN') {
+            console.log('Game in StartScreen');
+            this._app.switchScene(new StartScreen(this._app.engine));
+        }
+    }
 
 }

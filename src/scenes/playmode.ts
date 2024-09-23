@@ -3,9 +3,8 @@ import { FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, MinePos
 
 
 //classes
-import { App } from "../app";
 import { GUIPlay } from "../GUI/GUIPlay";
-import { GameStateT } from "../../typings";
+import { App } from "../app";
 
 //gamepieces
 import { Hill } from "../models_structures/hill";
@@ -19,11 +18,8 @@ import { Egg } from "../models_props/egg";
 //import { Mine02 } from "../models_structures/mine02";
 
 export class PlayMode extends Scene {
-    private _app:App;
-    private _gameState:GameStateT;
-    
-    public gui:GUIPlay;
     public mainCamera:FreeCamera;
+    private _app:App;
 
     //gamepieces 
     private _hill:Hill;
@@ -45,12 +41,11 @@ export class PlayMode extends Scene {
 
     public egg:Egg;
 
-    constructor(app:App, engine:Engine) {
-        super(engine);
-        this._app = app;
-        this._gameState = 'PLAY_MODE';
-        
-        this._initialize(engine);
+    constructor(app:App,) {
+        super(app.engine);
+        this._app = app
+
+        this._initialize(this._app.engine);
 
     }
 
@@ -94,9 +89,9 @@ export class PlayMode extends Scene {
         this.farmHouse.position = new Vector3(0,-10,0);
 
         //Characters TODO- Add them all so they should be cloned.
-        this.dragon = new Dragon('Dragon', this, this.gui);
+        this.dragon = new Dragon('Dragon', this, this._app.gui as GUIPlay);
     
-        this.egg = new Egg('egg', this, this.gui, this.dragon);
+        this.egg = new Egg('egg', this, this._app.gui as GUIPlay, this.dragon);
         
         //load the hill
         this._hill = new Hill(this);
@@ -112,17 +107,17 @@ export class PlayMode extends Scene {
 
             if (hit.pickedMesh === this.farmLand01.model.allMeshes[0] || hit.pickedMesh === this.farmLand02.model.allMeshes[0] ) {
                 console.log('Farm Clicked');
-                this.gui.showUpgrades(this.gui.GUIWrapperFarmUpgrade);
+                this._app.gui.showUpgrades(this._app.gui.GUIWrapperFarmUpgrade);
             }
 
             if (hit.pickedMesh === this.castle01.model.allMeshes[0]) {
                 console.log('Castle Clicked');
-                this.gui.showUpgrades(this.gui.GUIWrapperCastleUpgrade);
+                this._app.gui.showUpgrades(this._app.gui.GUIWrapperCastleUpgrade);
             }
 
             if (hit.pickedMesh === this.mine.clickBox.meshes.allMeshes[0]) {
                 console.log('Mine Clicked');
-                this.gui.showUpgrades(this.gui.wrapperMineUpgrade);
+                this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
             }
 
             if (hit.pickedMesh === this.dragon.model.allMeshes[0]) {
@@ -135,15 +130,12 @@ export class PlayMode extends Scene {
         //--SCENE FINISHED LOADING--
         
         await this.whenReadyAsync();
-          //change the gameState
-          this._app.gameState.state = this._gameState;
+  
           //change the GUI
           engine.hideLoadingUI();
 
         //the gui is currently where all the math is done.
-        this.gui = new GUIPlay(this);
-
-        console.log(this.dragon);
+        this._app.gui = new GUIPlay(this._app, this, this._app.gameState);
 
     }
 
