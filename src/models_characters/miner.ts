@@ -69,7 +69,6 @@ export class Miner extends TransformNode {
         return {
             root:root,
             allMeshes:allMeshes
-          
         }
     }
 

@@ -1,8 +1,6 @@
 import { Engine, Scene, Vector3, FreeCamera } from "@babylonjs/core";
 
 import { App } from "../app";
-import { GUIStartScreen } from "../GUI/GUIStartScreen";
-import { GameStateI } from "../../typings";
 
 export class StartScreen extends Scene {
     private _app:App;

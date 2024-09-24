@@ -56,54 +56,54 @@ export class ButtonAddMine extends Button {
 
         this.addControl(this._costFarmersText);
 
-        this.onPointerDownObservable.add(() => {
-            if (gui.totalGold > this._costGold && gui.totalFarmers > this._costFarmers) {
+        // this.onPointerDownObservable.add(() => {
+        //     if (gui.totalGold > this._costGold && gui.totalFarmers > this._costFarmers) {
 
-                //GUI
-                //hide this button
-                this.isVisible = false;
+        //         //GUI
+        //         //hide this button
+        //         this.isVisible = false;
 
-                //hide the GUI so we see the mine appear
-                gui.GUIWrapperCastleUpgrade.isVisible = false;
+        //         //hide the GUI so we see the mine appear
+        //         gui.GUIWrapperCastleUpgrade.isVisible = false;
                 
-                  //Scene
-                //move the mine Into View
-                const mine = gui.scene.getNodeByName('Mine') as Mine;
-                mine.position.y = MinePos.y;
+        //           //Scene
+        //         //move the mine Into View
+        //         const mine = gui.scene.getNodeByName('Mine') as Mine;
+        //         mine.position.y = MinePos.y;
 
-                //add the miners
-                let count = gui.mineState.upgradeCostFarmers;
-                console.log('number of Miners', count);
+        //         //add the miners
+        //         let count = gui.mineState.upgradeCostFarmers;
+        //         console.log('number of Miners', count);
 
-                const createMiners = () => {
-                    count -= 1;
+        //         const createMiners = () => {
+        //             count -= 1;
 
-                    gui.makeMiner(count, 0);
+        //             gui.makeMiner(count, 0);
 
-                    if( count <= 1 ) {
-                        clearInterval(intervalId);
-                    }
-                }
+        //             if( count <= 1 ) {
+        //                 clearInterval(intervalId);
+        //             }
+        //         }
                 
-                const intervalId = setInterval(createMiners, 250);
+        //         const intervalId = setInterval(createMiners, 250);
 
 
-                //apply the cost changes
-                gui.totalFarmers = gui.totalFarmers - this._costFarmers;
-                gui.totalGold =  gui.totalGold - this._costGold;
+        //         //apply the cost changes
+        //         gui.totalFarmers = gui.totalFarmers - this._costFarmers;
+        //         gui.totalGold =  gui.totalGold - this._costGold;
                 
-                //upgrade the state
-                mineState.changeState();
+        //         //upgrade the state
+        //         mineState.changeState();
 
-                //update the GUI
-                upgradeSection.goldCost = mineState.upgradeCostGold;
-                upgradeSection.otherCost[1] = mineState.upgradeCostFarmers;
-                console.log("cost of gold", mineState.upgradeCostGold);
+        //         //update the GUI
+        //         upgradeSection.goldCost = mineState.upgradeCostGold;
+        //         upgradeSection.otherCost[1] = mineState.upgradeCostFarmers;
+        //         console.log("cost of gold", mineState.upgradeCostGold);
             
-                console.log(mine.getAbsolutePosition())
-            }
+        //         console.log(mine.getAbsolutePosition())
+        //     }
 
-        })
+        // })
 
     }
 

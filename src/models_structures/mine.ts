@@ -20,6 +20,7 @@ export class Mine extends TransformNode {
         this.models = [];
         
         this.initialize();
+        
 
     }
 

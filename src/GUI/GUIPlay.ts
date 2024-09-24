@@ -2,7 +2,7 @@ import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { Farmer } from "../models_characters/farmer";
 import { PlayMode } from "../scenes/playmode";
-import { startingFarmers, startingGold, farmerBaseValue, wheatUpgradesMax, wheatUpgradeValue, wheatUpgradeCostGold, farmCost, farmersMax, farmUpgradeCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue } from "../utils/MATHCONSTANTS";
+import { farmerBaseValue, wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue } from "../utils/MATHCONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
 import { FarmState } from "../gameControl/farmState";
 import { FarmLand } from "../models_structures/farmLand";
@@ -12,30 +12,17 @@ import { UpgradeWindow } from "./upgradeWindows";
 import { MineState } from "../gameControl/mineState";
 import { Miner } from "../models_characters/miner";
 import { InSceneGUI } from "./inSceneGUI";
-import { GameStateObserverI, GameStateI } from "../../typings";
+import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
 
-export class GUIPlay implements GameStateObserverI {
+export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _app:App;
     private _gameState:GameStateI;
+    private _mathState:MathStateI;
     public scene:PlayMode;
     
     //Math
-
-    //farmers
-    public totalFarmers:number;
-    public runningFarmers:number;
-    public farmersMax:number;
-   
-    //gold
-    public totalGold:number;
-    public totalGoldPerSecond:number;
-
-    //wheat
-    public wheatValue:number;
-    private _wheatValueIncrement:number;
-    private _costOfWheat:number;
 
     //ore
     public totalOre:number;
@@ -101,34 +88,22 @@ export class GUIPlay implements GameStateObserverI {
     //blacksmith
     public GUIWrapperBlackSmithUpgrade:Rectangle;
 
-    constructor(app:App, scene:PlayMode, gameState:GameStateI) {
+    constructor(app:App, scene:PlayMode, gameState:GameStateI, mathState:MathStateI) {
         this._app = app;
         this.scene = scene;
-        //game Start Stats
-        this.totalFarmers = startingFarmers;
-        this.totalGold = startingGold;
-        this.totalGoldPerSecond = this.totalFarmers/1000;
-
-        //upgrades//
-        //wheat
-        this.wheatValue = 0;
-        this._wheatValueIncrement = 1;
-        //this sets the initial cost.
-        this._costOfWheat = Math.round(wheatUpgradeCostGold(this._wheatValueIncrement)*1000)/1000;
+        this._mathState = this.scene.mathState
+        this._mathState.attach(this);
+        this._app.gameState.attach(this);
         
         //farms
-        this.farmState01 = new FarmState('Farm01', 'FarmLand01');
+        this.farmState01 = new FarmState('Farm01', 'FarmLand01', this);
         this.farmState01.changeState();
-        this.farmState02 = new FarmState('Farm02', 'FarmLand02');
-        this.farmState03 = new FarmState('Farm03', 'FarmLand03');
-        this.farmState04 = new FarmState('Farm04', 'FarmLand04');
+        this.farmState02 = new FarmState('Farm02', 'FarmLand02', this);
+        this.farmState03 = new FarmState('Farm03', 'FarmLand03', this);
+        this.farmState04 = new FarmState('Farm04', 'FarmLand04', this);
         this.farmStates = [];
         this.farmStates.push(this.farmState01, this.farmState02, this.farmState03, this.farmState04);
         this._farmUpgrades = [];
-
-        //farmers
-        this.runningFarmers = 0;
-        this.farmersMax = this.finalFarmerMaxMath();
         
         //mine
         this.mineState = new MineState();
@@ -149,7 +124,7 @@ export class GUIPlay implements GameStateObserverI {
         this.gameGUI.addControl(this._playGUIWrapperTop);
 
         //FARMERS
-        this._textBlockTotalFarmers = new TextBlock('FarmerCount', `${this.totalFarmers}`);
+        this._textBlockTotalFarmers = new TextBlock('FarmerCount', `${this._mathState.totalFarmers}`);
         this._textBlockTotalFarmers.fontFamily = GUIFONT1;
         this._textBlockTotalFarmers.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         this._textBlockTotalFarmers.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -166,7 +141,7 @@ export class GUIPlay implements GameStateObserverI {
         this._playGUIWrapperTop.addControl(this._textBlockFarmer);
         
         //GOLD
-        this._totalGoldPerSecondTextBlock = new TextBlock('TotalGoldPerSecond', `${this.totalGoldPerSecond}`);
+        this._totalGoldPerSecondTextBlock = new TextBlock('TotalGoldPerSecond', `${this._mathState.goldPerSecond}`);
         this._totalGoldPerSecondTextBlock.fontFamily =GUIFONT1;
         this._totalGoldPerSecondTextBlock.top = -10;
         this._totalGoldPerSecondTextBlock.left= -35;
@@ -180,7 +155,7 @@ export class GUIPlay implements GameStateObserverI {
         this._textBlockGoldPerSecond.color = 'white';
         this._playGUIWrapperTop.addControl(this._textBlockGoldPerSecond);    
         
-        this._totalGoldTextBlock = new TextBlock('TotalGold', `${this.totalGold}`);
+        this._totalGoldTextBlock = new TextBlock('TotalGold', `${this._mathState.totalGold}`);
         this._totalGoldTextBlock.fontFamily = GUIFONT1;
         this._totalGoldTextBlock.top = 10;
         this._totalGoldTextBlock.left= 670;
@@ -222,7 +197,7 @@ export class GUIPlay implements GameStateObserverI {
 
 
         //main clicker button
-        this._clickerBtn = Button.CreateSimpleButton("add", "Add");
+        this._clickerBtn = Button.CreateSimpleButton("addFarmer", "Add Farmer");
         this._clickerBtn.fontFamily = GUIFONT1;
         this._clickerBtn.width = 0.2
         this._clickerBtn.height = "40px";
@@ -243,7 +218,7 @@ export class GUIPlay implements GameStateObserverI {
         //this is the GUI that Appears when you click on the Land to upgrade
         this.GUIWrapperFarmUpgrade = new UpgradeWindow('FarmUpgradeWindow' , 'brown', this);
 
-        this.farmersMaxTextBox = new TextBlock('MaxFarmers', `Max Famers: ${this.farmersMax}`);
+        this.farmersMaxTextBox = new TextBlock('MaxFarmers', `Max Famers: ${this._mathState.farmersMax}`);
         this.farmersMaxTextBox.fontFamily = GUIFONT1;
         this.farmersMaxTextBox.top = -430;
         this.farmersMaxTextBox.width = .3;
@@ -251,20 +226,20 @@ export class GUIPlay implements GameStateObserverI {
         this.GUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
 
         //this creates the wheat Upgrade section on the GUI
-        this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._costOfWheat, null, wheatUpgradesMax, this.GUIWrapperFarmUpgrade, -320, this, this.scene, () => this._wheatValueChange());
+        this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._mathState.costOfWheat, null, wheatUpgradesMax, this.GUIWrapperFarmUpgrade, -320, this, this.scene, () => this._mathState.wheatValueChange(), this._mathState);
 
         //this creates the farm Upgrade section on the GUI
-        this._farmUpgrade01 = new UpgradeSection('farmUpgrade01', `next Uprade allows ${this.farmState01.farmersNextMax} total farmers on this land`, this.farmState01.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farmState01, this._farmUpgrade01));
+        // this._farmUpgrade01 = new UpgradeSection('farmUpgrade01', `next Uprade allows ${this.farmState01.farmersNextMax} total farmers on this land`, this.farmState01.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -200, this, this.scene, () => this._farmUpGradeChange(this.farmState01, this._farmUpgrade01));
         
-        this._farmUpgrade02 = new UpgradeSection('farmUpgrade02', `next Uprade allows ${this.farmState02.farmersNextMax} total farmers on this land`, this.farmState02.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farmState02, this._farmUpgrade02));
-        this._farmUpgrade02.wrapperUpgradeContainer.isVisible = false;
+        // this._farmUpgrade02 = new UpgradeSection('farmUpgrade02', `next Uprade allows ${this.farmState02.farmersNextMax} total farmers on this land`, this.farmState02.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -80, this, this.scene, () => this._farmUpGradeChange(this.farmState02, this._farmUpgrade02));
+        // this._farmUpgrade02.wrapperUpgradeContainer.isVisible = false;
         
-        this._farmUpgrade03 = new UpgradeSection('farmUpgrade03', `next Uprade allows ${this.farmState03.farmersNextMax} total farmers on this land`, this.farmState03.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farmState03, this._farmUpgrade03));
-        this._farmUpgrade03.wrapperUpgradeContainer.isVisible = false;
+        // this._farmUpgrade03 = new UpgradeSection('farmUpgrade03', `next Uprade allows ${this.farmState03.farmersNextMax} total farmers on this land`, this.farmState03.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 40, this, this.scene, () => this._farmUpGradeChange(this.farmState03, this._farmUpgrade03));
+        // this._farmUpgrade03.wrapperUpgradeContainer.isVisible = false;
 
-        this._farmUpgrade04 = new UpgradeSection('farmUpgrade04', `next Uprade allows ${this.farmState04.farmersNextMax} total farmers on this land`, this.farmState04.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 160, this, this.scene, () => this._farmUpGradeChange(this.farmState04, this._farmUpgrade04));
-        this._farmUpgrade04.wrapperUpgradeContainer.isVisible = false;
-        this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade02, this._farmUpgrade03, this._farmUpgrade04);
+        // this._farmUpgrade04 = new UpgradeSection('farmUpgrade04', `next Uprade allows ${this.farmState04.farmersNextMax} total farmers on this land`, this.farmState04.farmUpgradeCost, null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 160, this, this.scene, () => this._farmUpGradeChange(this.farmState04, this._farmUpgrade04));
+        // this._farmUpgrade04.wrapperUpgradeContainer.isVisible = false;
+        // this._farmUpgrades.push(this._farmUpgrade01, this._farmUpgrade02, this._farmUpgrade03, this._farmUpgrade04);
         
         //ADDFarm Buttons.
         this._addFarmButtons =[];
@@ -287,7 +262,7 @@ export class GUIPlay implements GameStateObserverI {
         //this is the GUI that Appears whn you click on the Mine to upgrade
         this.wrapperMineUpgrade = new UpgradeWindow('mineUpgradeWindow', 'DarkSlateGray', this);
         const oreValue = oreUpgradeValue * 100;
-        this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.mineState.upgradeCostGold, ['farmers', this.mineState.upgradeCostFarmers], mineUpgradeMax, this.wrapperMineUpgrade, -320, this, this.scene, () => this._mineUpgradeChange());
+        this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.mineState.upgradeCostGold, ['farmers', this.mineState.upgradeCostFarmers], mineUpgradeMax, this.wrapperMineUpgrade, -320, this, this.scene, () => this._mineUpgradeChange(), null);
 
         this.mineInSceneGUI = new InSceneGUI('MineSceneGui', this, this.scene.mine, this.mineState, 'Ore');
         this.mineInSceneGUI.zIndex = -100;
@@ -306,16 +281,9 @@ export class GUIPlay implements GameStateObserverI {
         //GAMELOOP//
         this.scene.onBeforeRenderObservable.add(() => {
 
-            //goldperSecond
-            this.totalGoldPerSecond = this.changeGoldPerSecond();
-            this._totalGoldPerSecondTextBlock.text = `${this.totalGoldPerSecond}`;
-
-            //gold
-            this._totalGoldTextBlock.text = `${this._finalGoldMath()}`;
-            this._textBlockTotalFarmers.text = `${this.totalFarmers}`;
-
             //ore
             this._textBlockTotalOre.text = `${this.totalOre}`;
+            
             //wheat
             this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
 
@@ -325,9 +293,9 @@ export class GUIPlay implements GameStateObserverI {
             }
             
             for (let i in this._addFarmButtons) {
-                if(this._addFarmButtons[i].isVisible && this.totalGold > farmCost) {
+                if(this._addFarmButtons[i].isVisible && this._mathState.totalGold > farmCost) {
                     this._addFarmButtons[i].isEnabled = true;
-                } else if (this._addFarmButtons[i].isVisible && this.totalGold < farmCost) {
+                } else if (this._addFarmButtons[i].isVisible && this._mathState.totalGold < farmCost) {
                     this._addFarmButtons[i].isEnabled = false;
                 }
             }
@@ -341,47 +309,18 @@ export class GUIPlay implements GameStateObserverI {
     }
 
     private _clickFunction(){
-
-        if(this.totalFarmers + this.runningFarmers < this.farmersMax) {
+            console.log('Add Farmer Button Clicked');
             //make a farmer and change the count
-            this._makeFarmer(this.totalFarmers);
-            this.runningFarmers += 1;
-        }
-        
+            this._makeFarmer(this._mathState.totalFarmers);  
     }
 
-    //math functions
-    //All math should go in finalMath
-    private _finalGoldMath() {
-        
-        this.totalGold = this.totalGold + (this.totalGoldPerSecond * (this.scene.getEngine().getDeltaTime()/1000));
-            
-        let roundedTotalGold = Math.round(this.totalGold * 1000) / 1000;
-
-        return roundedTotalGold;
-    
-    }
-
-    public changeGoldPerSecond() {
-
-        return Math.round((1 + this.wheatValue) * this._farmerMultiplyer(this.totalFarmers)* 1000) /1000;
-
-
-    }
-
-    public finalFarmerMaxMath(){
-        let total = 0;
-
-        for (let i in this.farmStates) {
-            total = total + this.farmStates[i].farmersMax;
-        }
-        
-        return total;
-    }
-
-    public changeFarmerCount() {
-
-        return this.totalFarmers + 1;
+    public updateMathState(mathState: MathStateI): void {
+        console.log('updateMathState Called in GUI');
+         this._textBlockTotalFarmers.text = `${mathState.totalFarmers}`;
+         this._totalGoldPerSecondTextBlock.text = `${mathState.goldPerSecond}`;
+         
+         this._totalGoldTextBlock.text = `${mathState.totalGold}`;
+        //GUI STUFF HERE;
 
     }
 
@@ -393,41 +332,18 @@ export class GUIPlay implements GameStateObserverI {
 
     //wheat
     private _wheatUpgradeAllowed() {
-        if (this.totalGold > this._costOfWheat) {
+        if (this._mathState.totalGold > this._mathState.costOfWheat) {
             return true;
         } else {
             return false;
         }
     }
     
-    //wheat Callback
-    private _wheatValueChange() {
-       
-        if (this.wheatValue < wheatUpgradeValue * wheatUpgradesMax) {
-            if (this.totalGold > this._costOfWheat) {
-            
-            //apply the value changes
-            this.wheatValue = Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
-            this.totalGoldPerSecond = Math.round(this.changeGoldPerSecond() * 10000)/10000;
-            
-            //use gold
-            this.totalGold = this.totalGold - this._costOfWheat;
-
-            //apply cost change
-            this._wheatValueIncrement += 1;
-            this._costOfWheat = Math.round(wheatUpgradeCostGold(this._wheatValueIncrement)* 1000)/1000;
-            this._wheatUpgrade.goldCost = this._costOfWheat;
-
-            }
-
-        }
-        
-    }
     //farms
     private _farmUpgradeAllowed(farm:FarmState) {
         //this depends on whether the farm is completely upgraded or not.
         if (this.farmState01.upgradeLevel < farmUpgradeMax) {
-            if (this.totalGold > farm.farmUpgradeCost) {
+            if (this._mathState.totalGold > farm.farmUpgradeCost) {
                 return true;
             } else {
                 return false;
@@ -436,43 +352,43 @@ export class GUIPlay implements GameStateObserverI {
     }
     
     //farmcallback
-    private _farmUpGradeChange(farmState:FarmState, farmSection:UpgradeSection) {
+    // private _farmUpGradeChange(farmState:FarmState, farmSection:UpgradeSection) {
         
-        switch(farmState.upgradeLevel) {
-            case 1: {
+    //     switch(farmState.upgradeLevel) {
+    //         case 1: {
             
-                const farmland = this.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
-                const position = farmland.farmHousePos;
+    //             const farmland = this.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
+    //             const position = farmland.farmHousePos;
                 
-                //upgrade the farm in the scene.
-                const farmHouse = this.scene.farmHouse.clone(`${farmState.gamePieceName}_FarmHouse`,null,null);
-                farmHouse.position = position;
+    //             //upgrade the farm in the scene.
+    //             const farmHouse = this.scene.farmHouse.clone(`${farmState.gamePieceName}_FarmHouse`,null,null);
+    //             farmHouse.position = position;
 
-            }
-            break;
-            //Other Upgrades go here.
-        }
+    //         }
+    //         break;
+    //         //Other Upgrades go here.
+    //     }
        
-        //use gold
-        this.totalGold = this.totalGold - farmState.farmUpgradeCost;
+    //     //use gold
+    //     this.totalGold = this.totalGold - farmState.farmUpgradeCost;
 
-        //upgrade the State
-        farmState.changeState();
+    //     //upgrade the State
+    //     farmState.changeState();
       
-        //apply cost Changes
-        this.farmersMax = this.finalFarmerMaxMath();
-        this.farmersMaxTextBox.text = `Max Famers: ${this.farmersMax}`;
-        farmSection.goldCost = farmState.farmUpgradeCost;
-        farmSection.instruction = `next Uprade allows ${farmState.farmersNextMax} total farmers on this land`
-        farmSection.textBlockUpgradeInstruction.text = farmSection.instruction;
+    //     //apply cost Changes
+    //     this._mathState.farmersMax = this._mathState.finalFarmerMaxMath();
+    //     this.farmersMaxTextBox.text = `Max Famers: ${this.farmersMax}`;
+    //     farmSection.goldCost = farmState.farmUpgradeCost;
+    //     farmSection.instruction = `next Uprade allows ${farmState.farmersNextMax} total farmers on this land`
+    //     farmSection.textBlockUpgradeInstruction.text = farmSection.instruction;
 
 
-    }
+    // }
 
     //mine
     private _mineUpgradeAllow() {
         if(this.mineState.upgradeLevel < mineUpgradeMax) {
-            if(this.totalGold > this.mineState.upgradeCostGold && this.totalFarmers > this.mineState.upgradeCostFarmers) {
+            if(this._mathState.totalGold > this.mineState.upgradeCostGold && this._mathState.totalFarmers > this.mineState.upgradeCostFarmers) {
                 return true;
             } else {
                 return false;
@@ -499,10 +415,10 @@ export class GUIPlay implements GameStateObserverI {
         }
         
         //use gold
-        this.totalGold = this.totalGold - this.mineState.upgradeCostGold;
+        this._mathState.totalGold = this._mathState.totalGold - this.mineState.upgradeCostGold;
 
         //use farmers
-        this.totalFarmers = this.totalFarmers = this.mineState.upgradeCostFarmers;
+        this._mathState.totalFarmers = this._mathState.totalFarmers = this.mineState.upgradeCostFarmers;
 
         //create and animate the Miners
 
@@ -568,9 +484,13 @@ export class GUIPlay implements GameStateObserverI {
     
     //Game interaction functions
     private _makeFarmer(currentCount:number) {
-        
-        new Farmer(currentCount.toLocaleString(), this.scene, this);
+        console.log(`makeFarmer Called: MathStates{totalFarmers: ${this._mathState.totalFarmers}, runningFarmers:${this._mathState.runningFarmers}, farmersMax:${this._mathState.farmersMax}}`)
 
+        if(this._mathState.totalFarmers + this._mathState.runningFarmers < this._mathState.farmersMax) {
+            //make a farmer and change the count
+            new Farmer(currentCount.toLocaleString(), this.scene, this);
+            this._mathState.makeFarmerRun(1);
+        }  
     }
     
     public makeMiner(currentCount:number, farmState:number){

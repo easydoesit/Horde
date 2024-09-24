@@ -1,19 +1,19 @@
-import { AbstractMesh, TransformNode, Vector3, Scene, SceneLoader, Curve3, Mesh, LinesMesh, MeshBuilder, Path3D, Animation } from "@babylonjs/core";
+import { AbstractMesh, TransformNode, Vector3, SceneLoader, Curve3, LinesMesh, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { CastleToFarmPath } from "../utils/CONSTANTS";
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
+import { PlayMode } from "../scenes/playmode";
 
 export class Farmer extends TransformNode{
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
     private _gui:GUIPlay;
     private _animations:Animation[];
 
-    constructor(name:string, scene:Scene, gui:GUIPlay) {
+    constructor(name:string, scene:PlayMode, gui:GUIPlay) {
         super(`farmer_${name}`, scene);
         this._gui = gui;
         this._animations = [];
-
         this.initialize();
 
     }
@@ -65,16 +65,16 @@ export class Farmer extends TransformNode{
      
         this.animations.push(pathFollowAnim);
 
-        this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
+        (this._scene as PlayMode).beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
 
-            this._gui.totalFarmers = this._gui.changeFarmerCount();
-            
+            (this._scene as PlayMode).mathState.increaseFarmerCount(1);
+            (this._scene as PlayMode).mathState.endFarmerRun();
+
             if(DEBUGMODE) {
                 debugPath.dispose();
             }
         });
-
-
     }
+    
 }

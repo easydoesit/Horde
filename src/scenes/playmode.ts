@@ -1,7 +1,6 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
 import { FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, MinePos } from "../utils/CONSTANTS";
 
-
 //classes
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
@@ -15,11 +14,14 @@ import { Castle01 } from "../models_structures/castle";
 import { Mine } from "../models_structures/mine";
 import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
+import { MathStateI } from "../../typings";
+import { MathState } from "../gameControl/mathState";
 //import { Mine02 } from "../models_structures/mine02";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
     private _app:App;
+    public mathState:MathStateI;
 
     //gamepieces 
     private _hill:Hill;
@@ -36,9 +38,7 @@ export class PlayMode extends Scene {
 
     //for cloning
     public farmHouse:FarmHouse;
-
     public dragon:Dragon;
-
     public egg:Egg;
 
     constructor(app:App,) {
@@ -47,11 +47,13 @@ export class PlayMode extends Scene {
 
         this._initialize(this._app.engine);
 
+
     }
 
     private async _initialize(engine:Engine):Promise<void>{
         engine.displayLoadingUI();
         this.clearColor = new Color4(0.15, 0.15, 0.15, 1);
+        this.mathState = new MathState(this);
 
         //temp camera for now TODO - MAKE GAME CAMERA
         this.mainCamera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
@@ -133,9 +135,6 @@ export class PlayMode extends Scene {
   
           //change the GUI
           engine.hideLoadingUI();
-
-        //the gui is currently where all the math is done.
-        this._app.gui = new GUIPlay(this._app, this, this._app.gameState);
 
     }
 

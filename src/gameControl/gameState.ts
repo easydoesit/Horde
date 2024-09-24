@@ -1,5 +1,4 @@
 import { GameStateT, GameStateI, GameStateObserverI } from "../../typings";
-import { DEBUGMODE } from "../utils/CONSTANTS";
 
 export class GameState implements GameStateI{
     
@@ -18,7 +17,7 @@ export class GameState implements GameStateI{
             return console.log(`GameStateObserverI has been attached already`);
 
         }
-        
+        console.log('GameState Attached an Observer');
         this._gameStateObservers.push(gameStateObserver);
 
     }
@@ -26,10 +25,12 @@ export class GameState implements GameStateI{
     public detach(gameStateObserver:GameStateObserverI) {
         const observerIndex = this._gameStateObservers.indexOf(gameStateObserver);
 
-        if (!observerIndex) {
-            return console.log('Detached a GameStateObserverI');
+        if (observerIndex === -1) {
+            return console.log('No Attached Observer');
         }
 
+        this._gameStateObservers.splice(observerIndex, 1);
+        console.log('Detached a GameStateObserverI');
     }
 
     public notify(): void {

@@ -27,8 +27,9 @@ export class MineState {
             this.upgradeCostFarmers = Math.round(mineUpgradeCostFarmers(this.upgradeLevel));
             this.timeToMakeOre = timeToMakeOre(this.upgradeLevel);
            
-            if (this._onStateChange) {
-                this._onStateChange({ speed:this.timeToMakeOre }); // Example: Inverse relationship
+            //notify the Observer of the change.
+            if (this._onStateChange) { //this checks that it is not null.
+                this._onStateChange({ speed:this.timeToMakeOre });
             }
         }
     }

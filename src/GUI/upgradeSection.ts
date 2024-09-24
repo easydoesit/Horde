@@ -2,9 +2,10 @@ import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@b
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { GUIPlay } from "./GUIPlay";
 import { PlayMode } from "../scenes/playmode";
+import { MathStateI, MathStateObserverI, StructureStateObserverI } from "../../typings";
 
 
-export class UpgradeSection {
+export class UpgradeSection implements StructureStateObserverI, MathStateObserverI {
     public wrapperUpgradeContainer:Rectangle;
     private _textBlockUpgradeTitle:TextBlock;
     public textBlockUpgradeInstruction:TextBlock;
@@ -26,7 +27,9 @@ export class UpgradeSection {
     public goldCost:number;
     public otherCost:[name:string, cost:number];
 
-    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any) {
+    private mathState:MathStateI
+
+    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any, mathState:MathStateI | null) {
         this.name = name;
         this.instruction = instruction;
         this._maxNumOfUpgrades = maxNumberOfUpgrades;
@@ -34,11 +37,19 @@ export class UpgradeSection {
         this._guiVertPosition = guiVertPosition;  
         this._gui = gui;
         this.goldCost = goldCost;
+        
         if (otherCost) {
             this.otherCost = otherCost;
         }
+        
         this._scene = scene;
         this.upgradeAble = false;
+        
+        
+        if(mathState) {
+        this.mathState = mathState;
+        mathState.attach(this);
+        }
 
         this.wrapperUpgradeContainer = new Rectangle('wrapperUpgradeBar');
         this.wrapperUpgradeContainer.width = .95;
@@ -170,5 +181,12 @@ export class UpgradeSection {
         }
     }
     
+    public updateUI(): void {
+        
+    }
+
+    public updateMathState(mathstate: MathStateI): void {
+        this.goldCost = mathstate.costOfWheat;
+    }
 
 }

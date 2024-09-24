@@ -55,7 +55,7 @@ export class GUIStartScreen implements GameStateObserverI {
                 console.log('Game in Playmode');
                 const newScene = new PlayMode(this._app);
                 this._app.switchScene(newScene);
-                this._app.gui = new GUIPlay(this._app, newScene, this._app.gameState);
+                this._app.gui = new GUIPlay(this._app, newScene, this._app.gameState, newScene.mathState);
                 this._app.gameState.detach(this);
             }
 

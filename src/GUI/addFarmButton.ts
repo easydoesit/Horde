@@ -45,7 +45,7 @@ export class ButtonAddFarm extends Button{
 
         this.onPointerDownObservable.add(() =>
             {
-                if (gui.totalGold > farmCost) {
+                if (gui.scene.mathState.totalGold > farmCost) {
 
                     //GUI
                     //hide this button
@@ -58,8 +58,8 @@ export class ButtonAddFarm extends Button{
                     farmState.changeState();
 
                     //apply the cost changes
-                    gui.farmersMax = gui.finalFarmerMaxMath();
-                    gui.farmersMaxTextBox.text = `Max Famers: ${gui.farmersMax}`
+                    //gui.farmersMax = gui.finalFarmerMaxMath();
+                    //gui.farmersMaxTextBox.text = `Max Famers: ${gui.farmersMax}`
                     
                     //upgrade section info
                     upgradeSection.goldCost = farmState.farmUpgradeCost;
@@ -78,10 +78,7 @@ export class ButtonAddFarm extends Button{
                     //SCENE
                     //move the farm into view
                     const farmLand = gui.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
-                    console.log(farmLand);
                     farmLand.position.y = .5;
-                 
-
 
                 }
             }
