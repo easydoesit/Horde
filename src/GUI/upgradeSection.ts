@@ -2,10 +2,10 @@ import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@b
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { GUIPlay } from "./GUIPlay";
 import { PlayMode } from "../scenes/playmode";
-import { MathStateI, MathStateObserverI, StructureStateObserverI } from "../../typings";
+import { MathStateI, MathStateObserverI } from "../../typings";
 
 
-export class UpgradeSection implements StructureStateObserverI, MathStateObserverI {
+export class UpgradeSection implements MathStateObserverI {
     public wrapperUpgradeContainer:Rectangle;
     private _textBlockUpgradeTitle:TextBlock;
     public textBlockUpgradeInstruction:TextBlock;
@@ -181,10 +181,6 @@ export class UpgradeSection implements StructureStateObserverI, MathStateObserve
         }
     }
     
-    public updateUI(): void {
-        
-    }
-
     public updateMathState(mathstate: MathStateI): void {
         this.goldCost = mathstate.costOfWheat;
     }

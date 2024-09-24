@@ -22,6 +22,7 @@ export class InSceneGUI extends Rectangle {
         this._actor = actor;
         this._gui = gui;
         this._stateCallback = stateCallback;
+        console.log(this._stateCallback);
         this._speed = 0;
         this._itemBuilt = itemBuilt;
 
@@ -80,7 +81,7 @@ export class InSceneGUI extends Rectangle {
         } else {
             this._animatedBar.width = 0;
             //add ore to the game.
-            this._gui.totalOre++;
+            this._gui.scene.mathState.totalOre++;
         }
 
     }

@@ -68,7 +68,7 @@ export class Farmer extends TransformNode{
         (this._scene as PlayMode).beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
 
-            (this._scene as PlayMode).mathState.increaseFarmerCount(1);
+            (this._scene as PlayMode).mathState.addFarmers(1);
             (this._scene as PlayMode).mathState.endFarmerRun();
 
             if(DEBUGMODE) {
