@@ -22,6 +22,7 @@ export interface GameStateObserverI {
 export interface MathStateI {
     totalGold:number;
     goldPerSecond:number;
+    totalLumens:number;
     totalFarmers:number;
     runningFarmers:number;
     farmersMax:number;
@@ -46,9 +47,13 @@ export interface MathStateI {
     spendFarmers(amount:number):void;
     changeFarmersMax():void;
     changeGoldPerSecond():number;
+    addLumens(amount:number):void;
+    spendLumens(amount:number):void;
     addGold(amount:number):void;
     spendGold(amount:number):void;
-    wheatValueChange():void;
+    upgradeWheat():void;
+    changeCostOfWheat():void;
+    changeWheatValue():void;
 }
 
 export interface MathStateObserverI { //subscribe to whatever you want

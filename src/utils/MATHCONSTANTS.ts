@@ -1,5 +1,37 @@
+//lumens
+export const startingLumens = 100;
+
 //gold
 export const startingGold = 1000;
+
+//eggs
+export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
+    
+    const gold = [100, 500, 1000, 2000];//these are temporary values and should be
+    const lumens = [10, 50,100, 200];//replaced by math formulas
+    const options = [gold, lumens]; 
+    const option = Math.floor(Math.random() *  options.length);
+    let optionName:'gold' | 'lumens' = 'gold';
+    const amountIndex = Math.floor(Math.random() * options[option].length);
+    let amount:number;
+
+    if(option === 0) {
+        optionName = 'gold';
+        amount = options[0][amountIndex];
+    } else if(option === 1 ) {
+        optionName = 'lumens';
+        amount = options[1][amountIndex];
+    }   
+
+    const delivery = {
+        option: optionName,
+        amount:amount,
+
+    }
+    console.log(delivery);
+    return delivery;
+    
+}
 
 //Farmers
 export const startingFarmers = 260;

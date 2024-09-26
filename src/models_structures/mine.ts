@@ -1,6 +1,6 @@
 import { AbstractMesh, TransformNode, SceneLoader, Vector3, StandardMaterial} from "@babylonjs/core";
 import { PlayMode } from "../scenes/playmode";
-import {MatClickBox} from "../reusedAssets/materials"
+import { MatClickBox } from "../reusedAssets/materials"
 
 export class Mine extends TransformNode {
     public models:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}[];
@@ -62,9 +62,9 @@ export class Mine extends TransformNode {
 
         return {
             name:name,
-                meshes: {
-                root:root,
-                allMeshes:allMeshes
+            meshes: {
+            root:root,
+            allMeshes:allMeshes
             }
         }
     }

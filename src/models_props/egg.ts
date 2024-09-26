@@ -7,10 +7,10 @@ import { PlayMode } from "../scenes/playmode";
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
 import { Dragon } from "../models_characters/dragon";
 import { eggFallPath } from "../utils/CONSTANTS";
+import { eggDelivery } from "../utils/MATHCONSTANTS";
 
 export class Egg extends TransformNode {
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
-    private _gui:GUIPlay;
     private _animations:Animation[];
     public scene:PlayMode;
     private _animeFrameRate:Number | BigInt | any;
@@ -80,14 +80,23 @@ export class Egg extends TransformNode {
     }
 
     public async runAnimation() {
+        console.log('egg falling');
         let curve:Curve3;        
         curve = await createCurve(eggFallPath(this._dragon.position));
         this._path = createAnimationPath(curve);
 
         this._makeAnimation(this._path);
         
-        this._scene.beginAnimation(this, 0, this._animeFrameRate * this._path.length, false, 1, () => {
-            this.dispose();
+        this._scene.beginDirectAnimation(this, this.animations, 0, this._animeFrameRate * this._path.length, false, 1, () => {
+            const delivery  = eggDelivery();
+            
+            if (delivery.option === 'gold') {
+                (this._scene as PlayMode).mathState.addGold(delivery.amount);
+            }
+
+            if (delivery.option === 'lumens') {
+                (this._scene as PlayMode).mathState.addLumens(delivery.amount);
+            }
         })
 
     } 

@@ -3,57 +3,127 @@ import { DEBUGMODE } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { PlayMode } from "../scenes/playmode";
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
+import { MatClickBox } from "../reusedAssets/materials";
 
-import { DragonPath01} from "../utils/CONSTANTS";
+import { dragonPaths, dragonLoopMaxMin } from "../utils/CONSTANTS";
 
 export class Dragon extends TransformNode {
-    public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
+    public models:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}[];
+    public clickBox:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}};
+    
+    private _publicDir;
     private _gui:GUIPlay;
-    private _animations:Animation[];
+    private _importedModels:string[];
+    
+    public animations:Animation[];
     public scene:PlayMode;
+    public clickable:boolean;
 
     constructor(name:string, scene:PlayMode, gui:GUIPlay){
         super(`${name}`, scene);
-
+        this._publicDir = './models/';
+        this._importedModels = ['dragon01.glb'];
+        this._gui = gui;
+        this.animations = [];
+        this.models = [];
+        this.scene = scene;
         this.initialize();
 
     }
 
     public async initialize():Promise<void> {
-        this.model = await this.createDragon();
+        //add all the models to the scene        
+        for (let i = 0; i <= this._importedModels.length - 1; i++ ) {
+            let name = this._importedModels[i];
+            name  = name.slice(0 , -4);
 
-        this.model.root.parent = this;
+            const model = await this._createModel(name,this._importedModels[i]);
+            model.meshes.root.parent = this;
 
-        let curve:Curve3;
-        let path:Vector3[];
-        
-        curve = await createCurve(DragonPath01);
-        path = createAnimationPath(curve);
+            this.models.push(model);
+        }
 
-        this._makeAnimation(path,curve);
+        //hide the meshes of the other models
+        for (let i = 1; i <= this.models.length - 1; i++ ) {
+            for (let j = 0; j < this.models[i].meshes.allMeshes.length; j++) {
+                this.models[i].meshes.allMeshes[j].isVisible = false;
+            }
+        }
+
+        //create the click model which is invisible but in the scene for RayHits
+        this.clickBox = await this._createModel('clickZone', 'dragonClickBox.glb');
+        this.clickBox.meshes.root.parent = this;
+        //hide the click zone
+        const clickModelMaterial = new MatClickBox('mineClickBoxMat', this.scene);
+        this.clickBox.meshes.allMeshes[0].material = clickModelMaterial;
+        this.clickBox.meshes.allMeshes[0].material.alpha = 0;
+
+        if (this.models) {
+            this.playDragon();
+        }
         
     }
 
-    async createDragon():Promise<{root:AbstractMesh, allMeshes:AbstractMesh[]}>{
-        const models = await SceneLoader.ImportMeshAsync('', './models/', 'dragon01.glb')
+    async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}>{
+        const models = await SceneLoader.ImportMeshAsync('',this._publicDir, importedModel, this.scene);
         const root = models.meshes[0];
         const allMeshes = root.getChildMeshes();
 
         return {
+            name:name,
+            meshes: {
             root:root,
             allMeshes:allMeshes
+            }
         }
     }
 
+    private _getPath(list:Vector3[][]) {
+        
+        const index = list[Math.floor(Math.random() * list.length)]
+        return index; 
+
+    }
+
+    public makeUnclickable() {
+        this.clickable = false;
+    }
+
+    public makeClickable() {
+        this.clickable = true;
+    }
+
+    public playDragon = () => {
+
+        let randomInterval = Math.round(Math.random() * (dragonLoopMaxMin[0] - dragonLoopMaxMin[1]) + dragonLoopMaxMin[1]);
+        const dragonPath = this._getPath(dragonPaths);
+        let curve:Curve3;
+        let path:Vector3[];
+        this.makeClickable();
+
+        setTimeout(async function() {
+            curve = await createCurve(dragonPath);
+            path = createAnimationPath(curve);
+
+            if(path && curve) {
+                this._makeAnimation(path,curve);
+            } else {
+                console.error('Path or curve not ready')
+            }
+        }.bind(this), randomInterval);
+
+    }
+
     private _makeAnimation(path:Vector3[], curve:Curve3) {
+        console.log('makeAnimation called');
         let debugPath:LinesMesh;
 
         if (DEBUGMODE) {
             debugPath = showPath(curve);
         }
 
-        const frameRate = 60;
-        const pathFollowAnim = new Animation('dragonFlight', 'position', frameRate * 1, Animation.ANIMATIONTYPE_VECTOR3);
+        const frameRate = 30;
+        const pathFollowAnim = new Animation('dragonFlight', 'position', frameRate, Animation.ANIMATIONTYPE_VECTOR3);
         const pathFollowKeys = [];
 
         for (let i = 0; i < path.length; i++) {
@@ -65,15 +135,16 @@ export class Dragon extends TransformNode {
         pathFollowAnim.setKeys(pathFollowKeys);
 
         this.animations.push(pathFollowAnim);
-
-        this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () => {
+        
+        (this.scene as PlayMode).beginDirectAnimation(this, this.animations, 0, frameRate * path.length, false, 1, () => {
             //this.dispose();
-
+            this.playDragon();
+            
+            console.log('animation played');
             if(DEBUGMODE) {
                 debugPath.dispose();
             }
 
         })
-
     }
 }

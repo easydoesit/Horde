@@ -92,7 +92,7 @@ export class PlayMode extends Scene {
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this, this._app.gui as GUIPlay);
-    
+        this.dragon.position = new Vector3(0,-10,0);
         this.egg = new Egg('egg', this, this._app.gui as GUIPlay, this.dragon);
         
         //load the hill
@@ -122,9 +122,13 @@ export class PlayMode extends Scene {
                 this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
             }
 
-            if (hit.pickedMesh === this.dragon.model.allMeshes[0]) {
+            if (hit.pickedMesh === this.dragon.clickBox.meshes.allMeshes[0]) {
                 console.log('Dragon Clicked');
-                this.egg.runAnimation();
+                if (this.dragon.clickable) {
+                    this.egg.runAnimation();
+                    this.dragon.makeUnclickable();
+                    
+                }
             }
 
         }
@@ -135,7 +139,6 @@ export class PlayMode extends Scene {
   
           //change the GUI
           engine.hideLoadingUI();
-
     }
 
 }

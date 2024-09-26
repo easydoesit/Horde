@@ -1,5 +1,5 @@
 import { MathStateI, MathStateObserverI} from "../../typings";
-import { farmerBaseValue,startingFarmers,startingGold,wheatUpgradeCostGold, wheatUpgradeValue, wheatUpgradesMax } from "../utils/MATHCONSTANTS";
+import { farmerBaseValue,startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue, wheatUpgradesMax } from "../utils/MATHCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { FarmState } from "./farmState";
 import { MineState } from "./mineState";
@@ -17,6 +17,8 @@ export class MathState implements MathStateI {
     //gold
     public totalGold:number;
     public goldPerSecond:number;
+
+    public totalLumens:number;
 
     //wheat
     public wheatValue:number;
@@ -49,6 +51,8 @@ export class MathState implements MathStateI {
     
         this.totalGold = startingGold;
         this.goldPerSecond = 0;
+
+        this.totalLumens = startingLumens;
         
         this.wheatValue = 0;
         this.wheatUpgrades = 0;
@@ -131,7 +135,15 @@ export class MathState implements MathStateI {
     }
 
     public spendGold(amount:number) {
-        this.totalGold -= amount;
+        this.totalLumens -= amount;
+    }
+
+    public addLumens(amount: number): void {
+        Math.round(this.totalLumens  += amount)
+    }
+
+    public spendLumens(amount:number) {
+        Math.round(this.totalLumens -= amount);
     }
 
     //Farmers
@@ -164,28 +176,18 @@ export class MathState implements MathStateI {
         
         return total;
     }
-
-
-    //Wheat
-    public wheatValueChange() {
     
-        if (this.wheatValue < wheatUpgradeValue * wheatUpgradesMax) {
-            if (this.totalGold > this.costOfWheat) {
-            
-            //apply the value changes
-            this.wheatValue = Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
-            this.goldPerSecond = Math.round(this.changeGoldPerSecond() * 10000)/10000;
-            
-            //use gold
-            this.spendGold(this.costOfWheat);
-            
-            //apply cost change
-            this.wheatUpgrades += 1;
-            this.costOfWheat = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)* 1000)/1000;
-            }
+    //wheat
+    public upgradeWheat() {
+        this.wheatUpgrades += 1;
+    }
 
-        }
-        
+    public changeCostOfWheat() {
+        this.costOfWheat = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)* 1000)/1000;
+    }
+
+    public changeWheatValue() {
+        this.wheatValue =  Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
     }
 
 }

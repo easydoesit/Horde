@@ -44,13 +44,38 @@ export const FarmToMinepath04 = [
     MinePos,
 ]
 
-export const DragonPath01 = [
+//define dragon flight paths - Not Exported
+export const dragonPath01 = [
     new Vector3(-20,6, -5),
     new Vector3(-16, 6, 0),
     new Vector3(-20,6, 5),
 ]
 
+const dragonPath02 = [
+    new Vector3(-20,3, 5),
+    new Vector3(-16, 3, 0),
+    new Vector3(-20,3, -5),
+]
+
+const dragonPath03 = [
+    new Vector3(-20,8, 5),
+    new Vector3(-16, 3, 0),
+    new Vector3(-20,2, -5),
+]
+
+const dragonPath04 = [
+    new Vector3(-20,8, 5),
+    new Vector3(-16, 3, 0),
+    new Vector3(-20,2, -5),
+]
+
+//export all the paths into array.
+export const dragonPaths = [dragonPath01, dragonPath02, dragonPath03, dragonPath04];
+
+export const dragonLoopMaxMin = [15000, 5000]; //milliseconds
+
 export const eggFallPath = (dragonPosition:Vector3) => {
+    
     const path = [
         dragonPosition,
         new Vector3(dragonPosition.x, -10, dragonPosition.z)
