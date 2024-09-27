@@ -22,7 +22,6 @@ export class InSceneGUI extends Rectangle {
         this._actor = actor;
         this._gui = gui;
         this._stateCallback = stateCallback;
-        console.log(this._stateCallback);
         this._speed = 0;
         this._itemBuilt = itemBuilt;
 

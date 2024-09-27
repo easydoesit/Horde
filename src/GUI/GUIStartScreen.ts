@@ -43,7 +43,6 @@ export class GUIStartScreen implements GameStateObserverI {
   
           startBtn.onPointerDownObservable.add(() => {
               this._scene.detachControl();
-              console.log('this was detached.');
               this._app.gameState.setGameState('PLAY_MODE');
           });
 

@@ -21,18 +21,6 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _gameState:GameStateI;
     private _mathState:MathStateI;
     public scene:PlayMode;
-    
-    //Math
-
-    //ore
-    // public totalOre:number;
-    // public costOfOreGold:number;
-    // public timeToMakeOre:number;
-
-    //structures
-
-    //mines
-    public mineState:MineState;
  
     //GUI
     public gameGUI:AdvancedDynamicTexture;
@@ -112,9 +100,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._textBlockTotalFarmers = new TextBlock('FarmerCount', `${this._mathState.totalFarmers}`);
         this._textBlockTotalFarmers.fontFamily = GUIFONT1;
         this._textBlockTotalFarmers.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._textBlockTotalFarmers.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-        this._textBlockTotalFarmers.top = 10;
-        this._textBlockTotalFarmers.left= 720;
+        this._textBlockTotalFarmers.top = -30;
+        this._textBlockTotalFarmers.left= 670;
         this._textBlockTotalFarmers.color = 'white';
         this._playGUIWrapperTop.addControl(this._textBlockTotalFarmers);
 
@@ -128,8 +115,9 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         //GOLD
         this._totalGoldPerSecondTextBlock = new TextBlock('TotalGoldPerSecond', `${this._mathState.goldPerSecond}`);
         this._totalGoldPerSecondTextBlock.fontFamily =GUIFONT1;
+        this._totalGoldPerSecondTextBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         this._totalGoldPerSecondTextBlock.top = -10;
-        this._totalGoldPerSecondTextBlock.left= -35;
+        this._totalGoldPerSecondTextBlock.left= 670;
         this._totalGoldPerSecondTextBlock.color = "white";
         this._playGUIWrapperTop.addControl(this._totalGoldPerSecondTextBlock);
 
@@ -313,7 +301,6 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     }
 
     public updateMathState(mathState: MathStateI): void {
-        console.log('updateMathState Called in GUI');
         
         //Everytime the MathState Class runs the game loop these update.
         this._textBlockTotalFarmers.text = `${mathState.totalFarmers}`;

@@ -4,7 +4,6 @@ import { GUIPlay } from "../GUI/GUIPlay";
 import { PlayMode } from "../scenes/playmode";
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
 import { MatClickBox } from "../reusedAssets/materials";
-
 import { dragonPaths, dragonLoopMaxMin } from "../utils/CONSTANTS";
 
 export class Dragon extends TransformNode {
@@ -54,7 +53,7 @@ export class Dragon extends TransformNode {
         this.clickBox = await this._createModel('clickZone', 'dragonClickBox.glb');
         this.clickBox.meshes.root.parent = this;
         //hide the click zone
-        const clickModelMaterial = new MatClickBox('mineClickBoxMat', this.scene);
+        const clickModelMaterial = new MatClickBox('dragonClickBoxMat', this.scene);
         this.clickBox.meshes.allMeshes[0].material = clickModelMaterial;
         this.clickBox.meshes.allMeshes[0].material.alpha = 0;
 
@@ -115,7 +114,6 @@ export class Dragon extends TransformNode {
     }
 
     private _makeAnimation(path:Vector3[], curve:Curve3) {
-        console.log('makeAnimation called');
         let debugPath:LinesMesh;
 
         if (DEBUGMODE) {
@@ -135,12 +133,11 @@ export class Dragon extends TransformNode {
         pathFollowAnim.setKeys(pathFollowKeys);
 
         this.animations.push(pathFollowAnim);
-        
+        //this part should be removed.
         (this.scene as PlayMode).beginDirectAnimation(this, this.animations, 0, frameRate * path.length, false, 1, () => {
             //this.dispose();
             this.playDragon();
             
-            console.log('animation played');
             if(DEBUGMODE) {
                 debugPath.dispose();
             }

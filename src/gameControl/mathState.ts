@@ -1,5 +1,5 @@
 import { MathStateI, MathStateObserverI} from "../../typings";
-import { farmerBaseValue,startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue, wheatUpgradesMax } from "../utils/MATHCONSTANTS";
+import { farmerBaseValue,ogreIntervalTime,startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue, wheatUpgradesMax } from "../utils/MATHCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { FarmState } from "./farmState";
 import { MineState } from "./mineState";

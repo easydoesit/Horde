@@ -69,11 +69,13 @@ const dragonPath04 = [
     new Vector3(-20,2, -5),
 ]
 
-//export all the paths into array.
+//export all the paths into array. Add as many as we want
 export const dragonPaths = [dragonPath01, dragonPath02, dragonPath03, dragonPath04];
 
+//a random interval for how often a dragon should appear.
 export const dragonLoopMaxMin = [15000, 5000]; //milliseconds
 
+//egg
 export const eggFallPath = (dragonPosition:Vector3) => {
     
     const path = [
@@ -83,3 +85,22 @@ export const eggFallPath = (dragonPosition:Vector3) => {
     
     return path;
 }
+
+//Ogre
+export const ogreLoopMaxMin = [5000, 1000]; //Temp Values for testing use: 5 * 60 * 1000, 1 * 60 * 1000
+
+const ogrePathEnter = [
+    new Vector3(-6,1.1, 18),
+    new Vector3(-6, 1.1, 0),
+    new Vector3(-6,1.1, -5),
+]
+
+const ogrePathExit = [
+    new Vector3(-6,1.1, -5),
+    new Vector3(-6,1.1, -18),
+]
+
+//export all the paths into array. Add as many as we want
+export const ogrePaths = [ogrePathEnter, ogrePathExit];
+
+export const ogreClicks = 10;

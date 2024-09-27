@@ -16,6 +16,7 @@ import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
 import { MathStateI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
+import { Ogre } from "../models_characters/ogre";
 //import { Mine02 } from "../models_structures/mine02";
 
 export class PlayMode extends Scene {
@@ -40,6 +41,7 @@ export class PlayMode extends Scene {
     public farmHouse:FarmHouse;
     public dragon:Dragon;
     public egg:Egg;
+    public ogre:Ogre;
 
     constructor(app:App,) {
         super(app.engine);
@@ -95,6 +97,8 @@ export class PlayMode extends Scene {
         this.dragon.position = new Vector3(0,-10,0);
         this.egg = new Egg('egg', this, this._app.gui as GUIPlay, this.dragon);
         
+        this.ogre = new Ogre('ogre', this, this._app.gui as GUIPlay);
+
         //load the hill
         this._hill = new Hill(this);
         
@@ -128,6 +132,16 @@ export class PlayMode extends Scene {
                     this.egg.runAnimation();
                     this.dragon.makeUnclickable();
                     
+                }
+            }
+
+            if (hit.pickedMesh === this.ogre.clickBox.meshes.allMeshes[0]) {
+                
+                if (this.ogre.clickable) {
+                    this.ogre.takeClick();
+                    if(this.ogre.clicksLeft === 0) {
+                        this.ogre.playOgreExit();
+                    }
                 }
             }
 

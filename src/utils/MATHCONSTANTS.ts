@@ -34,8 +34,10 @@ export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
 }
 
 //Farmers
-export const startingFarmers = 260;
+export const startingFarmers = 0;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
+export const ogreIntervalTime = 1000; //how fast the ogre ruins farmers.
+export const ogreScaresFarmers = 2; //how much the ogre removes farmers per ogreBeat
 
 //Wheat
 

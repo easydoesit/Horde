@@ -11,15 +11,12 @@ export class Miner extends TransformNode {
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
     private _gui:GUIPlay;
     private _departFarm:number;
-    private _animations:Animation[];
     public scene:PlayMode;
 
     constructor(name:string, scene:PlayMode, gui:GUIPlay, departFarm:number) {
         super(`miner_${name}`, scene);
-
         this._gui = gui;
         this._departFarm = departFarm;
-        this._animations = [];
       
         this.initialize();
     }
@@ -79,6 +76,7 @@ export class Miner extends TransformNode {
         if (DEBUGMODE) {
             debugPath = showPath(curve);
         }
+        
         const frameRate = 60;
         const pathFollowAnim = new Animation('farmerPosition', 'position',frameRate * 3 , Animation.ANIMATIONTYPE_VECTOR3)
         const pathFollowKeys = [];
@@ -92,7 +90,7 @@ export class Miner extends TransformNode {
         pathFollowAnim.setKeys(pathFollowKeys);
      
         this.animations.push(pathFollowAnim);
-
+        console.log(this.animations);
         this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
             
@@ -100,8 +98,5 @@ export class Miner extends TransformNode {
                 debugPath.dispose();
             }
         });
-
-        
-    
     }
 }
