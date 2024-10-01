@@ -4,12 +4,28 @@ export const DEBUGMODE = true;
 
 export const GUIFONT1 = 'Arial';
 
+export const modelsDir = './models/';
+
+//hill
+export const hillModels = ['hill.glb'];
+
+//castle
+export const castleModels = ['castle01.glb', 'castle02.glb'];
+export const castlClickBox = 'castleClickBox.glb';
+
+//farms
+
 export const FarmHouse01Pos = new Vector3(-10,1.25,-4);
 export const FarmHouse02Pos = new Vector3(-10,1.25,4);
 export const FarmHouse03Pos = new Vector3(-10,1.25,-10);
 export const FarmHouse04Pos = new Vector3(-10,1.25,10);
 
 export const MinePos = new Vector3(-5,1.25,1);
+
+//mines
+export const mineModels = ['mine01.glb', 'mine02.glb'];
+export const mineClickBox = 'mineClickBox.glb'
+
 
 //paths
 

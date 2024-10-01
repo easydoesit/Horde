@@ -9,7 +9,7 @@ import { FarmLand } from "../models_structures/farmLand";
 import { ButtonAddFarm } from "./addFarmButton";
 import { ButtonAddMine } from "./addMineButton";
 import { UpgradeWindow } from "./upgradeWindows";
-import { MineState } from "../gameControl/mineState";
+//import { MineState } from "../gameControl/mineState";
 import { Miner } from "../models_characters/miner";
 import { InSceneGUI } from "./inSceneGUI";
 import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI } from "../../typings";
@@ -256,6 +256,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
         this.mineInSceneGUI = new InSceneGUI('MineSceneGui', this, this.scene.mine, this._mathState.mineState, 'Ore');
         this.mineInSceneGUI.zIndex = -100;
+        
         //blackSmith Upgrades
         //this is the GUI that Appears whn you click on the BlackSmith Building to upgrade
         this.GUIWrapperBlackSmithUpgrade = new UpgradeWindow('blackSmithUpgradeWindow', 'skyblue', this);
@@ -267,6 +268,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
         this._addMineButton = new ButtonAddMine(-320, this._mineUpgradeSection, this._mathState.mineState, this);
         this.GUIWrapperCastleUpgrade.addControl(this._addMineButton);
+        this._addMineButton.isEnabled = false;
 
         //GAMELOOP//
         this.scene.onBeforeRenderObservable.add(() => {
@@ -288,6 +290,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
             }
 
             //mine
+            this._addMineButton.isEnabled = this._mineUpgradeAllow();
             this._mineUpgradeSection.upgradeAble = this._mineUpgradeAllow();
             
         })
@@ -406,11 +409,9 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
             case 1 : {
                 //remove the old model from the scene
-                this.scene.mine.models[0].meshes.root.dispose();
+                this.scene.mine.hideModel(0);
                 //make the next meshes Visible
-                for(let i in this.scene.mine.models[1].meshes.allMeshes){
-                    this.scene.mine.models[1].meshes.allMeshes[i].isVisible = true;
-                } 
+                this.scene.mine.showModel('mine02');
             }   
             break;
         

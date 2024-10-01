@@ -32,21 +32,21 @@ export class Miner extends TransformNode {
         
         switch(this._departFarm) {
             case 0:  {
-                curve = await createCurve(FarmToMinepath01)
+                curve = createCurve(FarmToMinepath01)
             }
             break;
             case 1: {
-                curve = await createCurve(FarmToMinepath02);
+                curve = createCurve(FarmToMinepath02);
                 
             }
             break;
             case 2:{
-                curve = await createCurve(FarmToMinepath03);
+                curve = createCurve(FarmToMinepath03);
                 
             }
             break;
             case 3: {
-                curve = await createCurve(FarmToMinepath04);
+                curve = createCurve(FarmToMinepath04);
                 
             }
             break;
@@ -90,7 +90,7 @@ export class Miner extends TransformNode {
         pathFollowAnim.setKeys(pathFollowKeys);
      
         this.animations.push(pathFollowAnim);
-        console.log(this.animations);
+        
         this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
             

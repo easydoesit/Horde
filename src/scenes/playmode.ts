@@ -1,23 +1,20 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
-import { FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, MinePos } from "../utils/CONSTANTS";
+import { castlClickBox, castleModels, FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, hillModels, mineClickBox, mineModels, MinePos } from "../utils/CONSTANTS";
 
 //classes
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
 
 //gamepieces
-import { Hill } from "../models_structures/hill";
+import { Structure } from "../models_structures/structures";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
 import { FarmLand } from "../models_structures/farmLand";
 import { FarmHouse } from "../models_structures/farmHouse";
-import { Castle01 } from "../models_structures/castle";
-import { Mine } from "../models_structures/mine";
 import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
 import { MathStateI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
-//import { Mine02 } from "../models_structures/mine02";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -25,17 +22,17 @@ export class PlayMode extends Scene {
     public mathState:MathStateI;
 
     //gamepieces 
-    private _hill:Hill;
+    private _hill:Structure;
 
     //interacative
-    public castle01:Castle01;
+    public castle:Structure;
 
     public farmLand01:FarmLand;
     public farmLand02:FarmLand;
     public farmLand03:FarmLand;
     public farmLand04:FarmLand;
     
-    public mine:Mine;
+    public mine:Structure;
 
     //for cloning
     public farmHouse:FarmHouse;
@@ -68,8 +65,8 @@ export class PlayMode extends Scene {
         mainLight.intensity = 2;
 
         //load the starter Castle and position on hill
-        this.castle01 = new Castle01(this);
-        this.castle01.position = new Vector3(-.6, 6.5, -.2);
+        this.castle = new Structure('Castle', this, castleModels, castlClickBox);
+        this.castle.position = new Vector3(-.6, 6.5, -.2);
 
         //load the entry level farms
         this.farmLand01 = new FarmLand('FarmLand01', this, FarmHouse01Pos);
@@ -85,7 +82,7 @@ export class PlayMode extends Scene {
         this.farmLand04 = new FarmLand('FarmLand04', this, FarmHouse04Pos);
         this.farmLand04.position = new Vector3(0,-10,12);
 
-        this.mine = new Mine('Mine', this);    
+        this.mine = new Structure('Mine', this, mineModels, mineClickBox );    
         this.mine.position = new Vector3(MinePos.x, MinePos.y - 10 , MinePos.z);
 
         //load all models but position them off screen for faster loading times.
@@ -100,8 +97,8 @@ export class PlayMode extends Scene {
         this.ogre = new Ogre('ogre', this, this._app.gui as GUIPlay);
 
         //load the hill
-        this._hill = new Hill(this);
-        
+        this._hill = new Structure('Hill', this, hillModels, null );
+    
         //load the background
         const background = new PlainsBackground(this);
 
@@ -116,12 +113,12 @@ export class PlayMode extends Scene {
                 this._app.gui.showUpgrades(this._app.gui.GUIWrapperFarmUpgrade);
             }
 
-            if (hit.pickedMesh === this.castle01.model.allMeshes[0]) {
+            if (hit.pickedMesh === this.castle.clickZone) {
                 console.log('Castle Clicked');
                 this._app.gui.showUpgrades(this._app.gui.GUIWrapperCastleUpgrade);
             }
 
-            if (hit.pickedMesh === this.mine.clickBox.meshes.allMeshes[0]) {
+            if (hit.pickedMesh === this.mine.clickZone) {
                 console.log('Mine Clicked');
                 this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
             }
@@ -151,8 +148,13 @@ export class PlayMode extends Scene {
         
         await this.whenReadyAsync();
   
-          //change the GUI
-          engine.hideLoadingUI();
+        //show any hidden models waiting on Async
+        this._hill.showModel(0);
+        this.castle.showModel(0);
+
+        //change the GUI
+        engine.hideLoadingUI();
+       
     }
 
 }
