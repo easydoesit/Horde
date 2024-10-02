@@ -15,6 +15,7 @@ import { InSceneGUI } from "./inSceneGUI";
 import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
+import { Structure } from "../models_structures/structures";
 
 export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _app:App;
@@ -363,12 +364,12 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         switch(farmState.upgradeLevel) {
             case 1: {
             
-                const farmland = this.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
-                const position = farmland.farmHousePos;
-                
+                const farm = this.scene.getNodeByName(farmState.gamePieceName)as Structure;
+                console.log(farm);
                 //upgrade the farm in the scene.
-                const farmHouse = this.scene.farmHouse.clone(`${farmState.gamePieceName}_FarmHouse`,null,null);
-                farmHouse.position = position;
+                farm.hideModel(0);
+                farm.showModel(1);
+                
 
             }
             break;

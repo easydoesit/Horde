@@ -15,6 +15,9 @@ export const castlClickBox = 'castleClickBox.glb';
 
 //farms
 
+export const farmModels = ['farm01.glb', 'farm02.glb'];
+export const farmClickBox = 'farmClickBox.glb';
+
 export const FarmHouse01Pos = new Vector3(-10,1.25,-4);
 export const FarmHouse02Pos = new Vector3(-10,1.25,4);
 export const FarmHouse03Pos = new Vector3(-10,1.25,-10);

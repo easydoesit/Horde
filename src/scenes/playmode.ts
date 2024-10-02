@@ -1,5 +1,5 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
-import { castlClickBox, castleModels, FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, hillModels, mineClickBox, mineModels, MinePos } from "../utils/CONSTANTS";
+import { castlClickBox, castleModels, farmClickBox, FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, farmModels, hillModels, mineClickBox, mineModels, MinePos } from "../utils/CONSTANTS";
 
 //classes
 import { GUIPlay } from "../GUI/GUIPlay";
@@ -8,8 +8,6 @@ import { App } from "../app";
 //gamepieces
 import { Structure } from "../models_structures/structures";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
-import { FarmLand } from "../models_structures/farmLand";
-import { FarmHouse } from "../models_structures/farmHouse";
 import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
 import { MathStateI } from "../../typings";
@@ -27,15 +25,14 @@ export class PlayMode extends Scene {
     //interacative
     public castle:Structure;
 
-    public farmLand01:FarmLand;
-    public farmLand02:FarmLand;
-    public farmLand03:FarmLand;
-    public farmLand04:FarmLand;
+    public farm01:Structure;
+    public farm02:Structure;
+    public farm03:Structure;
+    public farm04:Structure;
     
     public mine:Structure;
 
     //for cloning
-    public farmHouse:FarmHouse;
     public dragon:Dragon;
     public egg:Egg;
     public ogre:Ogre;
@@ -69,25 +66,22 @@ export class PlayMode extends Scene {
         this.castle.position = new Vector3(-.6, 6.5, -.2);
 
         //load the entry level farms
-        this.farmLand01 = new FarmLand('FarmLand01', this, FarmHouse01Pos);
-        this.farmLand01.position = new Vector3(0,.5,-4);
+        this.farm01 = new Structure('Farm01', this, farmModels, farmClickBox);
+        this.farm01.position = new Vector3(0,.5,-4);
         
         //these start out of view
-        this.farmLand02 = new FarmLand('FarmLand02', this, FarmHouse02Pos);
-        this.farmLand02.position = new Vector3(0,-10,4);
+        this.farm02 = new Structure('Farm02', this, farmModels, farmClickBox);
+        this.farm02.position = new Vector3(0,-10,4);
 
-        this.farmLand03 = new FarmLand('FarmLand03', this, FarmHouse03Pos);
-        this.farmLand03.position = new Vector3(0,-10,-12);
+        this.farm03 = new Structure('Farm03', this, farmModels, farmClickBox);
+        this.farm03.position = new Vector3(0,-10,-12);
 
-        this.farmLand04 = new FarmLand('FarmLand04', this, FarmHouse04Pos);
-        this.farmLand04.position = new Vector3(0,-10,12);
+        this.farm04 = new Structure('Farm04', this, farmModels, farmClickBox);
+        this.farm04.position = new Vector3(0,-10,12);
 
         this.mine = new Structure('Mine', this, mineModels, mineClickBox );    
         this.mine.position = new Vector3(MinePos.x, MinePos.y - 10 , MinePos.z);
 
-        //load all models but position them off screen for faster loading times.
-        this.farmHouse = new FarmHouse('FarmHouseBase',this);
-        this.farmHouse.position = new Vector3(0,-10,0);
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this, this._app.gui as GUIPlay);
@@ -108,7 +102,7 @@ export class PlayMode extends Scene {
 
             const hit = this.pickWithRay(ray);
 
-            if (hit.pickedMesh === this.farmLand01.model.allMeshes[0] || hit.pickedMesh === this.farmLand02.model.allMeshes[0] ) {
+            if (hit.pickedMesh === this.farm01.clickZone || hit.pickedMesh === this.farm02.clickZone ) {
                 console.log('Farm Clicked');
                 this._app.gui.showUpgrades(this._app.gui.GUIWrapperFarmUpgrade);
             }
@@ -151,6 +145,10 @@ export class PlayMode extends Scene {
         //show any hidden models waiting on Async
         this._hill.showModel(0);
         this.castle.showModel(0);
+        this.farm01.showModel(0);
+        this.farm02.showModel(0);
+        this.farm03.showModel(0);
+        this.farm04.showModel(0);
 
         //change the GUI
         engine.hideLoadingUI();

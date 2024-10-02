@@ -1,5 +1,5 @@
 import { farmUpgradeCost, farmersMax, farmUpgradeMax, } from "../utils/MATHCONSTANTS";
-import { FarmLand } from "../models_structures/farmLand";
+import { Structure } from "../models_structures/structures";
 import { GUIPlay } from "../GUI/GUIPlay";
 
 export class FarmState {
@@ -7,13 +7,13 @@ export class FarmState {
     public farmersMax:number;
     public farmUpgradeCost:number;
     public farmersNextMax:number | string | void;
-    public gamePieceName:FarmLand['name'];
+    public gamePieceName:Structure['name'];
     public farmUpgradeAllowed: Boolean;
     public upgradeLevel:number;
 
     private _gui:GUIPlay;
 
-    constructor(name: string, gamePieceName:FarmLand['name']) {
+    constructor(name: string, gamePieceName:Structure['name']) {
         this.name = name;
         this.upgradeLevel = 0;
         this.farmersMax = Math.round(farmersMax(this.upgradeLevel));

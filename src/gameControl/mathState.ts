@@ -59,11 +59,11 @@ export class MathState implements MathStateI {
         this.costOfWheat = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)*1000)/1000;
 
         //farms
-        this.farmState01 = new FarmState('Farm01', 'FarmLand01');
+        this.farmState01 = new FarmState('Farm01', 'Farm01');
         this.farmState01.changeState();
-        this.farmState02 = new FarmState('Farm02', 'FarmLand02');
-        this.farmState03 = new FarmState('Farm03', 'FarmLand03');
-        this.farmState04 = new FarmState('Farm04', 'FarmLand04');
+        this.farmState02 = new FarmState('Farm02', 'Farm02');
+        this.farmState03 = new FarmState('Farm03', 'Farm03');
+        this.farmState04 = new FarmState('Farm04', 'Farm04');
         this.farmStates = [];
         this.farmStates.push(this.farmState01, this.farmState02, this.farmState03, this.farmState04);
 
