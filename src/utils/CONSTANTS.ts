@@ -12,23 +12,32 @@ export const hillModels = ['hill.glb'];
 //castle
 export const castleModels = ['castle01.glb', 'castle02.glb'];
 export const castlClickBox = 'castleClickBox.glb';
+export const castlePos = new Vector3(-.6, 6.5, -.2);
 
 //farms
 
 export const farmModels = ['farm01.glb', 'farm02.glb'];
 export const farmClickBox = 'farmClickBox.glb';
 
+export const Farm01Pos = new Vector3(0,.5,-4);
+export const Farm02Pos = new Vector3(0,-10,4);
+export const Farm03Pos = new Vector3(0,-10,-12);
+export const Farm04Pos = new Vector3(0,-10,12);
+
 export const FarmHouse01Pos = new Vector3(-10,1.25,-4);
 export const FarmHouse02Pos = new Vector3(-10,1.25,4);
 export const FarmHouse03Pos = new Vector3(-10,1.25,-10);
 export const FarmHouse04Pos = new Vector3(-10,1.25,10);
 
-export const MinePos = new Vector3(-5,1.25,1);
-
 //mines
 export const mineModels = ['mine01.glb', 'mine02.glb'];
-export const mineClickBox = 'mineClickBox.glb'
+export const mineClickBox = 'mineClickBox.glb';
+export const MinePos = new Vector3(-5,1.25,1);
 
+//smithy
+export const smithyModels = ['smithy01.glb', 'smithy02.glb'];
+export const smithyClickBox = 'smithyClickBox.glb';
+export const smithyPos = new Vector3(-5, 5, -1.5);
 
 //paths
 

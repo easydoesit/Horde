@@ -5,7 +5,7 @@ import { MineState } from "../gameControl/mineState";
 import { GUIPlay } from "./GUIPlay";
 import { mineUpgradeCostFarmers, mineUpgradeCostGold, oreUpgradeValue } from "../utils/MATHCONSTANTS";
 import { MinePos } from "../utils/CONSTANTS";
-import { Structure } from "../models_structures/structures";
+import { StructureModel } from "../models_structures/structureModels";
 
 export class ButtonAddMine extends Button {
     private _guiVertPosition:number;
@@ -68,7 +68,7 @@ export class ButtonAddMine extends Button {
                 
                   //Scene
                 //move the mine Into View
-                const mine = gui.scene.getNodeByName('Mine') as Structure;
+                const mine = gui.scene.getNodeByName('Mine') as StructureModel;
                 mine.position.y = MinePos.y;
                 mine.showModel(0);
 
@@ -87,7 +87,6 @@ export class ButtonAddMine extends Button {
                 }
                 
                 const intervalId = setInterval(createMiners, 250);
-
 
                 //apply the cost changes
                 gui.scene.mathState.totalFarmers = gui.scene.mathState.totalFarmers - this._costFarmers;

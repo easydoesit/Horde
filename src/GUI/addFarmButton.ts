@@ -4,7 +4,7 @@ import { UpgradeSection } from "./upgradeSection";
 import { FarmState } from "../gameControl/farmState";
 import { GUIPlay } from "./GUIPlay";
 import { farmCost } from "../utils/MATHCONSTANTS";
-import { FarmLand } from "../models_structures/farmLand";
+import { StructureModel } from "../models_structures/structureModels";
 
 export class ButtonAddFarm extends Button{
     private _guiVertPosition:number;
@@ -77,8 +77,8 @@ export class ButtonAddFarm extends Button{
 
                     //SCENE
                     //move the farm into view
-                    const farmLand = gui.scene.getNodeByName(farmState.gamePieceName)as FarmLand;
-                    farmLand.position.y = .5;
+                    const farm = gui.scene.getNodeByName(farmState.gamePieceName)as StructureModel;
+                    farm.position.y = .5;
 
                 }
             }

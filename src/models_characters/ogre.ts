@@ -42,7 +42,6 @@ export class Ogre extends TransformNode {
         this.models = [];
         this.scene = scene;
         this.clicksLeft = ogreClicks;
-        console.log("animations at before initialize: ", this.animations);
 
         this._animOgreEnterPos = new Vector3(-6,1.1, 18);
         this._animOgreAttackPos = new Vector3(-6,1.1, -5);
@@ -81,14 +80,10 @@ export class Ogre extends TransformNode {
         transfromPosition.setKeys(transfromPositionAnimKeyFrames);
         this.animations.push(transfromPosition);
 
-        for (let i in this.animations) {
-            console.log(this.animations[i].name);
-        }
-
     }
 
     public async initialize():Promise<void> {
-        console.log("animations at start: ", this.animations);
+
         //add all the models to the scene        
         for (let i = 0; i < this._importedModels.length; i++ ) {
             let name = this._importedModels[i];
@@ -160,7 +155,6 @@ export class Ogre extends TransformNode {
                 },ogreIntervalTime);
             }
         } else {
-            console.log('stop attack')
             this.ogreAttack = false;
             
             if (this._ogreInterval) {
@@ -174,7 +168,6 @@ export class Ogre extends TransformNode {
     public takeClick() {
         if (this.clicksLeft > 0) {
             this.clicksLeft -= 1;
-            console.log(this.clicksLeft);
         }
     }
 

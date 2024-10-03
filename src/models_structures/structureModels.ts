@@ -1,27 +1,31 @@
 import { AbstractMesh, TransformNode, SceneLoader, Vector3, StandardMaterial} from "@babylonjs/core";
 import { PlayMode } from "../scenes/playmode";
 import { MatClickBox } from "../reusedAssets/materials";
-import { modelsDir } from "../utils/CONSTANTS";
+import { DEBUGMODE, modelsDir } from "../utils/CONSTANTS";
 
-export class Structure extends TransformNode {
+export class StructureModel extends TransformNode {
     public models:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}[];
     private _clickBox:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}};
     public clickZone:AbstractMesh;
-
     private _modelsDir:string;
     private _importedModels:string[];
     public scene:PlayMode;
+    public gamePosition:Vector3;
 
-    constructor(name:string, scene:PlayMode, importedModels:string[], clickBox:string | null) {
+    constructor(name:string, scene:PlayMode, importedModels:string[], clickBox:string | null, gamePosition:Vector3) {
         super(name);
         this.scene = scene;
         this._modelsDir = modelsDir;
         this._importedModels = importedModels;
         this.models = [];
+        this.gamePosition = gamePosition;
         this.initialize(clickBox);
     }
 
     public async initialize(clickBox:string):Promise<void> {
+        if (DEBUGMODE) {
+            console.log(`initializing structure: ${this.name}`);
+        }
 
         //add all the models to the scene        
         for (let i = 0; i <= this._importedModels.length - 1; i++ ) {

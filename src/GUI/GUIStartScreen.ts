@@ -8,13 +8,14 @@ import { GUIPlay } from "./GUIPlay";
 
 export class GUIStartScreen implements GameStateObserverI {
     public gameGUI:AdvancedDynamicTexture;
-
+    public name:string;
     private _app:App;
     private _scene:Scene;
 
     private _startScreenWrapper:Rectangle;
 
     constructor(app:App, scene:Scene) {
+        this.name = 'GUIStartScreen'
         this._app = app;
         this._scene = scene;
 
@@ -54,7 +55,7 @@ export class GUIStartScreen implements GameStateObserverI {
                 console.log('Game in Playmode');
                 const newScene = new PlayMode(this._app);
                 this._app.switchScene(newScene);
-                this._app.gui = new GUIPlay(this._app, newScene, this._app.gameState, newScene.mathState);
+                this._app.gui = new GUIPlay(this._app, newScene);
                 this._app.gameState.detach(this);
             }
 

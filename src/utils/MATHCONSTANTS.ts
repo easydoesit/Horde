@@ -75,7 +75,7 @@ export const farmersMax = (currentFarmUpgradeAmount:number) => {
     return currentFarmUpgradeAmount * a * baseFarmerMultiplyer;
 } 
 
-//Miners
+//Mines
 export const mineUpgradeMax = 3;
 
 export const mineUpgradeCostGold = (numberOfUpgrades:number) => {
@@ -128,8 +128,33 @@ export const timeToMakeOre = (numberOfUpgrades:number) => {
     }
 }
 
-//BlackSmith
-export const blackSmithUpgradeMax = 3;
+//Smithy
+export const SmithyUpgradeMax = 3;
+
+export const weapons = 0;
+export const costOfWeaponsOre = 10;
+export const weaponUpgradeValue = 0.05; //percent
+
+export const timeToMakeWeapon = (numberOfUpgrades:number) => {
+    
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 0;
+        
+        }
+        case 1:  {
+            return .25;
+        }
+
+        case 2: {
+            return .4;
+        }
+
+        case 3: {
+            return 1;
+        }
+    }
+}
 
 export const blackSmithUpgradeCostGold = (numberOfUpgrades:number) => {
     const a = 3.01;
@@ -156,7 +181,3 @@ export const blackSmithUpgradeCostFarmers = (numberOfUpgrades:number) => {
         }
     }
 }
-
-export const weapons = 0;
-
-export const costOfWeaponsOre = 1000;

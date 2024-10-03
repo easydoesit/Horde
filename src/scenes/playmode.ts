@@ -1,36 +1,38 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
-import { castlClickBox, castleModels, farmClickBox, FarmHouse01Pos, FarmHouse02Pos, FarmHouse03Pos, FarmHouse04Pos, farmModels, hillModels, mineClickBox, mineModels, MinePos } from "../utils/CONSTANTS";
+import { castlClickBox, castleModels, castlePos, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, hillModels, mineClickBox, mineModels, MinePos, smithyPos } from "../utils/CONSTANTS";
 
 //classes
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
 
 //gamepieces
-import { Structure } from "../models_structures/structures";
+import { StructureModel } from "../models_structures/structureModels";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
 import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
-import { MathStateI } from "../../typings";
+import { MathStateI, StructureI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
+import { Smithy } from "../gameControl/smithy";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
     private _app:App;
     public mathState:MathStateI;
+    public smithy: StructureI;
 
     //gamepieces 
-    private _hill:Structure;
+    private _hill:StructureModel;
 
     //interacative
-    public castle:Structure;
+    public castle:StructureModel;
 
-    public farm01:Structure;
-    public farm02:Structure;
-    public farm03:Structure;
-    public farm04:Structure;
+    public farm01:StructureModel;
+    public farm02:StructureModel;
+    public farm03:StructureModel;
+    public farm04:StructureModel;
     
-    public mine:Structure;
+    public mine:StructureModel;
 
     //for cloning
     public dragon:Dragon;
@@ -50,6 +52,7 @@ export class PlayMode extends Scene {
         engine.displayLoadingUI();
         this.clearColor = new Color4(0.15, 0.15, 0.15, 1);
         this.mathState = new MathState(this);
+        
 
         //temp camera for now TODO - MAKE GAME CAMERA
         this.mainCamera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
@@ -62,26 +65,28 @@ export class PlayMode extends Scene {
         mainLight.intensity = 2;
 
         //load the starter Castle and position on hill
-        this.castle = new Structure('Castle', this, castleModels, castlClickBox);
-        this.castle.position = new Vector3(-.6, 6.5, -.2);
+        this.castle = new StructureModel('Castle', this, castleModels, castlClickBox, castlePos );
+        this.castle.position = castlePos;
 
         //load the entry level farms
-        this.farm01 = new Structure('Farm01', this, farmModels, farmClickBox);
-        this.farm01.position = new Vector3(0,.5,-4);
+        this.farm01 = new StructureModel('Farm01', this, farmModels, farmClickBox, Farm01Pos);
+        this.farm01.position = Farm01Pos;
         
         //these start out of view
-        this.farm02 = new Structure('Farm02', this, farmModels, farmClickBox);
-        this.farm02.position = new Vector3(0,-10,4);
+        this.farm02 = new StructureModel('Farm02', this, farmModels, farmClickBox, Farm02Pos);
+        this.farm02.position = Farm02Pos;
 
-        this.farm03 = new Structure('Farm03', this, farmModels, farmClickBox);
-        this.farm03.position = new Vector3(0,-10,-12);
+        this.farm03 = new StructureModel('Farm03', this, farmModels, farmClickBox, Farm03Pos);
+        this.farm03.position = Farm03Pos;
 
-        this.farm04 = new Structure('Farm04', this, farmModels, farmClickBox);
-        this.farm04.position = new Vector3(0,-10,12);
+        this.farm04 = new StructureModel('Farm04', this, farmModels, farmClickBox, Farm04Pos);
+        this.farm04.position =Farm04Pos;
 
-        this.mine = new Structure('Mine', this, mineModels, mineClickBox );    
+        this.mine = new StructureModel('Mine', this, mineModels, mineClickBox, MinePos);    
         this.mine.position = new Vector3(MinePos.x, MinePos.y - 10 , MinePos.z);
 
+        this.smithy = new Smithy('Smithy', this);
+        this.smithy.structureModels.position = new Vector3(smithyPos.x, smithyPos.y -20, smithyPos.z);
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this, this._app.gui as GUIPlay);
@@ -91,7 +96,7 @@ export class PlayMode extends Scene {
         this.ogre = new Ogre('ogre', this, this._app.gui as GUIPlay);
 
         //load the hill
-        this._hill = new Structure('Hill', this, hillModels, null );
+        this._hill = new StructureModel('Hill', this, hillModels, null, Vector3.Zero());
     
         //load the background
         const background = new PlainsBackground(this);
@@ -115,6 +120,11 @@ export class PlayMode extends Scene {
             if (hit.pickedMesh === this.mine.clickZone) {
                 console.log('Mine Clicked');
                 this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
+            }
+
+            if (hit.pickedMesh === this.smithy.structureModels.clickZone) {
+                console.log("Smithy Clicked");
+                this._app.gui.showUpgrades(this._app.gui.wrapperSmithyUpgrade);
             }
 
             if (hit.pickedMesh === this.dragon.clickBox.meshes.allMeshes[0]) {
@@ -149,6 +159,7 @@ export class PlayMode extends Scene {
         this.farm02.showModel(0);
         this.farm03.showModel(0);
         this.farm04.showModel(0);
+        this.smithy.structureModels.showModel(0);
 
         //change the GUI
         engine.hideLoadingUI();

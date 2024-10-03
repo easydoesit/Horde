@@ -1,41 +1,54 @@
 import { GameStateT, GameStateI, GameStateObserverI } from "../../typings";
+import { DEBUGMODE } from "../utils/CONSTANTS";
 
 export class GameState implements GameStateI{
-    
-    private _gameStateObservers:GameStateObserverI[];
+    private _name:string;
+    private _observers:GameStateObserverI[];
     public state:GameStateT;
 
     constructor(gameState:GameStateT) {
+        this._name ='gameState'
         this.state = gameState;
-        this._gameStateObservers =[];
+        this._observers =[];
     }
 
-    public attach(gameStateObserver:GameStateObserverI):void {
-        const observerExists = this._gameStateObservers.includes(gameStateObserver);
+    public attach(observer:GameStateObserverI):void {
+        const observerExists = this._observers.includes(observer);
         
         if(observerExists) {
-            return console.log(`GameStateObserverI has been attached already`);
-
+            if (DEBUGMODE) {
+                return console.log(`${this._name} ${observer.name} has been attached already`);
+            }
         }
-        console.log('GameState Attached an Observer');
-        this._gameStateObservers.push(gameStateObserver);
+
+        this._observers.push(observer);
+        
+        if (DEBUGMODE) {
+            console.log(`${this._name} attached ${observer.name}`);
+        }
 
     }
 
-    public detach(gameStateObserver:GameStateObserverI) {
-        const observerIndex = this._gameStateObservers.indexOf(gameStateObserver);
+    public detach(observer:GameStateObserverI) {
+        const observerIndex = this._observers.indexOf(observer);
 
         if (observerIndex === -1) {
-            return console.log('No Attached Observer');
+            if (DEBUGMODE) {
+                return console.log(`No ${observer.name} on ${this._name}`);
+            }
+            return;
         }
+        
+        this._observers.splice(observerIndex, 1);
 
-        this._gameStateObservers.splice(observerIndex, 1);
-        console.log('Detached a GameStateObserverI');
+        if (DEBUGMODE) {
+            console.log(`Detached ${observer.name} from ${this._name}`);
+        }
     }
 
     public notify(): void {
-        for(const gameStateObserver of this._gameStateObservers) {
-            gameStateObserver.updateGameState(this);
+        for(const observer of this._observers) {
+            observer.updateGameState(this);
         }
         
     }

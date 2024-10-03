@@ -4,19 +4,19 @@ import { GUIPlay } from "./GUIPlay";
 import { PlayMode } from "../scenes/playmode";
 import { TransformNode } from "@babylonjs/core";
 
-import { IStateCallback } from "../../typings";
+import { IStateCallback, StructureI } from "../../typings";
 
-export class InSceneGUI extends Rectangle {
+export class InSceneStuctureGUI extends Rectangle {
     private _animatedBarWrapper:Rectangle;
     private _animatedBar:Rectangle
     private _actor:TransformNode;
     private _gui:GUIPlay;
-    private _stateCallback:IStateCallback;
+    private _stateCallback:IStateCallback | StructureI;
     private _speed:number;
     private _infoText:TextBlock;
     private _itemBuilt:string;
 
-    constructor(name:string, gui:GUIPlay, actor:TransformNode, stateCallback:IStateCallback, itemBuilt:string) {
+    constructor(name:string, gui:GUIPlay, actor:TransformNode, stateCallback:IStateCallback | null, itemBuilt:string) {
         super(name);
 
         this._actor = actor;
@@ -64,8 +64,9 @@ export class InSceneGUI extends Rectangle {
         })
 
         //Register the callback with the state
-        this._stateCallback.setOnStateChangeCallback(this.updateGUI.bind(this));
-
+        if (this._stateCallback) {
+            this._stateCallback.setOnStateChangeCallback(this.updateGUI.bind(this));
+        }
     }
         
     private updateGUI(stateInfo: {speed:number}) {

@@ -3,9 +3,10 @@ import { farmerBaseValue,ogreIntervalTime,startingFarmers,startingGold,startingL
 import { PlayMode } from "../scenes/playmode";
 import { FarmState } from "./farmState";
 import { MineState } from "./mineState";
+import { DEBUGMODE } from "../utils/CONSTANTS";
 
 export class MathState implements MathStateI {
-    private _thisName:string;
+    private _name:string;
     private _observers:MathStateObserverI[];
     private _scene:PlayMode;
 
@@ -41,7 +42,7 @@ export class MathState implements MathStateI {
     public mineState:MineState;
 
     constructor(scene:PlayMode) {
-        this._thisName = "MathState"
+        this._name = "MathState"
         this._scene = scene;
         this._observers = [];
 
@@ -87,11 +88,16 @@ export class MathState implements MathStateI {
         const observerExists = this._observers.includes(observer);
         
         if(observerExists) {
-            return console.log(`${this._thisName} ObserverI has been attached already`);
-
+            if (DEBUGMODE) {
+                return console.log(`${this._name} ${observer.name} has been attached already`);
+            }
         }
-        console.log(`${this._thisName} Attached an Observer`);
+        
         this._observers.push(observer);
+       
+        if (DEBUGMODE) {
+            console.log(`${this._name} attached ${observer.name}`);
+        }
 
     }
 
@@ -99,11 +105,17 @@ export class MathState implements MathStateI {
         const observerIndex = this._observers.indexOf(observer);
 
         if (observerIndex === -1) {
-            return console.log(`No Attached Observer on ${this._thisName}`);
+            if (DEBUGMODE) {
+                return console.log(`No ${observer.name} on ${this._name}`);
+            }
+            return;
         }
 
         this._observers.splice(observerIndex, 1);
-        console.log(`Detached a ${this._thisName}ObserverI`);
+
+        if (DEBUGMODE) {
+            console.log(`Detached ${observer.name} from ${this._name}`);
+        }
     }
 
     public notify(): void {
@@ -138,6 +150,7 @@ export class MathState implements MathStateI {
         this.totalLumens -= amount;
     }
 
+    //Lumens
     public addLumens(amount: number): void {
         Math.round(this.totalLumens  += amount)
     }

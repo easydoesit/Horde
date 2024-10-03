@@ -1,9 +1,6 @@
 import { Engine, Scene, Vector3, FreeCamera } from "@babylonjs/core";
 
-import { App } from "../app";
-
 export class StartScreen extends Scene {
-    private _app:App;
 
     constructor(engine:Engine) {
         super(engine);
@@ -19,9 +16,11 @@ export class StartScreen extends Scene {
 
         //--SCENE FINISHED LOADING--
         
-        await this.whenReadyAsync();
+        await this.whenReadyAsync().then(() => {
+            engine.hideLoadingUI();
+        });
        
-        engine.hideLoadingUI();
+        
 
     }
 

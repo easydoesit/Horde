@@ -1,26 +1,27 @@
 import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@babylonjs/gui";
-import { GUIFONT1 } from "../utils/CONSTANTS";
+import { DEBUGMODE, GUIFONT1 } from "../utils/CONSTANTS";
 import { Farmer } from "../models_characters/farmer";
 import { PlayMode } from "../scenes/playmode";
-import { wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue } from "../utils/MATHCONSTANTS";
+import { wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue, weaponUpgradeValue, SmithyUpgradeMax } from "../utils/MATHCONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
 import { FarmState } from "../gameControl/farmState";
-import { FarmLand } from "../models_structures/farmLand";
 import { ButtonAddFarm } from "./addFarmButton";
 import { ButtonAddMine } from "./addMineButton";
 import { UpgradeWindow } from "./upgradeWindows";
-//import { MineState } from "../gameControl/mineState";
 import { Miner } from "../models_characters/miner";
-import { InSceneGUI } from "./inSceneGUI";
-import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI } from "../../typings";
+import { InSceneStuctureGUI } from "./inSceneStructureGUI";
+import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureObserverI, StructureI } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
-import { Structure } from "../models_structures/structures";
+import { StructureModel } from "../models_structures/structureModels";
+import { AddStructureButton } from "./addStructureButton";
 
-export class GUIPlay implements GameStateObserverI, MathStateObserverI {
+export class GUIPlay implements GameStateObserverI, MathStateObserverI, StructureObserverI {
     private _app:App;
     private _gameState:GameStateI;
     private _mathState:MathStateI;
+    private _smithy:StructureI;
+    public name:string;
     public scene:PlayMode;
  
     //GUI
@@ -51,6 +52,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     //castle
     public GUIWrapperCastleUpgrade:Rectangle;
     private _addMineButton:ButtonAddMine;
+    private _addSmithyButton:AddStructureButton;
  
     //farms
     public GUIWrapperFarmUpgrade:Rectangle;
@@ -71,15 +73,20 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _mineUpgradeSection:UpgradeSection;
     public mineInSceneGUI:Rectangle;
 
-    //blacksmith
-    public GUIWrapperBlackSmithUpgrade:Rectangle;
+    //smithy
+    public wrapperSmithyUpgrade:Rectangle;
+    private _smithyUpgradeSection:UpgradeSection;
+    public smithyInSceneGUI:Rectangle;
 
-    constructor(app:App, scene:PlayMode, gameState:GameStateI, mathState:MathStateI) {
+    constructor(app:App, scene:PlayMode) {
+        this.name='GUIPlay';
         this._app = app;
         this.scene = scene;
         this._mathState = this.scene.mathState
         this._mathState.attach(this);
         this._app.gameState.attach(this);
+        this._smithy = this.scene.smithy;
+        this._smithy.attach(this);
         
         this._farmUpgradeSections = [];//there are multiple farm upgrades so we need this array to hold them.
         
@@ -205,8 +212,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         });
 
         
-        //FarmlandUpgrades
-        //this is the GUI that Appears when you click on the Land to upgrade
+        //Farm Upgrades
+        //this is the GUI that Appears when you click on the Farm to upgrade
         this.GUIWrapperFarmUpgrade = new UpgradeWindow('FarmUpgradeWindow' , 'brown', this);
 
         this.farmersMaxTextBox = new TextBlock('MaxFarmers', `Max Famers: ${this._mathState.farmersMax}`);
@@ -216,7 +223,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this.farmersMaxTextBox.color= 'white';
         this.GUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
 
-        //this creates the wheat Upgrade section on the GUI
+        //this creates the wheat Upgrade section on the Farm Window
         this._wheatUpgrade = new UpgradeSection('Wheat', `adds %${wheatUpgradeValue * 100} gold/second`, this._mathState.costOfWheat, null, wheatUpgradesMax, this.GUIWrapperFarmUpgrade, -320, this, this.scene, () => this.wheatValueChange(), this._mathState);
 
         //this creates the farm Upgrade section on the GUI
@@ -255,20 +262,28 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         const oreValue = oreUpgradeValue * 100;
         this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this._mathState.mineState.upgradeCostGold, ['farmers', this._mathState.mineState.upgradeCostFarmers], mineUpgradeMax, this.wrapperMineUpgrade, -320, this, this.scene, () => this._mineUpgradeChange(), null);
 
-        this.mineInSceneGUI = new InSceneGUI('MineSceneGui', this, this.scene.mine, this._mathState.mineState, 'Ore');
+        this.mineInSceneGUI = new InSceneStuctureGUI('MineSceneGui', this, this.scene.mine, this._mathState.mineState, 'Ore');
         this.mineInSceneGUI.zIndex = -100;
         
         //blackSmith Upgrades
         //this is the GUI that Appears whn you click on the BlackSmith Building to upgrade
-        this.GUIWrapperBlackSmithUpgrade = new UpgradeWindow('blackSmithUpgradeWindow', 'skyblue', this);
-
-           //Castle Upgrades
+        this.wrapperSmithyUpgrade = new UpgradeWindow('blackSmithUpgradeWindow', 'skyblue', this);
+        const weaponValue = weaponUpgradeValue * 100;
+        this._smithyUpgradeSection = new UpgradeSection('SmithyUpgradeSection', `Speeds Up Weapon Production by ${weaponValue}%`, this.scene.smithy.upgradeCostGold, ['farmers', this.scene.smithy.upgradeCostFarmers], SmithyUpgradeMax, this.wrapperSmithyUpgrade, -320, this, this.scene, null, null);
+        
+        this.smithyInSceneGUI = new InSceneStuctureGUI('SmithSceneGui', this, this.scene.smithy.structureModels, null, 'Weapons')
+        this.smithyInSceneGUI.zIndex = -100;
+        //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade
 
         this.GUIWrapperCastleUpgrade = new UpgradeWindow('castleUpgradeWindow', 'gray', this);
 
         this._addMineButton = new ButtonAddMine(-320, this._mineUpgradeSection, this._mathState.mineState, this);
         this.GUIWrapperCastleUpgrade.addControl(this._addMineButton);
+        this._addMineButton.isEnabled = false;
+
+        this._addSmithyButton = new AddStructureButton('addSmithyButton', this, this._smithyUpgradeSection, this.GUIWrapperCastleUpgrade as UpgradeWindow, 0, this.scene.smithy)
+        this.GUIWrapperCastleUpgrade.addControl(this._addSmithyButton);
         this._addMineButton.isEnabled = false;
 
         //GAMELOOP//
@@ -294,7 +309,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
             this._addMineButton.isEnabled = this._mineUpgradeAllow();
             this._mineUpgradeSection.upgradeAble = this._mineUpgradeAllow();
             
-        })
+        });
 
     }
 
@@ -304,6 +319,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
             this._makeFarmer(this._mathState.totalFarmers);  
     }
 
+    //this is the observer function to the MathState Class
     public updateMathState(mathState: MathStateI): void {
         
         //Everytime the MathState Class runs the game loop these update.
@@ -313,6 +329,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this.farmersMaxTextBox.text = `Max Famers: ${this._mathState.farmersMax}`;
         this._textBlockTotalOre.text = `${this._mathState.totalOre}`;
         this._textBlockTotalLumens.text = `${this._mathState.totalLumens}`;
+    
     }
 
     //wheat
@@ -364,8 +381,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         switch(farmState.upgradeLevel) {
             case 1: {
             
-                const farm = this.scene.getNodeByName(farmState.gamePieceName)as Structure;
-                console.log(farm);
+                const farm = this.scene.getNodeByName(farmState.gamePieceName)as StructureModel;
                 //upgrade the farm in the scene.
                 farm.hideModel(0);
                 farm.showModel(1);
@@ -495,8 +511,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         }  
     }
     
-    public makeMiner(currentCount:number, farmState:number){
-        new Miner(currentCount.toLocaleString(), this.scene, this, farmState);
+    public makeMiner(currentCount:number, mineState:number){
+        new Miner(currentCount.toLocaleString(), this.scene, this, mineState);
     }
 
     public updateGameState(gamestate: GameStateI): void {
@@ -508,6 +524,13 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
             console.log('Game in StartScreen');
             this._app.switchScene(new StartScreen(this._app.engine));
         }
+    }
+
+    public updateStructure(structure: StructureI): void {
+        if(DEBUGMODE) {
+            console.log(`update ${structure.name} called in ${this.name}`);
+        }
+
     }
 
 }

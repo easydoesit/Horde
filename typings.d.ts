@@ -1,5 +1,6 @@
 import { FarmState } from "./src/gameControl/farmState";
 import { MineState } from "./src/gameControl/mineState";
+import { StructureModel } from "./src/models_structures/structureModels";
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
@@ -16,6 +17,7 @@ export interface GameStateI {
 }
 
 export interface GameStateObserverI {
+    name:string;
     updateGameState(gamestate:GameStateI):void;
 }
 
@@ -56,6 +58,27 @@ export interface MathStateI {
     changeWheatValue():void;
 }
 
-export interface MathStateObserverI { //subscribe to whatever you want
-    updateMathState(mathstate:MathStateI):void;
+export interface MathStateObserverI { 
+    name:string;
+    updateMathState(mathstate:MathStateI):void;//subscribe to whatever you want
+}
+
+export interface StructureI {
+    name:string;
+    upgradeCostFarmers:number;
+    upgradeCostGold: number;
+    upgradeLevel:number;
+    timeToMakeWeapon:number;
+    structureModels:StructureModel;
+    
+    attach(observer:StructureObserverI):void;
+    detach(observer:StructureObserverI):void;
+    notify():void;
+    upgradeState():void;
+    
+}
+
+export interface StructureObserverI {
+    name:string;
+    updateStructure(structure:StructureI):void;
 }
