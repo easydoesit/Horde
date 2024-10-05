@@ -98,7 +98,8 @@ export class Dragon extends TransformNode {
         this.makeClickable();
 
         setTimeout(async function() {
-            curve = await createCurve(dragonPath);
+            curve = createCurve(dragonPath);
+            
             path = createAnimationPath(curve);
 
             if(path && curve) {
