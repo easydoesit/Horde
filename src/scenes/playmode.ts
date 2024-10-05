@@ -1,11 +1,7 @@
-import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix, TransformNode } from "@babylonjs/core";
-import { castlClickBox, castleModels, castlePos, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, hillModels, mineClickBox, mineModels, MinePos, smithyPos } from "../utils/CONSTANTS";
-
-//classes
+import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix} from "@babylonjs/core";
+import { castlClickBox, castleModels, castlePos, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, hillModels, mineClickBox, mineModels, minePos, smithyClickBox, smithyModels, smithyPos } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
-
-//gamepieces
 import { StructureModel } from "../models_structures/structureModels";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
 import { Dragon } from "../models_characters/dragon";
@@ -13,7 +9,8 @@ import { Egg } from "../models_props/egg";
 import { MathStateI, StructureI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
-import { Smithy } from "../gameControl/smithy";
+import { Structure } from "../gameControl/structures";
+import { farmUpgradeCostGold, farmUpgradeMax, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, smithyUpgradeCostFarmers, smithyUpgradeCostGold, smithyUpgradeMax, timeToMakeOre, timeToMakeWeapon } from "../utils/MATHCONSTANTS";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -27,12 +24,13 @@ export class PlayMode extends Scene {
     //interacative
     public castle:StructureModel;
 
-    public farm01:StructureModel;
-    public farm02:StructureModel;
-    public farm03:StructureModel;
-    public farm04:StructureModel;
+    public farm01:Structure;
+    public farm02:Structure;
+    public farm03:Structure;
+    public farm04:Structure;
+    public farms:Structure[];
     
-    public mine:StructureModel;
+    public mine:StructureI;
 
     //for cloning
     public dragon:Dragon;
@@ -44,15 +42,11 @@ export class PlayMode extends Scene {
         this._app = app
 
         this._initialize(this._app.engine);
-
-
     }
 
     private async _initialize(engine:Engine):Promise<void>{
         engine.displayLoadingUI();
         this.clearColor = new Color4(0.15, 0.15, 0.15, 1);
-        this.mathState = new MathState(this);
-        
 
         //temp camera for now TODO - MAKE GAME CAMERA
         this.mainCamera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
@@ -60,7 +54,6 @@ export class PlayMode extends Scene {
 
         //lights can be different for each scene
         //TODO Make all the background art swappable. It's a small app.
-        //all items in scene using scene.meshes
         const mainLight = new DirectionalLight('mainLight', new Vector3(1,-1,1),this);
         mainLight.intensity = 2;
 
@@ -69,31 +62,34 @@ export class PlayMode extends Scene {
         this.castle.position = castlePos;
 
         //load the entry level farms
-        this.farm01 = new StructureModel('Farm01', this, farmModels, farmClickBox, Farm01Pos);
-        this.farm01.position = Farm01Pos;
-        
+        this.farm01 = new Structure('Farm01', this, {upgradeCostOfGold:farmUpgradeCostGold, upgradeCostFarmers:null, timeToMakeProduct:null}, farmUpgradeMax, null, farmModels, farmClickBox, Farm01Pos, null);
+        this.farm01.structureModels.position = Farm01Pos;
+        this.farm01.upgradeState();
         //these start out of view
-        this.farm02 = new StructureModel('Farm02', this, farmModels, farmClickBox, Farm02Pos);
-        this.farm02.position = Farm02Pos;
+        this.farm02 = new Structure('Farm02', this, {upgradeCostOfGold:farmUpgradeCostGold, upgradeCostFarmers:null, timeToMakeProduct:null}, farmUpgradeMax, null, farmModels, farmClickBox, Farm01Pos, null)
+        this.farm02.structureModels.position = Farm02Pos;
+        
+        this.farm03 = new Structure('Farm03', this, {upgradeCostOfGold:farmUpgradeCostGold, upgradeCostFarmers:null, timeToMakeProduct:null}, farmUpgradeMax, null, farmModels, farmClickBox, Farm01Pos, null)
+        this.farm03.structureModels.position = Farm03Pos;
 
-        this.farm03 = new StructureModel('Farm03', this, farmModels, farmClickBox, Farm03Pos);
-        this.farm03.position = Farm03Pos;
+        this.farm04 = new Structure('Farm04', this, {upgradeCostOfGold:farmUpgradeCostGold, upgradeCostFarmers:null, timeToMakeProduct:null}, farmUpgradeMax, null, farmModels, farmClickBox, Farm01Pos, null)
+        this.farm04.structureModels.position = Farm04Pos;
 
-        this.farm04 = new StructureModel('Farm04', this, farmModels, farmClickBox, Farm04Pos);
-        this.farm04.position =Farm04Pos;
+        this.farms = [];
+        this.farms.push(this.farm01,this.farm02,this.farm03,this.farm04);
 
-        this.mine = new StructureModel('Mine', this, mineModels, mineClickBox, MinePos);    
-        this.mine.position = new Vector3(MinePos.x, MinePos.y - 10 , MinePos.z);
-
-        this.smithy = new Smithy('Smithy', this);
+        this.mine = new Structure('Mine', this, {upgradeCostOfGold:mineUpgradeCostGold, upgradeCostFarmers:mineUpgradeCostFarmers, timeToMakeProduct:timeToMakeOre}, mineUpgradeMax, 'Ore', mineModels, mineClickBox, minePos, 'miners');    
+        this.mine.structureModels.position = new Vector3(minePos.x, minePos.y - 10 , minePos.z);
+        console.log('mine upgrade level:', this.mine.upgradeLevel);
+        this.smithy = new Structure('Smithy', this, {upgradeCostOfGold:smithyUpgradeCostGold, upgradeCostFarmers:smithyUpgradeCostFarmers, timeToMakeProduct:timeToMakeWeapon}, smithyUpgradeMax, 'Weapons', smithyModels, smithyClickBox, smithyPos, 'blacksmiths');
         this.smithy.structureModels.position = new Vector3(smithyPos.x, smithyPos.y -20, smithyPos.z);
 
         //Characters TODO- Add them all so they should be cloned.
-        this.dragon = new Dragon('Dragon', this, this._app.gui as GUIPlay);
+        this.dragon = new Dragon('Dragon', this);
         this.dragon.position = new Vector3(0,-10,0);
         this.egg = new Egg('egg', this, this._app.gui as GUIPlay, this.dragon);
         
-        this.ogre = new Ogre('ogre', this, this._app.gui as GUIPlay);
+        this.ogre = new Ogre('ogre', this);
 
         //load the hill
         this._hill = new StructureModel('Hill', this, hillModels, null, Vector3.Zero());
@@ -101,13 +97,15 @@ export class PlayMode extends Scene {
         //load the background
         const background = new PlainsBackground(this);
 
+        this.mathState = new MathState(this);
+
         //interact with the scene
         this.onPointerDown = function castRay() {
             const ray = this.createPickingRay(this.pointerX, this.pointerY, Matrix.Identity(), this.mainCamera);
 
             const hit = this.pickWithRay(ray);
 
-            if (hit.pickedMesh === this.farm01.clickZone || hit.pickedMesh === this.farm02.clickZone ) {
+            if (hit.pickedMesh === this.farm01.structureModels.clickZone || hit.pickedMesh === this.farm02.structureModels.clickZone ) {
                 console.log('Farm Clicked');
                 this._app.gui.showUpgrades(this._app.gui.GUIWrapperFarmUpgrade);
             }
@@ -117,13 +115,13 @@ export class PlayMode extends Scene {
                 this._app.gui.showUpgrades(this._app.gui.GUIWrapperCastleUpgrade);
             }
 
-            if (hit.pickedMesh === this.mine.clickZone) {
+            if (hit.pickedMesh === this.mine.structureModels.clickZone) {
                 console.log('Mine Clicked');
                 this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
             }
 
             if (hit.pickedMesh === this.smithy.structureModels.clickZone) {
-                console.log("Smithy Clicked");
+                console.log("Structure Clicked");
                 this._app.gui.showUpgrades(this._app.gui.wrapperSmithyUpgrade);
             }
 
@@ -151,15 +149,6 @@ export class PlayMode extends Scene {
         //--SCENE FINISHED LOADING--
         
         await this.whenReadyAsync();
-  
-        //show any hidden models waiting on Async
-        this._hill.showModel(0);
-        this.castle.showModel(0);
-        this.farm01.showModel(0);
-        this.farm02.showModel(0);
-        this.farm03.showModel(0);
-        this.farm04.showModel(0);
-        this.smithy.structureModels.showModel(0);
 
         //change the GUI
         engine.hideLoadingUI();

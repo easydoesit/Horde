@@ -1,6 +1,5 @@
 import { AbstractMesh, TransformNode, Vector3, SceneLoader, Curve3,LinesMesh, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { GUIPlay } from "../GUI/GUIPlay";
 
 import { FarmToMinepath01, FarmToMinepath02,FarmToMinepath03,FarmToMinepath04 } from "../utils/CONSTANTS";
 
@@ -9,13 +8,11 @@ import { PlayMode } from "../scenes/playmode";
 
 export class Miner extends TransformNode {
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
-    private _gui:GUIPlay;
     private _departFarm:number;
     public scene:PlayMode;
 
-    constructor(name:string, scene:PlayMode, gui:GUIPlay, departFarm:number) {
+    constructor(name:string, scene:PlayMode, departFarm:number) {
         super(`miner_${name}`, scene);
-        this._gui = gui;
         this._departFarm = departFarm;
       
         this.initialize();
@@ -90,7 +87,7 @@ export class Miner extends TransformNode {
         pathFollowAnim.setKeys(pathFollowKeys);
      
         this.animations.push(pathFollowAnim);
-        
+
         this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
             this.dispose();
             

@@ -1,11 +1,8 @@
 import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
-import { GUIPlay } from "./GUIPlay";
 import { PlayMode } from "../scenes/playmode";
-import { MathStateI, MathStateObserverI } from "../../typings";
 
-
-export class UpgradeSection implements MathStateObserverI {
+export class UpgradeSection {
     public wrapperUpgradeContainer:Rectangle;
     private _textBlockUpgradeTitle:TextBlock;
     public textBlockUpgradeInstruction:TextBlock;
@@ -19,7 +16,6 @@ export class UpgradeSection implements MathStateObserverI {
     public instruction:string;
     private _maxNumOfUpgrades:number;
     private _higherContainer: Rectangle | AdvancedDynamicTexture;
-    private _gui:GUIPlay;
     private _scene:PlayMode;
     private _guiVertPosition:number;
     public upgradeAble:boolean;
@@ -27,15 +23,12 @@ export class UpgradeSection implements MathStateObserverI {
     public goldCost:number;
     public otherCost:[name:string, cost:number];
 
-    private mathState:MathStateI
-
-    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, gui:GUIPlay, scene:PlayMode, callback:any, mathState:MathStateI | null) {
+    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, scene:PlayMode, callback:any) {
         this.name = name;
         this.instruction = instruction;
         this._maxNumOfUpgrades = maxNumberOfUpgrades;
         this._higherContainer = higherContainer;
         this._guiVertPosition = guiVertPosition;  
-        this._gui = gui;
         this.goldCost = goldCost;
         
         if (otherCost) {
@@ -44,12 +37,6 @@ export class UpgradeSection implements MathStateObserverI {
         
         this._scene = scene;
         this.upgradeAble = false;
-        
-        
-        if(mathState) {
-        this.mathState = mathState;
-        mathState.attach(this);
-        }
 
         this.wrapperUpgradeContainer = new Rectangle('wrapperUpgradeBar');
         this.wrapperUpgradeContainer.width = .95;
@@ -88,6 +75,7 @@ export class UpgradeSection implements MathStateObserverI {
             //change the size of the upgrade bar
             const cleanString = this._cleanString(this._upgradeBar.width);
             const sizeAsFloat = this._makeFloatDivideBy100(cleanString);
+            
             if (this.upgradeAble) {
                 this._upgradeBtn.isEnabled = true;
                 if (sizeAsFloat < 1) {
@@ -179,10 +167,6 @@ export class UpgradeSection implements MathStateObserverI {
         } else {
             this._upgradeBtn.isEnabled = false;
         }
-    }
-    
-    public updateMathState(mathstate: MathStateI): void {
-        this.goldCost = mathstate.costOfWheat;
     }
 
 }

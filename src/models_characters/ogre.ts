@@ -10,7 +10,6 @@ export class Ogre extends TransformNode {
     public clickBox:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}};
 
     private _publicDir;
-    private _gui:GUIPlay;
     private _importedModels:string[];
 
     public animations:Animation[];
@@ -33,19 +32,18 @@ export class Ogre extends TransformNode {
     private _keyFramesStartAttackToExit:number;
     private _keyFramesEndAttackToExit:number;
     
-    constructor(name:string, scene:PlayMode, gui:GUIPlay) {
+    constructor(name:string, scene:PlayMode) {
         super(`ogre`, scene);
         this._publicDir = './models/';
         this._importedModels = ['ogre.glb'];
-        this._gui = gui;
         this.animations = [];
         this.models = [];
         this.scene = scene;
         this.clicksLeft = ogreClicks;
 
-        this._animOgreEnterPos = new Vector3(-6,1.1, 18);
-        this._animOgreAttackPos = new Vector3(-6,1.1, -5);
-        this._animOgreExitPos = new Vector3(-6,1.1, -18);
+        this._animOgreEnterPos = new Vector3(-6, 1, 18);
+        this._animOgreAttackPos = new Vector3(-6, 1, -5);
+        this._animOgreExitPos = new Vector3(-6, 1, -18);
 
         this._keyFrameStartEnterToAttack = 0;
         this._keyFramesEndEnterToAttack = 600;

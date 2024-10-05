@@ -1,6 +1,5 @@
 import { AbstractMesh, TransformNode, Vector3, SceneLoader, Curve3,LinesMesh, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { GUIPlay } from "../GUI/GUIPlay";
 import { PlayMode } from "../scenes/playmode";
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
 import { MatClickBox } from "../reusedAssets/materials";
@@ -10,19 +9,17 @@ export class Dragon extends TransformNode {
     public models:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}[];
     public clickBox:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}};
     
-    private _publicDir;
-    private _gui:GUIPlay;
+    private _publicDir:string;
     private _importedModels:string[];
     
     public animations:Animation[];
     public scene:PlayMode;
     public clickable:boolean;
 
-    constructor(name:string, scene:PlayMode, gui:GUIPlay){
+    constructor(name:string, scene:PlayMode){
         super(`${name}`, scene);
         this._publicDir = './models/';
         this._importedModels = ['dragon01.glb'];
-        this._gui = gui;
         this.animations = [];
         this.models = [];
         this.scene = scene;

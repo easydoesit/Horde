@@ -1,12 +1,10 @@
-import { FarmState } from "./src/gameControl/farmState";
-import { MineState } from "./src/gameControl/mineState";
 import { StructureModel } from "./src/models_structures/structureModels";
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
-export interface IStateCallback {
-    setOnStateChangeCallback(callback:() => void):void;
-}
+export type ProductsT = 'Ore' | 'Weapons';
+
+export type StructureCharactersT = 'farmers' | 'miners' | 'blacksmiths';
 
 export interface GameStateI {
     state:GameStateT;
@@ -29,17 +27,17 @@ export interface MathStateI {
     runningFarmers:number;
     farmersMax:number;
     wheatValue:number;
-    costOfWheat:number;
+    costOfWheatUpgrade:number;
     wheatUpgrades:number;
-    farmState01:FarmState;
-    farmState02:FarmState;
-    farmState03:FarmState;
-    farmState04:FarmState;
-    farmStates:FarmState[];
+    
     totalOre:number;
     costOfOreGold:number;
     timeToMakeOre:number;
-    mineState:MineState;
+
+    totalWeapons:number;
+    costOfWeaponsGold:number;
+    timeToMakeWeapons:number;
+
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;
     notify():void;
@@ -54,8 +52,11 @@ export interface MathStateI {
     addGold(amount:number):void;
     spendGold(amount:number):void;
     upgradeWheat():void;
-    changeCostOfWheat():void;
+    changeCostOfWheatUpgrade():void;
     changeWheatValue():void;
+    addProduct(product:ProductsT, amount:number):void;
+    removeProduct(product:ProductsT, amount:number):void;
+
 }
 
 export interface MathStateObserverI { 
@@ -68,7 +69,8 @@ export interface StructureI {
     upgradeCostFarmers:number;
     upgradeCostGold: number;
     upgradeLevel:number;
-    timeToMakeWeapon:number;
+    product:string | null;
+    timeToMakeProduct:number | null;
     structureModels:StructureModel;
     
     attach(observer:StructureObserverI):void;
@@ -81,4 +83,10 @@ export interface StructureI {
 export interface StructureObserverI {
     name:string;
     updateStructure(structure:StructureI):void;
+}
+
+export type StructureMathFunctionsT = {
+    upgradeCostOfGold:(upgradeLevel:number) => number;
+    upgradeCostFarmers:((upgradeLevel:number) => number) | null;
+    timeToMakeProduct:((upgradeLevel:number) => number) | null;
 }

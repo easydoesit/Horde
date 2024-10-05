@@ -19,8 +19,6 @@ export class StartScreen extends Scene {
         await this.whenReadyAsync().then(() => {
             engine.hideLoadingUI();
         });
-       
-        
 
     }
 

@@ -32,7 +32,7 @@ export const FarmHouse04Pos = new Vector3(-10,1.25,10);
 //mines
 export const mineModels = ['mine01.glb', 'mine02.glb'];
 export const mineClickBox = 'mineClickBox.glb';
-export const MinePos = new Vector3(-5,1.25,1);
+export const minePos = new Vector3(-5,1.25,1);
 
 //smithy
 export const smithyModels = ['smithy01.glb', 'smithy02.glb'];
@@ -53,23 +53,23 @@ export const CastleToFarmPath = [
 export const FarmToMinepath01 = [
     FarmHouse01Pos,
     new Vector3(FarmHouse01Pos.x + 2, 1.25, -0.38271),
-    MinePos,
+    minePos,
     
 ]
 export const FarmToMinepath02 = [
     FarmHouse02Pos,
     new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    MinePos,
+    minePos,
 ]
 export const FarmToMinepath03 = [
     FarmHouse03Pos,
     new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    MinePos,
+    minePos,
 ]
 export const FarmToMinepath04 = [
     FarmHouse04Pos,
     new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    MinePos,
+    minePos,
 ]
 
 //define dragon flight paths - Not Exported
@@ -118,14 +118,14 @@ export const eggFallPath = (dragonPosition:Vector3) => {
 export const ogreLoopMaxMin = [5000, 1000]; //Temp Values for testing use: 5 * 60 * 1000, 1 * 60 * 1000
 
 const ogrePathEnter = [
-    new Vector3(-6,1.1, 18),
-    new Vector3(-6, 1.1, 0),
-    new Vector3(-6,1.1, -5),
+    new Vector3(-6, 0, 18),
+    new Vector3(-6, 0, 0),
+    new Vector3(-6, 0, -5),
 ]
 
 const ogrePathExit = [
-    new Vector3(-6,1.1, -5),
-    new Vector3(-6,1.1, -18),
+    new Vector3(-6, 0, -5),
+    new Vector3(-6, 0, -18),
 ]
 
 //export all the paths into array. Add as many as we want

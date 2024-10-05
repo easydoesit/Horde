@@ -1,18 +1,15 @@
 import { AbstractMesh, TransformNode, Vector3, SceneLoader, Curve3, LinesMesh, Animation } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { GUIPlay } from "../GUI/GUIPlay";
 import { CastleToFarmPath } from "../utils/CONSTANTS";
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
 import { PlayMode } from "../scenes/playmode";
 
 export class Farmer extends TransformNode{
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
-    private _gui:GUIPlay;
     private _animations:Animation[];
 
-    constructor(name:string, scene:PlayMode, gui:GUIPlay) {
+    constructor(name:string, scene:PlayMode) {
         super(`farmer_${name}`, scene);
-        this._gui = gui;
         this._animations = [];
         this.initialize();
 

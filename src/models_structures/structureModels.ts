@@ -25,6 +25,7 @@ export class StructureModel extends TransformNode {
     public async initialize(clickBox:string):Promise<void> {
         if (DEBUGMODE) {
             console.log(`initializing structure: ${this.name}`);
+            //console.log(`${this.name} has a clickbox: ${clickBox}`);
         }
 
         //add all the models to the scene        
@@ -39,8 +40,8 @@ export class StructureModel extends TransformNode {
             this.models.push(model);
         }
 
-        //hide the meshes of the models
-        for (let i = 0; i <= this.models.length - 1; i++ ) {
+        //hide the meshes of all the models except the first
+        for (let i = 1; i <= this.models.length - 1; i++ ) {
             for (let j = 0; j < this.models[i].meshes.allMeshes.length; j++) {
                 this.models[i].meshes.allMeshes[j].isVisible = false;
             }

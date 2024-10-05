@@ -1,27 +1,31 @@
-import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@babylonjs/gui";
+import { Rectangle, TextBlock, Control} from "@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { GUIPlay } from "./GUIPlay";
-import { PlayMode } from "../scenes/playmode";
 import { TransformNode } from "@babylonjs/core";
+import { DEBUGMODE } from "../utils/CONSTANTS";
 
-import { IStateCallback, StructureI } from "../../typings";
+import { ProductsT, StructureI, StructureObserverI } from "../../typings";
 
-export class InSceneStuctureGUI extends Rectangle {
+export class InSceneStuctureGUI extends Rectangle implements StructureObserverI {
     private _animatedBarWrapper:Rectangle;
     private _animatedBar:Rectangle
+    private _structure:StructureI
     private _actor:TransformNode;
     private _gui:GUIPlay;
-    private _stateCallback:IStateCallback | StructureI;
     private _speed:number;
     private _infoText:TextBlock;
-    private _itemBuilt:string;
+    private _itemBuilt:ProductsT;
 
-    constructor(name:string, gui:GUIPlay, actor:TransformNode, stateCallback:IStateCallback | null, itemBuilt:string) {
+    public name:string;
+
+    constructor(name:string, gui:GUIPlay, structure:StructureI, itemBuilt:ProductsT) {
         super(name);
+        
+        this._structure = structure;
+        this._structure.attach(this);
 
-        this._actor = actor;
+        this._actor = this._structure.structureModels;
         this._gui = gui;
-        this._stateCallback = stateCallback;
         this._speed = 0;
         this._itemBuilt = itemBuilt;
 
@@ -63,27 +67,27 @@ export class InSceneStuctureGUI extends Rectangle {
             this._moveBar();
         })
 
-        //Register the callback with the state
-        if (this._stateCallback) {
-            this._stateCallback.setOnStateChangeCallback(this.updateGUI.bind(this));
-        }
     }
         
-    private updateGUI(stateInfo: {speed:number}) {
-        this._speed = stateInfo.speed;
-        this._infoText.text = `${this._speed} ${this._itemBuilt}/second`;
-    }
-
     //costOfItem:number, otherCostofItem:number | null,
     private _moveBar() {
         if (this._animatedBar._width.value < 1) {
             this._animatedBar.width = this._animatedBar._width.value + (this._speed * this._gui.scene.getEngine().getDeltaTime()/1000);
         } else {
             this._animatedBar.width = 0;
-            //add ore to the game.
-            this._gui.scene.mathState.totalOre++;
+            //add product to the game.
+            this._gui.scene.mathState.addProduct(this._itemBuilt, 1);
         }
 
+    }
+
+    public updateStructure(structure: StructureI): void {
+        if(DEBUGMODE) {
+            console.log(`updating ${this.name} from ${structure.name}`);
+        }
+
+        this._speed = structure.timeToMakeProduct;
+        this._infoText.text = `${this._speed} ${this._itemBuilt}/second`;
     }
 
 }

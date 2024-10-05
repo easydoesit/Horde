@@ -1,12 +1,10 @@
-import { MathStateI, MathStateObserverI} from "../../typings";
-import { farmerBaseValue,ogreIntervalTime,startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue, wheatUpgradesMax } from "../utils/MATHCONSTANTS";
+import { MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
+import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue, wheatUpgradesMax, farmUpgradeMax } from "../utils/MATHCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
-import { FarmState } from "./farmState";
-import { MineState } from "./mineState";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
-export class MathState implements MathStateI {
-    private _name:string;
+export class MathState implements MathStateI, StructureObserverI {
+    public name:string;
     private _observers:MathStateObserverI[];
     private _scene:PlayMode;
 
@@ -14,6 +12,7 @@ export class MathState implements MathStateI {
     public totalFarmers:number;
     public runningFarmers:number;
     public farmersMax:number;
+    public farmersNextUpgradeMax:number;
     
     //gold
     public totalGold:number;
@@ -23,32 +22,41 @@ export class MathState implements MathStateI {
 
     //wheat
     public wheatValue:number;
-    public costOfWheat:number;
+    public costOfWheatUpgrade:number;
     public wheatUpgrades:number;
 
     //farms
-    public farmState01:FarmState;
-    public farmState02:FarmState;
-    public farmState03:FarmState;
-    public farmState04:FarmState;
-    public farmStates:FarmState[];
+    private _farm01:StructureI;
+    private _farm02:StructureI;
+    private _farm03:StructureI;
+    private _farm04:StructureI;
+    //public farms:StructureI[];
+
+        //mine
+    private _mine:StructureI;
+
+    //smithy
+    private _smithy:StructureI;
     
     //ore
     public totalOre:number;
     public costOfOreGold:number;
     public timeToMakeOre:number;
 
-    //mine
-    public mineState:MineState;
+    //weapons
+    public totalWeapons:number;
+    public costOfWeaponsGold:number;
+    public timeToMakeWeapons:number;
 
     constructor(scene:PlayMode) {
-        this._name = "MathState"
+        this.name = "MathState"
         this._scene = scene;
         this._observers = [];
 
         this.totalFarmers = startingFarmers;
         this.runningFarmers = 0;
-        this.farmersMax = this.changeFarmersMax();
+        this.farmersMax = 0;
+        this.changeFarmersMax();
     
         this.totalGold = startingGold;
         this.goldPerSecond = 0;
@@ -57,27 +65,37 @@ export class MathState implements MathStateI {
         
         this.wheatValue = 0;
         this.wheatUpgrades = 0;
-        this.costOfWheat = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)*1000)/1000;
+        this.costOfWheatUpgrade = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)*1000)/1000;
 
+        //Structures
         //farms
-        this.farmState01 = new FarmState('Farm01', 'Farm01');
-        this.farmState01.changeState();
-        this.farmState02 = new FarmState('Farm02', 'Farm02');
-        this.farmState03 = new FarmState('Farm03', 'Farm03');
-        this.farmState04 = new FarmState('Farm04', 'Farm04');
-        this.farmStates = [];
-        this.farmStates.push(this.farmState01, this.farmState02, this.farmState03, this.farmState04);
+        this._farm01 = this._scene.farm01;
+        this._farm01.attach(this);
+        this._farm02 = this._scene.farm02;
+        this._farm02.attach(this);
+        this._farm03 = this._scene.farm03;
+        this._farm03.attach(this);
+        this._farm04 = this._scene.farm04;
+        this._farm04.attach(this);
 
+        //mine
+        this._mine = this._scene.mine;
+        this._mine.attach(this);
+
+        //smithy
+        this._smithy = this._scene.smithy;
+        this._smithy.attach(this);
+
+        ///Products
         //ore
         this.totalOre = 0;
 
-        //mine
-        this.mineState = new MineState();
+        //weapons
+        this.totalWeapons = 0;
 
         this._scene.onBeforeRenderObservable.add(() => {
             this.goldPerSecond = this.changeGoldPerSecond();
             this.totalGold = this.changeFinalGold();
-            this.farmersMax = this.changeFarmersMax();
             this.notify();
         })
 
@@ -89,14 +107,14 @@ export class MathState implements MathStateI {
         
         if(observerExists) {
             if (DEBUGMODE) {
-                return console.log(`${this._name} ${observer.name} has been attached already`);
+                return console.log(`${this.name} ${observer.name} has been attached already`);
             }
         }
         
         this._observers.push(observer);
        
         if (DEBUGMODE) {
-            console.log(`${this._name} attached ${observer.name}`);
+            console.log(`${this.name} attached ${observer.name}`);
         }
 
     }
@@ -106,7 +124,7 @@ export class MathState implements MathStateI {
 
         if (observerIndex === -1) {
             if (DEBUGMODE) {
-                return console.log(`No ${observer.name} on ${this._name}`);
+                return console.log(`No ${observer.name} on ${this.name}`);
             }
             return;
         }
@@ -114,7 +132,7 @@ export class MathState implements MathStateI {
         this._observers.splice(observerIndex, 1);
 
         if (DEBUGMODE) {
-            console.log(`Detached ${observer.name} from ${this._name}`);
+            console.log(`Detached ${observer.name} from ${this.name}`);
         }
     }
 
@@ -147,7 +165,7 @@ export class MathState implements MathStateI {
     }
 
     public spendGold(amount:number) {
-        this.totalLumens -= amount;
+        this.totalGold -= amount;
     }
 
     //Lumens
@@ -183,11 +201,42 @@ export class MathState implements MathStateI {
     public changeFarmersMax(){
         let total = 0;
 
-        for (let i in this.farmStates) {
-            total = total + this.farmStates[i].farmersMax;
+        for (let i in this._scene.farms) {
+            total += Math.round(farmersMaxPerFarm(this._scene.farms[i].upgradeLevel));
         }
         
-        return total;
+        this.farmersMax  = total;
+    }
+
+    //products Ore, Weapons, Etc
+    public addProduct(product:ProductsT, amount:number) {
+        switch (product) {
+            case 'Ore' : {
+                this.totalOre += amount;
+            }
+            break;
+
+            case 'Weapons' : {
+                this.totalWeapons += amount;
+            }
+            break;
+        }
+
+    }
+
+    public removeProduct(product:ProductsT, amount:number) {
+        
+        switch (product) {
+            case 'Ore' : {
+                this.totalOre -= amount;
+            }
+            break;
+
+            case 'Weapons' : {
+                this.totalWeapons -= amount;
+            }
+            break;
+        }
     }
     
     //wheat
@@ -195,12 +244,32 @@ export class MathState implements MathStateI {
         this.wheatUpgrades += 1;
     }
 
-    public changeCostOfWheat() {
-        this.costOfWheat = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)* 1000)/1000;
+    public changeCostOfWheatUpgrade() {
+        this.costOfWheatUpgrade = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)* 1000)/1000;
     }
 
     public changeWheatValue() {
         this.wheatValue =  Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
+    }
+
+    public updateStructure(structure: StructureI): void {
+        if (DEBUGMODE) {
+            console.log(`updating ${this.name} from ${structure.name}`);
+            console.log(`Cost of Farmers is ${structure.upgradeCostFarmers}`);
+            console.log(`Cost of Gold is ${structure.upgradeCostGold}`);
+            console.log(`The Product is $${structure.product}`);
+        }
+
+        this.totalFarmers -= Math.round(structure.upgradeCostFarmers);
+        this.totalGold -= Math.round(structure.upgradeCostGold * 1000)/1000;
+
+        if (structure.product === 'weapons') {
+            this.timeToMakeWeapons = structure.timeToMakeProduct;
+        }
+
+        if (structure.name.includes("Farm")){
+            this.changeFarmersMax();
+        } 
     }
 
 }

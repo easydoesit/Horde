@@ -2,16 +2,15 @@ import { Button, TextBlock } from"@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { GUIPlay } from "./GUIPlay";
 import { MathStateI, StructureI } from "../../typings";
-import { PlayMode } from "../scenes/playmode";
 import { UpgradeWindow } from "./upgradeWindows";
 import { UpgradeSection } from "./upgradeSection";
 
 export class AddStructureButton extends Button {
     private _mathState:MathStateI;
-    private _scene:PlayMode;
-    private _gamePiece:StructureI;
+    private structure:StructureI;
     private _wrapper:UpgradeWindow;
     private _guiVertPosition:number;
+    private _gui:GUIPlay;
 
     public available:boolean;
     public visible:boolean;
@@ -20,12 +19,12 @@ export class AddStructureButton extends Button {
     private _costGoldText:TextBlock;
     private _costFarmersText:TextBlock;
 
-    constructor(name:string, gui:GUIPlay, upgradeSection:UpgradeSection, wrapper:UpgradeWindow, guiVertPosition:number, gamePiece:StructureI ) {
+    constructor(name:string, gui:GUIPlay, upgradeSection:UpgradeSection, wrapper:UpgradeWindow, guiVertPosition:number, structure:StructureI, callback:any ) {
         super(name);
 
-        this._mathState = gui.scene.mathState;
-        this._scene = gui.scene;
-        this._gamePiece = gamePiece;
+        this._gui = gui
+        this._mathState = this._gui.scene.mathState;
+        this.structure = structure;
         this._wrapper = wrapper;
 
         this._guiVertPosition = guiVertPosition;
@@ -39,51 +38,77 @@ export class AddStructureButton extends Button {
         this.thickness = 0;
         this.left =0;
 
-        this._text = new TextBlock(`add${gamePiece.name}`, `Add ${gamePiece.name}`);
+        this._text = new TextBlock(`add${structure.name}`, `Add ${structure.name}`);
         this._text.fontFamily = GUIFONT1;
         this._text.color = 'white';
         this._text.top = -20;
         this.addControl(this._text);
 
-        this._costGoldText = new TextBlock('costInGold', `Cost Gold: ${this._gamePiece.upgradeCostGold}`);
+        this._costGoldText = new TextBlock('costInGold', `Cost Gold: ${this.structure.upgradeCostGold}`);
         this._costGoldText.fontFamily = GUIFONT1;
         this._costGoldText.color = 'white';
         this.addControl(this._costGoldText);
 
-        this._costFarmersText = new TextBlock('costInFarmers', `Cost Famers: ${this._gamePiece.upgradeCostFarmers}`);
-        this._costFarmersText.fontFamily = GUIFONT1;
-        this._costFarmersText.color = 'white';
-        this._costFarmersText.top = 20;
+        if (this.structure.upgradeCostFarmers) {
+            this._costFarmersText = new TextBlock('costInFarmers', `Cost Famers: ${this.structure.upgradeCostFarmers}`);
+            this._costFarmersText.fontFamily = GUIFONT1;
+            this._costFarmersText.color = 'white';
+            this._costFarmersText.top = 20;
 
-        this.addControl(this._costFarmersText);
+            this.addControl(this._costFarmersText);
+        }
 
         this.onPointerDownObservable.add(() => {
-            if(this._mathState.totalGold > this._gamePiece.upgradeCostGold && this._mathState.totalFarmers > this._gamePiece.upgradeCostFarmers) {
-                //hide this button
-                this.isVisible = false;
-
-                //hide the GUI Wrapper so we see the gamePiece Appear
-                this._wrapper.isVisible = false;
-
-                //move the structure into view
-                const structure = this._gamePiece.structureModels;
-                structure.position.y = structure.gamePosition.y;
-                structure.showModel(0);
-
-                //apply the cost changes
-                gui.scene.mathState.totalFarmers -= this._gamePiece.upgradeCostFarmers;
-                gui.scene.mathState.totalGold -= this._gamePiece.upgradeCostGold;
-
-                //upgrade the state
-                this._gamePiece.upgradeState();
-
-                //update teh GUI
-                upgradeSection.goldCost = this._gamePiece.upgradeCostGold;
-                upgradeSection.otherCost[1] = this._gamePiece.upgradeCostFarmers;
-
             
+            if (this.structure.upgradeCostFarmers) {
+
+                if(this._mathState.totalGold >= this.structure.upgradeCostGold && this._mathState.totalFarmers >= this.structure.upgradeCostFarmers) {
+                
+                    this._addStructureFlow(upgradeSection);
+
+                }
+                
+            } else {
+                
+                if(this._mathState.totalGold >= this.structure.upgradeCostGold) {
+
+                    this._addStructureFlow(upgradeSection);
+
+                }
+
             }
 
-        })
+            if (callback) {
+                callback();
+            }
+
+        });
+
+    }
+
+    private _addStructureFlow(upgradeSection:UpgradeSection) {
+        //hide this button
+        this.isVisible = false;
+
+        //hide the GUI Wrapper so we see the structure Appear
+        this._wrapper.isVisible = false;
+
+        //move the structure into view
+        const structure = this.structure.structureModels;
+        structure.position.y = structure.gamePosition.y;
+        structure.showModel(0);
+
+        //do the scene animations here
+
+        //upgrade the state
+        this.structure.upgradeState();
+
+        //update the GUI
+        upgradeSection.goldCost = this.structure.upgradeCostGold;
+        
+        if (this.structure.upgradeCostFarmers) {
+            upgradeSection.otherCost[1] = this.structure.upgradeCostFarmers;
+        }
+
     }
 }
