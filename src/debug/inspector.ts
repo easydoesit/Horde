@@ -12,12 +12,16 @@ export class BabInspector {
             window.addEventListener("keydown", (ev) => {
                 // Shift+Ctrl+Alt+I
                 if ((ev.metaKey || ev.ctrlKey) && ev.key === 'i') {
-                    console.log('Show Inspector');
+                    if (DEBUGMODE) {
+                        console.log('Show Inspector');
+                    }
+
                     if (this.scene.debugLayer.isVisible()) {
                         this.scene.debugLayer.hide();
                     } else {
                         this.scene.debugLayer.show({embedMode: true, overlay:true});
                     }
+                    
                 }
             });
         }

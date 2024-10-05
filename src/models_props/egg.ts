@@ -80,7 +80,9 @@ export class Egg extends TransformNode {
     }
 
     public async runAnimation() {
-        console.log('egg falling');
+        if (DEBUGMODE) {
+            console.log('egg falling');
+        }
         let curve:Curve3;        
         curve = await createCurve(eggFallPath(this._dragon.position));
         this._path = createAnimationPath(curve);

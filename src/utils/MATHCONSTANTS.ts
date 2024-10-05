@@ -1,3 +1,5 @@
+import { DEBUGMODE } from "./CONSTANTS";
+
 //lumens
 export const startingLumens = 100;
 
@@ -28,7 +30,11 @@ export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
         amount:amount,
 
     }
-    console.log(delivery);
+
+    if (DEBUGMODE) {
+       console.log(delivery);
+    }
+    
     return delivery;
     
 }

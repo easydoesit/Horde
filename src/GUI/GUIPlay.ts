@@ -338,9 +338,12 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     }
 
     private _clickFunction(){
+        if (DEBUGMODE) {
             console.log('Add Farmer Button Clicked');
-            //make a farmer and change the count
-            this._makeFarmer(this._mathState.totalFarmers);  
+        }
+            
+        //make a farmer and change the count
+        this._makeFarmer(this._mathState.totalFarmers);  
     }
 
     //this is the observer function to the MathState Class
@@ -408,13 +411,13 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
     private _checkUpgradeFarmersMax(farm:StructureI) {
         let total = null;
-        console.log(`check upgradeNext for ${farm.name}`);
+
         if (farm.upgradeLevel < farmUpgradeMax) {
             total = Math.round(farmersMaxPerFarm(farm.upgradeLevel + 1))
         } else {
             total = "Maxed out!";
         }
-        console.log(`${farm.name} next upgrade is: ${total}`);
+
         return total;
     }
 

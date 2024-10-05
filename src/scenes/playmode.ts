@@ -1,5 +1,5 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix} from "@babylonjs/core";
-import { castlClickBox, castleModels, castlePos, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, hillModels, mineClickBox, mineModels, minePos, smithyClickBox, smithyModels, smithyPos } from "../utils/CONSTANTS";
+import { castlClickBox, castleModels, castlePos, DEBUGMODE, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, hillModels, mineClickBox, mineModels, minePos, smithyClickBox, smithyModels, smithyPos } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
 import { StructureModel } from "../models_structures/structureModels";
@@ -80,7 +80,7 @@ export class PlayMode extends Scene {
 
         this.mine = new Structure('Mine', this, {upgradeCostOfGold:mineUpgradeCostGold, upgradeCostFarmers:mineUpgradeCostFarmers, timeToMakeProduct:timeToMakeOre}, mineUpgradeMax, 'Ore', mineModels, mineClickBox, minePos, 'miners');    
         this.mine.structureModels.position = new Vector3(minePos.x, minePos.y - 10 , minePos.z);
-        console.log('mine upgrade level:', this.mine.upgradeLevel);
+
         this.smithy = new Structure('Smithy', this, {upgradeCostOfGold:smithyUpgradeCostGold, upgradeCostFarmers:smithyUpgradeCostFarmers, timeToMakeProduct:timeToMakeWeapon}, smithyUpgradeMax, 'Weapons', smithyModels, smithyClickBox, smithyPos, 'blacksmiths');
         this.smithy.structureModels.position = new Vector3(smithyPos.x, smithyPos.y -20, smithyPos.z);
 
@@ -106,36 +106,59 @@ export class PlayMode extends Scene {
             const hit = this.pickWithRay(ray);
 
             if (hit.pickedMesh === this.farm01.structureModels.clickZone || hit.pickedMesh === this.farm02.structureModels.clickZone ) {
-                console.log('Farm Clicked');
+                
+                if (DEBUGMODE) {
+                    console.log('Farm Clicked');
+                }
+
                 this._app.gui.showUpgrades(this._app.gui.GUIWrapperFarmUpgrade);
             }
 
             if (hit.pickedMesh === this.castle.clickZone) {
-                console.log('Castle Clicked');
+                
+                if (DEBUGMODE) {
+                    console.log('Castle Clicked');
+                }
+
                 this._app.gui.showUpgrades(this._app.gui.GUIWrapperCastleUpgrade);
             }
 
             if (hit.pickedMesh === this.mine.structureModels.clickZone) {
-                console.log('Mine Clicked');
+                
+                if (DEBUGMODE) {
+                    console.log('Mine Clicked');
+                }
+
                 this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
             }
 
             if (hit.pickedMesh === this.smithy.structureModels.clickZone) {
-                console.log("Structure Clicked");
+                
+                if (DEBUGMODE) {
+                    console.log("Structure Clicked");
+                }
+                
                 this._app.gui.showUpgrades(this._app.gui.wrapperSmithyUpgrade);
             }
 
             if (hit.pickedMesh === this.dragon.clickBox.meshes.allMeshes[0]) {
-                console.log('Dragon Clicked');
+                
+                if (DEBUGMODE) {
+                    console.log('Dragon Clicked');
+                }
+                
                 if (this.dragon.clickable) {
                     this.egg.runAnimation();
-                    this.dragon.makeUnclickable();
-                    
+                    this.dragon.makeUnclickable();    
                 }
             }
 
             if (hit.pickedMesh === this.ogre.clickBox.meshes.allMeshes[0]) {
                 
+                if (DEBUGMODE) {
+                    console.log('Ogre Clicked');
+                }
+
                 if (this.ogre.clickable) {
                     this.ogre.takeClick();
                     if(this.ogre.clicksLeft === 0) {

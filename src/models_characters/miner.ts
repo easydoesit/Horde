@@ -26,7 +26,6 @@ export class Miner extends TransformNode {
         let curve:Curve3;
         let name:string;
         
-        
         switch(this._departFarm) {
             case 0:  {
                 curve = createCurve(FarmToMinepath01)
@@ -50,7 +49,7 @@ export class Miner extends TransformNode {
         }
         name = this._departFarm.toLocaleString();
         path = createAnimationPath(curve);
-        //makeAnimation(name, path, curve, this._animations, this, this.scene);
+
         this._makeAnimation(path,curve);
         
     }

@@ -5,6 +5,7 @@ import { App } from "../app";
 import { GameStateI, GameStateObserverI } from "../../typings";
 import { PlayMode } from "../scenes/playmode";
 import { GUIPlay } from "./GUIPlay";
+import { DEBUGMODE } from "../utils/CONSTANTS";
 
 export class GUIStartScreen implements GameStateObserverI {
     public gameGUI:AdvancedDynamicTexture;
@@ -51,15 +52,18 @@ export class GUIStartScreen implements GameStateObserverI {
 
     public updateGameState(gamestate: GameStateI): void {
            
-              if(this._app.gameState.state === 'PLAY_MODE') {
+        if(this._app.gameState.state === 'PLAY_MODE') {
+    
+            if (DEBUGMODE) {
                 console.log('Game in Playmode');
-                const newScene = new PlayMode(this._app);
-                this._app.switchScene(newScene);
-                this._app.gui = new GUIPlay(this._app, newScene);
-                this._app.gameState.detach(this);
             }
-
-
+        
+            const newScene = new PlayMode(this._app);
+            this._app.switchScene(newScene);
+            this._app.gui = new GUIPlay(this._app, newScene);
+            this._app.gameState.detach(this);
+        
+        }
 
     }
     
