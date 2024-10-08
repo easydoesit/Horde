@@ -40,6 +40,9 @@ export class MathState implements MathStateI, StructureObserverI {
 
     //barracks
     private _barracks:StructureI;
+
+    //barracks
+    private _thievesGuild:StructureI;
     
     //ore
     public totalOre:number;
@@ -98,6 +101,10 @@ export class MathState implements MathStateI, StructureObserverI {
         //barracks
         this._barracks = this._scene.barracks;
         this._barracks.attach(this);
+
+        //barracks
+        this._thievesGuild = this._scene.thievesGuild;
+        this._thievesGuild.attach(this);
 
         ///Products
         //ore
