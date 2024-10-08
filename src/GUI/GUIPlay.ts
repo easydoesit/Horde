@@ -5,11 +5,12 @@ import { wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgr
 import { UpgradeSection } from "./upgradeSection";
 import { UpgradeWindow } from "./upgradeWindows";
 import { InSceneStuctureGUI } from "./inSceneStructureGUI";
-import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureObserverI, StructureI } from "../../typings";
+import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureObserverI, StructureI, GUIProductCounterI } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
 import { AddStructureButton } from "./addStructureButton";
 import { Runner } from "../models_characters/runners";
+import { ProductCounter } from "./productCounter";
 
 export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _app:App;
@@ -22,10 +23,14 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     public gameGUI:AdvancedDynamicTexture;
     
     //Top
-    private _playGUIWrapperTop:Rectangle;
-    
-    private _textBlockFarmer:TextBlock;
-    private _textBlockTotalFarmers:TextBlock;
+    private _wrapperTop:Rectangle;
+    private _farmersCount:GUIProductCounterI;
+    private _goldPerSecondCount:GUIProductCounterI;
+    private _goldCount:GUIProductCounterI;
+    private _lumenCount:GUIProductCounterI;
+    private _oreCount:GUIProductCounterI;
+    private _weaponCount:GUIProductCounterI;
+    private _villageCount:GUIProductCounterI;
     
     private _textBlockGoldPerSecond:TextBlock;
     private _totalGoldPerSecondTextBlock:TextBlock;
@@ -101,126 +106,23 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         
         //TOP
         //playGUITop
-        this._playGUIWrapperTop = new Rectangle('playGUIWrapperTop');
-        this._playGUIWrapperTop.width = 0.8;
-        this._playGUIWrapperTop.height= 0.1;
-        this._playGUIWrapperTop.thickness = 1;
-        this._playGUIWrapperTop.top = -400;
-        this.gameGUI.addControl(this._playGUIWrapperTop);
+        this._wrapperTop = new Rectangle('playGUIWrapperTop');
+        this._wrapperTop.width = 0.8;
+        this._wrapperTop.height= 0.1;
+        this._wrapperTop.thickness = 1;
+        this._wrapperTop.top = -400;
+        this.gameGUI.addControl(this._wrapperTop);
 
         //FARMERS
-        this._textBlockTotalFarmers = new TextBlock('FarmerCount', `${this._mathState.totalFarmers}`);
-        this._textBlockTotalFarmers.fontFamily = GUIFONT1;
-        this._textBlockTotalFarmers.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._textBlockTotalFarmers.top = -30;
-        this._textBlockTotalFarmers.left= 670;
-        this._textBlockTotalFarmers.color = 'white';
-        this._playGUIWrapperTop.addControl(this._textBlockTotalFarmers);
+        this._farmersCount = new ProductCounter('Farmers', 0, 0, `${this._mathState.totalFarmers}`, this._wrapperTop);
+        this._goldPerSecondCount = new ProductCounter('Gold/Second', 24, 0, `${this._mathState.goldPerSecond}`, this._wrapperTop);
+        this._goldCount = new ProductCounter('Gold', 48, 0, `${this._mathState.totalGold}`, this._wrapperTop);
+        this._lumenCount = new ProductCounter('Lumens', 0, -300, `${this._mathState.totalLumens}`, this._wrapperTop);
+        this._oreCount = new ProductCounter('Ore', 0, 300, `${this._mathState.totalOre}`, this._wrapperTop);
+        this._weaponCount = new ProductCounter('Weapons', 24, 300,`${this._mathState.totalWeapons}`, this._wrapperTop);
+        this._villageCount = new ProductCounter('Villages', 48, 300, `${this._mathState.totalVillages}`, this._wrapperTop);
 
-        this._textBlockFarmer = new TextBlock('farmer', 'farmers');
-        this._textBlockFarmer.fontFamily = GUIFONT1;
-        this._textBlockFarmer.top = -30;
-        this._textBlockFarmer.left= 35;
-        this._textBlockFarmer.color = 'white';
-        this._playGUIWrapperTop.addControl(this._textBlockFarmer);
-        
-        //GOLD
-        this._totalGoldPerSecondTextBlock = new TextBlock('TotalGoldPerSecond', `${this._mathState.goldPerSecond}`);
-        this._totalGoldPerSecondTextBlock.fontFamily =GUIFONT1;
-        this._totalGoldPerSecondTextBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._totalGoldPerSecondTextBlock.top = -10;
-        this._totalGoldPerSecondTextBlock.left= 670;
-        this._totalGoldPerSecondTextBlock.color = "white";
-        this._playGUIWrapperTop.addControl(this._totalGoldPerSecondTextBlock);
-
-        this._textBlockGoldPerSecond = new TextBlock('GoldPerSecond', 'gold / second')
-        this._textBlockGoldPerSecond.fontFamily = GUIFONT1;
-        this._textBlockGoldPerSecond.top = -10;
-        this._textBlockGoldPerSecond.left= 53;
-        this._textBlockGoldPerSecond.color = 'white';
-        this._playGUIWrapperTop.addControl(this._textBlockGoldPerSecond);    
-        
-        this._totalGoldTextBlock = new TextBlock('TotalGold', `${this._mathState.totalGold}`);
-        this._totalGoldTextBlock.fontFamily = GUIFONT1;
-        this._totalGoldTextBlock.top = 10;
-        this._totalGoldTextBlock.left= 670;
-        this._totalGoldTextBlock.color = 'white';
-        this._totalGoldTextBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._playGUIWrapperTop.addControl(this._totalGoldTextBlock);
-
-        this._textBlockGold = new TextBlock('gold', 'gold');
-        this._textBlockGold.fontFamily = GUIFONT1;
-        this._textBlockGold.top = 10;
-        this._textBlockGold.left= 16;
-        this._textBlockGold.color = 'white';
-        this._playGUIWrapperTop.addControl(this._textBlockGold);
-        
-        //LUMENS
-        this._textBlockTotalLumens = new TextBlock('TotalLumens', `${this._mathState.totalLumens}`);
-        this._textBlockTotalLumens.fontFamily = GUIFONT1;
-        this._textBlockTotalLumens.top = -30;
-        this._textBlockTotalLumens.left= 0;
-        this._textBlockTotalLumens.color = 'white';
-        this._textBlockTotalLumens.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._playGUIWrapperTop.addControl(this._textBlockTotalLumens);
-
-        this._textBlockLumens = new TextBlock('ore', 'lumens');
-        this._textBlockLumens.fontFamily = GUIFONT1;
-        this._textBlockLumens.top = -30;
-        this._textBlockLumens.left= 50;
-        this._textBlockLumens.color = 'white';
-        this._textBlockLumens.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._playGUIWrapperTop.addControl(this._textBlockLumens);
-
-        //ORE
-        this._textBlockTotalOre = new TextBlock('TotalOre', `${this._mathState.totalOre}`);
-        this._textBlockTotalOre.fontFamily = GUIFONT1;
-        this._textBlockTotalOre.top = -30;
-        this._textBlockTotalOre.left= 940;
-        this._textBlockTotalOre.color = 'white';
-        this._textBlockTotalOre.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._playGUIWrapperTop.addControl(this._textBlockTotalOre);
-
-        this._textBlockOre = new TextBlock('ore', 'ore');
-        this._textBlockOre.fontFamily = GUIFONT1;
-        this._textBlockOre.top = -30;
-        this._textBlockOre.left= 216;
-        this._textBlockOre.color = 'white';
-        this._playGUIWrapperTop.addControl(this._textBlockOre);
-
-        //Weapons
-        this._textBlockTotalWeapons = new TextBlock('TotalWeapons', `${this._mathState.totalWeapons}`);
-        this._textBlockTotalWeapons.fontFamily = GUIFONT1;
-        this._textBlockTotalWeapons.top = -10;
-        this._textBlockTotalWeapons.left= 940;
-        this._textBlockTotalWeapons.color = 'white';
-        this._textBlockTotalWeapons.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._playGUIWrapperTop.addControl(this._textBlockTotalWeapons);
-
-        this._textBlockWeapons = new TextBlock('Weapons', 'Weapons');
-        this._textBlockWeapons.fontFamily = GUIFONT1;
-        this._textBlockWeapons.top = -10;
-        this._textBlockWeapons.left= 240;
-        this._textBlockWeapons.color = 'white';
-        this._playGUIWrapperTop.addControl(this._textBlockWeapons);
-
-        //Villages
-        this._textBlockTotalVillages = new TextBlock('TotalVillages', `${this._mathState.totalVillages}`);
-        this._textBlockTotalVillages.fontFamily = GUIFONT1;
-        this._textBlockTotalVillages.top = 10;
-        this._textBlockTotalVillages.left= 940;
-        this._textBlockTotalVillages.color = 'white';
-        this._textBlockTotalVillages.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._playGUIWrapperTop.addControl(this._textBlockTotalVillages);
-
-        this._textBlockVillages = new TextBlock('Villages', 'Villages');
-        this._textBlockVillages.fontFamily = GUIFONT1;
-        this._textBlockVillages.top = 10;
-        this._textBlockVillages.left= 240;
-        this._textBlockVillages.color = 'white';
-        this._playGUIWrapperTop.addControl(this._textBlockVillages);
-
-         //Bottom
+        //Bottom
         //playGUIBottom
         this._playGUIWrapperBottom = new Rectangle('playGUIWrapperBottom');
         this._playGUIWrapperBottom.width = 0.8;
@@ -392,14 +294,13 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     public updateMathState(mathState: MathStateI): void {
         
         //Everytime the MathState Class runs the game loop these update.
-        this._textBlockTotalFarmers.text = `${mathState.totalFarmers}`;
-        this._totalGoldPerSecondTextBlock.text = `${mathState.goldPerSecond}`;
-        this._totalGoldTextBlock.text = `${mathState.totalGold}`;
-        
-        this._textBlockTotalOre.text = `${this._mathState.totalOre}`;
-        this._textBlockTotalLumens.text = `${this._mathState.totalLumens}`;
-        this._textBlockTotalWeapons.text = `${this._mathState.totalWeapons}`;
-        this._textBlockTotalVillages.text = `${this._mathState.totalVillages}`;
+        this._farmersCount.changeText(`${mathState.totalFarmers}`);
+        this._goldPerSecondCount.changeText(`${mathState.goldPerSecond}`);
+        this._goldCount.changeText(`${mathState.totalGold}`);
+        this._lumenCount.changeText(`${this._mathState.totalLumens}`);
+        this._oreCount.changeText(`${this._mathState.totalOre}`);
+        this._weaponCount.changeText(`${this._mathState.totalWeapons}`);
+        this._villageCount.changeText(`${this._mathState.totalVillages}`);
 
         this.farmersMaxTextBox.text = `Max Farmers: ${this._mathState.farmersMax}`;
 

@@ -1,10 +1,12 @@
 import { StructureModel } from "./src/models_structures/structureModels";
+import { Rectangle, TextBlock } from "@babylonjs/gui";
+
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
-export type ProductsT = 'Ore' | 'Weapons' | 'Villages';
+export type ProductsT = 'Ore' | 'Weapons' | 'Villages' | 'Loot';
 
-export type StructureCharactersT = 'farmers' | 'miners' | 'blacksmiths' | 'soldiers';
+export type StructureCharactersT = 'farmers' | 'miners' | 'blacksmiths' | 'soldiers' | 'thieves';
 
 export interface GameStateI {
     state:GameStateT;
@@ -22,42 +24,50 @@ export interface GameStateObserverI {
 export interface MathStateI {
     totalGold:number;
     goldPerSecond:number;
+    
     totalLumens:number;
     totalFarmers:number;
+    
     runningFarmers:number;
     farmersMax:number;
+    
     wheatValue:number;
     costOfWheatUpgrade:number;
     wheatUpgrades:number;
     
     totalOre:number;
     costOfOreGold:number;
-    timeToMakeOre:number;
+    //timeToMakeOre:number;
 
     totalWeapons:number;
     costOfWeaponsGold:number;
-    timeToMakeWeapons:number;
+    //timeToMakeWeapons:number;
 
     totalVillages:number;
     costOfVillagesGold:number;
-    timeToMakeVillages:number;
+    //timeToMakeVillages:number;
 
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;
     notify():void;
+   
     makeFarmerRun(number:number):void;
     endFarmerRun():void;
     addFarmers(number:number):void;
     spendFarmers(amount:number):void;
     changeFarmersMax():void;
+    
     changeGoldPerSecond():number;
-    addLumens(amount:number):void;
-    spendLumens(amount:number):void;
     addGold(amount:number):void;
     spendGold(amount:number):void;
+
+    addLumens(amount:number):void;
+    spendLumens(amount:number):void;
+    
     upgradeWheat():void;
     changeCostOfWheatUpgrade():void;
     changeWheatValue():void;
+   
     addProduct(product:ProductsT, amount:number):void;
     removeProduct(product:ProductsT, amount:number):void;
 
@@ -93,4 +103,9 @@ export type StructureMathFunctionsT = {
     upgradeCostOfGold:(upgradeLevel:number) => number;
     upgradeCostFarmers:((upgradeLevel:number) => number) | null;
     timeToMakeProduct:((upgradeLevel:number) => number) | null;
+}
+
+export interface GUIProductCounterI {
+    counterBlock:TextBlock;
+    changeText:(string:string) => void;
 }

@@ -44,6 +44,11 @@ export const barracksModels = ['barracks01.glb', 'barracks02.glb'];
 export const barracksClickBox = 'barracksClickBox.glb';
 export const barracksPos = new Vector3(-5, 3, - 1.25);
 
+//thievesGuild
+export const thievesGuildModels = ['thievesGuild01.glb', 'thievesGuild02.glb'];
+export const thievesGuildClickBox = 'thievesGuildClickBox.glb';
+export const thievesGuildPos = new Vector3(-5, 3, 1.25);
+
 //paths
 
 const castleToFarmPath = [

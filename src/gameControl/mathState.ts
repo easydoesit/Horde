@@ -1,5 +1,5 @@
 import { MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
-import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue, wheatUpgradesMax, farmUpgradeMax } from "../utils/MATHCONSTANTS";
+import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
@@ -44,17 +44,14 @@ export class MathState implements MathStateI, StructureObserverI {
     //ore
     public totalOre:number;
     public costOfOreGold:number;
-    public timeToMakeOre:number;
 
     //weapons
     public totalWeapons:number;
     public costOfWeaponsGold:number;
-    public timeToMakeWeapons:number;
 
     //villages
     public totalVillages:number;
     public costOfVillagesGold:number;
-    public timeToMakeVillages:number;
 
     constructor(scene:PlayMode) {
         this.name = "MathState"
@@ -286,10 +283,6 @@ export class MathState implements MathStateI, StructureObserverI {
 
         this.totalFarmers -= Math.round(structure.upgradeCostFarmers);
         this.totalGold -= Math.round(structure.upgradeCostGold * 1000)/1000;
-
-        if (structure.product === 'weapons') {
-            this.timeToMakeWeapons = structure.timeToMakeProduct;
-        }
 
         if (structure.name.includes("Farm")){
             this.changeFarmersMax();

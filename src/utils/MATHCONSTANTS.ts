@@ -4,7 +4,7 @@ import { DEBUGMODE } from "./CONSTANTS";
 export const startingLumens = 100;
 
 //gold
-export const startingGold = 1000;
+export const startingGold = 1000.000;
 
 //eggs
 export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
@@ -243,3 +243,56 @@ export const barracksUpgradeCostFarmers = (numberOfUpgrades:number) => {
     }
 }
 
+//ThievesGuild
+export const thievesGuildUpgradeMax = 3;
+
+export const loot = 0;
+export const costOfLootVillages = 10;
+export const lootUpgradeValue = 0.05; //percent
+
+export const timeToMakeLoot = (numberOfUpgrades:number) => {
+    
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 0;
+        
+        }
+        case 1:  {
+            return .25;
+        }
+
+        case 2: {
+            return .4;
+        }
+
+        case 3: {
+            return 1;
+        }
+    }
+}
+
+export const thievesGuildUpgradeCostGold = (numberOfUpgrades:number) => {
+    const a = 3.01;
+    const b = 5;
+    return a * Math.exp(b * numberOfUpgrades);
+}
+
+export const thievesGuildUpgradeCostFarmers = (numberOfUpgrades:number) => {
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 20;
+        
+        }
+        case 1:  {
+            return 75;
+        }
+
+        case 2: {
+            return 600;
+        }
+
+        case 3: {
+            return 2000;
+        }
+    }
+}
