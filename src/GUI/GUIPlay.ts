@@ -556,8 +556,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
       //barracks
       private _barracksUpgradeAllow() {
-        if(this.scene.smithy.upgradeLevel < smithyUpgradeMax) {
-            if(this._mathState.totalGold > this.scene.smithy.upgradeCostGold && this._mathState.totalFarmers > this.scene.smithy.upgradeCostFarmers) {
+        if(this.scene.barracks.upgradeLevel < barracksUpgradeMax) {
+            if(this._mathState.totalGold > this.scene.barracks.upgradeCostGold && this._mathState.totalFarmers > this.scene.barracks.upgradeCostFarmers) {
                 return true;
             } else {
                 return false;
