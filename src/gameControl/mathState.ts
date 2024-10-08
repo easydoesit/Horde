@@ -53,6 +53,10 @@ export class MathState implements MathStateI, StructureObserverI {
     public totalVillages:number;
     public costOfVillagesGold:number;
 
+    //loot
+    public totalLoot:number;
+    public costOfLootGold:number;
+
     constructor(scene:PlayMode) {
         this.name = "MathState"
         this._scene = scene;
@@ -105,10 +109,15 @@ export class MathState implements MathStateI, StructureObserverI {
         //villages
         this.totalVillages = 0;
 
+        //loot
+        this.totalLoot = 0;
+
         this._scene.onBeforeRenderObservable.add(() => {
+            
             this.goldPerSecond = this.changeGoldPerSecond();
             this.totalGold = this.changeFinalGold();
             this.notify();
+        
         })
 
     }
@@ -237,6 +246,12 @@ export class MathState implements MathStateI, StructureObserverI {
             case 'Villages' : {
                 this.totalVillages += amount;
             }
+            break;
+
+            case 'Loot': {
+                this.totalLoot -= amount;
+            }
+            break;
         }
 
     }
@@ -257,6 +272,12 @@ export class MathState implements MathStateI, StructureObserverI {
             case "Villages": {
                 this.totalVillages -= amount;
             }
+            break;
+
+            case 'Loot': {
+                this.totalLoot -= amount;
+            }
+            break;
         }
     }
     

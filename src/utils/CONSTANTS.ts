@@ -86,6 +86,7 @@ const farmToMinePath04 = [
 
 export const farmToMinePaths = [farmToMinePath01, farmToMinePath02, farmToMinePath03, farmToMinePath04];
 
+///
 const farmToSmithyPath01 = [
     farmHouse01Pos,
     new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
@@ -110,6 +111,7 @@ const farmToSmithyPath04 = [
 
 export const farmToSmithyPaths = [farmToSmithyPath01, farmToSmithyPath02, farmToSmithyPath03, farmToSmithyPath04];
 
+///
 const farmToBarracksPath01 = [
     farmHouse01Pos,
     new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
@@ -133,6 +135,32 @@ const farmToBarracksPath04 = [
 ]
 
 export const farmToBarracksPaths = [farmToBarracksPath01, farmToBarracksPath02, farmToBarracksPath03, farmToBarracksPath04];
+
+///
+const farmToThievesGuildPath01 = [
+    farmHouse01Pos,
+    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
+    thievesGuildPos,
+    
+]
+const farmToThievesGuildPath02 = [
+    FarmHouse02Pos,
+    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
+    thievesGuildPos,
+]
+const farmToThievesGuildPath03 = [
+    FarmHouse03Pos,
+    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
+    thievesGuildPos,
+]
+const farmToThievesGuildPath04 = [
+    FarmHouse04Pos,
+    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
+    thievesGuildPos,
+]
+
+export const farmToThievesGuildPaths = [farmToThievesGuildPath01, farmToThievesGuildPath02, farmToThievesGuildPath03, farmToThievesGuildPath04];
+
 
 //define dragon flight paths - Not Exported
 export const dragonPath01 = [

@@ -47,6 +47,10 @@ export interface MathStateI {
     costOfVillagesGold:number;
     //timeToMakeVillages:number;
 
+    totalLoot:number;
+    costOfLootGold:number;
+    //timeToMakeVillages:number;
+
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;
     notify():void;

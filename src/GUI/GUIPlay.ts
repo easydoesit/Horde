@@ -1,7 +1,7 @@
 import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@babylonjs/gui";
 import { castleToFarmPaths, DEBUGMODE, GUIFONT1, modelsDir } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
-import { wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue, weaponUpgradeValue, smithyUpgradeMax, farmersMaxPerFarm, villagesUpgradeValue, barracksUpgradeMax } from "../utils/MATHCONSTANTS";
+import { wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue, weaponUpgradeValue, smithyUpgradeMax, farmersMaxPerFarm, villagesUpgradeValue, barracksUpgradeMax, lootUpgradeValue, thievesGuildUpgradeMax } from "../utils/MATHCONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
 import { UpgradeWindow } from "./upgradeWindows";
 import { InSceneStuctureGUI } from "./inSceneStructureGUI";
@@ -31,24 +31,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _oreCount:GUIProductCounterI;
     private _weaponCount:GUIProductCounterI;
     private _villageCount:GUIProductCounterI;
-    
-    private _textBlockGoldPerSecond:TextBlock;
-    private _totalGoldPerSecondTextBlock:TextBlock;
-   
-    private _textBlockGold:TextBlock
-    private _totalGoldTextBlock:TextBlock;
-
-    private _textBlockLumens:TextBlock;
-    private _textBlockTotalLumens:TextBlock
-    
-    private _textBlockOre:TextBlock;
-    private _textBlockTotalOre:TextBlock
-
-    private _textBlockWeapons:TextBlock;
-    private _textBlockTotalWeapons:TextBlock;
-
-    private _textBlockVillages:TextBlock;
-    private _textBlockTotalVillages:TextBlock;
+    private _lootCount:GUIProductCounterI;
 
     //Bottom
     private _playGUIWrapperBottom:Rectangle;
@@ -59,6 +42,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _addMineButton:AddStructureButton;
     private _addSmithyButton:AddStructureButton;
     private _addBarracksButton:AddStructureButton;
+    private _addThievesGuildButton:AddStructureButton;
  
     //farms
     public GUIWrapperFarmUpgrade:Rectangle;
@@ -84,10 +68,15 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _smithyUpgradeSection:UpgradeSection;
     public smithyInSceneGUI:Rectangle;
 
-    //smithy
+    //barracks
     public wrapperBarracksUpgrade:Rectangle;
     private _barracksUpgradeSection:UpgradeSection;
     public barracksInSceneGUI:Rectangle;
+
+    //thievesGuild
+    public wrapperThievesGuildUpgrade:Rectangle;
+    private _thievesGuildUpgradeSection:UpgradeSection;
+    public thievesGuildInSceneGUI:Rectangle;
 
     constructor(app:App, scene:PlayMode) {
         this.name='GUIPlay';
@@ -108,7 +97,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         //playGUITop
         this._wrapperTop = new Rectangle('playGUIWrapperTop');
         this._wrapperTop.width = 0.8;
-        this._wrapperTop.height= 0.1;
+        this._wrapperTop.height= 0.12;
         this._wrapperTop.thickness = 1;
         this._wrapperTop.top = -400;
         this.gameGUI.addControl(this._wrapperTop);
@@ -121,6 +110,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._oreCount = new ProductCounter('Ore', 0, 300, `${this._mathState.totalOre}`, this._wrapperTop);
         this._weaponCount = new ProductCounter('Weapons', 24, 300,`${this._mathState.totalWeapons}`, this._wrapperTop);
         this._villageCount = new ProductCounter('Villages', 48, 300, `${this._mathState.totalVillages}`, this._wrapperTop);
+        this._lootCount = new ProductCounter('Loot', 72, 300, `${this._mathState.totalLoot}`, this._wrapperTop);
 
         //Bottom
         //playGUIBottom
@@ -196,7 +186,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._addFarmButtons.push(this._addFarmButton02, this._addFarmButton03, this._addFarmButton04);
 
         //Mine Upgrades
-        //this is the GUI that Appears whn you click on the Mine to upgrade
+        //this is the GUI that Appears when you click on the Mine to upgrade
         this.wrapperMineUpgrade = new UpgradeWindow('mineUpgradeWindow', 'DarkSlateGray', this);
         const oreValue = oreUpgradeValue * 100;
         
@@ -205,7 +195,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this.mineInSceneGUI = new InSceneStuctureGUI('MineSceneGui', this, this.scene.mine, 'Ore');
         
         //Smithy Upgrades
-        //this is the GUI that Appears whn you click on the Smithy Building to upgrade
+        //this is the GUI that Appears when you click on the Smithy Building to upgrade
         this.wrapperSmithyUpgrade = new UpgradeWindow('SmithyUpgradeWindow', 'skyblue', this);
         const weaponValue = weaponUpgradeValue * 100;
         
@@ -214,7 +204,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this.smithyInSceneGUI = new InSceneStuctureGUI('SmithySceneGui', this, this.scene.smithy, 'Weapons')
 
         //Barracks Upgrades
-        //this is the GUI that Appears whn you click on the Smithy Building to upgrade
+        //this is the GUI that Appears when you click on the Barracks Building to upgrade
         this.wrapperBarracksUpgrade = new UpgradeWindow('BarracksUpgradeWindow', 'black', this);
         const soldierValue = villagesUpgradeValue * 100;
         
@@ -222,6 +212,16 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         
         this.barracksInSceneGUI = new InSceneStuctureGUI('BarracksSceneGui', this, this.scene.barracks, 'Villages');
         
+        //ThievesGuild Upgrades
+        //this is the GUI that Appears whn you click on the Smithy Building to upgrade
+        this.wrapperThievesGuildUpgrade = new UpgradeWindow('ThievesGuildUpgradeWindow', 'orange', this);
+        const LootValue = lootUpgradeValue * 100;
+        
+        this._thievesGuildUpgradeSection = new UpgradeSection('ThievesGuildUpgradeSection', `Speeds Up Loot Capture by ${LootValue}%`, this.scene.thievesGuild.upgradeCostGold, ['farmers', this.scene.thievesGuild.upgradeCostFarmers], thievesGuildUpgradeMax, this.wrapperThievesGuildUpgrade, -320, this.scene, () => {this._thievesGuildUpgradeCallback()});
+        
+        this.thievesGuildInSceneGUI = new InSceneStuctureGUI('ThievesGuildSceneGui', this, this.scene.thievesGuild, 'Loot');
+
+
         //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade
         this.GUIWrapperCastleUpgrade = new UpgradeWindow('castleUpgradeWindow', 'gray', this);
@@ -236,6 +236,10 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
         this._addBarracksButton = new AddStructureButton('addBarracksButton', this, this._barracksUpgradeSection, this.GUIWrapperCastleUpgrade as UpgradeWindow, -80, this.scene.barracks, () => {this._barracksAdditionCallback()});
         this.GUIWrapperCastleUpgrade.addControl(this._addBarracksButton);
+        this._addBarracksButton.isEnabled = false;
+
+        this._addThievesGuildButton = new AddStructureButton('addThievesGuildButton', this, this._thievesGuildUpgradeSection, this.GUIWrapperCastleUpgrade as UpgradeWindow,  40, this.scene.thievesGuild, () => {this._thievesGuildAdditionCallback()});
+        this.GUIWrapperCastleUpgrade.addControl(this._addThievesGuildButton);
         this._addBarracksButton.isEnabled = false;
 
 
@@ -276,6 +280,12 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
                 this._addBarracksButton.isEnabled = this._barracksUpgradeAllow();
             }
             this._barracksUpgradeSection.upgradeAble = this._barracksUpgradeAllow();
+
+             //barracks
+             if (this._addThievesGuildButton.isVisible) {
+                this._addThievesGuildButton.isEnabled = this._thievesGuildUpgradeAllow();
+            }
+            this._thievesGuildUpgradeSection.upgradeAble = this._thievesGuildUpgradeAllow();
 
         });
 
@@ -455,8 +465,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
     }
 
-      //barracks
-      private _barracksUpgradeAllow() {
+    //barracks
+    private _barracksUpgradeAllow() {
         if(this.scene.barracks.upgradeLevel < barracksUpgradeMax) {
             if(this._mathState.totalGold > this.scene.barracks.upgradeCostGold && this._mathState.totalFarmers > this.scene.barracks.upgradeCostFarmers) {
                 return true;
@@ -481,6 +491,35 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         
         //upgrade the State
         this.scene.barracks.upgradeState();
+
+    }
+
+     //barracks
+     private _thievesGuildUpgradeAllow() {
+        if(this.scene.thievesGuild.upgradeLevel < thievesGuildUpgradeMax) {
+            if(this._mathState.totalGold > this.scene.thievesGuild.upgradeCostGold && this._mathState.totalFarmers > this.scene.thievesGuild.upgradeCostFarmers) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    //barracks Callbacks
+
+    private _thievesGuildAdditionCallback() {
+        if (DEBUGMODE) {
+            console.log('addthievesGuildCalled');
+        }     
+    }
+
+    private _thievesGuildUpgradeCallback() {
+        if (DEBUGMODE) {
+            console.log('thievesGuildUpgradeChangeCalled');
+        }
+        
+        //upgrade the State
+        this.scene.thievesGuild.upgradeState();
 
     }
 

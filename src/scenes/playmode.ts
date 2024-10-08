@@ -92,7 +92,7 @@ export class PlayMode extends Scene {
         this.barracks.structureModels.position = new Vector3(barracksPos.x, barracksPos.y -20, barracksPos.z);
 
         this.thievesGuild = new Structure('ThievesGuild', this, {upgradeCostOfGold:thievesGuildUpgradeCostGold, upgradeCostFarmers:thievesGuildUpgradeCostFarmers, timeToMakeProduct:timeToMakeLoot}, thievesGuildUpgradeMax, 'Loot', thievesGuildModels, thievesGuildClickBox, thievesGuildPos, 'thieves');
-        this.thievesGuild.structureModels.position = thievesGuildPos;
+        this.thievesGuild.structureModels.position = new Vector3(thievesGuildPos.x, thievesGuildPos.y -20, thievesGuildPos.z);
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this);
@@ -158,6 +158,15 @@ export class PlayMode extends Scene {
                 }
                 
                 this._app.gui.showUpgrades(this._app.gui.wrapperBarracksUpgrade);
+            }
+
+            if (hit.pickedMesh === this.thievesGuild.structureModels.clickZone) {
+                
+                if (DEBUGMODE) {
+                    console.log("Thieves Guild Clicked");
+                }
+                
+                this._app.gui.showUpgrades(this._app.gui.wrapperThievesGuildUpgrade);
             }
 
             if (hit.pickedMesh === this.dragon.clickBox.meshes.allMeshes[0]) {
