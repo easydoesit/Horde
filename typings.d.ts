@@ -2,9 +2,9 @@ import { StructureModel } from "./src/models_structures/structureModels";
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
-export type ProductsT = 'Ore' | 'Weapons';
+export type ProductsT = 'Ore' | 'Weapons' | 'Villages';
 
-export type StructureCharactersT = 'farmers' | 'miners' | 'blacksmiths';
+export type StructureCharactersT = 'farmers' | 'miners' | 'blacksmiths' | 'soldiers';
 
 export interface GameStateI {
     state:GameStateT;
@@ -37,6 +37,10 @@ export interface MathStateI {
     totalWeapons:number;
     costOfWeaponsGold:number;
     timeToMakeWeapons:number;
+
+    totalVillages:number;
+    costOfVillagesGold:number;
+    timeToMakeVillages:number;
 
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;

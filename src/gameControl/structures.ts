@@ -2,7 +2,7 @@ import { Vector3 } from "@babylonjs/core";
 import { ProductsT, StructureCharactersT, StructureI, StructureMathFunctionsT, StructureObserverI } from "../../typings";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { castleToFarmPaths, DEBUGMODE, farmToMinePaths, farmToSmithyPaths, modelsDir } from "../utils/CONSTANTS";
+import { castleToFarmPaths, DEBUGMODE, farmToMinePaths, farmToSmithyPaths, farmToBarracksPaths, modelsDir } from "../utils/CONSTANTS";
 import { Runner } from "../models_characters/runners";
 
 export class Structure implements StructureI {
@@ -172,17 +172,21 @@ export class Structure implements StructureI {
     
     }
     
-    private _makeCharacter(currentCount:number, orignalLocation:number, character:StructureCharactersT){
+    private _makeCharacter(currentCount:number, originalLocation:number, character:StructureCharactersT){
 
         switch(character) {
             
             case 'miners' : {
-                new Runner('miner', currentCount, modelsDir, 'miner.glb', this._scene, orignalLocation, farmToMinePaths, null);
+                new Runner('miner', currentCount, modelsDir, 'miner.glb', this._scene, originalLocation, farmToMinePaths, null);
             }
             break;
 
             case 'blacksmiths' : {
-                new Runner('blacksmith', currentCount, modelsDir, 'blacksmith.glb', this._scene, orignalLocation, farmToSmithyPaths, null);
+                new Runner('blacksmith', currentCount, modelsDir, 'blacksmith.glb', this._scene, originalLocation, farmToSmithyPaths, null);
+            }
+
+            case 'soldiers' : {
+                new Runner('soldier', currentCount, modelsDir, 'soldier.glb', this._scene, originalLocation, farmToBarracksPaths, null );
             }
         }
         

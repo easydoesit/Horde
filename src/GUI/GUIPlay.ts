@@ -1,7 +1,7 @@
 import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@babylonjs/gui";
 import { castleToFarmPaths, DEBUGMODE, GUIFONT1, modelsDir } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
-import { wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue, weaponUpgradeValue, smithyUpgradeMax, farmersMaxPerFarm } from "../utils/MATHCONSTANTS";
+import { wheatUpgradesMax, wheatUpgradeValue, farmCost, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue, weaponUpgradeValue, smithyUpgradeMax, farmersMaxPerFarm, villagesUpgradeValue, barracksUpgradeMax } from "../utils/MATHCONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
 import { UpgradeWindow } from "./upgradeWindows";
 import { InSceneStuctureGUI } from "./inSceneStructureGUI";
@@ -42,6 +42,9 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _textBlockWeapons:TextBlock;
     private _textBlockTotalWeapons:TextBlock;
 
+    private _textBlockVillages:TextBlock;
+    private _textBlockTotalVillages:TextBlock;
+
     //Bottom
     private _playGUIWrapperBottom:Rectangle;
     private _clickerBtn:Button;
@@ -50,6 +53,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     public GUIWrapperCastleUpgrade:Rectangle;
     private _addMineButton:AddStructureButton;
     private _addSmithyButton:AddStructureButton;
+    private _addBarracksButton:AddStructureButton;
  
     //farms
     public GUIWrapperFarmUpgrade:Rectangle;
@@ -74,6 +78,11 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     public wrapperSmithyUpgrade:Rectangle;
     private _smithyUpgradeSection:UpgradeSection;
     public smithyInSceneGUI:Rectangle;
+
+    //smithy
+    public wrapperBarracksUpgrade:Rectangle;
+    private _barracksUpgradeSection:UpgradeSection;
+    public barracksInSceneGUI:Rectangle;
 
     constructor(app:App, scene:PlayMode) {
         this.name='GUIPlay';
@@ -195,6 +204,22 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._textBlockWeapons.color = 'white';
         this._playGUIWrapperTop.addControl(this._textBlockWeapons);
 
+        //Villages
+        this._textBlockTotalVillages = new TextBlock('TotalVillages', `${this._mathState.totalVillages}`);
+        this._textBlockTotalVillages.fontFamily = GUIFONT1;
+        this._textBlockTotalVillages.top = 10;
+        this._textBlockTotalVillages.left= 940;
+        this._textBlockTotalVillages.color = 'white';
+        this._textBlockTotalVillages.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this._playGUIWrapperTop.addControl(this._textBlockTotalVillages);
+
+        this._textBlockVillages = new TextBlock('Villages', 'Villages');
+        this._textBlockVillages.fontFamily = GUIFONT1;
+        this._textBlockVillages.top = 10;
+        this._textBlockVillages.left= 240;
+        this._textBlockVillages.color = 'white';
+        this._playGUIWrapperTop.addControl(this._textBlockVillages);
+
          //Bottom
         //playGUIBottom
         this._playGUIWrapperBottom = new Rectangle('playGUIWrapperBottom');
@@ -276,7 +301,6 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.scene.mine.upgradeCostGold, ['farmers', this.scene.mine.upgradeCostFarmers], mineUpgradeMax, this.wrapperMineUpgrade, -320, this.scene, () => {this._mineUpgradeCallback()});
 
         this.mineInSceneGUI = new InSceneStuctureGUI('MineSceneGui', this, this.scene.mine, 'Ore');
-        this.mineInSceneGUI.zIndex = -100;
         
         //Smithy Upgrades
         //this is the GUI that Appears whn you click on the Smithy Building to upgrade
@@ -286,7 +310,15 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._smithyUpgradeSection = new UpgradeSection('SmithyUpgradeSection', `Speeds Up Weapon Production by ${weaponValue}%`, this.scene.smithy.upgradeCostGold, ['farmers', this.scene.smithy.upgradeCostFarmers], smithyUpgradeMax, this.wrapperSmithyUpgrade, -320, this.scene, () => {this._smithyUpgradeCallback()});
         
         this.smithyInSceneGUI = new InSceneStuctureGUI('SmithySceneGui', this, this.scene.smithy, 'Weapons')
-        this.smithyInSceneGUI.zIndex = -100;
+
+        //Barracks Upgrades
+        //this is the GUI that Appears whn you click on the Smithy Building to upgrade
+        this.wrapperBarracksUpgrade = new UpgradeWindow('BarracksUpgradeWindow', 'black', this);
+        const soldierValue = villagesUpgradeValue * 100;
+        
+        this._barracksUpgradeSection = new UpgradeSection('BarrackUpgradeSection', `Speeds Up Village Capture by ${soldierValue}%`, this.scene.barracks.upgradeCostGold, ['farmers', this.scene.barracks.upgradeCostFarmers], barracksUpgradeMax, this.wrapperBarracksUpgrade, -320, this.scene, () => {this._barracksUpgradeCallback()});
+        
+        this.barracksInSceneGUI = new InSceneStuctureGUI('BarracksSceneGui', this, this.scene.barracks, 'Villages');
         
         //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade
@@ -296,9 +328,14 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this.GUIWrapperCastleUpgrade.addControl(this._addMineButton);
         this._addMineButton.isEnabled = false;
 
-        this._addSmithyButton = new AddStructureButton('addSmithyButton', this, this._smithyUpgradeSection, this.GUIWrapperCastleUpgrade as UpgradeWindow, 0, this.scene.smithy, () => {this._smithyAdditionCallback()});
+        this._addSmithyButton = new AddStructureButton('addSmithyButton', this, this._smithyUpgradeSection, this.GUIWrapperCastleUpgrade as UpgradeWindow, -200, this.scene.smithy, () => {this._smithyAdditionCallback()});
         this.GUIWrapperCastleUpgrade.addControl(this._addSmithyButton);
         this._addSmithyButton.isEnabled = false;
+
+        this._addBarracksButton = new AddStructureButton('addBarracksButton', this, this._barracksUpgradeSection, this.GUIWrapperCastleUpgrade as UpgradeWindow, -80, this.scene.barracks, () => {this._barracksAdditionCallback()});
+        this.GUIWrapperCastleUpgrade.addControl(this._addBarracksButton);
+        this._addBarracksButton.isEnabled = false;
+
 
         //GAMELOOP//
         this.scene.onBeforeRenderObservable.add(() => {
@@ -326,12 +363,17 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
            
             this._mineUpgradeSection.upgradeAble = this._mineUpgradeAllow();
             
-            //weapons
+            //smithy
             if (this._addSmithyButton.isVisible) {
                 this._addSmithyButton.isEnabled = this._smithyUpgradeAllow();
             }
             this._smithyUpgradeSection.upgradeAble = this._smithyUpgradeAllow();
 
+            //barracks
+            if (this._addBarracksButton.isVisible) {
+                this._addBarracksButton.isEnabled = this._barracksUpgradeAllow();
+            }
+            this._barracksUpgradeSection.upgradeAble = this._barracksUpgradeAllow();
 
         });
 
@@ -342,8 +384,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
             console.log('Add Farmer Button Clicked');
         }
             
-        //make a farmer and change the count
-        this._makeFarmer(this._mathState.totalFarmers);  
+        //make a farmer
+        this._makeFarmer();  
     }
 
     //this is the observer function to the MathState Class
@@ -353,12 +395,19 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._textBlockTotalFarmers.text = `${mathState.totalFarmers}`;
         this._totalGoldPerSecondTextBlock.text = `${mathState.goldPerSecond}`;
         this._totalGoldTextBlock.text = `${mathState.totalGold}`;
-        this.farmersMaxTextBox.text = `Max Farmers: ${this._mathState.farmersMax}`;
+        
         this._textBlockTotalOre.text = `${this._mathState.totalOre}`;
         this._textBlockTotalLumens.text = `${this._mathState.totalLumens}`;
         this._textBlockTotalWeapons.text = `${this._mathState.totalWeapons}`;
+        this._textBlockTotalVillages.text = `${this._mathState.totalVillages}`;
+
+        this.farmersMaxTextBox.text = `Max Farmers: ${this._mathState.farmersMax}`;
+
         this._mineUpgradeSection.goldCost = this.scene.mine.upgradeCostGold;
-        this._mineUpgradeSection.otherCost[1] = this.scene.mine.upgradeCostFarmers;  
+        this._mineUpgradeSection.otherCost[1] = this.scene.mine.upgradeCostFarmers;
+
+        this._barracksUpgradeSection.goldCost = this.scene.barracks.upgradeCostGold;
+        this._barracksUpgradeSection.otherCost[1] = this.scene.barracks.upgradeCostFarmers;
     }
 
     //wheat
@@ -487,21 +536,50 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         }
     }
 
-    //mine Callbacks
+    //smithy Callbacks
 
     private _smithyAdditionCallback() {
         if (DEBUGMODE) {
-            console.log('addMineCalled');
+            console.log('addSmithyCalled');
         }     
     }
 
     private _smithyUpgradeCallback() {
         if (DEBUGMODE) {
-            console.log('mineUpgradeChangeCalled');
+            console.log('smithyUpgradeChangeCalled');
         }
         
         //upgrade the State
         this.scene.smithy.upgradeState();
+
+    }
+
+      //barracks
+      private _barracksUpgradeAllow() {
+        if(this.scene.smithy.upgradeLevel < smithyUpgradeMax) {
+            if(this._mathState.totalGold > this.scene.smithy.upgradeCostGold && this._mathState.totalFarmers > this.scene.smithy.upgradeCostFarmers) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    //barracks Callbacks
+
+    private _barracksAdditionCallback() {
+        if (DEBUGMODE) {
+            console.log('addBarracksCalled');
+        }     
+    }
+
+    private _barracksUpgradeCallback() {
+        if (DEBUGMODE) {
+            console.log('barracksUpgradeChangeCalled');
+        }
+        
+        //upgrade the State
+        this.scene.barracks.upgradeState();
 
     }
 
@@ -516,13 +594,14 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     }
     
     //Game interaction functions
-    private _makeFarmer(currentCount:number) {
+    private _makeFarmer() {
+        let currentCount = this._mathState.totalFarmers + this._mathState.runningFarmers;
 
         if(this._mathState.totalFarmers + this._mathState.runningFarmers < this._mathState.farmersMax) {
             //make a farmer and change the count
-            console.log('making a farmer');
             new Runner('farmer', currentCount, modelsDir, 'farmer.glb', this.scene, 0, castleToFarmPaths, () => {this.scene.mathState.addFarmers(1); this._mathState.endFarmerRun()});
             this._mathState.makeFarmerRun(1);
+        
         }  
     }
 

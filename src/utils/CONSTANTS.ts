@@ -39,6 +39,11 @@ export const smithyModels = ['smithy01.glb', 'smithy02.glb'];
 export const smithyClickBox = 'smithyClickBox.glb';
 export const smithyPos = new Vector3(-5, 5, -1.5);
 
+//barracks
+export const barracksModels = ['barracks01.glb', 'barracks02.glb'];
+export const barracksClickBox = 'barracksClickBox.glb';
+export const barracksPos = new Vector3(-5, 3, - 1.25);
+
 //paths
 
 const castleToFarmPath = [
@@ -76,29 +81,53 @@ const farmToMinePath04 = [
 
 export const farmToMinePaths = [farmToMinePath01, farmToMinePath02, farmToMinePath03, farmToMinePath04];
 
-export const farmToSmithyPath01 = [
+const farmToSmithyPath01 = [
     farmHouse01Pos,
     new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
     smithyPos,
     
 ]
-export const farmToSmithyPath02 = [
+const farmToSmithyPath02 = [
     FarmHouse02Pos,
     new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
     smithyPos,
 ]
-export const farmToSmithyPath03 = [
+const farmToSmithyPath03 = [
     FarmHouse03Pos,
     new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
     smithyPos,
 ]
-export const farmToSmithyPath04 = [
+const farmToSmithyPath04 = [
     FarmHouse04Pos,
     new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
     smithyPos,
 ]
 
-export const farmToSmithyPaths = [farmToSmithyPath01, farmToSmithyPath02, farmToSmithyPath03, farmToSmithyPath04]
+export const farmToSmithyPaths = [farmToSmithyPath01, farmToSmithyPath02, farmToSmithyPath03, farmToSmithyPath04];
+
+const farmToBarracksPath01 = [
+    farmHouse01Pos,
+    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
+    barracksPos,
+    
+]
+const farmToBarracksPath02 = [
+    FarmHouse02Pos,
+    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
+    barracksPos,
+]
+const farmToBarracksPath03 = [
+    FarmHouse03Pos,
+    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
+    barracksPos,
+]
+const farmToBarracksPath04 = [
+    FarmHouse04Pos,
+    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
+    barracksPos,
+]
+
+export const farmToBarracksPaths = [farmToBarracksPath01, farmToBarracksPath02, farmToBarracksPath03, farmToBarracksPath04];
 
 //define dragon flight paths - Not Exported
 export const dragonPath01 = [
@@ -143,7 +172,7 @@ export const eggFallPath = (dragonPosition:Vector3) => {
 }
 
 //Ogre
-export const ogreLoopMaxMin = [60000, 30000]; //Temp Values for testing use: 5 * 60 * 1000, 1 * 60 * 1000
+export const ogreLoopMaxMin = [10 * 60 * 1000, 3 * 60 * 1000];
 
 const ogrePathEnter = [
     new Vector3(-6, 0, 18),

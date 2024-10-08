@@ -58,6 +58,7 @@ export class StructureModel extends TransformNode {
 
             this.clickZone = this._clickBox.meshes.allMeshes[0];
             }
+
     }
 
     async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}> {

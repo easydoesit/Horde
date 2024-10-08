@@ -188,3 +188,58 @@ export const smithyUpgradeCostFarmers = (numberOfUpgrades:number) => {
         }
     }
 }
+
+//Barracks
+export const barracksUpgradeMax = 3;
+
+export const villages = 0;
+export const costOfVillagesWeapons = 10;
+export const villagesUpgradeValue = 0.05; //percent
+
+export const timeToMakeSoldier = (numberOfUpgrades:number) => {
+    
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 0;
+        
+        }
+        case 1:  {
+            return .25;
+        }
+
+        case 2: {
+            return .4;
+        }
+
+        case 3: {
+            return 1;
+        }
+    }
+}
+
+export const barracksUpgradeCostGold = (numberOfUpgrades:number) => {
+    const a = 3.01;
+    const b = 5;
+    return a * Math.exp(b * numberOfUpgrades);
+}
+
+export const barracksUpgradeCostFarmers = (numberOfUpgrades:number) => {
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 20;
+        
+        }
+        case 1:  {
+            return 75;
+        }
+
+        case 2: {
+            return 600;
+        }
+
+        case 3: {
+            return 2000;
+        }
+    }
+}
+

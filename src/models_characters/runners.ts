@@ -54,10 +54,13 @@ export class Runner extends TransformNode {
             break;
         }
         name = this._departLoc.toLocaleString();
-        console.log(name);
         path = createAnimationPath(curve);
 
         this._makeAnimation(path,curve, endOfAnim);
+
+        if (DEBUGMODE) {
+            console.log(this.name);
+        }
     
     }
 

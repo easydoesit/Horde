@@ -1,5 +1,5 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix} from "@babylonjs/core";
-import { castlClickBox, castleModels, castlePos, DEBUGMODE, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, hillModels, mineClickBox, mineModels, minePos, smithyClickBox, smithyModels, smithyPos } from "../utils/CONSTANTS";
+import { barracksClickBox, barracksModels, barracksPos, castlClickBox, castleModels, castlePos, DEBUGMODE, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, hillModels, mineClickBox, mineModels, minePos, smithyClickBox, smithyModels, smithyPos } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
 import { StructureModel } from "../models_structures/structureModels";
@@ -10,7 +10,7 @@ import { MathStateI, StructureI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { Structure } from "../gameControl/structures";
-import { farmUpgradeCostGold, farmUpgradeMax, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, smithyUpgradeCostFarmers, smithyUpgradeCostGold, smithyUpgradeMax, timeToMakeOre, timeToMakeWeapon } from "../utils/MATHCONSTANTS";
+import { barracksUpgradeCostFarmers, barracksUpgradeCostGold, barracksUpgradeMax, farmUpgradeCostGold, farmUpgradeMax, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, smithyUpgradeCostFarmers, smithyUpgradeCostGold, smithyUpgradeMax, timeToMakeOre, timeToMakeSoldier, timeToMakeWeapon } from "../utils/MATHCONSTANTS";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -24,13 +24,15 @@ export class PlayMode extends Scene {
     //interacative
     public castle:StructureModel;
 
-    public farm01:Structure;
-    public farm02:Structure;
-    public farm03:Structure;
-    public farm04:Structure;
-    public farms:Structure[];
+    public farm01:StructureI;
+    public farm02:StructureI;
+    public farm03:StructureI;
+    public farm04:StructureI;
+    public farms:StructureI[];
     
     public mine:StructureI;
+
+    public barracks:StructureI
 
     //for cloning
     public dragon:Dragon;
@@ -84,6 +86,9 @@ export class PlayMode extends Scene {
         this.smithy = new Structure('Smithy', this, {upgradeCostOfGold:smithyUpgradeCostGold, upgradeCostFarmers:smithyUpgradeCostFarmers, timeToMakeProduct:timeToMakeWeapon}, smithyUpgradeMax, 'Weapons', smithyModels, smithyClickBox, smithyPos, 'blacksmiths');
         this.smithy.structureModels.position = new Vector3(smithyPos.x, smithyPos.y -20, smithyPos.z);
 
+        this.barracks = new Structure('Barracks', this, {upgradeCostOfGold:barracksUpgradeCostGold, upgradeCostFarmers:barracksUpgradeCostFarmers, timeToMakeProduct:timeToMakeSoldier}, barracksUpgradeMax, 'Villages', barracksModels, barracksClickBox, barracksPos, 'soldiers'); 
+        this.barracks.structureModels.position = new Vector3(barracksPos.x, barracksPos.y -20, barracksPos.z);
+
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this);
         this.dragon.position = new Vector3(0,-10,0);
@@ -135,10 +140,19 @@ export class PlayMode extends Scene {
             if (hit.pickedMesh === this.smithy.structureModels.clickZone) {
                 
                 if (DEBUGMODE) {
-                    console.log("Structure Clicked");
+                    console.log("Smithy Clicked");
                 }
                 
                 this._app.gui.showUpgrades(this._app.gui.wrapperSmithyUpgrade);
+            }
+
+            if (hit.pickedMesh === this.barracks.structureModels.clickZone) {
+                
+                if (DEBUGMODE) {
+                    console.log("Barracks Clicked");
+                }
+                
+                this._app.gui.showUpgrades(this._app.gui.wrapperBarracksUpgrade);
             }
 
             if (hit.pickedMesh === this.dragon.clickBox.meshes.allMeshes[0]) {

@@ -38,6 +38,7 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
         //before you link to mesh
         this.linkWithMesh(this._actor);
         this.linkOffsetY = -100;
+        this.zIndex = -100;
 
         this._infoText = new TextBlock (`${itemBuilt}_info`,`${this._speed} ${itemBuilt}/second`)
         this._infoText.fontFamily = GUIFONT1;

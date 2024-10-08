@@ -32,11 +32,14 @@ export class MathState implements MathStateI, StructureObserverI {
     private _farm04:StructureI;
     //public farms:StructureI[];
 
-        //mine
+    //mine
     private _mine:StructureI;
 
     //smithy
     private _smithy:StructureI;
+
+    //barracks
+    private _barracks:StructureI;
     
     //ore
     public totalOre:number;
@@ -47,6 +50,11 @@ export class MathState implements MathStateI, StructureObserverI {
     public totalWeapons:number;
     public costOfWeaponsGold:number;
     public timeToMakeWeapons:number;
+
+    //villages
+    public totalVillages:number;
+    public costOfVillagesGold:number;
+    public timeToMakeVillages:number;
 
     constructor(scene:PlayMode) {
         this.name = "MathState"
@@ -86,12 +94,19 @@ export class MathState implements MathStateI, StructureObserverI {
         this._smithy = this._scene.smithy;
         this._smithy.attach(this);
 
+        //barracks
+        this._barracks = this._scene.barracks;
+        this._barracks.attach(this);
+
         ///Products
         //ore
         this.totalOre = 0;
 
         //weapons
         this.totalWeapons = 0;
+
+        //villages
+        this.totalVillages = 0;
 
         this._scene.onBeforeRenderObservable.add(() => {
             this.goldPerSecond = this.changeGoldPerSecond();
@@ -210,6 +225,7 @@ export class MathState implements MathStateI, StructureObserverI {
 
     //products Ore, Weapons, Etc
     public addProduct(product:ProductsT, amount:number) {
+        
         switch (product) {
             case 'Ore' : {
                 this.totalOre += amount;
@@ -220,6 +236,10 @@ export class MathState implements MathStateI, StructureObserverI {
                 this.totalWeapons += amount;
             }
             break;
+
+            case 'Villages' : {
+                this.totalVillages += amount;
+            }
         }
 
     }
@@ -236,6 +256,10 @@ export class MathState implements MathStateI, StructureObserverI {
                 this.totalWeapons -= amount;
             }
             break;
+
+            case "Villages": {
+                this.totalVillages -= amount;
+            }
         }
     }
     
