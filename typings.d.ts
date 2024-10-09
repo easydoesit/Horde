@@ -6,7 +6,7 @@ export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
 export type ProductsT = 'Ore' | 'Weapons' | 'Villages' | 'Loot';
 
-export type StructureCharactersT = 'farmers' | 'miners' | 'blacksmiths' | 'soldiers' | 'thieves';
+export type StructureCharactersT = 'farmer' | 'miner' | 'blacksmith' | 'soldier' | 'thief';
 
 export interface GameStateI {
     state:GameStateT;

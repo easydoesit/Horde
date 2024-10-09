@@ -25,25 +25,6 @@ export class MathState implements MathStateI, StructureObserverI {
     public costOfWheatUpgrade:number;
     public wheatUpgrades:number;
 
-    //farms
-    private _farm01:StructureI;
-    private _farm02:StructureI;
-    private _farm03:StructureI;
-    private _farm04:StructureI;
-    //public farms:StructureI[];
-
-    //mine
-    private _mine:StructureI;
-
-    //smithy
-    private _smithy:StructureI;
-
-    //barracks
-    private _barracks:StructureI;
-
-    //barracks
-    private _thievesGuild:StructureI;
-    
     //ore
     public totalOre:number;
     public costOfOreGold:number;
@@ -81,30 +62,10 @@ export class MathState implements MathStateI, StructureObserverI {
 
         //Structures
         //farms
-        this._farm01 = this._scene.farm01;
-        this._farm01.attach(this);
-        this._farm02 = this._scene.farm02;
-        this._farm02.attach(this);
-        this._farm03 = this._scene.farm03;
-        this._farm03.attach(this);
-        this._farm04 = this._scene.farm04;
-        this._farm04.attach(this);
 
-        //mine
-        this._mine = this._scene.mine;
-        this._mine.attach(this);
-
-        //smithy
-        this._smithy = this._scene.smithy;
-        this._smithy.attach(this);
-
-        //barracks
-        this._barracks = this._scene.barracks;
-        this._barracks.attach(this);
-
-        //barracks
-        this._thievesGuild = this._scene.thievesGuild;
-        this._thievesGuild.attach(this);
+        for (let i in this._scene.allStructures) {
+            this._scene.allStructures[i].attach(this);
+        }
 
         ///Products
         //ore

@@ -10,6 +10,8 @@ export class Runner extends TransformNode {
     private _modelDirectory:string;
     private _modelFile:string;
     private _paths:(Vector3[])[];
+    private _endOfAnim: any;
+    private _frameRate:number;
     
     public scene:PlayMode;
 
@@ -19,11 +21,14 @@ export class Runner extends TransformNode {
         this._modelDirectory = modelDirectory;
         this._modelFile = modelFile;
         this._paths = paths;
+        this._endOfAnim = endOfRun;
+
+        this._frameRate = 60
     
-        this.initialize(endOfRun);
+        this.initialize();
     }
 
-    public async initialize(endOfAnim:any): Promise<void> {
+    public async initialize(): Promise<void> {
         this.model = await this.createCharacter();
         
         this.model.root.parent = this;
@@ -37,26 +42,31 @@ export class Runner extends TransformNode {
                 curve = createCurve(this._paths[0])
             }
             break;
+
             case 1: {
                 curve = createCurve(this._paths[1]);
                 
             }
             break;
+            
             case 2:{
                 curve = createCurve(this._paths[2]);
                 
             }
             break;
+            
             case 3: {
-                curve = createCurve(this._paths[4]);
+                curve = createCurve(this._paths[3]);
                 
             }
             break;
         }
+
         name = this._departLoc.toLocaleString();
         path = createAnimationPath(curve);
 
-        this._makeAnimation(path,curve, endOfAnim);
+        this._makeAnimation(path);
+        this.playAnimation(path, curve, this._endOfAnim);
 
         if (DEBUGMODE) {
             console.log(this.name);
@@ -75,28 +85,33 @@ export class Runner extends TransformNode {
         }
     }
 
-    private _makeAnimation(path:Vector3[], curve:Curve3, endOfAnim:any) {
-        let debugPath:LinesMesh;
+    private _makeAnimation(path:Vector3[]) {
 
-        if (DEBUGMODE) {
-            debugPath = showPath(curve);
-        }
-        
-        const frameRate = 60;
-        const pathFollowAnim = new Animation(`${this.name} Position`, 'position', frameRate * 3 , Animation.ANIMATIONTYPE_VECTOR3)
+        const pathFollowAnim = new Animation(`${this.name} Position`, 'position', this._frameRate * 3 , Animation.ANIMATIONTYPE_VECTOR3)
         const pathFollowKeys = [];
 
         for (let i = 0; i < path.length; i++) {
             const position = path[i];
             
-            pathFollowKeys.push({frame: i * frameRate, value:position})
+            pathFollowKeys.push({frame: i * this._frameRate, value:position})
         }
     
         pathFollowAnim.setKeys(pathFollowKeys);
      
         this.animations.push(pathFollowAnim);
 
-        this._scene.beginAnimation(this, 0, frameRate * path.length, false, 1, () =>{
+    }
+
+    public playAnimation(path:Vector3[], curve:Curve3, endOfAnim:any) {
+        
+        let debugPath:LinesMesh;
+
+        if (DEBUGMODE) {
+            debugPath = showPath(curve);
+        }
+        
+        
+        this._scene.beginAnimation(this, 0, this._frameRate * path.length, false, 1, () =>{
             this.dispose();
             
             if (endOfAnim) {

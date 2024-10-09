@@ -14,11 +14,11 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
     private _gui:GUIPlay;
     private _speed:number;
     private _infoText:TextBlock;
-    private _itemBuilt:ProductsT;
+    private _product:ProductsT;
 
     public name:string;
 
-    constructor(name:string, gui:GUIPlay, structure:StructureI, itemBuilt:ProductsT) {
+    constructor(name:string, gui:GUIPlay, structure:StructureI, product:ProductsT) {
         super(name);
         
         this._structure = structure;
@@ -27,7 +27,7 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
         this._actor = this._structure.structureModels;
         this._gui = gui;
         this._speed = 0;
-        this._itemBuilt = itemBuilt;
+        this._product = product;
 
         this.width = '200px';
         this.height = '50px';
@@ -40,7 +40,7 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
         this.linkOffsetY = -100;
         this.zIndex = -100;
 
-        this._infoText = new TextBlock (`${itemBuilt}_info`,`${this._speed} ${itemBuilt}/second`)
+        this._infoText = new TextBlock (`${product}_info`,`${this._speed} ${product}/second`)
         this._infoText.fontFamily = GUIFONT1;
         this._infoText.color = 'white';
         this._infoText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -72,23 +72,30 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
         
     //costOfItem:number, otherCostofItem:number | null,
     private _moveBar() {
+     
         if (this._animatedBar._width.value < 1) {
+        
             this._animatedBar.width = this._animatedBar._width.value + (this._speed * this._gui.scene.getEngine().getDeltaTime()/1000);
+        
         } else {
+        
             this._animatedBar.width = 0;
-            //add product to the game.
-            this._gui.scene.mathState.addProduct(this._itemBuilt, 1);
+            //add _product to the game.
+       
+            this._gui.scene.mathState.addProduct(this._product, 1);
         }
 
     }
 
     public updateStructure(structure: StructureI): void {
+        
         if(DEBUGMODE) {
             console.log(`updating ${this.name} from ${structure.name}`);
         }
 
         this._speed = structure.timeToMakeProduct;
-        this._infoText.text = `${this._speed} ${this._itemBuilt}/second`;
+        this._infoText.text = `${this._speed} ${this._product}/second`;
+    
     }
 
 }

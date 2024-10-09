@@ -11,6 +11,7 @@ export class Structure implements StructureI {
     private _scene:PlayMode;
     private _mathFunctions:StructureMathFunctionsT;
     private _character:StructureCharactersT | null;
+    private _animationPaths:Vector3[][];
 
     public upgradeMax:number;
     public upgradeCostFarmers:number | null;
@@ -20,12 +21,13 @@ export class Structure implements StructureI {
     public upgradeLevel:number;
     public structureModels: StructureModel;
     
-    constructor(name:string, scene:PlayMode, mathFunctions:StructureMathFunctionsT, upgradeMax:number, product:ProductsT | null, models:string[], clickBox:string, position:Vector3, character:StructureCharactersT | null) {
+    constructor(name:string, scene:PlayMode, mathFunctions:StructureMathFunctionsT, upgradeMax:number, product:ProductsT | null, models:string[], clickBox:string, position:Vector3, character:StructureCharactersT | null, animationPaths:Vector3[][] | null) {
         this.name = name;
         this._scene = scene;
         this._observers = [];
         this._mathFunctions = mathFunctions;
         this._character = character;
+        this._animationPaths = animationPaths;
         this.upgradeMax = upgradeMax;
         this.upgradeLevel = 0;
         this.upgradeCostGold = Math.round(this._mathFunctions.upgradeCostOfGold(this.upgradeLevel)*1000)/1000;
@@ -90,6 +92,7 @@ export class Structure implements StructureI {
     }
 
     public upgradeState() {
+        
         if (DEBUGMODE) {
             console.log(`${this.name} upgradeStateCalled`);
             console.log(`${this.name} currentUpgradeLevel: ${this.upgradeLevel}`);
@@ -105,51 +108,7 @@ export class Structure implements StructureI {
                 break;
             }
 
-            //animate characters
-            if(this._character) {
-                let characterCount = this.upgradeCostFarmers;
-
-                //get the farms that have been upgraded
-                const usableFarms:StructureI[] = [];
-
-                for(let i in this._scene.farms) {
-                    if (this._scene.farms[i].upgradeLevel >= 1) {
-                        usableFarms.push(this._scene.farms[i]);
-                    }
-                }
-
-                const intervalAmount = (arraySize:number) => {
-                    return 240/arraySize;
-                }
-
-                if (characterCount >= 0) {
-                    let index = 0;
-                    let iterationCount = 0;
-                    
-                    let maxIterations  = Math.round(this.upgradeCostFarmers / usableFarms.length);
-        
-                    const intervalId = setInterval(() => {
-
-                    this._makeCharacter(characterCount, index, this._character);
-        
-                    index++;
-        
-                    if(index >= usableFarms.length) {
-                        index = 0;
-                    }
-        
-                    iterationCount++;
-                    characterCount--;
-                
-        
-                    if(iterationCount >= maxIterations || characterCount <=0) {
-                        clearInterval(intervalId);
-                    }
-                    }, intervalAmount(usableFarms.length));
-                }
-            
-            }
-
+            this._animateCharacters();
        
             //update the variables
             //these ones are before the notify
@@ -172,29 +131,81 @@ export class Structure implements StructureI {
     
     }
     
-    private _makeCharacter(currentCount:number, originalLocation:number, character:StructureCharactersT){
-
-        switch(character) {
-            
-            case 'miners' : {
-                new Runner('miner', currentCount, modelsDir, 'miner.glb', this._scene, originalLocation, farmToMinePaths, null);
-            }
-            break;
-
-            case 'blacksmiths' : {
-                new Runner('blacksmith', currentCount, modelsDir, 'blacksmith.glb', this._scene, originalLocation, farmToSmithyPaths, null);
-            }
-
-            case 'soldiers' : {
-                new Runner('soldier', currentCount, modelsDir, 'soldier.glb', this._scene, originalLocation, farmToBarracksPaths, null );
-            }
-
-            case 'thieves' : {
-                new Runner ('thief', currentCount, modelsDir, 'thief.glb', this._scene, originalLocation, farmToThievesGuildPaths, null);
-            }
-
-        }
+    private _makeCharacter(currentCount:number, originalLocation:number, character:StructureCharactersT, paths:Vector3[][] ){
         
+        const characterModel = character + '.glb'
+
+        new Runner(character, currentCount, modelsDir, characterModel, this._scene, originalLocation, paths, null)
+        
+        
+        // switch(character) {
+            
+        //     case 'miner' : {
+        //         new Runner('miner', currentCount, modelsDir, 'miner.glb', this._scene, originalLocation, farmToMinePaths, null);
+        //     }
+        //     break;
+
+        //     case 'blacksmith' : {
+        //         new Runner('blacksmith', currentCount, modelsDir, 'blacksmith.glb', this._scene, originalLocation, farmToSmithyPaths, null);
+        //     }
+
+        //     case 'soldier' : {
+        //         new Runner('soldier', currentCount, modelsDir, 'soldier.glb', this._scene, originalLocation, farmToBarracksPaths, null );
+        //     }
+
+        //     case 'thief' : {
+        //         new Runner ('thief', currentCount, modelsDir, 'thief.glb', this._scene, originalLocation, farmToThievesGuildPaths, null);
+        //     }
+
+        // }
+        
+    }
+
+    private _animateCharacters() {
+          //animate characters
+          if(this._character) {
+            let characterCount = this.upgradeCostFarmers;
+
+            //get the farms that have been upgraded
+            const usableFarms:StructureI[] = [];
+
+            for(let i in this._scene.farms) {
+                if (this._scene.farms[i].upgradeLevel >= 1) {
+                    usableFarms.push(this._scene.farms[i]);
+                }
+            }
+
+            const intervalAmount = (arraySize:number) => {
+                return 240/arraySize;
+            }
+
+            if (characterCount >= 0) {
+                let index = 0;
+                let iterationCount = 0;
+                
+                let maxIterations  = Math.round(this.upgradeCostFarmers / usableFarms.length);
+    
+                const intervalId = setInterval(() => {
+
+                this._makeCharacter(characterCount, index, this._character, this._animationPaths);
+    
+                index++;
+    
+                if(index >= usableFarms.length) {
+                    index = 0;
+                }
+    
+                iterationCount++;
+                characterCount--;
+            
+    
+                if(iterationCount >= maxIterations || characterCount <=0) {
+                    clearInterval(intervalId);
+                }
+                }, intervalAmount(usableFarms.length));
+            }
+        
+        }
     }
 
 }
