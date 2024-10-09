@@ -203,6 +203,7 @@ export class PlayMode extends Scene {
         //--SCENE FINISHED LOADING--
         
         await this.whenReadyAsync();
+        console.log(this);
 
         //change the GUI
         engine.hideLoadingUI();
