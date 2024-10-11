@@ -1,5 +1,5 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix} from "@babylonjs/core";
-import { barracksClickBox, barracksModels, barracksPos, castlClickBox, castleModels, castlePos, DEBUGMODE, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, farmToBarracksPaths, farmToMinePaths, farmToSmithyPaths, farmToThievesGuildPaths, hillModels, mineClickBox, mineModels, minePos, smithyClickBox, smithyModels, smithyPos, thievesGuildClickBox, thievesGuildModels, thievesGuildPos } from "../utils/CONSTANTS";
+import { barracksClickBox, barracksModels, barracksPos, castlClickBox, castleModels, castlePos, towerClickBox, towerModels, towerPos, DEBUGMODE, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, farmClickBox, farmModels, farmToBarracksPaths, farmToTowerPaths, farmToMinePaths, farmToForgePaths, farmToThievesGuildPaths, farmToTavernPaths, farmToWorkShopPaths, hillModels, mineClickBox, mineModels, minePos, forgeClickBox, forgeModels, forgePos, thievesGuildClickBox, thievesGuildModels, thievesGuildPos, tavernClickBox, tavernModels, tavernPos, workShopClickBox, workShopModels, workShopPos } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
 import { StructureModel } from "../models_structures/structureModels";
@@ -10,7 +10,7 @@ import { MathStateI, StructureI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { Structure } from "../gameControl/structures";
-import { barracksUpgradeCostFarmers, barracksUpgradeCostGold, barracksUpgradeMax, farmUpgradeCostGold, farmUpgradeMax, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, smithyUpgradeCostFarmers, smithyUpgradeCostGold, smithyUpgradeMax, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeLoot, timeToMakeOre, timeToMakeSoldier, timeToMakeWeapon } from "../utils/MATHCONSTANTS";
+import { barracksUpgradeCostFarmers, barracksUpgradeCostGold, barracksUpgradeMax, towerUpgradeCostFarmers, towerUpgradeCostGold, towerUpgradeMax, farmUpgradeCostGold, farmUpgradeMax, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeGoldBar, timeToMakeLoot, timeToMakeOre, timeToMakePortal, timeToMakeRelic, timeToMakeSoldier, timeToMakeWeapon, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -30,9 +30,12 @@ export class PlayMode extends Scene {
     public farms:StructureI[];
     
     public mine:StructureI;
-    public smithy: StructureI;
+    public forge: StructureI;
     public barracks:StructureI;
     public thievesGuild:StructureI;
+    public workShop:StructureI;
+    public tower:StructureI;
+    public tavern:StructureI;
 
     public allStructures:StructureI[];
 
@@ -85,17 +88,27 @@ export class PlayMode extends Scene {
         this.mine = new Structure('Mine', this, {upgradeCostOfGold:mineUpgradeCostGold, upgradeCostFarmers:mineUpgradeCostFarmers, timeToMakeProduct:timeToMakeOre}, mineUpgradeMax, 'Ore', mineModels, mineClickBox, minePos, 'miner', farmToMinePaths);    
         this.mine.structureModels.position = new Vector3(minePos.x, minePos.y - 10 , minePos.z);
 
-        this.smithy = new Structure('Smithy', this, {upgradeCostOfGold:smithyUpgradeCostGold, upgradeCostFarmers:smithyUpgradeCostFarmers, timeToMakeProduct:timeToMakeWeapon}, smithyUpgradeMax, 'Weapons', smithyModels, smithyClickBox, smithyPos, 'blacksmith', farmToSmithyPaths);
-        this.smithy.structureModels.position = new Vector3(smithyPos.x, smithyPos.y -20, smithyPos.z);
+        this.forge = new Structure('Forge', this, {upgradeCostOfGold:forgeUpgradeCostGold, upgradeCostFarmers:forgeUpgradeCostFarmers, timeToMakeProduct:timeToMakeWeapon}, forgeUpgradeMax, 'Weapons', forgeModels, forgeClickBox, forgePos, 'blacksmith', farmToForgePaths);
+        this.forge.structureModels.position = new Vector3(forgePos.x, forgePos.y -20, forgePos.z);
 
         this.barracks = new Structure('Barracks', this, {upgradeCostOfGold:barracksUpgradeCostGold, upgradeCostFarmers:barracksUpgradeCostFarmers, timeToMakeProduct:timeToMakeSoldier}, barracksUpgradeMax, 'Villages', barracksModels, barracksClickBox, barracksPos, 'soldier', farmToBarracksPaths); 
         this.barracks.structureModels.position = new Vector3(barracksPos.x, barracksPos.y -20, barracksPos.z);
-
+        
         this.thievesGuild = new Structure('ThievesGuild', this, {upgradeCostOfGold:thievesGuildUpgradeCostGold, upgradeCostFarmers:thievesGuildUpgradeCostFarmers, timeToMakeProduct:timeToMakeLoot}, thievesGuildUpgradeMax, 'Loot', thievesGuildModels, thievesGuildClickBox, thievesGuildPos, 'thief', farmToThievesGuildPaths);
         this.thievesGuild.structureModels.position = new Vector3(thievesGuildPos.x, thievesGuildPos.y -20, thievesGuildPos.z);
-        
+
+        this.workShop = new Structure('WorkShop', this, {upgradeCostOfGold:workShopUpgradeCostGold, upgradeCostFarmers:workShopUpgradeCostFarmers, timeToMakeProduct:timeToMakeGoldBar}, workShopUpgradeMax, 'Goldbars', workShopModels, workShopClickBox, workShopPos, 'alchemist', farmToWorkShopPaths);
+        this.workShop.structureModels.position = new Vector3(workShopPos.x, workShopPos.y -20, workShopPos.z);
+
+        this.tower = new Structure('Tower', this, {upgradeCostOfGold:towerUpgradeCostGold, upgradeCostFarmers:towerUpgradeCostFarmers, timeToMakeProduct:timeToMakePortal}, towerUpgradeMax, 'Portals' , towerModels, towerClickBox, towerPos, 'wizard', farmToTowerPaths);
+        this.tower.structureModels.position = new Vector3(towerPos.x, towerPos.y -20, towerPos.z);
+        this.tower.structureModels.rotation.y = -45;
+
+        this.tavern  = new Structure('Tavern', this, {upgradeCostOfGold:tavernUpgradeCostGold, upgradeCostFarmers:tavernUpgradeCostFarmers, timeToMakeProduct:timeToMakeRelic}, tavernUpgradeMax, 'Relics', tavernModels, tavernClickBox, tavernPos, 'adventurer', farmToTavernPaths );
+        this.tavern.structureModels.position = new Vector3(tavernPos.x, tavernPos.y -20, tavernPos.z);
+
         this.allStructures = []
-        this.allStructures.push(this.farm01, this.farm02,this.farm03,this.farm04,this.mine, this.smithy, this.barracks, this.thievesGuild)
+        this.allStructures.push(this.farm01, this.farm02,this.farm03,this.farm04,this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this);
@@ -145,13 +158,13 @@ export class PlayMode extends Scene {
                 this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
             }
 
-            if (hit.pickedMesh === this.smithy.structureModels.clickZone) {
+            if (hit.pickedMesh === this.forge.structureModels.clickZone) {
                 
                 if (DEBUGMODE) {
-                    console.log("Smithy Clicked");
+                    console.log("Forge Clicked");
                 }
                 
-                this._app.gui.showUpgrades(this._app.gui.wrapperSmithyUpgrade);
+                this._app.gui.showUpgrades(this._app.gui.wrapperForgeUpgrade);
             }
 
             if (hit.pickedMesh === this.barracks.structureModels.clickZone) {
@@ -171,6 +184,34 @@ export class PlayMode extends Scene {
                 
                 this._app.gui.showUpgrades(this._app.gui.wrapperThievesGuildUpgrade);
             }
+
+            if (hit.pickedMesh === this.workShop.structureModels.clickZone) {
+                
+                if (DEBUGMODE) {
+                    console.log("Workshop Clicked");
+                }
+                
+                this._app.gui.showUpgrades(this._app.gui.wrapperWorkShopUpgrade);
+            }
+
+            if (hit.pickedMesh === this.tower.structureModels.clickZone) {
+                
+                if (DEBUGMODE) {
+                    console.log("Tower Clicked");
+                }
+                
+                this._app.gui.showUpgrades(this._app.gui.wrapperTowerUpgrade);
+            }
+
+            if (hit.pickedMesh === this.tavern.structureModels.clickZone) {
+                
+                if (DEBUGMODE) {
+                    console.log("Tavern Clicked");
+                }
+                
+                this._app.gui.showUpgrades(this._app.gui.wrapperTavernUpgrade);
+            }
+            
 
             if (hit.pickedMesh === this.dragon.clickBox.meshes.allMeshes[0]) {
                 
@@ -203,7 +244,6 @@ export class PlayMode extends Scene {
         //--SCENE FINISHED LOADING--
         
         await this.whenReadyAsync();
-        console.log(this);
 
         //change the GUI
         engine.hideLoadingUI();

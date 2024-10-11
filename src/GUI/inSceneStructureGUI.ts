@@ -29,18 +29,18 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
         this._speed = 0;
         this._product = product;
 
-        this.width = '200px';
-        this.height = '50px';
+        this.width = '125px';
+        this.height = '40px';
         
         //you add the control
         this._gui.gameGUI.addControl(this);
         
         //before you link to mesh
         this.linkWithMesh(this._actor);
-        this.linkOffsetY = -100;
+        this.linkOffsetY = -90;
         this.zIndex = -100;
 
-        this._infoText = new TextBlock (`${product}_info`,`${this._speed} ${product}/second`)
+        this._infoText = new TextBlock (`${product}_info`,`${this._speed} ${product}/s`)
         this._infoText.fontFamily = GUIFONT1;
         this._infoText.color = 'white';
         this._infoText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -94,7 +94,7 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
         }
 
         this._speed = structure.timeToMakeProduct;
-        this._infoText.text = `${this._speed} ${this._product}/second`;
+        this._infoText.text = `${this._speed} ${this._product}/s`;
     
     }
 

@@ -4,9 +4,9 @@ import { Rectangle, TextBlock } from "@babylonjs/gui";
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
-export type ProductsT = 'Ore' | 'Weapons' | 'Villages' | 'Loot';
+export type ProductsT = 'Ore' | 'Weapons' | 'Villages' | 'Loot' | 'Goldbars' | 'Portals' | 'Relics';
 
-export type StructureCharactersT = 'farmer' | 'miner' | 'blacksmith' | 'soldier' | 'thief';
+export type StructureCharactersT = 'farmer' | 'miner' | 'blacksmith' | 'soldier' | 'thief' | 'alchemist' | 'wizard' | 'adventurer';
 
 export interface GameStateI {
     state:GameStateT;
@@ -37,19 +37,24 @@ export interface MathStateI {
     
     totalOre:number;
     costOfOreGold:number;
-    //timeToMakeOre:number;
 
     totalWeapons:number;
     costOfWeaponsGold:number;
-    //timeToMakeWeapons:number;
 
     totalVillages:number;
     costOfVillagesGold:number;
-    //timeToMakeVillages:number;
 
     totalLoot:number;
-    costOfLootGold:number;
-    //timeToMakeVillages:number;
+    costOfLootGold:number
+
+    totalGoldBars:number;
+    costOfGoldBars:number;
+
+    totalPortals:number;
+    costOfPortals:number;
+
+    totalRelics:number;
+    costOfRelics:number;
 
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;

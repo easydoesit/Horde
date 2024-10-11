@@ -14,8 +14,6 @@ export function showPath(curve:Curve3) {
         return mesh;
     }
 
-
-
 export function createAnimationPath(curve:Curve3) {
 
     //transfrom the curves into a proper 3D path

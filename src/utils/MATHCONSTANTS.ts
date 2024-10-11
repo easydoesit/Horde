@@ -135,8 +135,8 @@ export const timeToMakeOre = (numberOfUpgrades:number) => {
     }
 }
 
-//Smithy
-export const smithyUpgradeMax = 3;
+//Forge
+export const forgeUpgradeMax = 3;
 
 export const weapons = 0;
 export const costOfWeaponsOre = 10;
@@ -163,13 +163,13 @@ export const timeToMakeWeapon = (numberOfUpgrades:number) => {
     }
 }
 
-export const smithyUpgradeCostGold = (numberOfUpgrades:number) => {
+export const forgeUpgradeCostGold = (numberOfUpgrades:number) => {
     const a = 3.01;
     const b = 5;
     return a * Math.exp(b * numberOfUpgrades);
 }
 
-export const smithyUpgradeCostFarmers = (numberOfUpgrades:number) => {
+export const forgeUpgradeCostFarmers = (numberOfUpgrades:number) => {
     switch (numberOfUpgrades) {
         case 0: {
             return 2;
@@ -247,7 +247,7 @@ export const barracksUpgradeCostFarmers = (numberOfUpgrades:number) => {
 export const thievesGuildUpgradeMax = 3;
 
 export const loot = 0;
-export const costOfLootVillages = 10;
+export const costOfLoot = 10;
 export const lootUpgradeValue = 0.05; //percent
 
 export const timeToMakeLoot = (numberOfUpgrades:number) => {
@@ -296,3 +296,168 @@ export const thievesGuildUpgradeCostFarmers = (numberOfUpgrades:number) => {
         }
     }
 }
+
+//WorkShop
+export const workShopUpgradeMax = 3;
+
+export const goldBars = 0;
+export const costOfGoldBar = 10;
+export const goldBarUpgradeValue = 0.05; //percent
+
+export const timeToMakeGoldBar = (numberOfUpgrades:number) => {
+    
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 0;
+        
+        }
+        case 1:  {
+            return .25;
+        }
+
+        case 2: {
+            return .4;
+        }
+
+        case 3: {
+            return 1;
+        }
+    }
+}
+
+export const workShopUpgradeCostGold = (numberOfUpgrades:number) => {
+    const a = 3.01;
+    const b = 5;
+    return a * Math.exp(b * numberOfUpgrades);
+}
+
+export const workShopUpgradeCostFarmers = (numberOfUpgrades:number) => {
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 20;
+        
+        }
+        case 1:  {
+            return 75;
+        }
+
+        case 2: {
+            return 600;
+        }
+
+        case 3: {
+            return 2000;
+        }
+    }
+}
+
+//Tower
+export const towerUpgradeMax = 3;
+
+export const portals = 0;
+export const costOfPortal = 10;
+export const portalUpgradeValue = 0.05; //percent
+
+export const timeToMakePortal = (numberOfUpgrades:number) => {
+    
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 0;
+        
+        }
+        case 1:  {
+            return .25;
+        }
+
+        case 2: {
+            return .4;
+        }
+
+        case 3: {
+            return 1;
+        }
+    }
+}
+
+export const towerUpgradeCostGold = (numberOfUpgrades:number) => {
+    const a = 3.01;
+    const b = 5;
+    return a * Math.exp(b * numberOfUpgrades);
+}
+
+export const towerUpgradeCostFarmers = (numberOfUpgrades:number) => {
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 20;
+        
+        }
+        case 1:  {
+            return 75;
+        }
+
+        case 2: {
+            return 600;
+        }
+
+        case 3: {
+            return 2000;
+        }
+    }
+}
+
+//Tavern
+export const tavernUpgradeMax = 3;
+
+export const relics = 0;
+export const costOfRelic = 10;
+export const relicUpgradeValue = 0.05; //percent
+
+export const timeToMakeRelic = (numberOfUpgrades:number) => {
+    
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 0;
+        
+        }
+        case 1:  {
+            return .25;
+        }
+
+        case 2: {
+            return .4;
+        }
+
+        case 3: {
+            return 1;
+        }
+    }
+}
+
+export const tavernUpgradeCostGold = (numberOfUpgrades:number) => {
+    const a = 3.01;
+    const b = 5;
+    return a * Math.exp(b * numberOfUpgrades);
+}
+
+export const tavernUpgradeCostFarmers = (numberOfUpgrades:number) => {
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 20;
+        
+        }
+        case 1:  {
+            return 75;
+        }
+
+        case 2: {
+            return 600;
+        }
+
+        case 3: {
+            return 2000;
+        }
+    }
+}
+
+
+

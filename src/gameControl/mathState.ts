@@ -41,6 +41,18 @@ export class MathState implements MathStateI, StructureObserverI {
     public totalLoot:number;
     public costOfLootGold:number;
 
+    //goldBars
+    public totalGoldBars:number;
+    public costOfGoldBars:number;
+
+    //portals
+    public totalPortals:number;
+    public costOfPortals:number;
+
+    //relics
+    public totalRelics:number;
+    public costOfRelics:number;
+
     constructor(scene:PlayMode) {
         this.name = "MathState"
         this._scene = scene;
@@ -79,6 +91,15 @@ export class MathState implements MathStateI, StructureObserverI {
 
         //loot
         this.totalLoot = 0;
+
+        //goldbars
+        this.totalGoldBars = 0;
+        
+        //portals
+        this.totalPortals = 0;
+
+        //relics
+        this.totalRelics  =0;
 
         this._scene.onBeforeRenderObservable.add(() => {
             
@@ -217,9 +238,25 @@ export class MathState implements MathStateI, StructureObserverI {
             break;
 
             case 'Loot': {
-                this.totalLoot -= amount;
+                this.totalLoot += amount;
             }
             break;
+
+            case 'Goldbars' : {
+                this.totalGoldBars += amount;
+            }
+            break;
+            
+            case 'Portals': {
+                this.totalPortals += amount;
+            }
+            break;
+
+            case 'Relics': {
+                this.totalRelics  += amount;
+            }
+            break;
+
         }
 
     }
@@ -244,6 +281,21 @@ export class MathState implements MathStateI, StructureObserverI {
 
             case 'Loot': {
                 this.totalLoot -= amount;
+            }
+            break;
+
+            case 'Goldbars' : {
+                this.totalGoldBars -= amount;
+            }
+            break;
+            
+            case 'Portals': {
+                this.totalPortals -= amount;
+            }
+            break;
+
+            case 'Relics': {
+                this.totalRelics  -= amount;
             }
             break;
         }
