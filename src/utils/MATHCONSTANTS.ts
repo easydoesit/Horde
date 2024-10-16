@@ -4,7 +4,7 @@ import { DEBUGMODE } from "./CONSTANTS";
 export const startingLumens = 100;
 
 //gold
-export const startingGold = 1000.000;
+export const startingGold = 0;
 
 //eggs
 export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
@@ -65,8 +65,6 @@ export const wheatUpgradeCostGold = (iteration:number) => {
 
 //Farms
 export const farmUpgradeMax = 5;
-
-export const farmCost = 27.71;
 
 export const farmUpgradeCostGold = (numberOfUpgrades:number) => {
     const a = 2.01;

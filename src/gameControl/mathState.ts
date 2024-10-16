@@ -1,5 +1,6 @@
 import { MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
 import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
+import { addFarmersCostLumens, addFarmersMultInit } from "../utils/EPICUPGRADESCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
@@ -9,16 +10,20 @@ export class MathState implements MathStateI, StructureObserverI {
     private _scene:PlayMode;
 
     //farmers
-    public totalFarmers:number;
-    public runningFarmers:number;
+    private _totalFarmers:number;
+    private _runningFarmers:number;
     public farmersMax:number;
     public farmersNextUpgradeMax:number;
     
-    //gold
-    public totalGold:number;
-    public goldPerSecond:number;
+    //farmers epic
+    private _addFarmersMult:number;
 
-    public totalLumens:number;
+    //gold
+    private _totalGold:number;
+    private _goldPerSecond:number;
+
+    //lumens
+    private _totalLumens:number;
 
     //wheat
     public wheatValue:number;
@@ -58,15 +63,16 @@ export class MathState implements MathStateI, StructureObserverI {
         this._scene = scene;
         this._observers = [];
 
-        this.totalFarmers = startingFarmers;
-        this.runningFarmers = 0;
+        this._totalFarmers = startingFarmers;
+        this._addFarmersMult = addFarmersMultInit;
+        this._runningFarmers = 0;
         this.farmersMax = 0;
         this.changeFarmersMax();
     
-        this.totalGold = startingGold;
-        this.goldPerSecond = 0;
+        this._totalGold = startingGold;
+        this._goldPerSecond = 0;
 
-        this.totalLumens = startingLumens;
+        this._totalLumens = startingLumens;
         
         this.wheatValue = 0;
         this.wheatUpgrades = 0;
@@ -99,12 +105,12 @@ export class MathState implements MathStateI, StructureObserverI {
         this.totalPortals = 0;
 
         //relics
-        this.totalRelics  =0;
+        this.totalRelics  = 0;
 
         this._scene.onBeforeRenderObservable.add(() => {
             
-            this.goldPerSecond = this.changeGoldPerSecond();
-            this.totalGold = this.changeFinalGold();
+            this._goldPerSecond = this.changeGoldPerSecond();
+            this.changeFinalGold();
             this.notify();
         
         })
@@ -154,68 +160,111 @@ export class MathState implements MathStateI, StructureObserverI {
     }
 
     //Gold
-    private changeFinalGold() {
-        
-        this.totalGold = this.totalGold + (this.goldPerSecond * (this._scene.getEngine().getDeltaTime()/1000));
-            
-        let roundedTotalGold = Math.round(this.totalGold * 1000) / 1000;
+    private changeFinalGold() {    
 
-        return roundedTotalGold;
+        //const frame = this._scene.getEngine().getDeltaTime()/1000;
+        
+        const goldPerFrame = this.getGoldPerSecond() * (this._scene.getEngine().getDeltaTime()/1000);
+
+        this.addGold(goldPerFrame);
+
+
     
     }
 
     public changeGoldPerSecond() {
 
-        return Math.round((1 + this.wheatValue) * this._farmerMultiplyer(this.totalFarmers)* 1000) /1000;
+        return Math.round((1 + this.wheatValue) * this._farmerMultiplyByBaseVal(this._totalFarmers)* 1000) /1000;
 
+    }
+
+    public getGoldPerSecond(): number {
+        return this._goldPerSecond;
     }
 
     public addGold(amount: number): void {
-        this.totalGold  += amount
+        this._totalGold  += amount;
     }
 
     public spendGold(amount:number) {
-        this.totalGold -= amount;
+        this._totalGold -= amount;
+    }
+
+    public getTotalGold():number {
+        return this._totalGold;
     }
 
     //Lumens
     public addLumens(amount: number): void {
-        Math.round(this.totalLumens  += amount)
+        Math.round(this._totalLumens  += amount)
     }
 
-    public spendLumens(amount:number) {
-        Math.round(this.totalLumens -= amount);
+    public spendLumens(amount:number):void {
+        Math.round(this._totalLumens -= amount);
+    }
+
+    public getTotalLumens():number {
+        return this._totalLumens;
     }
 
     //Farmers
+    public getTotalFarmers() {
+        return this._totalFarmers;
+    }
+
     public addFarmers(number:number) {
-       this.totalFarmers += number;
+       this._totalFarmers += number;
     }
 
     public spendFarmers(amount:number) {
-        this.totalFarmers -= amount;
+        this._totalFarmers -= amount;
     }
 
-    private _farmerMultiplyer(totalFarmers:number) {
-        return Math.round((totalFarmers * farmerBaseValue) * 1000) /1000;
+    private _farmerMultiplyByBaseVal(_totalFarmers:number) {
+        return Math.round((_totalFarmers * farmerBaseValue) * 1000) /1000;
     }
 
     public makeFarmerRun(number:number) {
-        this.runningFarmers += number;
+        this._runningFarmers += number;
     }
 
     public endFarmerRun() {
-        this.runningFarmers -= 1;
+        this._runningFarmers -= 1;
     }
 
-    public changeFarmersMax(){
+    public getRunningFarmers() {
+        return this._runningFarmers;
+    }
+
+    public changeFarmersMax():void {
         let total = 0;
 
         for (let i in this._scene.farms) {
             total += Math.round(farmersMaxPerFarm(this._scene.farms[i].upgradeLevel));
         }
         
-        this.farmersMax  = total;
+        this.farmersMax = total;
+    }
+
+    public getFarmersMax():number {
+        return this.farmersMax;
+    }
+
+    public increaseAddFarmersMultiplyer(amount:number) {
+        
+        if(this._addFarmersMult > 1) {
+            
+            this._addFarmersMult += amount;
+        
+        } else if (this._addFarmersMult === 1) {
+
+            this._addFarmersMult += amount - 1;
+        
+        }
+    }
+
+    public getFarmersMult() {
+        return this._addFarmersMult;
     }
 
     //products Ore, Weapons, Etc
@@ -322,8 +371,8 @@ export class MathState implements MathStateI, StructureObserverI {
             console.log(`The Product is $${structure.product}`);
         }
 
-        this.totalFarmers -= Math.round(structure.upgradeCostFarmers);
-        this.totalGold -= Math.round(structure.upgradeCostGold * 1000)/1000;
+        this._totalFarmers -= Math.round(structure.upgradeCostFarmers);
+        this._totalGold -= Math.round(structure.upgradeCostGold * 1000)/1000;
 
         if (structure.name.includes("Farm")){
             this.changeFarmersMax();

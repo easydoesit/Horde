@@ -50,7 +50,7 @@ export class AddStructureButton extends Button {
         this.addControl(this._costGoldText);
 
         if (this.structure.upgradeCostFarmers) {
-            this._costFarmersText = new TextBlock('costInFarmers', `Cost Famers: ${this.structure.upgradeCostFarmers}`);
+            this._costFarmersText = new TextBlock('costInFarmers', `Cost Farmers: ${this.structure.upgradeCostFarmers}`);
             this._costFarmersText.fontFamily = GUIFONT1;
             this._costFarmersText.color = 'white';
             this._costFarmersText.top = 20;
@@ -62,7 +62,7 @@ export class AddStructureButton extends Button {
             
             if (this.structure.upgradeCostFarmers) {
 
-                if(this._mathState.totalGold >= this.structure.upgradeCostGold && this._mathState.totalFarmers >= this.structure.upgradeCostFarmers) {
+                if(this._mathState.getTotalGold() >= this.structure.upgradeCostGold && this._mathState.getTotalFarmers() >= this.structure.upgradeCostFarmers) {
                 
                     this._addStructureFlow(upgradeSection);
 
@@ -70,7 +70,7 @@ export class AddStructureButton extends Button {
                 
             } else {
                 
-                if(this._mathState.totalGold >= this.structure.upgradeCostGold) {
+                if(this._mathState.getTotalGold() >= this.structure.upgradeCostGold) {
 
                     this._addStructureFlow(upgradeSection);
 

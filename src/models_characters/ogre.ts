@@ -147,7 +147,7 @@ export class Ogre extends TransformNode {
 
             if(!this._ogreInterval) {
                 this._ogreInterval = setInterval(() => {
-                    if(this.scene.mathState.totalFarmers > 0) {
+                    if(this.scene.mathState.getTotalFarmers() > 0) {
                         this.scene.mathState.spendFarmers(1);
                     }
                 },ogreIntervalTime);

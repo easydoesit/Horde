@@ -21,16 +21,7 @@ export interface GameStateObserverI {
     updateGameState(gamestate:GameStateI):void;
 }
 
-export interface MathStateI {
-    totalGold:number;
-    goldPerSecond:number;
-    
-    totalLumens:number;
-    totalFarmers:number;
-    
-    runningFarmers:number;
-    farmersMax:number;
-    
+export interface MathStateI {        
     wheatValue:number;
     costOfWheatUpgrade:number;
     wheatUpgrades:number;
@@ -59,16 +50,25 @@ export interface MathStateI {
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;
     notify():void;
+
+    getTotalLumens():number
    
+    getFarmersMax():number;
+    getTotalFarmers():number;
     makeFarmerRun(number:number):void;
     endFarmerRun():void;
+    getRunningFarmers():number;
     addFarmers(number:number):void;
     spendFarmers(amount:number):void;
     changeFarmersMax():void;
+    increaseAddFarmersMultiplyer(amount:number):void;
+    getFarmersMult():number;
     
     changeGoldPerSecond():number;
+    getGoldPerSecond():number;
     addGold(amount:number):void;
     spendGold(amount:number):void;
+    getTotalGold():number;
 
     addLumens(amount:number):void;
     spendLumens(amount:number):void;
