@@ -133,13 +133,13 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._goldPerSecondCount = new ProductCounter('Gold/Second', 24, 0, `${this._mathState.getGoldPerSecond()}`, this._wrapperTop);
         this._goldCount = new ProductCounter('Gold', 48, 0, `${this._mathState.getTotalGold()}`, this._wrapperTop);
         this._lumenCount = new ProductCounter('Lumens', 0, -300, `${this._mathState.getTotalLumens()}`, this._wrapperTop);
-        this._oreCount = new ProductCounter('Ore', 0, 300, `${this._mathState.totalOre}`, this._wrapperTop);
-        this._weaponCount = new ProductCounter('Weapons', 24, 300,`${this._mathState.totalWeapons}`, this._wrapperTop);
-        this._villageCount = new ProductCounter('Villages', 48, 300, `${this._mathState.totalVillages}`, this._wrapperTop);
-        this._lootCount = new ProductCounter('Loot', 72, 300, `${this._mathState.totalLoot}`, this._wrapperTop);
-        this._goldBarsCount = new ProductCounter('Goldbars', 0, 600, `${this._mathState.totalGoldBars}`, this._wrapperTop);
-        this._portalsCount = new ProductCounter('Portals', 24, 600, `${this._mathState.totalPortals}`, this._wrapperTop);
-        this._relicsCount = new ProductCounter('Relics', 48, 600, `${this._mathState.totalRelics}`, this._wrapperTop);
+        this._oreCount = new ProductCounter('Ore', 0, 300, `${this._mathState.getTotalProductAmount('Ore')}`, this._wrapperTop);
+        this._weaponCount = new ProductCounter('Weapons', 24, 300,`${this._mathState.getTotalProductAmount('Weapons')}`, this._wrapperTop);
+        this._villageCount = new ProductCounter('Villages', 48, 300, `${this._mathState.getTotalProductAmount('Villages')}`, this._wrapperTop);
+        this._lootCount = new ProductCounter('Loot', 72, 300, `${this._mathState.getTotalProductAmount('Loot')}`, this._wrapperTop);
+        this._goldBarsCount = new ProductCounter('Goldbars', 0, 600, `${this._mathState.getTotalProductAmount('Goldbars')}`, this._wrapperTop);
+        this._portalsCount = new ProductCounter('Portals', 24, 600, `${this._mathState.getTotalProductAmount('Portals')}`, this._wrapperTop);
+        this._relicsCount = new ProductCounter('Relics', 48, 600, `${this._mathState.getTotalProductAmount('Relics')}`, this._wrapperTop);
 
         //Bottom
         //playGUIBottom
@@ -410,13 +410,13 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._goldPerSecondCount.changeText(`${mathState.getGoldPerSecond().toFixed(3)}`);
         this._goldCount.changeText(`${mathState.getTotalGold().toFixed(3)}`);
         this._lumenCount.changeText(`${this._mathState.getTotalLumens()}`);
-        this._oreCount.changeText(`${this._mathState.totalOre}`);
-        this._weaponCount.changeText(`${this._mathState.totalWeapons}`);
-        this._villageCount.changeText(`${this._mathState.totalVillages}`);
-        this._lootCount.changeText(`${this._mathState.totalLoot}`);
-        this._goldBarsCount.changeText(`${this._mathState.totalGoldBars}`);
-        this._portalsCount.changeText(`${this._mathState.totalPortals}`);
-        this._relicsCount.changeText(`${this._mathState.totalRelics}`)
+        this._oreCount.changeText(`${this._mathState.getTotalProductAmount('Ore')}`);
+        this._weaponCount.changeText(`${this._mathState.getTotalProductAmount('Weapons')}`);
+        this._villageCount.changeText(`${this._mathState.getTotalProductAmount('Villages')}`);
+        this._lootCount.changeText(`${this._mathState.getTotalProductAmount('Loot')}`);
+        this._goldBarsCount.changeText(`${this._mathState.getTotalProductAmount('Goldbars')}`);
+        this._portalsCount.changeText(`${this._mathState.getTotalProductAmount('Portals')}`);
+        this._relicsCount.changeText(`${this._mathState.getTotalProductAmount('Relics')}`);
         
     }
 

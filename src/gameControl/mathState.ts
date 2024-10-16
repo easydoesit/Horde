@@ -12,8 +12,8 @@ export class MathState implements MathStateI, StructureObserverI {
     //farmers
     private _totalFarmers:number;
     private _runningFarmers:number;
-    public farmersMax:number;
-    public farmersNextUpgradeMax:number;
+    private _farmersMax:number;
+    private _farmersNextUpgradeMax:number;
     
     //farmers epic
     private _addFarmersMult:number;
@@ -31,32 +31,32 @@ export class MathState implements MathStateI, StructureObserverI {
     public wheatUpgrades:number;
 
     //ore
-    public totalOre:number;
-    public costOfOreGold:number;
+    private _totalOre:number;
+    private _costOfOreGold:number;
 
     //weapons
-    public totalWeapons:number;
-    public costOfWeaponsGold:number;
+    private _totalWeapons:number;
+    private _costOfWeaponsGold:number;
 
     //villages
-    public totalVillages:number;
-    public costOfVillagesGold:number;
+    private _totalVillages:number;
+    private _costOfVillagesGold:number;
 
     //loot
-    public totalLoot:number;
-    public costOfLootGold:number;
+    private _totalLoot:number;
+    private _costOfLootGold:number;
 
     //goldBars
-    public totalGoldBars:number;
-    public costOfGoldBars:number;
+    private _totalGoldBars:number;
+    private _costOfGoldBars:number;
 
     //portals
-    public totalPortals:number;
-    public costOfPortals:number;
+    private _totalPortals:number;
+    private _costOfPortals:number;
 
     //relics
-    public totalRelics:number;
-    public costOfRelics:number;
+    private _totalRelics:number;
+    private _costOfRelics:number;
 
     constructor(scene:PlayMode) {
         this.name = "MathState"
@@ -66,7 +66,7 @@ export class MathState implements MathStateI, StructureObserverI {
         this._totalFarmers = startingFarmers;
         this._addFarmersMult = addFarmersMultInit;
         this._runningFarmers = 0;
-        this.farmersMax = 0;
+        this._farmersMax = 0;
         this.changeFarmersMax();
     
         this._totalGold = startingGold;
@@ -87,25 +87,25 @@ export class MathState implements MathStateI, StructureObserverI {
 
         ///Products
         //ore
-        this.totalOre = 0;
+        this._totalOre = 0;
 
         //weapons
-        this.totalWeapons = 0;
+        this._totalWeapons = 0;
 
         //villages
-        this.totalVillages = 0;
+        this._totalVillages = 0;
 
         //loot
-        this.totalLoot = 0;
+        this._totalLoot = 0;
 
         //goldbars
-        this.totalGoldBars = 0;
+        this._totalGoldBars = 0;
         
         //portals
-        this.totalPortals = 0;
+        this._totalPortals = 0;
 
         //relics
-        this.totalRelics  = 0;
+        this._totalRelics  = 0;
 
         this._scene.onBeforeRenderObservable.add(() => {
             
@@ -243,11 +243,11 @@ export class MathState implements MathStateI, StructureObserverI {
             total += Math.round(farmersMaxPerFarm(this._scene.farms[i].upgradeLevel));
         }
         
-        this.farmersMax = total;
+        this._farmersMax = total;
     }
 
     public getFarmersMax():number {
-        return this.farmersMax;
+        return this._farmersMax;
     }
 
     public increaseAddFarmersMultiplyer(amount:number) {
@@ -272,37 +272,37 @@ export class MathState implements MathStateI, StructureObserverI {
         
         switch (product) {
             case 'Ore' : {
-                this.totalOre += amount;
+                this._totalOre += amount;
             }
             break;
 
             case 'Weapons' : {
-                this.totalWeapons += amount;
+                this._totalWeapons += amount;
             }
             break;
 
             case 'Villages' : {
-                this.totalVillages += amount;
+            this._totalVillages += amount;
             }
             break;
 
             case 'Loot': {
-                this.totalLoot += amount;
+            this._totalLoot += amount;
             }
             break;
 
             case 'Goldbars' : {
-                this.totalGoldBars += amount;
+            this._totalGoldBars += amount;
             }
             break;
             
             case 'Portals': {
-                this.totalPortals += amount;
+                this._totalPortals += amount;
             }
             break;
 
             case 'Relics': {
-                this.totalRelics  += amount;
+                this._totalRelics  += amount;
             }
             break;
 
@@ -314,37 +314,77 @@ export class MathState implements MathStateI, StructureObserverI {
         
         switch (product) {
             case 'Ore' : {
-                this.totalOre -= amount;
+                this._totalOre -= amount;
             }
             break;
 
             case 'Weapons' : {
-                this.totalWeapons -= amount;
+                this._totalWeapons -= amount;
             }
             break;
 
             case "Villages": {
-                this.totalVillages -= amount;
+            this._totalVillages -= amount;
             }
             break;
 
             case 'Loot': {
-                this.totalLoot -= amount;
+            this._totalLoot -= amount;
             }
             break;
 
             case 'Goldbars' : {
-                this.totalGoldBars -= amount;
+            this._totalGoldBars -= amount;
             }
             break;
             
             case 'Portals': {
-                this.totalPortals -= amount;
+                this._totalPortals -= amount;
             }
             break;
 
             case 'Relics': {
-                this.totalRelics  -= amount;
+                this._totalRelics  -= amount;
+            }
+            break;
+        }
+    }
+
+    public getTotalProductAmount(product:ProductsT):number {
+        
+        switch (product) {
+            case 'Ore' : {
+                return this._totalOre;
+            }
+            break;
+
+            case 'Weapons' : {
+                return this._totalWeapons;
+            }
+            break;
+
+            case "Villages": {
+                return this._totalVillages;
+            }
+            break;
+
+            case 'Loot': {
+                return this._totalLoot;
+            }
+            break;
+
+            case 'Goldbars' : {
+                return this._totalGoldBars;
+            }
+            break;
+            
+            case 'Portals': {
+                return this._totalPortals;
+            }
+            break;
+
+            case 'Relics': {
+                return this._totalRelics;
             }
             break;
         }

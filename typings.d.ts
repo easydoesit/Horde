@@ -25,34 +25,15 @@ export interface MathStateI {
     wheatValue:number;
     costOfWheatUpgrade:number;
     wheatUpgrades:number;
-    
-    totalOre:number;
-    costOfOreGold:number;
-
-    totalWeapons:number;
-    costOfWeaponsGold:number;
-
-    totalVillages:number;
-    costOfVillagesGold:number;
-
-    totalLoot:number;
-    costOfLootGold:number
-
-    totalGoldBars:number;
-    costOfGoldBars:number;
-
-    totalPortals:number;
-    costOfPortals:number;
-
-    totalRelics:number;
-    costOfRelics:number;
 
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;
     notify():void;
 
-    getTotalLumens():number
-   
+    getTotalLumens():number;
+    addLumens(amount:number):void;
+    spendLumens(amount:number):void;
+
     getFarmersMax():number;
     getTotalFarmers():number;
     makeFarmerRun(number:number):void;
@@ -70,16 +51,13 @@ export interface MathStateI {
     spendGold(amount:number):void;
     getTotalGold():number;
 
-    addLumens(amount:number):void;
-    spendLumens(amount:number):void;
-    
     upgradeWheat():void;
     changeCostOfWheatUpgrade():void;
     changeWheatValue():void;
    
     addProduct(product:ProductsT, amount:number):void;
     removeProduct(product:ProductsT, amount:number):void;
-
+    getTotalProductAmount(product:ProductsT):number;
 }
 
 export interface MathStateObserverI { 
