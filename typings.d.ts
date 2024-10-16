@@ -42,8 +42,8 @@ export interface MathStateI {
     addFarmers(number:number):void;
     spendFarmers(amount:number):void;
     changeFarmersMax():void;
-    increaseAddFarmersMultiplyer(amount:number):void;
-    getFarmersMult():number;
+    // increaseAddFarmersMultiplyer(amount:number):void;
+    // getFarmersMult():number;
     
     changeGoldPerSecond():number;
     getGoldPerSecond():number;
@@ -95,4 +95,22 @@ export type StructureMathFunctionsT = {
 export interface GUIProductCounterI {
     counterBlock:TextBlock;
     changeText:(string:string) => void;
+}
+
+export interface EpicUpgradeI {
+    name:string;
+
+    attach(observer:EpicUpgradeObserverI):void;
+    detach(observer:EpicUpgradeObserverI):void;
+    notify():void;
+    getCurrentUpgradeLevel():number;
+    getCostToUpgrade():number;
+    getCurrentValue():number;
+    getUpgradeNumMax():number;
+    getIncrement():number;
+}
+
+export interface EpicUpgradeObserverI {
+    name:string;
+    updateEpicUpgrade(upgrade:EpicUpgradeI):void;
 }

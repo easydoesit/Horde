@@ -1,10 +1,10 @@
-import { MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
+import { EpicUpgradeI, EpicUpgradeObserverI, MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
 import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
 import { addFarmersCostLumens, addFarmersMultInit } from "../utils/EPICUPGRADESCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
-export class MathState implements MathStateI, StructureObserverI {
+export class MathState implements MathStateI, StructureObserverI{
     public name:string;
     private _observers:MathStateObserverI[];
     private _scene:PlayMode;
@@ -250,23 +250,6 @@ export class MathState implements MathStateI, StructureObserverI {
         return this._farmersMax;
     }
 
-    public increaseAddFarmersMultiplyer(amount:number) {
-        
-        if(this._addFarmersMult > 1) {
-            
-            this._addFarmersMult += amount;
-        
-        } else if (this._addFarmersMult === 1) {
-
-            this._addFarmersMult += amount - 1;
-        
-        }
-    }
-
-    public getFarmersMult() {
-        return this._addFarmersMult;
-    }
-
     //products Ore, Weapons, Etc
     public addProduct(product:ProductsT, amount:number) {
         
@@ -417,6 +400,14 @@ export class MathState implements MathStateI, StructureObserverI {
         if (structure.name.includes("Farm")){
             this.changeFarmersMax();
         } 
+    }
+
+    public updateEpicUpgrade(upgrade: EpicUpgradeI): void {
+        if (DEBUGMODE) {
+            console.log(`updating ${this.name} from ${upgrade.name}`)
+        }
+
+
     }
 
 }

@@ -11,6 +11,8 @@ import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { Structure } from "../gameControl/structures";
 import { barracksUpgradeCostFarmers, barracksUpgradeCostGold, barracksUpgradeMax, towerUpgradeCostFarmers, towerUpgradeCostGold, towerUpgradeMax, farmUpgradeCostGold, farmUpgradeMax, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeGoldBar, timeToMakeLoot, timeToMakeOre, timeToMakePortal, timeToMakeRelic, timeToMakeSoldier, timeToMakeWeapon, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
+import { EpicUpgrade } from "../upgradesEpic/epicUpgrade";
+import { addFarmersCostLumens, addFarmersMultInit, addFarmersMultMax, addFarmersValueIncrement } from "../utils/EPICUPGRADESCONSTANTS";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -38,6 +40,9 @@ export class PlayMode extends Scene {
     public tavern:StructureI;
 
     public allStructures:StructureI[];
+
+    //Epic upgrades
+    public addFarmersUpgrade:EpicUpgrade;
 
     //for cloning
     public dragon:Dragon;
@@ -124,6 +129,7 @@ export class PlayMode extends Scene {
         const background = new PlainsBackground(this);
 
         this.mathState = new MathState(this);
+        this.addFarmersUpgrade = new EpicUpgrade('Add Farmers', addFarmersCostLumens, addFarmersMultInit, addFarmersValueIncrement, addFarmersMultMax);
 
         //interact with the scene
         this.onPointerDown = function castRay() {

@@ -5,12 +5,14 @@ import { wheatUpgradesMax, wheatUpgradeValue, farmUpgradeMax, mineUpgradeMax, or
 import { UpgradeSection } from "./upgradeSection";
 import { UpgradeWindow } from "./upgradeWindows";
 import { InSceneStuctureGUI } from "./inSceneStructureGUI";
-import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureI, GUIProductCounterI } from "../../typings";
+import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureI, GUIProductCounterI, EpicUpgradeObserverI, EpicUpgradeI } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
 import { AddStructureButton } from "./addStructureButton";
 import { Runner } from "../models_characters/runners";
 import { ProductCounter } from "./productCounter";
+import { EpicUpgradeSection } from "./epicUpgradeSection";
+import { addFarmersMultMax, addFarmersUpgradeInstructions, addFarmersValueIncrement } from "../utils/EPICUPGRADESCONSTANTS";
 
 export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _app:App;
@@ -44,6 +46,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
 
     //epic
     public GUIWrapperEpicUpgrade:Rectangle;
+
+    private _upgradeAddFarmers:Rectangle;
     
     //castle
     public GUIWrapperCastleUpgrade:Rectangle;
@@ -168,6 +172,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         
         });
 
+
         //add Farmer button
         this._addFarmerBtn = Button.CreateSimpleButton("addFarmer", "Add Farmer");
         this._addFarmerBtn.fontFamily = GUIFONT1;
@@ -188,6 +193,8 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         //Epic Upgrades
         this.GUIWrapperEpicUpgrade = new UpgradeWindow('EpicUpgradeWindow', 'violet', this);
         
+        this._upgradeAddFarmers = new EpicUpgradeSection('Add Farmers', addFarmersUpgradeInstructions, this.scene.addFarmersUpgrade, this.GUIWrapperEpicUpgrade, -320, this.scene, null);
+
         //Farm Upgrades
         //this is the GUI that Appears when you click on the Farm to upgrade
         this.GUIWrapperFarmUpgrade = new UpgradeWindow('FarmUpgradeWindow' , 'brown', this);
@@ -395,11 +402,11 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
     private _clickFunction(){
         if (DEBUGMODE) {
             console.log('Add Farmer Button Clicked');
-            console.log('mathStateFarmerMult: ', this._mathState.getFarmersMult());
+            console.log('mathStateFarmerMult: ', this.scene.addFarmersUpgrade.getCurrentValue());
         }
             
         //make a farmer
-        this._makeFarmer(this._mathState.getFarmersMult());  
+        this._makeFarmer(this.scene.addFarmersUpgrade.getCurrentValue());  
     }
 
     //this is the observer function to the MathState Class
