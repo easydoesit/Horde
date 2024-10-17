@@ -82,6 +82,7 @@ export const farmersMaxPerFarm = (currentUpgradeAmount:number) => {
 
 //Mines
 export const mineUpgradeMax = 3;
+export const mineCreateGoldAmount = 10;
 
 export const mineUpgradeCostGold = (numberOfUpgrades:number) => {
     const a = 2.75;
@@ -135,6 +136,7 @@ export const timeToMakeOre = (numberOfUpgrades:number) => {
 
 //Forge
 export const forgeUpgradeMax = 3;
+export const forgeCreateGoldAmount = 10;
 
 export const weapons = 0;
 export const costOfWeaponsOre = 10;
@@ -189,12 +191,12 @@ export const forgeUpgradeCostFarmers = (numberOfUpgrades:number) => {
 
 //Barracks
 export const barracksUpgradeMax = 3;
-
+export const barracksCreateGoldAmount = 160;
 export const villages = 0;
 export const costOfVillagesWeapons = 10;
 export const villagesUpgradeValue = 0.05; //percent
 
-export const timeToMakeSoldier = (numberOfUpgrades:number) => {
+export const timeToMakeVillage = (numberOfUpgrades:number) => {
     
     switch (numberOfUpgrades) {
         case 0: {
@@ -243,6 +245,7 @@ export const barracksUpgradeCostFarmers = (numberOfUpgrades:number) => {
 
 //ThievesGuild
 export const thievesGuildUpgradeMax = 3;
+export const theivesGuildCreateGoldAmount = 640;
 
 export const loot = 0;
 export const costOfLoot = 10;
@@ -297,6 +300,7 @@ export const thievesGuildUpgradeCostFarmers = (numberOfUpgrades:number) => {
 
 //WorkShop
 export const workShopUpgradeMax = 3;
+export const workShopCreateGoldAmount = 2560
 
 export const goldBars = 0;
 export const costOfGoldBar = 10;
@@ -351,7 +355,7 @@ export const workShopUpgradeCostFarmers = (numberOfUpgrades:number) => {
 
 //Tower
 export const towerUpgradeMax = 3;
-
+export const towerCreateGoldAmount = 10240;
 export const portals = 0;
 export const costOfPortal = 10;
 export const portalUpgradeValue = 0.05; //percent
@@ -405,7 +409,7 @@ export const towerUpgradeCostFarmers = (numberOfUpgrades:number) => {
 
 //Tavern
 export const tavernUpgradeMax = 3;
-
+export const tavernCreateGoldAmount = 40960;
 export const relics = 0;
 export const costOfRelic = 10;
 export const relicUpgradeValue = 0.05; //percent

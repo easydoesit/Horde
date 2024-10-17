@@ -42,8 +42,6 @@ export interface MathStateI {
     addFarmers(number:number):void;
     spendFarmers(amount:number):void;
     changeFarmersMax():void;
-    // increaseAddFarmersMultiplyer(amount:number):void;
-    // getFarmersMult():number;
     
     changeGoldPerSecond():number;
     getGoldPerSecond():number;
@@ -65,41 +63,30 @@ export interface MathStateObserverI {
     updateMathState(mathstate:MathStateI):void;//subscribe to whatever you want
 }
 
-export interface StructureI {
+export interface StructureStateI {
     name:string;
-    upgradeCostFarmers:number;
-    upgradeCostGold: number;
-    upgradeLevel:number;
-    product:string | null;
-    timeToMakeProduct:number | null;
-    structureModels:StructureModel;
-    
-    attach(observer:StructureObserverI):void;
-    detach(observer:StructureObserverI):void;
+
+    attach(observer:StructureStateObserverI):void;
+    detach(observer:StructureStateObserverI):void;
     notify():void;
     
-    upgradeState():void;
-    // getUpgradeCostFarmers():number;
-    // getUpgradeCostGold():number;
-    // getUpgradeLevel():number;
-    // getProduct():string;
-    // getTimeToMakeProduct():number;
-
+    getUpgradeCostFarmers():number;
+    getUpgradeCostGold():number;
+    getUpgradeLevel():number;
+    getProduct():ProductsT | null;
+    getTimeToMakeProduct():number | null;
+    getUpgradeMax():number;
+    getStructureModels():StructureModel;
+    getCreateGoldAmount():number;
 }
 
-export interface StructureChildI {
+export interface StructureStateChildI extends StructureStateI {
     upgradeState():void;
 }
 
-export interface StructureObserverI {
+export interface StructureStateObserverI {
     name:string;
-    updateStructure(structure:StructureI):void;
-}
-
-export type StructureMathFunctionsT = {
-    upgradeCostOfGold:(upgradeLevel:number) => number;
-    upgradeCostFarmers:((upgradeLevel:number) => number) | null;
-    timeToMakeProduct:((upgradeLevel:number) => number) | null;
+    updateStructure(structure:StructureStateI):void;
 }
 
 export interface GUIProductCounterI {

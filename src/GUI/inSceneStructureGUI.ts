@@ -4,12 +4,12 @@ import { GUIPlay } from "./GUIPlay";
 import { TransformNode } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
-import { ProductsT, StructureI, StructureObserverI } from "../../typings";
+import { ProductsT, StructureStateChildI, StructureStateObserverI } from "../../typings";
 
-export class InSceneStuctureGUI extends Rectangle implements StructureObserverI {
+export class InSceneStuctureGUI extends Rectangle implements StructureStateObserverI {
     private _animatedBarWrapper:Rectangle;
     private _animatedBar:Rectangle
-    private _structure:StructureI
+    private _structure:StructureStateChildI
     private _actor:TransformNode;
     private _gui:GUIPlay;
     private _speed:number;
@@ -18,13 +18,13 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
 
     public name:string;
 
-    constructor(name:string, gui:GUIPlay, structure:StructureI, product:ProductsT) {
+    constructor(name:string, gui:GUIPlay, structure:StructureStateChildI, product:ProductsT) {
         super(name);
         
         this._structure = structure;
         this._structure.attach(this);
 
-        this._actor = this._structure.structureModels;
+        this._actor = this._structure.getStructureModels();
         this._gui = gui;
         this._speed = 0;
         this._product = product;
@@ -83,17 +83,18 @@ export class InSceneStuctureGUI extends Rectangle implements StructureObserverI 
             //add _product to the game.
        
             this._gui.scene.mathState.addProduct(this._product, 1);
+            this._gui.scene.mathState.addGold(this._structure.getCreateGoldAmount());
         }
 
     }
 
-    public updateStructure(structure: StructureI): void {
+    public updateStructure(structure: StructureStateChildI): void {
         
         if(DEBUGMODE) {
             console.log(`updating ${this.name} from ${structure.name}`);
         }
 
-        this._speed = structure.timeToMakeProduct;
+        this._speed = structure.getTimeToMakeProduct();
         this._infoText.text = `${this._speed} ${this._product}/s`;
     
     }

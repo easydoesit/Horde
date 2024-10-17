@@ -1,9 +1,9 @@
-import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
+import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ProductsT, StructureStateI, StructureStateObserverI} from "../../typings";
 import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
-export class MathState implements MathStateI, StructureObserverI{
+export class MathState implements MathStateI, StructureStateObserverI{
     public name:string;
     private _observers:MathStateObserverI[];
     private _scene:PlayMode;
@@ -234,7 +234,7 @@ export class MathState implements MathStateI, StructureObserverI{
         let total = 0;
 
         for (let i in this._scene.farms) {
-            total += Math.round(farmersMaxPerFarm(this._scene.farms[i].upgradeLevel));
+            total += Math.round(farmersMaxPerFarm(this._scene.farms[i].getUpgradeLevel()));
         }
         
         this._farmersMax = total;
@@ -380,16 +380,16 @@ export class MathState implements MathStateI, StructureObserverI{
         this.wheatValue =  Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
     }
 
-    public updateStructure(structure: StructureI): void {
+    public updateStructure(structure: StructureStateI): void {
         if (DEBUGMODE) {
             console.log(`updating ${this.name} from ${structure.name}`);
-            console.log(`Cost of Farmers is ${structure.upgradeCostFarmers}`);
-            console.log(`Cost of Gold is ${structure.upgradeCostGold}`);
-            console.log(`The Product is $${structure.product}`);
+            console.log(`Cost of Farmers is ${structure.getUpgradeCostFarmers()}`);
+            console.log(`Cost of Gold is ${structure.getUpgradeCostGold()}`);
+            console.log(`The Product is $${structure.getProduct()}`);
         }
 
-        this._totalFarmers -= Math.round(structure.upgradeCostFarmers);
-        this._totalGold -= Math.round(structure.upgradeCostGold * 1000)/1000;
+        this._totalFarmers -= Math.round(structure.getUpgradeCostFarmers());
+        this._totalGold -= Math.round(structure.getUpgradeCostGold() * 1000)/1000;
 
         if (structure.name.includes("Farm")){
             this.changeFarmersMax();
