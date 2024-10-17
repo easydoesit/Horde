@@ -1,6 +1,5 @@
-import { EpicUpgradeI, EpicUpgradeObserverI, MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
+import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ProductsT, StructureI, StructureObserverI} from "../../typings";
 import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
-import { addFarmersCostLumens, addFarmersMultInit } from "../utils/EPICUPGRADESCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
@@ -13,10 +12,6 @@ export class MathState implements MathStateI, StructureObserverI{
     private _totalFarmers:number;
     private _runningFarmers:number;
     private _farmersMax:number;
-    private _farmersNextUpgradeMax:number;
-    
-    //farmers epic
-    private _addFarmersMult:number;
 
     //gold
     private _totalGold:number;
@@ -64,7 +59,6 @@ export class MathState implements MathStateI, StructureObserverI{
         this._observers = [];
 
         this._totalFarmers = startingFarmers;
-        this._addFarmersMult = addFarmersMultInit;
         this._runningFarmers = 0;
         this._farmersMax = 0;
         this.changeFarmersMax();
@@ -402,7 +396,7 @@ export class MathState implements MathStateI, StructureObserverI{
         } 
     }
 
-    public updateEpicUpgrade(upgrade: EpicUpgradeI): void {
+    public updateEpicUpgrade(upgrade: EpicUpgradeStateI): void {
         if (DEBUGMODE) {
             console.log(`updating ${this.name} from ${upgrade.name}`)
         }

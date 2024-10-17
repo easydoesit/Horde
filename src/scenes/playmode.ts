@@ -11,8 +11,8 @@ import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { Structure } from "../gameControl/structures";
 import { barracksUpgradeCostFarmers, barracksUpgradeCostGold, barracksUpgradeMax, towerUpgradeCostFarmers, towerUpgradeCostGold, towerUpgradeMax, farmUpgradeCostGold, farmUpgradeMax, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeGoldBar, timeToMakeLoot, timeToMakeOre, timeToMakePortal, timeToMakeRelic, timeToMakeSoldier, timeToMakeWeapon, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
-import { EpicUpgrade } from "../upgradesEpic/epicUpgrade";
-import { addFarmersCostLumens, addFarmersMultInit, addFarmersMultMax, addFarmersValueIncrement } from "../utils/EPICUPGRADESCONSTANTS";
+import { AddFarmerUpgradeState } from "../upgradesEpic/addFarmerUpgradeState";
+import { BaseGoldPercentUpgradeState } from "../upgradesEpic/baseGoldPercentUpgradeState";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -42,7 +42,8 @@ export class PlayMode extends Scene {
     public allStructures:StructureI[];
 
     //Epic upgrades
-    public addFarmersUpgrade:EpicUpgrade;
+    public epicAddFarmersUpgrade:AddFarmerUpgradeState;
+    public epicUpgradeBaseGold:BaseGoldPercentUpgradeState;
 
     //for cloning
     public dragon:Dragon;
@@ -129,7 +130,10 @@ export class PlayMode extends Scene {
         const background = new PlainsBackground(this);
 
         this.mathState = new MathState(this);
-        this.addFarmersUpgrade = new EpicUpgrade('Add Farmers', addFarmersCostLumens, addFarmersMultInit, addFarmersValueIncrement, addFarmersMultMax);
+        
+        //epic upgrades
+        this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');
+        this.epicUpgradeBaseGold = new BaseGoldPercentUpgradeState('Base Gold');
 
         //interact with the scene
         this.onPointerDown = function castRay() {

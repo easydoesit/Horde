@@ -2,19 +2,17 @@ import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@b
 import { DEBUGMODE, GUIFONT1 } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { makeButtonEnabled, calcBarSegment, cleanString, makeFloatDivideBy100 } from "../utils/upgradeHelpers";
-import { EpicUpgrade } from "../upgradesEpic/epicUpgrade";
-import { EpicUpgradeI, EpicUpgradeObserverI } from "../../typings";
+import { EpicUpgradeStateChildI, EpicUpgradeStateI, EpicUpgradeStateObserverI } from "../../typings";
 
-export class EpicUpgradeSection extends Rectangle implements EpicUpgradeObserverI {
+export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObserverI {
     public name:string;
-    private _instructionFunc:(upgradeLevel:number, increment:number) => string;
     private _costInLumens:number;
     private _maxNumUpgrades:number;
     private _container: Rectangle | AdvancedDynamicTexture;
     private _vertPos:number;
     private _scene:PlayMode;
     private _upgradable:boolean;
-    private _upgrade:EpicUpgrade;
+    private _upgrade:EpicUpgradeStateChildI;
 
     private _title:TextBlock;
     private _textBlockInstruction:TextBlock;
@@ -24,11 +22,10 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeObserver
     private _upgradeBarWrapper:Rectangle;
     private _upgradeBar:Rectangle;
 
-    constructor(name:string, instruction:(upgradeLevel:number, increment:number) => string, epicUpgrade:EpicUpgrade, container:Rectangle | AdvancedDynamicTexture, vertPos:number, scene:PlayMode, callback:any ) {
+    constructor(name:string, epicUpgrade:EpicUpgradeStateChildI, container:Rectangle | AdvancedDynamicTexture, vertPos:number, scene:PlayMode, callback:any ) {
         super(name + 'epicUpgradeSection');
         this._upgrade = epicUpgrade;
         this._upgrade.attach(this);
-        this._instructionFunc = instruction;
         this._costInLumens = this._upgrade.getCostToUpgrade();
         this._maxNumUpgrades = this._upgrade.getUpgradeNumMax();
         this._container = container;
@@ -49,7 +46,7 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeObserver
         this._title.top = -35;
         this.addControl(this._title);
 
-        this._textBlockInstruction = new TextBlock(this.name + 'instructions', this._instructionFunc(this._upgrade.getCurrentUpgradeLevel(), this._upgrade.getIncrement()));
+        this._textBlockInstruction = new TextBlock(this.name + 'instructions', this._upgrade.getInstructions());
         this._textBlockInstruction.fontFamily = GUIFONT1;
         this._textBlockInstruction.color = 'white';
         this._textBlockInstruction.top = -15;
@@ -90,7 +87,7 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeObserver
                 }
 
                 this._scene.mathState.spendLumens(this._costInLumens);
-                this._upgrade.upgradeState();
+                this._upgrade.updateState();
 
                 if (callback) {
                     callback();
@@ -149,11 +146,11 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeObserver
         
     }
 
-    public updateEpicUpgrade(upgrade: EpicUpgradeI): void {
+    public updateEpicUpgrade(upgrade: EpicUpgradeStateI): void {
         console.log("the observer was called");
 
         this._costInLumens = upgrade.getCostToUpgrade();
-        this._textBlockInstruction.text = this._instructionFunc(upgrade.getCurrentUpgradeLevel(), upgrade.getIncrement());
+        this._textBlockInstruction.text = upgrade.getInstructions();
     }
 
 }

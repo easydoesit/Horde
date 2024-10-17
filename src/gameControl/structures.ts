@@ -12,7 +12,8 @@ export class Structure implements StructureI {
     private _mathFunctions:StructureMathFunctionsT;
     private _character:StructureCharactersT | null;
     private _animationPaths:Vector3[][];
-
+    
+    private _createGoldAmount:number;
     public upgradeMax:number;
     public upgradeCostFarmers:number | null;
     public upgradeCostGold:number;

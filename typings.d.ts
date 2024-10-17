@@ -77,8 +77,18 @@ export interface StructureI {
     attach(observer:StructureObserverI):void;
     detach(observer:StructureObserverI):void;
     notify():void;
-    upgradeState():void;
     
+    upgradeState():void;
+    // getUpgradeCostFarmers():number;
+    // getUpgradeCostGold():number;
+    // getUpgradeLevel():number;
+    // getProduct():string;
+    // getTimeToMakeProduct():number;
+
+}
+
+export interface StructureChildI {
+    upgradeState():void;
 }
 
 export interface StructureObserverI {
@@ -97,20 +107,29 @@ export interface GUIProductCounterI {
     changeText:(string:string) => void;
 }
 
-export interface EpicUpgradeI {
+export interface EpicUpgradeStateI {
     name:string;
 
-    attach(observer:EpicUpgradeObserverI):void;
-    detach(observer:EpicUpgradeObserverI):void;
+    attach(observer:EpicUpgradeStateObserverI):void;
+    detach(observer:EpicUpgradeStateObserverI):void;
     notify():void;
+
+    getUpgradeNumMax():number;
     getCurrentUpgradeLevel():number;
+    
     getCostToUpgrade():number;
     getCurrentValue():number;
-    getUpgradeNumMax():number;
+    
     getIncrement():number;
+    getInstructions():string;
+    
 }
 
-export interface EpicUpgradeObserverI {
+export interface EpicUpgradeStateChildI extends EpicUpgradeStateI {
+    updateState():void;
+}
+
+export interface EpicUpgradeStateObserverI {
     name:string;
-    updateEpicUpgrade(upgrade:EpicUpgradeI):void;
+    updateEpicUpgrade(upgrade:EpicUpgradeStateI):void;
 }
