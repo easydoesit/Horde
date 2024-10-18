@@ -50,7 +50,7 @@ export class GUIStartScreen implements GameStateObserverI {
 
     }
 
-    public updateGameState(gamestate: GameStateI): void {
+    public async updateGameState(gamestate: GameStateI): Promise<void> {
            
         if(this._app.gameState.state === 'PLAY_MODE') {
     
@@ -59,9 +59,12 @@ export class GUIStartScreen implements GameStateObserverI {
             }
         
             const newScene = new PlayMode(this._app);
-            this._app.switchScene(newScene);
-            this._app.gui = new GUIPlay(this._app, newScene);
-            this._app.gameState.detach(this);
+            await this._app.switchScene(newScene).then(() => {
+                this._app.gui = new GUIPlay(this._app, newScene);
+                this._app.gameState.detach(this);
+            });
+            
+            
         
         }
 

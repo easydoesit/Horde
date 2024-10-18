@@ -5,7 +5,7 @@ import { wheatUpgradesMax, wheatUpgradeValue, farmUpgradeMax, mineUpgradeMax, or
 import { UpgradeSection } from "./upgradeSection";
 import { UpgradeWindow } from "./upgradeWindows";
 import { InSceneStuctureGUI } from "./inSceneStructureGUI";
-import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureStateI, GUIProductCounterI } from "../../typings";
+import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureStateI, GUIProductCounterI, StructureStateObserverOnCycleI, ProductsT } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
 import { AddStructureButton } from "./addStructureButton";
@@ -17,7 +17,7 @@ import { StructureFarm02 } from "../structures/structureFarm02";
 import { StructureFarm03 } from "../structures/structureFarm03";
 import { StructureFarm04 } from "../structures/structureFarm04";
 
-export class GUIPlay implements GameStateObserverI, MathStateObserverI {
+export class GUIPlay implements GameStateObserverI, MathStateObserverI, StructureStateObserverOnCycleI {
     private _app:App;
     private _gameState:GameStateI;
     private _mathState:MathStateI;
@@ -119,6 +119,12 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._mathState = this.scene.mathState
         this._mathState.attach(this);
         this._app.gameState.attach(this);
+
+        for (let i in this.scene.allStructures) {
+            const structure = this.scene.allStructures[i];
+
+            structure.attachObserversCycle(this);
+        }
         
         this._farmUpgradeSections = [];//there are multiple farm upgrades so we need this array to hold them.
         
@@ -141,13 +147,13 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._goldPerSecondCount = new ProductCounter('Gold/Second', 24, 0, `${this._mathState.getGoldPerSecond()}`, this._wrapperTop);
         this._goldCount = new ProductCounter('Gold', 48, 0, `${this._mathState.getTotalGold()}`, this._wrapperTop);
         this._lumenCount = new ProductCounter('Lumens', 0, -300, `${this._mathState.getTotalLumens()}`, this._wrapperTop);
-        this._oreCount = new ProductCounter('Ore', 0, 300, `${this._mathState.getTotalProductAmount('Ore')}`, this._wrapperTop);
-        this._weaponCount = new ProductCounter('Weapons', 24, 300,`${this._mathState.getTotalProductAmount('Weapons')}`, this._wrapperTop);
-        this._villageCount = new ProductCounter('Villages', 48, 300, `${this._mathState.getTotalProductAmount('Villages')}`, this._wrapperTop);
-        this._lootCount = new ProductCounter('Loot', 72, 300, `${this._mathState.getTotalProductAmount('Loot')}`, this._wrapperTop);
-        this._goldBarsCount = new ProductCounter('Goldbars', 0, 600, `${this._mathState.getTotalProductAmount('Goldbars')}`, this._wrapperTop);
-        this._portalsCount = new ProductCounter('Portals', 24, 600, `${this._mathState.getTotalProductAmount('Portals')}`, this._wrapperTop);
-        this._relicsCount = new ProductCounter('Relics', 48, 600, `${this._mathState.getTotalProductAmount('Relics')}`, this._wrapperTop);
+        this._oreCount = new ProductCounter('Ore', 0, 300, `${this.scene.mine.getTotalProductAmount()}`, this._wrapperTop);
+        this._weaponCount = new ProductCounter('Weapons', 24, 300,`${this.scene.forge.getTotalProductAmount()}`, this._wrapperTop);
+        this._villageCount = new ProductCounter('Villages', 48, 300, `${this.scene.barracks.getTotalProductAmount()}`, this._wrapperTop);
+        this._lootCount = new ProductCounter('Loot', 72, 300, `${this.scene.thievesGuild.getTotalProductAmount()}`, this._wrapperTop);
+        this._goldBarsCount = new ProductCounter('Goldbars', 0, 600, `${this.scene.workShop.getTotalProductAmount()}`, this._wrapperTop);
+        this._portalsCount = new ProductCounter('Portals', 24, 600, `${this.scene.tower.getTotalProductAmount()}`, this._wrapperTop);
+        this._relicsCount = new ProductCounter('Relics', 48, 600, `${this.scene.tavern.getTotalProductAmount()}`, this._wrapperTop);
 
         //Bottom
         //playGUIBottom
@@ -422,15 +428,53 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI {
         this._goldPerSecondCount.changeText(`${mathState.getGoldPerSecond().toFixed(3)}`);
         this._goldCount.changeText(`${mathState.getTotalGold().toFixed(3)}`);
         this._lumenCount.changeText(`${this._mathState.getTotalLumens()}`);
-        this._oreCount.changeText(`${this._mathState.getTotalProductAmount('Ore')}`);
-        this._weaponCount.changeText(`${this._mathState.getTotalProductAmount('Weapons')}`);
-        this._villageCount.changeText(`${this._mathState.getTotalProductAmount('Villages')}`);
-        this._lootCount.changeText(`${this._mathState.getTotalProductAmount('Loot')}`);
-        this._goldBarsCount.changeText(`${this._mathState.getTotalProductAmount('Goldbars')}`);
-        this._portalsCount.changeText(`${this._mathState.getTotalProductAmount('Portals')}`);
-        this._relicsCount.changeText(`${this._mathState.getTotalProductAmount('Relics')}`);
-        
     }
+
+    public updateStructureOnCycle(product: ProductsT, productAmount: number, goldPerCycle: number): void {
+        if (DEBUGMODE) {
+            console.log(`${this.name} is running ${product} cycle`);
+        }
+
+        switch (product) {
+            case 'Ore': {
+                this._oreCount.changeText(`${productAmount}`);
+            }
+            break;
+
+            case 'Weapons' : {
+                this._weaponCount.changeText(`${productAmount}`);
+            }
+            break;
+
+            case 'Villages': {
+                this._villageCount.changeText(`${productAmount}`);
+            }
+            break;
+
+            case 'Loot' : {
+                this._lootCount.changeText(`${productAmount}`);
+            }
+            break;
+
+            case 'Goldbars' : {
+                this._goldBarsCount.changeText(`${productAmount}`);
+            }
+            break;
+
+            case 'Portals': {
+                this._portalsCount.changeText(`${productAmount}`);
+            }
+            break;
+
+            case 'Relics' : {
+                this._relicsCount.changeText(`${productAmount}`);
+            }
+            break;
+
+        }
+
+    }
+
 
     //wheat
     private _wheatUpgradeAllowed() {

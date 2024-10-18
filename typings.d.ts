@@ -5,7 +5,7 @@ import { Rectangle, TextBlock } from "@babylonjs/gui";
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
 export type ProductsT = 'Ore' | 'Weapons' | 'Villages' | 'Loot' | 'Goldbars' | 'Portals' | 'Relics';
-
+export type StructureNamesT = 'Farm01' | 'Farm02' | 'Farm03' | 'Farm04' | 'Mine' | 'Forge' | 'Barracks' | 'Thieves Guild' | 'Workshop' | 'Tower' | 'Tavern';
 export type StructureCharactersT = 'farmer' | 'miner' | 'blacksmith' | 'soldier' | 'thief' | 'alchemist' | 'wizard' | 'adventurer';
 
 export interface GameStateI {
@@ -52,10 +52,6 @@ export interface MathStateI {
     upgradeWheat():void;
     changeCostOfWheatUpgrade():void;
     changeWheatValue():void;
-   
-    addProduct(product:ProductsT, amount:number):void;
-    removeProduct(product:ProductsT, amount:number):void;
-    getTotalProductAmount(product:ProductsT):number;
 }
 
 export interface MathStateObserverI { 
@@ -64,29 +60,46 @@ export interface MathStateObserverI {
 }
 
 export interface StructureStateI {
-    name:string;
 
-    attach(observer:StructureStateObserverI):void;
-    detach(observer:StructureStateObserverI):void;
-    notify():void;
+    attachObserversUpgrade(observer:StructureStateObserverOnUpgradeI):void;
+    detachObserversUpgrade(observer:StructureStateObserverOnUpgradeI):void;
+    notifyObserversOnUpgrade():void;
     
+    attachObserversCycle(observer:StructureStateObserverOnCycleI):void;
+    detachObserversCycle(observer:StructureStateObserverOnCycleI):void;
+    notifyObserversOnCycle():void;
+    
+    getName():StructureNamesT;
     getUpgradeCostFarmers():number;
     getUpgradeCostGold():number;
     getUpgradeLevel():number;
-    getProduct():ProductsT | null;
-    getTimeToMakeProduct():number | null;
+    
+    getProductName():ProductsT | null;
+    addProduct(amount:number):void;
+    removeProduct(amount:number):void;
+    getTotalProductAmount():number;
+    getProductPerCycle():number;
+    getProductCycleTime():number;
+    
     getUpgradeMax():number;
     getStructureModels():StructureModel;
-    getCreateGoldAmount():number;
+    getGoldPerCycle():number;
+    changeGoldPerCycle(amount:number):void;
 }
 
 export interface StructureStateChildI extends StructureStateI {
     upgradeState():void;
 }
 
-export interface StructureStateObserverI {
+export interface StructureStateObserverOnUpgradeI {
     name:string;
-    updateStructure(structure:StructureStateI):void;
+    updateStructureOnUpgrade(structure:StructureStateI):void;
+    
+}
+
+export interface StructureStateObserverOnCycleI {
+    name:string;
+    updateStructureOnCycle(product:ProductsT, productAmount:number, goldPerCycle:number ):void;
 }
 
 export interface GUIProductCounterI {

@@ -4,9 +4,9 @@ import { GUIPlay } from "./GUIPlay";
 import { TransformNode } from "@babylonjs/core";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
-import { ProductsT, StructureStateChildI, StructureStateObserverI } from "../../typings";
+import { ProductsT, StructureStateChildI, StructureStateObserverOnUpgradeI } from "../../typings";
 
-export class InSceneStuctureGUI extends Rectangle implements StructureStateObserverI {
+export class InSceneStuctureGUI extends Rectangle implements StructureStateObserverOnUpgradeI {
     private _animatedBarWrapper:Rectangle;
     private _animatedBar:Rectangle
     private _structure:StructureStateChildI
@@ -22,7 +22,7 @@ export class InSceneStuctureGUI extends Rectangle implements StructureStateObser
         super(name);
         
         this._structure = structure;
-        this._structure.attach(this);
+        this._structure.attachObserversUpgrade(this);
 
         this._actor = this._structure.getStructureModels();
         this._gui = gui;
@@ -82,21 +82,25 @@ export class InSceneStuctureGUI extends Rectangle implements StructureStateObser
             this._animatedBar.width = 0;
             //add _product to the game.
        
-            this._gui.scene.mathState.addProduct(this._product, 1);
-            this._gui.scene.mathState.addGold(this._structure.getCreateGoldAmount());
+            this._structure.addProduct(this._structure.getProductPerCycle());
+            this._structure.notifyObserversOnCycle();
         }
 
     }
 
-    public updateStructure(structure: StructureStateChildI): void {
+    public updateStructureOnUpgrade(structure: StructureStateChildI): void {
         
         if(DEBUGMODE) {
-            console.log(`updating ${this.name} from ${structure.name}`);
+            console.log(`updating ${this.name} from ${structure.getName()}`);
         }
 
-        this._speed = structure.getTimeToMakeProduct();
+        this._speed = structure.getProductCycleTime();
         this._infoText.text = `${this._speed} ${this._product}/s`;
     
+    }
+
+    public updateStructureOnCycle(product: ProductsT, productAmountPerCycle: number, goldPerCycle: number): void {
+       ///    
     }
 
 }

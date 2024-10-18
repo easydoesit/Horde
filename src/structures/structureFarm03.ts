@@ -8,26 +8,22 @@ import { debugUpgradeState } from "../utils/structuresHelpers";
 
 export class StructureFarm03 extends StructureState implements StructureStateChildI {
     
-    constructor(name:string, scene:PlayMode){
-        super(name,scene);
+    constructor(scene:PlayMode){
+        super(scene);
+        this._name = 'Farm03'
         this._character = 'farmer';
         this._animationPaths = castleToFarmPaths;
-
         this._upgradeMax = farmUpgradeMax;
-        this._upgradeLevel = 0;
         this._upgradeCostGold = Math.round(farmUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
         this._upgradeCostFarmers = 0;
         this._product = null;
-        this._timeToMakeProduct = 0;
-        this._structureModels = new StructureModel(`${this.name}_models`, this._scene, farmModels, farmClickBox, Farm03Pos);
-        this._createGoldAmount = 0;
-
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, farmModels, farmClickBox, Farm03Pos);
     }
 
     public upgradeState() {
             
         if (DEBUGMODE) {
-            debugUpgradeState(this.name, this.getUpgradeLevel());
+            debugUpgradeState(this._name, this.getUpgradeLevel());
         }
         
         if (this.getUpgradeLevel() < this._upgradeMax) {
@@ -40,14 +36,9 @@ export class StructureFarm03 extends StructureState implements StructureStateChi
                 break;
             }
 
-            this._animateCharacters();
-    
-            //update the variables
-            //these ones are before the notify
             this._upgradeLevel += 1;
 
-            //update the observers
-            this.notify();
+            this.notifyObserversOnUpgrade();
 
         }
 

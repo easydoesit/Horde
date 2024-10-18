@@ -6,7 +6,7 @@ import { StructureModel } from "../models_structures/structureModels";
 import { PlainsBackground } from "../models_backgrounds/plains_background";
 import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
-import { MathStateI, StructureStateI } from "../../typings";
+import { MathStateI, StructureStateChildI, StructureStateI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { AddFarmerUpgradeState } from "../upgradesEpic/addFarmerUpgradeState";
@@ -18,7 +18,7 @@ import { StructureFarm04 } from "../structures/structureFarm04";
 import { StructureMine } from "../structures/structureMine";
 import { StructureForge } from "../structures/structureForge";
 import { StructureBarracks } from "../structures/structureBarracks";
-import { StructureTheivesGuild } from "../structures/structureTheivesGuild";
+import { StructureThievesGuild } from "../structures/structureThievesGuild";
 import { StructureWorkShop } from "../structures/structureWorkshop";
 import { StructureTower } from "../structures/structureTower";
 import { StructureTavern } from "../structures/structureTavern";
@@ -38,12 +38,12 @@ export class PlayMode extends Scene {
     public farm02:StructureFarm02;
     public farm03:StructureFarm03;
     public farm04:StructureFarm04;
-    public farms:StructureStateI[];
+    public farms:StructureStateChildI[];
     
     public mine:StructureMine;
     public forge: StructureForge;
     public barracks:StructureBarracks;
-    public thievesGuild:StructureTheivesGuild;
+    public thievesGuild:StructureThievesGuild;
     public workShop:StructureWorkShop;
     public tower:StructureTower;
     public tavern:StructureTavern;
@@ -84,42 +84,42 @@ export class PlayMode extends Scene {
         this.castle.position = castlePos;
 
         //load the entry level farms
-        this.farm01 = new StructureFarm01('Farm01', this );
+        this.farms = [];
+        this.farm01 = new StructureFarm01(this );
         this.farm01.getStructureModels().position = Farm01Pos;
         this.farm01.upgradeState();
         //these start out of view
-        this.farm02 = new StructureFarm02('Farm02', this)
+        this.farm02 = new StructureFarm02(this)
         this.farm02.getStructureModels().position = Farm02Pos;
         
-        this.farm03 = new StructureFarm03('Farm03', this)
+        this.farm03 = new StructureFarm03(this)
         this.farm03.getStructureModels().position = Farm03Pos;
 
-        this.farm04 = new StructureFarm04('Farm04', this)
+        this.farm04 = new StructureFarm04(this)
         this.farm04.getStructureModels().position = Farm04Pos;
 
-        this.farms = [];
         this.farms.push(this.farm01,this.farm02,this.farm03,this.farm04);
 
-        this.mine = new StructureMine('Mine', this);    
+        this.mine = new StructureMine(this);    
         this.mine.getStructureModels().position = new Vector3(minePos.x, minePos.y - 10 , minePos.z);
 
-        this.forge = new StructureForge('Forge', this);
+        this.forge = new StructureForge(this);
         this.forge.getStructureModels().position = new Vector3(forgePos.x, forgePos.y -20, forgePos.z);
 
-        this.barracks = new StructureBarracks('Barracks', this); 
+        this.barracks = new StructureBarracks( this); 
         this.barracks.getStructureModels().position = new Vector3(barracksPos.x, barracksPos.y -20, barracksPos.z);
         
-        this.thievesGuild = new StructureTheivesGuild('ThievesGuild', this );
+        this.thievesGuild = new StructureThievesGuild(this );
         this.thievesGuild.getStructureModels().position = new Vector3(thievesGuildPos.x, thievesGuildPos.y -20, thievesGuildPos.z);
 
-        this.workShop = new StructureWorkShop('WorkShop', this );
+        this.workShop = new StructureWorkShop( this );
         this.workShop.getStructureModels().position = new Vector3(workShopPos.x, workShopPos.y -20, workShopPos.z);
 
-        this.tower = new StructureTower('Tower', this );
+        this.tower = new StructureTower(this );
         this.tower.getStructureModels().position = new Vector3(towerPos.x, towerPos.y -20, towerPos.z);
         this.tower.getStructureModels().rotation.y = -45;
 
-        this.tavern  = new StructureTavern('Tavern', this);
+        this.tavern  = new StructureTavern(this);
         this.tavern.getStructureModels().position = new Vector3(tavernPos.x, tavernPos.y -20, tavernPos.z);
 
         this.allStructures = []
@@ -142,7 +142,7 @@ export class PlayMode extends Scene {
         
         //epic upgrades
         this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');
-        this.epicUpgradeBaseGold = new BaseGoldPercentUpgradeState('Base Gold');
+        this.epicUpgradeBaseGold = new BaseGoldPercentUpgradeState('Base Gold', this);
 
         //interact with the scene
         this.onPointerDown = function castRay() {

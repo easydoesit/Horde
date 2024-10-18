@@ -7,26 +7,24 @@ import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureBarracks extends StructureState implements StructureStateChildI {
-    constructor(name:string, scene:PlayMode) {
-        super(name, scene);
+    constructor(scene:PlayMode) {
+        super(scene);
+        this._name = 'Barracks';
         this._character = 'soldier';
         this._animationPaths = farmToBarracksPaths;
-
         this._upgradeMax = barracksUpgradeMax;
-        this._upgradeLevel = 0;
         this._upgradeCostGold = Math.round(barracksUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
         this._upgradeCostFarmers = Math.round(barracksUpgradeCostFarmers(this.getUpgradeLevel()));
         this._product = 'Villages';
-        this._timeToMakeProduct = timeToMakeVillage(this.getUpgradeLevel());
-        this._structureModels = new StructureModel(`${this.name}_models`, this._scene, barracksModels, barracksClickBox, barracksPos);
-        this._createGoldAmount = barracksCreateGoldAmount;
-    
+        this._cycleTime = timeToMakeVillage(this.getUpgradeLevel());
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, barracksModels, barracksClickBox, barracksPos);
+        this._goldPerCycle = barracksCreateGoldAmount;
     }
 
     public upgradeState(): void {
         
         if (DEBUGMODE) {
-            debugUpgradeState(this.name, this.getUpgradeLevel());
+            debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
@@ -44,10 +42,10 @@ export class StructureBarracks extends StructureState implements StructureStateC
             //update the variables
             //these ones are before the notify
             this._upgradeLevel += 1;
-            this._timeToMakeProduct = timeToMakeVillage(this.getUpgradeLevel());
+            this._cycleTime = timeToMakeVillage(this.getUpgradeLevel());
       
             //update the observers
-            this.notify();
+            this.notifyObserversOnUpgrade();
 
             this._upgradeCostFarmers = barracksUpgradeCostFarmers(this.getUpgradeLevel());
 

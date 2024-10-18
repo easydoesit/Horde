@@ -1,9 +1,9 @@
-import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ProductsT, StructureStateI, StructureStateObserverI} from "../../typings";
+import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ProductsT, StructureStateI, StructureStateObserverOnCycleI, StructureStateObserverOnUpgradeI} from "../../typings";
 import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 
-export class MathState implements MathStateI, StructureStateObserverI{
+export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, StructureStateObserverOnCycleI{
     public name:string;
     private _observers:MathStateObserverI[];
     private _scene:PlayMode;
@@ -24,34 +24,6 @@ export class MathState implements MathStateI, StructureStateObserverI{
     public wheatValue:number;
     public costOfWheatUpgrade:number;
     public wheatUpgrades:number;
-
-    //ore
-    private _totalOre:number;
-    private _costOfOreGold:number;
-
-    //weapons
-    private _totalWeapons:number;
-    private _costOfWeaponsGold:number;
-
-    //villages
-    private _totalVillages:number;
-    private _costOfVillagesGold:number;
-
-    //loot
-    private _totalLoot:number;
-    private _costOfLootGold:number;
-
-    //goldBars
-    private _totalGoldBars:number;
-    private _costOfGoldBars:number;
-
-    //portals
-    private _totalPortals:number;
-    private _costOfPortals:number;
-
-    //relics
-    private _totalRelics:number;
-    private _costOfRelics:number;
 
     constructor(scene:PlayMode) {
         this.name = "MathState"
@@ -76,30 +48,9 @@ export class MathState implements MathStateI, StructureStateObserverI{
         //farms
 
         for (let i in this._scene.allStructures) {
-            this._scene.allStructures[i].attach(this);
+            this._scene.allStructures[i].attachObserversUpgrade(this);
+            this._scene.allStructures[i].attachObserversCycle(this);
         }
-
-        ///Products
-        //ore
-        this._totalOre = 0;
-
-        //weapons
-        this._totalWeapons = 0;
-
-        //villages
-        this._totalVillages = 0;
-
-        //loot
-        this._totalLoot = 0;
-
-        //goldbars
-        this._totalGoldBars = 0;
-        
-        //portals
-        this._totalPortals = 0;
-
-        //relics
-        this._totalRelics  = 0;
 
         this._scene.onBeforeRenderObservable.add(() => {
             
@@ -243,129 +194,6 @@ export class MathState implements MathStateI, StructureStateObserverI{
     public getFarmersMax():number {
         return this._farmersMax;
     }
-
-    //products Ore, Weapons, Etc
-    public addProduct(product:ProductsT, amount:number) {
-        
-        switch (product) {
-            case 'Ore' : {
-                this._totalOre += amount;
-            }
-            break;
-
-            case 'Weapons' : {
-                this._totalWeapons += amount;
-            }
-            break;
-
-            case 'Villages' : {
-            this._totalVillages += amount;
-            }
-            break;
-
-            case 'Loot': {
-            this._totalLoot += amount;
-            }
-            break;
-
-            case 'Goldbars' : {
-            this._totalGoldBars += amount;
-            }
-            break;
-            
-            case 'Portals': {
-                this._totalPortals += amount;
-            }
-            break;
-
-            case 'Relics': {
-                this._totalRelics  += amount;
-            }
-            break;
-
-        }
-
-    }
-
-    public removeProduct(product:ProductsT, amount:number) {
-        
-        switch (product) {
-            case 'Ore' : {
-                this._totalOre -= amount;
-            }
-            break;
-
-            case 'Weapons' : {
-                this._totalWeapons -= amount;
-            }
-            break;
-
-            case "Villages": {
-            this._totalVillages -= amount;
-            }
-            break;
-
-            case 'Loot': {
-            this._totalLoot -= amount;
-            }
-            break;
-
-            case 'Goldbars' : {
-            this._totalGoldBars -= amount;
-            }
-            break;
-            
-            case 'Portals': {
-                this._totalPortals -= amount;
-            }
-            break;
-
-            case 'Relics': {
-                this._totalRelics  -= amount;
-            }
-            break;
-        }
-    }
-
-    public getTotalProductAmount(product:ProductsT):number {
-        
-        switch (product) {
-            case 'Ore' : {
-                return this._totalOre;
-            }
-            break;
-
-            case 'Weapons' : {
-                return this._totalWeapons;
-            }
-            break;
-
-            case "Villages": {
-                return this._totalVillages;
-            }
-            break;
-
-            case 'Loot': {
-                return this._totalLoot;
-            }
-            break;
-
-            case 'Goldbars' : {
-                return this._totalGoldBars;
-            }
-            break;
-            
-            case 'Portals': {
-                return this._totalPortals;
-            }
-            break;
-
-            case 'Relics': {
-                return this._totalRelics;
-            }
-            break;
-        }
-    }
     
     //wheat
     public upgradeWheat() {
@@ -380,20 +208,24 @@ export class MathState implements MathStateI, StructureStateObserverI{
         this.wheatValue =  Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
     }
 
-    public updateStructure(structure: StructureStateI): void {
+    public updateStructureOnUpgrade(structure: StructureStateI): void {
         if (DEBUGMODE) {
-            console.log(`updating ${this.name} from ${structure.name}`);
+            console.log(`updating ${this.name} from ${structure.getName()}`);
             console.log(`Cost of Farmers is ${structure.getUpgradeCostFarmers()}`);
             console.log(`Cost of Gold is ${structure.getUpgradeCostGold()}`);
-            console.log(`The Product is $${structure.getProduct()}`);
+            console.log(`The Product is $${structure.getProductName()}`);
         }
 
         this._totalFarmers -= Math.round(structure.getUpgradeCostFarmers());
         this._totalGold -= Math.round(structure.getUpgradeCostGold() * 1000)/1000;
 
-        if (structure.name.includes("Farm")){
+        if (structure.getName().includes("Farm")){
             this.changeFarmersMax();
         } 
+    }
+
+    public updateStructureOnCycle(product: ProductsT, productAmountPerCycle: number, goldPerCycle: number): void {
+        this.addGold(goldPerCycle);
     }
 
     public updateEpicUpgrade(upgrade: EpicUpgradeStateI): void {

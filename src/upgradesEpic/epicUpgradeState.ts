@@ -13,6 +13,7 @@ export class EpicUpgradeState implements EpicUpgradeStateI{
     protected _instructions:string;
 
     constructor(name:string) {
+        this.name = name;
         this._observers = [];
     }
 

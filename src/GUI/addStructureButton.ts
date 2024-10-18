@@ -38,7 +38,7 @@ export class AddStructureButton extends Button {
         this.thickness = 0;
         this.left =0;
 
-        this._text = new TextBlock(`add${_structure.name}`, `Add ${_structure.name}`);
+        this._text = new TextBlock(`add${_structure.getName()}`, `Add ${_structure.getName()}`);
         this._text.fontFamily = GUIFONT1;
         this._text.color = 'white';
         this._text.top = -20;

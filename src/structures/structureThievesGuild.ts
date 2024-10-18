@@ -6,27 +6,25 @@ import { theivesGuildCreateGoldAmount, thievesGuildUpgradeCostFarmers, thievesGu
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
-export class StructureTheivesGuild extends StructureState implements StructureStateChildI {
-    constructor(name:string, scene:PlayMode) {
-        super(name, scene);
+export class StructureThievesGuild extends StructureState implements StructureStateChildI {
+    constructor(scene:PlayMode) {
+        super(scene);
+        this._name = 'Thieves Guild';
         this._character = 'thief';
         this._animationPaths = farmToThievesGuildPaths;
-
         this._upgradeMax = thievesGuildUpgradeMax;
-        this._upgradeLevel = 0;
         this._upgradeCostGold = Math.round(thievesGuildUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
         this._upgradeCostFarmers = Math.round(thievesGuildUpgradeCostFarmers(this.getUpgradeLevel()));
         this._product = 'Loot';
-        this._timeToMakeProduct = timeToMakeLoot(this.getUpgradeLevel());
-        this._structureModels = new StructureModel(`${this.name}_models`, this._scene, thievesGuildModels, thievesGuildClickBox, thievesGuildPos);
-        this._createGoldAmount = theivesGuildCreateGoldAmount;
-
+        this._cycleTime = timeToMakeLoot(this.getUpgradeLevel());
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, thievesGuildModels, thievesGuildClickBox, thievesGuildPos);
+        this._goldPerCycle = theivesGuildCreateGoldAmount;
     }
 
     public upgradeState(): void {
         
         if (DEBUGMODE) {
-            debugUpgradeState(this.name, this.getUpgradeLevel());
+            debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
@@ -40,14 +38,12 @@ export class StructureTheivesGuild extends StructureState implements StructureSt
             }
 
             this._animateCharacters();
-    
-            //update the variables
-            //these ones are before the notify
+
             this._upgradeLevel += 1;
-            this._timeToMakeProduct = timeToMakeLoot(this.getUpgradeLevel());
+            this._cycleTime = timeToMakeLoot(this.getUpgradeLevel());
       
             //update the observers
-            this.notify();
+            this.notifyObserversOnUpgrade();
 
             this._upgradeCostFarmers = thievesGuildUpgradeCostFarmers(this.getUpgradeLevel());
 

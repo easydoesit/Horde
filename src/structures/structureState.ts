@@ -1,135 +1,125 @@
 import { Vector3 } from "@babylonjs/core";
-import { ProductsT, StructureCharactersT, StructureStateI, StructureStateObserverI } from "../../typings";
+import { ProductsT, StructureCharactersT, StructureNamesT, StructureStateI, StructureStateObserverOnUpgradeI, StructureStateObserverOnCycleI } from "../../typings";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, modelsDir } from "../utils/CONSTANTS";
 import { Runner } from "../models_characters/runners";
 
 export class StructureState implements StructureStateI {
-    public name:string;
-    protected _observers:StructureStateObserverI[];
+    protected _name:StructureNamesT;
+    protected _observersOnUpgrade:StructureStateObserverOnUpgradeI[];
+    protected _observersOnCycle:StructureStateObserverOnCycleI[]
     protected _scene:PlayMode;
     protected _character:StructureCharactersT | null;
     protected _animationPaths:Vector3[][];
-    
-    protected _createGoldAmount:number;
-    protected _upgradeMax:number;
-    protected _upgradeCostFarmers:number | null;
-    protected _upgradeCostGold:number;
-    protected _product: ProductsT | null;
-    protected _timeToMakeProduct:number | null;
-    protected _upgradeLevel:number;
     protected _structureModels: StructureModel;
     
-    //mathFunctions:StructureMathFunctionsT, _upgradeMax:number, _product:ProductsT | null, models:string[], clickBox:string, position:Vector3, character:StructureCharactersT | null, animationPaths:Vector3[][] | null
+    protected _upgradeMax:number;
+    protected _upgradeLevel:number;
+    
+    protected _upgradeCostGold:number;
+    protected _upgradeCostFarmers:number | null;
+    
+    protected _product: ProductsT | null;
+    protected _totalProductAmount:number;
+    
+    protected _cycleTime:number | null;
+    protected _goldPerCycle:number;
+    protected _productAmountPerCycle:number;
+    
 
-    constructor(name:string, scene:PlayMode) {
-        this._observers = [];
-        // this = mathFunctions;
-        // this._character = character;
-        // this._animationPaths = animationPaths;
-        // this._upgradeMax = _upgradeMax;
-        // this._upgradeLevel = 0;
-        // this._upgradeCostGold = Math.round(this.upgradeCostOfGold(this._upgradeLevel)*1000)/1000;
-        
-        // if (this._upgradeCostFarmers) {
-        //     this._upgradeCostFarmers = Math.round(this.upgradeCostFarmers(this._upgradeLevel));
-        // } else {
-        //     this._upgradeCostFarmers = 0;
-        // }
-
-        
-        // if (this._timeToMakeProduct) {
-        //     this._timeToMakeProduct = this.timeToMakeProduct(this._upgradeLevel);    
-        // } else {
-        //     this._timeToMakeProduct = 0;
-        // }
-        
-        // this._product = _product
-        
-        // this._structureModels = new StructureModel(`${this.name}`, this._scene, models, clickBox, position);
+    constructor(scene:PlayMode) {
+        this._scene = scene;
+        this._observersOnUpgrade = [];
+        this._observersOnCycle = [];
+        this._totalProductAmount = 0;
+        this._upgradeLevel = 0;
+        this._cycleTime = 0;
+        this._goldPerCycle = 0;
+        this._productAmountPerCycle = 0;
     }
 
     //Observers
-    public attach(observer: StructureStateObserverI): void {
-        const observerExists = this._observers.includes(observer);
+    public attachObserversUpgrade(observer: StructureStateObserverOnUpgradeI): void {
+        const observerExists = this._observersOnUpgrade.includes(observer);
 
         if(observerExists) {
             if (DEBUGMODE) {
-                return console.log(`${this.name} ${observer.name} has been attached already`);
+                return console.log(`${this.getName()} ${observer.name} has been attached already`);
             }
         }
 
-        this._observers.push(observer);
+        this._observersOnUpgrade.push(observer);
         
         if (DEBUGMODE) {
-            console.log(`${this.name} attached ${observer.name}`);
+            console.log(`${this.getName()} attached ${observer.name}`);
         }
     }
 
-    public detach(observer:StructureStateObserverI):void {
-        const observerIndex = this._observers.indexOf(observer);
+    public detachObserversUpgrade(observer:StructureStateObserverOnUpgradeI):void {
+        const observerIndex = this._observersOnUpgrade.indexOf(observer);
 
         if (observerIndex === -1) {
             if (DEBUGMODE) {
-                return console.log(`No ${observer.name} on ${this.name}`);
+                return console.log(`No ${observer.name} on ${this.getName()}`);
             }
             return;
         }
         
-        this._observers.splice(observerIndex, 1);
+        this._observersOnUpgrade.splice(observerIndex, 1);
 
         if (DEBUGMODE) {
-            console.log(`Detached ${observer.name} from ${this.name}`);
+            console.log(`Detached ${observer.name} from ${this.getName()}`);
         }
     }
 
-    public notify(): void {
-        for(const observer of this._observers) {
-            observer.updateStructure(this);
+    public notifyObserversOnUpgrade(): void {
+        for(const observer of this._observersOnUpgrade) {
+            observer.updateStructureOnUpgrade(this);
         }
         
     }
 
-    // public upgradeState() {
+    public attachObserversCycle(observer: StructureStateObserverOnCycleI): void {
+        const observerExists = this._observersOnCycle.includes(observer);
+
+        if(observerExists) {
+            if (DEBUGMODE) {
+                return console.log(`${this.getName()} ${observer.name} has been attached already`);
+            }
+        }
+
+        this._observersOnCycle.push(observer);
         
-    //     if (DEBUGMODE) {
-    //         console.log(`${this.name} upgradeStateCalled`);
-    //         console.log(`${this.name} currentUpgradeLevel: ${this._upgradeLevel}`);
-    //     }
+        if (DEBUGMODE) {
+            console.log(`${this.getName()} attached ${observer.name}`);
+        }
+    }
+
+    public detachObserversCycle(observer:StructureStateObserverOnCycleI):void {
+        const observerIndex = this._observersOnCycle.indexOf(observer);
+
+        if (observerIndex === -1) {
+            if (DEBUGMODE) {
+                return console.log(`No ${observer.name} on ${this.getName()}`);
+            }
+            return;
+        }
         
-    //     if (this._upgradeLevel < this._upgradeMax) {
-    //         //change the structures
-    //         switch(this._upgradeLevel) {
-    //             case 1 :  {
-    //                 this._structureModels.hideModel(0);
-    //                 this._structureModels.showModel(1);
-    //             }
-    //             break;
-    //         }
+        this._observersOnCycle.splice(observerIndex, 1);
 
-    //         this._animateCharacters();
-       
-    //         //update the variables
-    //         //these ones are before the notify
-    //         this._upgradeLevel += 1;
+        if (DEBUGMODE) {
+            console.log(`Detached ${observer.name} from ${this.getName()}`);
+        }
+    }
 
-    //         if (this.timeToMakeProduct) {
-    //             this._timeToMakeProduct = this.timeToMakeProduct(this._upgradeLevel);
-    //         }
-
-    //         //update the observers
-    //         this.notify();
-
-    //         //these ones are after the notify
-    //         if(this.upgradeCostFarmers) {
-    //             this._upgradeCostFarmers = this.upgradeCostFarmers(this._upgradeLevel);
-    //         }
-    //         this._upgradeCostGold = Math.round(this.upgradeCostOfGold(this._upgradeLevel)*1000)/1000;
-
-    //     }
-    
-    // }
+    public notifyObserversOnCycle(): void {
+  
+        for(const observer of this._observersOnCycle) {
+            observer.updateStructureOnCycle(this.getProductName(), this.getTotalProductAmount(), this.getGoldPerCycle());
+        }
+  
+    }
     
     protected _makeCharacter(currentCount:number, originalLocation:number, character:StructureCharactersT, paths:Vector3[][] ){
         
@@ -146,12 +136,13 @@ export class StructureState implements StructureStateI {
 
             //get the farms that have been upgraded
             const usableFarms:StructureStateI[] = [];
-
+    
             for(let i in this._scene.farms) {
                 if (this._scene.farms[i].getUpgradeLevel() >= 1) {
                     usableFarms.push(this._scene.farms[i]);
                 }
             }
+            
 
             const intervalAmount = (arraySize:number) => {
                 return 240/arraySize;
@@ -186,6 +177,10 @@ export class StructureState implements StructureStateI {
         }
     }
 
+    public getName(): StructureNamesT {
+        return this._name;
+    }
+
     public getUpgradeCostFarmers(): number {
         return this._upgradeCostFarmers;
     }
@@ -198,12 +193,28 @@ export class StructureState implements StructureStateI {
         return this._upgradeLevel;
     }
 
-    public getProduct(): ProductsT {
+    public getProductName(): ProductsT {
         return this._product;
     }
 
-    public getTimeToMakeProduct(): number {
-        return this._timeToMakeProduct;
+    public addProduct(amount: number): void {
+        this._totalProductAmount += amount;
+    }
+
+    public removeProduct(amount: number): void {
+        this._totalProductAmount -= amount;
+    }
+
+    public getTotalProductAmount(): number {
+        return this._totalProductAmount;
+    }
+
+    public getProductPerCycle(): number {
+        return this._productAmountPerCycle;
+    }
+
+    public getProductCycleTime(): number {
+        return this._cycleTime;
     }
 
     public getUpgradeMax(): number {
@@ -214,15 +225,19 @@ export class StructureState implements StructureStateI {
         return this._structureModels;
     }
 
-    public getCreateGoldAmount():number {
-        if (this._createGoldAmount == null) {
+    public getGoldPerCycle():number {
+        if (this._goldPerCycle == null) {
          
             return 0
         
         } else {
          
-            return this._createGoldAmount;
+            return this._goldPerCycle;
         }
+    }
+
+    public changeGoldPerCycle(amount:number) {
+        this._goldPerCycle = amount;
     }
 
 }

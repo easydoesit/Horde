@@ -32,12 +32,45 @@ export const addFarmersUpgradeInstructions = (upgradeLevel:number, increment:num
 
 }
 
+//Base Resource Percent
+export const baseResourcePercentStart = 0; //initialValue
+export const baseResourcePercentUpgradeMax = 10; //maxNumbUpgrades
+export const baseResourcePercentValueIncrement = 1.02; //valueIncrement
+
+export const baseResourcePercentBaseCostLumens = 150; //baseCostLumens
+
+//costIncreaseFunction
+export const baseResourcePercentCostLumens = (currentUpgradeLevel:number, upgradeMax:number, baseCostLumens:number):number => {
+    
+    if (currentUpgradeLevel === 0) {
+        
+        return baseCostLumens;
+
+    } else if (currentUpgradeLevel < upgradeMax) {
+
+        return (1.8 * currentUpgradeLevel) * baseCostLumens;
+    
+    }
+
+}
+
+//instructions
+export const baseResourcePercentInstructions = (upgradeLevel:number, increment:number):string => {
+    let value = 0;
+
+    if (upgradeLevel === 0 ) {
+        value = 0;
+    } else {
+        value = upgradeLevel * increment
+    }
+
+    return `Current upgrade adds ${value} of created resources to all structures`;
+}
+
 //Base Gold Percent
-
-
 export const baseGoldPercentStart = 0; //initialValue
 export const baseGoldPercentUpgradeMax = 10; //maxNumbUpgrades
-export const baseGoldPercentValueIncrement = 1.005; //valueIncrement
+export const baseGoldPercentValueIncrement = 1.05; //valueIncrement
 
 export const baseGoldPercentBaseCostLumens = 200; //baseCostLumens
 
@@ -66,6 +99,8 @@ export const baseGoldPercentInstructions = (upgradeLevel:number, increment:numbe
         value = upgradeLevel * increment
     }
 
-    return `Current upgrade adds ${value} of gold to all structures`;
+    return `Current upgrade adds ${value} of gold created by structures`;
 }
+
+
 

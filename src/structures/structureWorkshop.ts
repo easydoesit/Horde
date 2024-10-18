@@ -7,26 +7,24 @@ import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureWorkShop extends StructureState implements StructureStateChildI {
-    constructor(name:string, scene:PlayMode) {
-        super(name, scene);
+    constructor(scene:PlayMode) {
+        super(scene);
+        this._name = 'Workshop';
         this._character = 'alchemist';
         this._animationPaths = farmToWorkShopPaths;
-
         this._upgradeMax = workShopUpgradeMax;
-        this._upgradeLevel = 0;
         this._upgradeCostGold = Math.round(workShopUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
         this._upgradeCostFarmers = Math.round(workShopUpgradeCostFarmers(this.getUpgradeLevel()));
         this._product = 'Goldbars';
-        this._timeToMakeProduct = timeToMakeRelic(this.getUpgradeLevel());
-        this._structureModels = new StructureModel(`${this.name}_models`, this._scene, workShopModels, workShopClickBox, workShopPos);
-        this._createGoldAmount = workShopCreateGoldAmount;
-
+        this._cycleTime = timeToMakeRelic(this.getUpgradeLevel());
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, workShopModels, workShopClickBox, workShopPos);
+        this._goldPerCycle = workShopCreateGoldAmount;
     }
 
     public upgradeState(): void {
         
         if (DEBUGMODE) {
-            debugUpgradeState(this.name, this.getUpgradeLevel());
+            debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
@@ -40,14 +38,12 @@ export class StructureWorkShop extends StructureState implements StructureStateC
             }
 
             this._animateCharacters();
-    
-            //update the variables
-            //these ones are before the notify
+
             this._upgradeLevel += 1;
-            this._timeToMakeProduct = timeToMakeGoldBar(this.getUpgradeLevel());
+            this._cycleTime = timeToMakeGoldBar(this.getUpgradeLevel());
       
             //update the observers
-            this.notify();
+            this.notifyObserversOnUpgrade();
 
             this._upgradeCostFarmers = workShopUpgradeCostFarmers(this.getUpgradeLevel());
 

@@ -7,26 +7,25 @@ import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureTower extends StructureState implements StructureStateChildI {
-    constructor(name:string, scene:PlayMode) {
-        super(name, scene);
+    constructor(scene:PlayMode) {
+        super(scene);
+        this._name = 'Tower';
         this._character = 'wizard';
         this._animationPaths = farmToTowerPaths;
-
         this._upgradeMax = towerUpgradeMax;
         this._upgradeLevel = 0;
         this._upgradeCostGold = Math.round(towerUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
         this._upgradeCostFarmers = Math.round(towerUpgradeCostFarmers(this.getUpgradeLevel()));
         this._product = 'Portals';
-        this._timeToMakeProduct = timeToMakePortal(this.getUpgradeLevel());
-        this._structureModels = new StructureModel(`${this.name}_models`, this._scene, towerModels, towerClickBox, towerPos);
-        this._createGoldAmount = towerCreateGoldAmount;
-
+        this._cycleTime = timeToMakePortal(this.getUpgradeLevel());
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, towerModels, towerClickBox, towerPos);
+        this._goldPerCycle = towerCreateGoldAmount;
     }
 
     public upgradeState(): void {
         
         if (DEBUGMODE) {
-            debugUpgradeState(this.name, this.getUpgradeLevel());
+            debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
@@ -44,10 +43,10 @@ export class StructureTower extends StructureState implements StructureStateChil
             //update the variables
             //these ones are before the notify
             this._upgradeLevel += 1;
-            this._timeToMakeProduct = timeToMakePortal(this.getUpgradeLevel());
+            this._cycleTime = timeToMakePortal(this.getUpgradeLevel());
       
             //update the observers
-            this.notify();
+            this.notifyObserversOnUpgrade();
 
             this._upgradeCostFarmers = towerUpgradeCostFarmers(this.getUpgradeLevel());
             this._upgradeCostGold = Math.round(towerUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;

@@ -82,7 +82,7 @@ export const farmersMaxPerFarm = (currentUpgradeAmount:number) => {
 
 //Mines
 export const mineUpgradeMax = 3;
-export const mineCreateGoldAmount = 10;
+export const mineGoldPerCycle = 10;
 
 export const mineUpgradeCostGold = (numberOfUpgrades:number) => {
     const a = 2.75;
@@ -113,6 +113,7 @@ export const mineUpgradeCostFarmers = (numberOfUpgrades:number) => {
 
 export const ore = 0;
 export const oreUpgradeValue = 0.05; //percent
+export const orePerCycle = 4;
 export const timeToMakeOre = (numberOfUpgrades:number) => {
     
     switch (numberOfUpgrades) {
@@ -121,7 +122,7 @@ export const timeToMakeOre = (numberOfUpgrades:number) => {
         
         }
         case 1:  {
-            return .25;
+            return .20;
         }
 
         case 2: {
