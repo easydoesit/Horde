@@ -1,5 +1,7 @@
 import { StructureModel } from "./src/models_structures/structureModels";
 import { Rectangle, TextBlock } from "@babylonjs/gui";
+import { PlayMode } from "./src/scenes/playmode";
+import { InSceneStuctureGUI } from "./src/GUI/inSceneStructureGUI";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
@@ -70,6 +72,7 @@ export interface StructureStateI {
     notifyObserversOnCycle():void;
     
     getName():StructureNamesT;
+    getScene():PlayMode;
     getUpgradeCostFarmers():number;
     getUpgradeCostGold():number;
     getUpgradeLevel():number;
@@ -79,12 +82,15 @@ export interface StructureStateI {
     removeProduct(amount:number):void;
     getTotalProductAmount():number;
     getProductPerCycle():number;
+    changeProductPerCycle(newValue:number):void;
     getProductCycleTime():number;
-    
+    changeProductCycleTime(newTime:number):void;
     getUpgradeMax():number;
     getStructureModels():StructureModel;
     getGoldPerCycle():number;
     changeGoldPerCycle(amount:number):void;
+
+    getInSceneGui():InSceneStuctureGUI;
 }
 
 export interface StructureStateChildI extends StructureStateI {

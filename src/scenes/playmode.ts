@@ -22,6 +22,8 @@ import { StructureThievesGuild } from "../structures/structureThievesGuild";
 import { StructureWorkShop } from "../structures/structureWorkshop";
 import { StructureTower } from "../structures/structureTower";
 import { StructureTavern } from "../structures/structureTavern";
+import { BaseResourcePercentUpgradeState } from "../upgradesEpic/baseResourcePercentState";
+import { StructuresFasterCyclesState } from "../upgradesEpic/structureFasterCycle";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -53,6 +55,8 @@ export class PlayMode extends Scene {
     //Epic upgrades
     public epicAddFarmersUpgrade:AddFarmerUpgradeState;
     public epicUpgradeBaseGold:BaseGoldPercentUpgradeState;
+    public epicUpgradeBaseResource:BaseResourcePercentUpgradeState;
+    public epicFasterCycleTimes:StructuresFasterCyclesState;
 
     //for cloning
     public dragon:Dragon;
@@ -143,6 +147,8 @@ export class PlayMode extends Scene {
         //epic upgrades
         this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');
         this.epicUpgradeBaseGold = new BaseGoldPercentUpgradeState('Base Gold', this);
+        this.epicUpgradeBaseResource = new BaseResourcePercentUpgradeState('Base Resource',this);
+        this.epicFasterCycleTimes = new StructuresFasterCyclesState('Cycle Times', this)
 
         //interact with the scene
         this.onPointerDown = function castRay() {
@@ -267,6 +273,14 @@ export class PlayMode extends Scene {
         //change the GUI
         engine.hideLoadingUI();
        
+    }
+
+    public getApp() {
+        return this._app;
+    }
+
+    public getAppGui() {
+        return this._app.gui;
     }
 
 }

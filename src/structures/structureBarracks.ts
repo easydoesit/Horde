@@ -1,8 +1,9 @@
 import { StructureStateChildI } from "../../typings";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { barracksClickBox, barracksModels, barracksPos, DEBUGMODE, farmToBarracksPaths } from "../utils/CONSTANTS";
-import { barracksCreateGoldAmount, barracksUpgradeCostFarmers, barracksUpgradeCostGold, barracksUpgradeMax, timeToMakeVillage } from "../utils/MATHCONSTANTS";
+import { barracksGoldPerCycle, barracksUpgradeCostFarmers, barracksUpgradeCostGold, barracksUpgradeMax, timeToMakeVillage, villagePerCycle } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -18,7 +19,9 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._product = 'Villages';
         this._cycleTime = timeToMakeVillage(this.getUpgradeLevel());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, barracksModels, barracksClickBox, barracksPos);
-        this._goldPerCycle = barracksCreateGoldAmount;
+        this._goldPerCycle = barracksGoldPerCycle;
+        this._productAmountPerCycle = villagePerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('BarracksSceneGui', this, 'Villages');
     }
 
     public upgradeState(): void {

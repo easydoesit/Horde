@@ -1,10 +1,10 @@
 import { DEBUGMODE } from "./CONSTANTS";
 
 //lumens
-export const startingLumens = 100;
+export const startingLumens = 40000;
 
 //gold
-export const startingGold = 0;
+export const startingGold = 500;
 
 //eggs
 export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
@@ -40,7 +40,7 @@ export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
 }
 
 //Farmers
-export const startingFarmers = 0;
+export const startingFarmers = 200;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
 export const ogreIntervalTime = 1000; //how fast the ogre ruins farmers.
 export const ogreScaresFarmers = 2; //how much the ogre removes farmers per ogreBeat
@@ -84,6 +84,14 @@ export const farmersMaxPerFarm = (currentUpgradeAmount:number) => {
 export const mineUpgradeMax = 3;
 export const mineGoldPerCycle = 10;
 
+export const ore = 0;
+export const oreUpgradeValue = 0.05; //percent
+export const orePerCycle = 4;
+export const timeToMakeOre = (numberOfUpgrades:number) => {
+    
+    return 1/5
+}
+
 export const mineUpgradeCostGold = (numberOfUpgrades:number) => {
     const a = 2.75;
     const b = 4.5;
@@ -111,57 +119,19 @@ export const mineUpgradeCostFarmers = (numberOfUpgrades:number) => {
     }
 }
 
-export const ore = 0;
-export const oreUpgradeValue = 0.05; //percent
-export const orePerCycle = 4;
-export const timeToMakeOre = (numberOfUpgrades:number) => {
-    
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 0;
-        
-        }
-        case 1:  {
-            return .20;
-        }
-
-        case 2: {
-            return .4;
-        }
-
-        case 3: {
-            return 1;
-        }
-    }
-}
-
 //Forge
 export const forgeUpgradeMax = 3;
-export const forgeCreateGoldAmount = 10;
+export const forgeGoldPerCycle = 40;
 
 export const weapons = 0;
 export const costOfWeaponsOre = 10;
 export const weaponUpgradeValue = 0.05; //percent
+export const weaponPerCycle = 16;
 
 export const timeToMakeWeapon = (numberOfUpgrades:number) => {
     
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 0;
-        
-        }
-        case 1:  {
-            return .25;
-        }
+    return 1/12
 
-        case 2: {
-            return .4;
-        }
-
-        case 3: {
-            return 1;
-        }
-    }
 }
 
 export const forgeUpgradeCostGold = (numberOfUpgrades:number) => {
@@ -171,51 +141,22 @@ export const forgeUpgradeCostGold = (numberOfUpgrades:number) => {
 }
 
 export const forgeUpgradeCostFarmers = (numberOfUpgrades:number) => {
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 2;
-        
-        }
-        case 1:  {
-            return 12;
-        }
-
-        case 2: {
-            return 300;
-        }
-
-        case 3: {
-            return 1300;
-        }
-    }
+    return Math.round(1/28*100)/100;
 }
 
 //Barracks
 export const barracksUpgradeMax = 3;
-export const barracksCreateGoldAmount = 160;
+export const barracksGoldPerCycle = 160;
+
 export const villages = 0;
 export const costOfVillagesWeapons = 10;
 export const villagesUpgradeValue = 0.05; //percent
+export const villagePerCycle = 64;
 
 export const timeToMakeVillage = (numberOfUpgrades:number) => {
-    
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 0;
-        
-        }
-        case 1:  {
-            return .25;
-        }
-
-        case 2: {
-            return .4;
-        }
-
-        case 3: {
-            return 1;
-        }
-    }
+   
+    return 1/28
+   
 }
 
 export const barracksUpgradeCostGold = (numberOfUpgrades:number) => {
@@ -251,26 +192,12 @@ export const theivesGuildCreateGoldAmount = 640;
 export const loot = 0;
 export const costOfLoot = 10;
 export const lootUpgradeValue = 0.05; //percent
+export const lootPerCycle = 256;
 
 export const timeToMakeLoot = (numberOfUpgrades:number) => {
     
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 0;
-        
-        }
-        case 1:  {
-            return .25;
-        }
+    return 1/64
 
-        case 2: {
-            return .4;
-        }
-
-        case 3: {
-            return 1;
-        }
-    }
 }
 
 export const thievesGuildUpgradeCostGold = (numberOfUpgrades:number) => {
@@ -306,26 +233,11 @@ export const workShopCreateGoldAmount = 2560
 export const goldBars = 0;
 export const costOfGoldBar = 10;
 export const goldBarUpgradeValue = 0.05; //percent
+export const goldBarPerCycle = 1024;
 
 export const timeToMakeGoldBar = (numberOfUpgrades:number) => {
     
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 0;
-        
-        }
-        case 1:  {
-            return .25;
-        }
-
-        case 2: {
-            return .4;
-        }
-
-        case 3: {
-            return 1;
-        }
-    }
+    return 1/147
 }
 
 export const workShopUpgradeCostGold = (numberOfUpgrades:number) => {
@@ -357,29 +269,15 @@ export const workShopUpgradeCostFarmers = (numberOfUpgrades:number) => {
 //Tower
 export const towerUpgradeMax = 3;
 export const towerCreateGoldAmount = 10240;
+
 export const portals = 0;
 export const costOfPortal = 10;
 export const portalUpgradeValue = 0.05; //percent
+export const portalsPerCycle = 4096;
 
 export const timeToMakePortal = (numberOfUpgrades:number) => {
     
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 0;
-        
-        }
-        case 1:  {
-            return .25;
-        }
-
-        case 2: {
-            return .4;
-        }
-
-        case 3: {
-            return 1;
-        }
-    }
+    return 1/388
 }
 
 export const towerUpgradeCostGold = (numberOfUpgrades:number) => {
@@ -411,29 +309,15 @@ export const towerUpgradeCostFarmers = (numberOfUpgrades:number) => {
 //Tavern
 export const tavernUpgradeMax = 3;
 export const tavernCreateGoldAmount = 40960;
+
 export const relics = 0;
 export const costOfRelic = 10;
 export const relicUpgradeValue = 0.05; //percent
+export const relicsPerCycle = 16384;
 
 export const timeToMakeRelic = (numberOfUpgrades:number) => {
     
-    switch (numberOfUpgrades) {
-        case 0: {
-            return 0;
-        
-        }
-        case 1:  {
-            return .25;
-        }
-
-        case 2: {
-            return .4;
-        }
-
-        case 3: {
-            return 1;
-        }
-    }
+    return 1/777
 }
 
 export const tavernUpgradeCostGold = (numberOfUpgrades:number) => {

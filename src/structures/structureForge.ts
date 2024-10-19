@@ -1,8 +1,9 @@
 import { StructureStateChildI } from "../../typings";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToForgePaths, forgeClickBox, forgeModels, forgePos } from "../utils/CONSTANTS";
-import { forgeCreateGoldAmount, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, timeToMakeWeapon } from "../utils/MATHCONSTANTS";
+import { forgeGoldPerCycle, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, timeToMakeWeapon, weaponPerCycle } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -18,7 +19,9 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._product = 'Weapons';
         this._cycleTime = timeToMakeWeapon(this.getUpgradeLevel());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, forgeModels, forgeClickBox, forgePos);
-        this._goldPerCycle = forgeCreateGoldAmount;
+        this._goldPerCycle = forgeGoldPerCycle;
+        this._productAmountPerCycle = weaponPerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('ForgeSceneGui', this,'Weapons');
 
     }
 

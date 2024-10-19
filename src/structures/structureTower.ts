@@ -1,8 +1,9 @@
 import { StructureStateChildI } from "../../typings";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToTowerPaths, towerClickBox, towerModels, towerPos  } from "../utils/CONSTANTS";
-import { timeToMakePortal, towerCreateGoldAmount, towerUpgradeCostFarmers, towerUpgradeCostGold, towerUpgradeMax } from "../utils/MATHCONSTANTS";
+import { portalsPerCycle, timeToMakePortal, towerCreateGoldAmount, towerUpgradeCostFarmers, towerUpgradeCostGold, towerUpgradeMax } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -20,6 +21,8 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._cycleTime = timeToMakePortal(this.getUpgradeLevel());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, towerModels, towerClickBox, towerPos);
         this._goldPerCycle = towerCreateGoldAmount;
+        this._productAmountPerCycle = portalsPerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('TowerSceneGui', this, 'Portals');
     }
 
     public upgradeState(): void {

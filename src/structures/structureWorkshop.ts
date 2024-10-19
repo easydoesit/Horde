@@ -1,8 +1,9 @@
 import { StructureStateChildI } from "../../typings";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToWorkShopPaths, workShopClickBox, workShopModels, workShopPos, } from "../utils/CONSTANTS";
-import { timeToMakeGoldBar, timeToMakeRelic, workShopCreateGoldAmount, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
+import { goldBarPerCycle, timeToMakeGoldBar, timeToMakeRelic, workShopCreateGoldAmount, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -19,6 +20,8 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._cycleTime = timeToMakeRelic(this.getUpgradeLevel());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, workShopModels, workShopClickBox, workShopPos);
         this._goldPerCycle = workShopCreateGoldAmount;
+        this._productAmountPerCycle = goldBarPerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('WorkShopSceneGui', this, 'Goldbars');
     }
 
     public upgradeState(): void {

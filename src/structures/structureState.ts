@@ -4,6 +4,7 @@ import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, modelsDir } from "../utils/CONSTANTS";
 import { Runner } from "../models_characters/runners";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 
 export class StructureState implements StructureStateI {
     protected _name:StructureNamesT;
@@ -13,6 +14,7 @@ export class StructureState implements StructureStateI {
     protected _character:StructureCharactersT | null;
     protected _animationPaths:Vector3[][];
     protected _structureModels: StructureModel;
+    protected _inSceneGui:InSceneStuctureGUI;
     
     protected _upgradeMax:number;
     protected _upgradeLevel:number;
@@ -181,6 +183,10 @@ export class StructureState implements StructureStateI {
         return this._name;
     }
 
+    public getScene(): PlayMode {
+        return this._scene;
+    }
+
     public getUpgradeCostFarmers(): number {
         return this._upgradeCostFarmers;
     }
@@ -213,8 +219,16 @@ export class StructureState implements StructureStateI {
         return this._productAmountPerCycle;
     }
 
+    public changeProductPerCycle(newValue: number): void {
+        this._productAmountPerCycle = newValue;
+    }
+
     public getProductCycleTime(): number {
         return this._cycleTime;
+    }
+
+    public changeProductCycleTime(newTime: number): void {
+        this._cycleTime = newTime;
     }
 
     public getUpgradeMax(): number {
@@ -238,6 +252,10 @@ export class StructureState implements StructureStateI {
 
     public changeGoldPerCycle(amount:number) {
         this._goldPerCycle = amount;
+    }
+
+    public getInSceneGui(): InSceneStuctureGUI {
+        return this._inSceneGui;
     }
 
 }

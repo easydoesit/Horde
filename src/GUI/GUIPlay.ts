@@ -50,9 +50,10 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
     //epic
     public GUIWrapperEpicUpgrade:Rectangle;
 
-    private _upgradeAddFarmers:Rectangle;
-    private _epicUpgradeBaseGold:Rectangle;
-    
+    private _epicUpgradeAddFarmers:EpicUpgradeSection;
+    private _epicUpgradeBaseGold:EpicUpgradeSection;
+    private _epicUpgradeBaseProduct:EpicUpgradeSection;
+    private _epicFasterCycleTime:EpicUpgradeSection;
     //castle
     public GUIWrapperCastleUpgrade:Rectangle;
     private _addMineButton:AddStructureButton;
@@ -119,12 +120,6 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         this._mathState = this.scene.mathState
         this._mathState.attach(this);
         this._app.gameState.attach(this);
-
-        for (let i in this.scene.allStructures) {
-            const structure = this.scene.allStructures[i];
-
-            structure.attachObserversCycle(this);
-        }
         
         this._farmUpgradeSections = [];//there are multiple farm upgrades so we need this array to hold them.
         
@@ -132,6 +127,16 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         this.gameGUI = AdvancedDynamicTexture.CreateFullscreenUI('GameGui')
         this.gameGUI.idealHeight = 1080;
         this.gameGUI.idealWidth = 1920;
+
+        for (let i in this.scene.allStructures) {
+            const structure = this.scene.allStructures[i];
+            //observers
+            structure.attachObserversCycle(this);
+            if (!structure.getName().includes('Farm')) {
+                this.gameGUI.addControl(structure.getInSceneGui());
+                structure.getInSceneGui().linkWithMesh(structure.getStructureModels());
+            }
+        }
         
         //TOP
         //playGUITop
@@ -203,8 +208,10 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         //Epic Upgrades
         this.GUIWrapperEpicUpgrade = new UpgradeWindow('EpicUpgradeWindow', 'violet', this);
         
-        this._upgradeAddFarmers = new EpicUpgradeSection('Add Farmers', this.scene.epicAddFarmersUpgrade, this.GUIWrapperEpicUpgrade, -320, this.scene, null);
-        this._epicUpgradeBaseGold = new EpicUpgradeSection('Starting Gold', this.scene.epicUpgradeBaseGold, this.GUIWrapperEpicUpgrade, -200, this.scene, null);
+        this._epicUpgradeAddFarmers = new EpicUpgradeSection('Running Farmers', this.scene.epicAddFarmersUpgrade, this.GUIWrapperEpicUpgrade, -320, this.scene, null);
+        this._epicUpgradeBaseGold = new EpicUpgradeSection('Gold Production Per Structure', this.scene.epicUpgradeBaseGold, this.GUIWrapperEpicUpgrade, -200, this.scene, null);
+        this._epicUpgradeBaseProduct = new EpicUpgradeSection('Resource Production Per Structure', this.scene.epicUpgradeBaseResource, this.GUIWrapperEpicUpgrade, -80, this.scene, null);
+        this._epicFasterCycleTime = new EpicUpgradeSection('Faster Cycle Time', this.scene.epicFasterCycleTimes, this.GUIWrapperEpicUpgrade, 40, this.scene, null);
 
         //Farm Upgrades
         //this is the GUI that Appears when you click on the Farm to upgrade
@@ -257,7 +264,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         
         this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.scene.mine.getUpgradeCostGold(), ['farmers', this.scene.mine.getUpgradeCostFarmers()], mineUpgradeMax, this.wrapperMineUpgrade, -320, this.scene, () => {this._mineUpgradeCallback()});
 
-        this.mineInSceneGUI = new InSceneStuctureGUI('MineSceneGui', this, this.scene.mine, 'Ore');
+        //this.mineInSceneGUI = new InSceneStuctureGUI('MineSceneGui', this, this.scene.mine, 'Ore');
         
         //Forge Upgrades
         this.wrapperForgeUpgrade = new UpgradeWindow('ForgeUpgradeWindow', 'skyblue', this);
@@ -265,7 +272,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         
         this._forgeUpgradeSection = new UpgradeSection('ForgeUpgradeSection', `Speeds Up Weapon Production by ${weaponValue}%`, this.scene.forge.getUpgradeCostGold(), ['farmers', this.scene.forge.getUpgradeCostFarmers()], forgeUpgradeMax, this.wrapperForgeUpgrade, -320, this.scene, () => {this._forgeUpgradeCallback()});
         
-        this.forgeInSceneGUI = new InSceneStuctureGUI('ForgeSceneGui', this, this.scene.forge, 'Weapons')
+        //this.forgeInSceneGUI = new InSceneStuctureGUI('ForgeSceneGui', this, this.scene.forge, 'Weapons')
 
         //Barracks Upgrades
         this.wrapperBarracksUpgrade = new UpgradeWindow('BarracksUpgradeWindow', 'black', this);
@@ -273,7 +280,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         
         this._barracksUpgradeSection = new UpgradeSection('BarrackUpgradeSection', `Speeds Up Village Capture by ${villageValue}%`, this.scene.barracks.getUpgradeCostGold(), ['farmers', this.scene.barracks.getUpgradeCostFarmers()], barracksUpgradeMax, this.wrapperBarracksUpgrade, -320, this.scene, () => {this._barracksUpgradeCallback()});
         
-        this.barracksInSceneGUI = new InSceneStuctureGUI('BarracksSceneGui', this, this.scene.barracks, 'Villages');
+        //this.barracksInSceneGUI = new InSceneStuctureGUI('BarracksSceneGui', this, this.scene.barracks, 'Villages');
         
         //ThievesGuild Upgrades
         this.wrapperThievesGuildUpgrade = new UpgradeWindow('ThievesGuildUpgradeWindow', 'orange', this);
@@ -281,7 +288,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         
         this._thievesGuildUpgradeSection = new UpgradeSection('ThievesGuildUpgradeSection', `Speeds Up Loot Capture by ${LootValue}%`, this.scene.thievesGuild.getUpgradeCostGold(), ['farmers', this.scene.thievesGuild.getUpgradeCostFarmers()], thievesGuildUpgradeMax, this.wrapperThievesGuildUpgrade, -320, this.scene, () => {this._thievesGuildUpgradeCallback()});
         
-        this.thievesGuildInSceneGUI = new InSceneStuctureGUI('ThievesGuildSceneGui', this, this.scene.thievesGuild, 'Loot');
+        //this.thievesGuildInSceneGUI = new InSceneStuctureGUI('ThievesGuildSceneGui', this, this.scene.thievesGuild, 'Loot');
 
         //WorkShop Upgrades
         this.wrapperWorkShopUpgrade = new UpgradeWindow('WorkShopUpgradeWindow', 'orange', this);
@@ -289,7 +296,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         
         this._workShopUpgradeSection = new UpgradeSection('WorkShopUpgradeSection', `Speeds Up GoldBar Creation by ${goldbarValue}%`, this.scene.workShop.getUpgradeCostGold(), ['farmers', this.scene.workShop.getUpgradeCostFarmers()], workShopUpgradeMax, this.wrapperWorkShopUpgrade, -320, this.scene, () => {this._workShopUpgradeCallback()});
         
-        this.workShopInSceneGUI = new InSceneStuctureGUI('WorkShopSceneGui', this, this.scene.workShop, 'Goldbars');
+        //this.workShopInSceneGUI = new InSceneStuctureGUI('WorkShopSceneGui', this, this.scene.workShop, 'Goldbars');
 
         //tower Upgrades
         this.wrapperTowerUpgrade = new UpgradeWindow('TowerUpgradeWindow', 'orange', this);
@@ -297,7 +304,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         
         this._towerUpgradeSection = new UpgradeSection('TowerUpgradeSection', `Speeds Up Portal Creation by ${portalValue}%`, this.scene.tower.getUpgradeCostGold(), ['farmers', this.scene.tower.getUpgradeCostFarmers()], towerUpgradeMax, this.wrapperTowerUpgrade, -320, this.scene, () => {this._towerUpgradeCallback()});
         
-        this.towerInSceneGUI = new InSceneStuctureGUI('TowerSceneGui', this, this.scene.tower, 'Portals');
+        //this.towerInSceneGUI = new InSceneStuctureGUI('TowerSceneGui', this, this.scene.tower, 'Portals');
 
         //tavern Upgrades
         this.wrapperTavernUpgrade = new UpgradeWindow('Tavern UpgradeWindow', 'orange', this);
@@ -305,7 +312,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         
         this._tavernUpgradeSection = new UpgradeSection('TavernUpgradeSection', `Speeds Up Relic Creation by ${relicValue}%`, this.scene.tavern.getUpgradeCostGold(), ['farmers', this.scene.tavern.getUpgradeCostFarmers()], tavernUpgradeMax, this.wrapperTavernUpgrade, -320, this.scene, () => {this._tavernUpgradeCallback()});
         
-        this.tavernInSceneGUI = new InSceneStuctureGUI('TavernSceneGui', this, this.scene.tavern, 'Relics');
+        //this.tavernInSceneGUI = new InSceneStuctureGUI('TavernSceneGui', this, this.scene.tavern, 'Relics');
 
         //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade

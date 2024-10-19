@@ -1,8 +1,9 @@
 import { StructureStateChildI } from "../../typings";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToTavernPaths, tavernClickBox, tavernModels, tavernPos,} from "../utils/CONSTANTS";
-import { tavernCreateGoldAmount, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, timeToMakeRelic } from "../utils/MATHCONSTANTS";
+import { relicsPerCycle, tavernCreateGoldAmount, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, timeToMakeRelic } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -19,7 +20,8 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._cycleTime = timeToMakeRelic(this.getUpgradeLevel());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, tavernModels, tavernClickBox, tavernPos);
         this._goldPerCycle = tavernCreateGoldAmount;
-
+        this._productAmountPerCycle = relicsPerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('TavernSceneGui', this, 'Relics');
     }
 
     public upgradeState(): void {

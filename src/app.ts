@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene } from "@babylonjs/core";
+import { DefaultLoadingScreen, Engine, Scene } from "@babylonjs/core";
 
 import {BabInspector} from "./debug/inspector";
 import createCanvas from "./canvas/createCanvas";
@@ -19,6 +19,7 @@ export class App {
     public gui:GUIPlay | GUIStartScreen;
     private _canvas: HTMLCanvasElement;
     private _inspector:BabInspector;
+    public loadingScreen:DefaultLoadingScreen;
 
     public startScreen:StartScreen;
 
@@ -36,6 +37,8 @@ export class App {
 
         // add the inspector
         this._inspector = new BabInspector(this.scene);
+
+        this.loadingScreen = new DefaultLoadingScreen(this._canvas);
         
         // run the main render loop
         this._main();
@@ -54,6 +57,7 @@ export class App {
 
     //Scene Switching function
     public async switchScene(newScene:Scene) {
+        this.loadingScreen.displayLoadingUI();
         //any controls are turned off if a scene exists
         if (this.scene) {
             this.scene.detachControl();

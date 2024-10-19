@@ -21,8 +21,7 @@ export class BaseResourcePercentUpgradeState extends EpicUpgradeState implements
 
     public updateState(): void {
 
-        if (this._currentUpgradeLevel < this._upgradeNumMax) {
-            
+        if (this._currentUpgradeLevel < this._upgradeNumMax) {          
             this._currentUpgradeLevel += 1;
             this._costToUpgrade = Math.round(baseResourcePercentCostLumens(this._currentUpgradeLevel, this._upgradeNumMax, this._baseCostLumens));
             this._instructions = baseResourcePercentInstructions(this._currentUpgradeLevel, this._increment);
@@ -37,8 +36,14 @@ export class BaseResourcePercentUpgradeState extends EpicUpgradeState implements
         const structures = this._scene.allStructures;
 
         for (let i in structures) {
-            if (!structures[i].getName().includes('Farm')) {
-                const currentAmount = structures[i].getTotalProductAmount();
+            const structure = structures[i];
+
+            if (!structure.getName().includes('Farm')) {
+                const currentProductPerCycleLevel = structure.getProductPerCycle();
+                const newProductPerCycleLevel = Math.round((currentProductPerCycleLevel * this._increment)*100)/100;
+                
+                structure.changeProductPerCycle(newProductPerCycleLevel);
+                structure.getInSceneGui().changeInfoText(`${structure.getProductPerCycle().toFixed(3)} ${structure.getProductName()}/cycle`)
             }
         }
 

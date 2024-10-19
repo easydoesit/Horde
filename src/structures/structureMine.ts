@@ -1,4 +1,5 @@
 import { StructureStateChildI } from "../../typings";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToMinePaths, mineClickBox, mineModels, minePos } from "../utils/CONSTANTS";
@@ -20,6 +21,7 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, mineModels, mineClickBox, minePos);
         this._goldPerCycle = mineGoldPerCycle;
         this._productAmountPerCycle = orePerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('MineSceneGui', this, 'Ore');
 
     }
 

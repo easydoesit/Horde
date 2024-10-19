@@ -1,8 +1,9 @@
 import { StructureStateChildI } from "../../typings";
+import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToThievesGuildPaths, thievesGuildClickBox, thievesGuildModels, thievesGuildPos } from "../utils/CONSTANTS";
-import { theivesGuildCreateGoldAmount, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeLoot } from "../utils/MATHCONSTANTS";
+import { lootPerCycle, theivesGuildCreateGoldAmount, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeLoot } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -19,6 +20,8 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._cycleTime = timeToMakeLoot(this.getUpgradeLevel());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, thievesGuildModels, thievesGuildClickBox, thievesGuildPos);
         this._goldPerCycle = theivesGuildCreateGoldAmount;
+        this._productAmountPerCycle = lootPerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('ThievesGuildSceneGui', this, 'Loot');
     }
 
     public upgradeState(): void {

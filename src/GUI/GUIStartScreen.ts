@@ -60,8 +60,10 @@ export class GUIStartScreen implements GameStateObserverI {
         
             const newScene = new PlayMode(this._app);
             await this._app.switchScene(newScene).then(() => {
-                this._app.gui = new GUIPlay(this._app, newScene);
+                
                 this._app.gameState.detach(this);
+                this._app.loadingScreen.hideLoadingUI();
+                this._app.gui = new GUIPlay(this._app, newScene);
             });
             
             
