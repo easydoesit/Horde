@@ -52,13 +52,6 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
     
     //castle
     public castleUpgradeWindow:UpgradeWindow;
-    // private _addMineButton:AddStructureButton;
-    // private _addForgeButton:AddStructureButton;
-    // private _addBarracksButton:AddStructureButton;
-    // private _addThievesGuildButton:AddStructureButton;
-    // private _addWorkShopButton:AddStructureButton;
-    // private _addTowerButton:AddStructureButton;
-    // private _addTavernButton:AddStructureButton;
  
     //farms
     public GUIWrapperFarmUpgrade:UpgradeWindow;
@@ -74,40 +67,7 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
     private _addFarmButton04:AddStructureButton;
     private _addFarmButtons: AddStructureButton[];
 
-    //mine
-    public wrapperMineUpgrade:UpgradeWindow;
-    private _mineUpgradeSection:StructureUpgradeSection;
-    public mineInSceneGUI:Rectangle;
-
-    //forge
-    public wrapperForgeUpgrade:UpgradeWindow;
-    private _forgeUpgradeSection:StructureUpgradeSection;
-    public forgeInSceneGUI:Rectangle;
-
-    //barracks
-    public wrapperBarracksUpgrade:UpgradeWindow;
-    private _barracksUpgradeSection:StructureUpgradeSection;
-    public barracksInSceneGUI:Rectangle;
-
-    //thievesGuild
-    public wrapperThievesGuildUpgrade:UpgradeWindow;
-    private _thievesGuildUpgradeSection:StructureUpgradeSection;
-    public thievesGuildInSceneGUI:Rectangle;
-
-    //workShop
-    public wrapperWorkShopUpgrade:UpgradeWindow;
-    private _workShopUpgradeSection:StructureUpgradeSection;
-    public workShopInSceneGUI:Rectangle;
-
-    //tower
-    public wrapperTowerUpgrade:UpgradeWindow;
-    private _towerUpgradeSection:StructureUpgradeSection;
-    public towerInSceneGUI:Rectangle;
-
-    //tavern
-    public wrapperTavernUpgrade:UpgradeWindow;
-    private _tavernUpgradeSection:StructureUpgradeSection;
-    public tavernInSceneGUI:Rectangle;
+  
 
     constructor(app:App, scene:PlayMode) {
         this.name='GUIPlay';
@@ -263,62 +223,6 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
 
         // this._addFarmButtons.push(this._addFarmButton02, this._addFarmButton03, this._addFarmButton04);
 
-        //Mine Upgrades
-        // this.wrapperMineUpgrade = new UpgradeWindow('mineUpgradeWindow');
-        // const oreValue = oreUpgradeValue * 100;
-        
-        // this._mineUpgradeSection = new StructureUpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.scene.mine.getUpgradeCostGold(), ['farmers', this.scene.mine.getUpgradeCostFarmers()], mineUpgradeMax, this.wrapperMineUpgrade.getPanelContainer(), this.scene, () => {this._mineUpgradeCallback()});
-
-        //this.mineInSceneGUI = new InSceneStuctureGUI('MineSceneGui', this, this.scene.mine, 'Ore');
-        
-        //Forge Upgrades
-        // this.wrapperForgeUpgrade = new UpgradeWindow('ForgeUpgradeWindow');
-        // const weaponValue = weaponUpgradeValue * 100;
-        
-        // this._forgeUpgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', `Speeds Up Weapon Production by ${weaponValue}%`, this.scene.forge.getUpgradeCostGold(), ['farmers', this.scene.forge.getUpgradeCostFarmers()], forgeUpgradeMax, this.wrapperForgeUpgrade.getPanelContainer(), this.scene, () => {this._forgeUpgradeCallback()});
-        
-        //this.forgeInSceneGUI = new InSceneStuctureGUI('ForgeSceneGui', this, this.scene.forge, 'Weapons')
-
-        //Barracks Upgrades
-        // this.wrapperBarracksUpgrade = new UpgradeWindow('BarracksUpgradeWindow');
-        // const villageValue = villagesUpgradeValue * 100;
-        
-        // this._barracksUpgradeSection = new StructureUpgradeSection('BarrackUpgradeSection', `Speeds Up Village Capture by ${villageValue}%`, this.scene.barracks.getUpgradeCostGold(), ['farmers', this.scene.barracks.getUpgradeCostFarmers()], barracksUpgradeMax, this.wrapperBarracksUpgrade.getPanelContainer(), this.scene, () => {this._barracksUpgradeCallback()});
-        
-        //this.barracksInSceneGUI = new InSceneStuctureGUI('BarracksSceneGui', this, this.scene.barracks, 'Villages');
-        
-        //ThievesGuild Upgrades
-        // this.wrapperThievesGuildUpgrade = new UpgradeWindow('ThievesGuildUpgradeWindow');
-        // const LootValue = lootUpgradeValue * 100;
-        
-        // this._thievesGuildUpgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', `Speeds Up Loot Capture by ${LootValue}%`, this.scene.thievesGuild.getUpgradeCostGold(), ['farmers', this.scene.thievesGuild.getUpgradeCostFarmers()], thievesGuildUpgradeMax, this.wrapperThievesGuildUpgrade.getPanelContainer(),  this.scene, () => {this._thievesGuildUpgradeCallback()});
-        
-        //this.thievesGuildInSceneGUI = new InSceneStuctureGUI('ThievesGuildSceneGui', this, this.scene.thievesGuild, 'Loot');
-
-        //WorkShop Upgrades
-        // this.wrapperWorkShopUpgrade = new UpgradeWindow('WorkShopUpgradeWindow');
-        // const goldbarValue = goldBarUpgradeValue * 100;
-        
-        // this._workShopUpgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', `Speeds Up GoldBar Creation by ${goldbarValue}%`, this.scene.workShop.getUpgradeCostGold(), ['farmers', this.scene.workShop.getUpgradeCostFarmers()], workShopUpgradeMax, this.wrapperWorkShopUpgrade.getPanelContainer(), this.scene, () => {this._workShopUpgradeCallback()});
-        
-        //this.workShopInSceneGUI = new InSceneStuctureGUI('WorkShopSceneGui', this, this.scene.workShop, 'Goldbars');
-
-        // //tower Upgrades
-        // this.wrapperTowerUpgrade = new UpgradeWindow('TowerUpgradeWindow');
-        // const portalValue = portalUpgradeValue * 100;
-        
-        // this._towerUpgradeSection = new StructureUpgradeSection('TowerUpgradeSection', `Speeds Up Portal Creation by ${portalValue}%`, this.scene.tower.getUpgradeCostGold(), ['farmers', this.scene.tower.getUpgradeCostFarmers()], towerUpgradeMax, this.wrapperTowerUpgrade.getPanelContainer(),  this.scene, () => {this._towerUpgradeCallback()});
-        
-        //this.towerInSceneGUI = new InSceneStuctureGUI('TowerSceneGui', this, this.scene.tower, 'Portals');
-
-        //tavern Upgrades
-        // this.wrapperTavernUpgrade = new UpgradeWindow('Tavern UpgradeWindow');
-        // const relicValue = relicUpgradeValue * 100;
-        
-        // this._tavernUpgradeSection = new StructureUpgradeSection('TavernUpgradeSection', `Speeds Up Relic Creation by ${relicValue}%`, this.scene.tavern.getUpgradeCostGold(), ['farmers', this.scene.tavern.getUpgradeCostFarmers()], tavernUpgradeMax, this.wrapperTavernUpgrade.getPanelContainer(), this.scene, () => {this._tavernUpgradeCallback()});
-        
-        //this.tavernInSceneGUI = new InSceneStuctureGUI('TavernSceneGui', this, this.scene.tavern, 'Relics');
-
         //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade
         this.castleUpgradeWindow = new CastleUpgradeWindow('castleUpgradeWindow', this.scene);
@@ -347,50 +251,6 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
             //     }
             
             // }
-
-            // //mine
-            // if (this._addMineButton.isVisible) {
-            //     this._addMineButton.isEnabled = this._mineUpgradeAllow();
-            // }
-           
-            // this._mineUpgradeSection.upgradeAble = this._mineUpgradeAllow();
-            
-            // //forge
-            // if (this._addForgeButton.isVisible) {
-            //     this._addForgeButton.isEnabled = this._forgeUpgradeAllow();
-            // }
-            // this._forgeUpgradeSection.upgradeAble = this._forgeUpgradeAllow();
-
-            // //barracks
-            // if (this._addBarracksButton.isVisible) {
-            //     this._addBarracksButton.isEnabled = this._barracksUpgradeAllow();
-            // }
-            // this._barracksUpgradeSection.upgradeAble = this._barracksUpgradeAllow();
-
-            // //thievesGuild
-            // if (this._addThievesGuildButton.isVisible) {
-            //     this._addThievesGuildButton.isEnabled = this._thievesGuildUpgradeAllow();
-            // }
-            // this._thievesGuildUpgradeSection.upgradeAble = this._thievesGuildUpgradeAllow();
-
-            // //workShop
-            // if (this._addWorkShopButton.isVisible) {
-            //     this._addWorkShopButton.isEnabled = this._workShopUpgradeAllow();
-            // }
-            // this._workShopUpgradeSection.upgradeAble = this._workShopUpgradeAllow();
-
-            // //tower
-            // if (this._addTowerButton.isVisible) {
-            //     this._addTowerButton.isEnabled = this._towerUpgradeAllow();
-            // }
-            // this._towerUpgradeSection.upgradeAble = this._towerUpgradeAllow();
-
-            
-            // //tavern
-            // if (this._addTavernButton.isVisible) {
-            //     this._addTavernButton.isEnabled = this._tavernUpgradeAllow();
-            // }
-            // this._tavernUpgradeSection.upgradeAble = this._tavernUpgradeAllow();
 
         });
 
@@ -688,7 +548,6 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
 
     public getUpgradeWindow(window: string): UpgradeWindow {
         const upgradeWindow = this.gameGUI.getControlByName(window) as UpgradeWindow;
-        console.log(upgradeWindow);
         return upgradeWindow;
     }
 

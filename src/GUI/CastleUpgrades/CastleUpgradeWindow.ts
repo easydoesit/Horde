@@ -1,21 +1,15 @@
-import { MathStateI, UpgradeWindowI } from "../../../typings";
+import { MathStateI, StructureStateChildI, StructureStateI, UpgradeWindowI } from "../../../typings";
 import { PlayMode } from "../../scenes/playmode";
 import { mineUpgradeMax } from "../../utils/MATHCONSTANTS";
 import { GUIPlay } from "../GUIPlay";
 import { UpgradeWindow } from "../upgradeWindow";
 import { AddStructureButton } from "../structureUpgrades/addStructureButton";
+import { StructureState } from "../../structures/structureState";
 
 export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI {
     private _scene:PlayMode;
     private _mathState:MathStateI;
-    //private _addMineButton:AddStructureButton;
     private _buttons:{name:string, button:AddStructureButton}[];
-    private _addForgeButton:AddStructureButton;
-    private _addBarracksButton:AddStructureButton;
-    private _addThievesGuildButton:AddStructureButton;
-    private _addWorkShopButton:AddStructureButton;
-    private _addTowerButton:AddStructureButton;
-    private _addTavernButton:AddStructureButton;
 
     constructor(name:string, scene:PlayMode) {
         super(name);
@@ -31,34 +25,38 @@ export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI
                 console.log(structure);
                 const buttonObj = {
                     name:structure.getName(),
-                    button:structure.getAddStructureButton()
+                    button:structure.getAddStructureButton(),
                 }
+                console.log(buttonObj);
                 this.getPanelContainer().addControl(buttonObj.button);
                 //this.getPanelContainer().addControl(structure.getUpgradesWindow());
                 this._buttons.push(buttonObj);
             }
         }
 
-        console.log('castle buttons', this._buttons)
 
         this._scene.onBeforeRenderObservable.add(() => {
-                //   //mine
-                //   if (this._addMineButton.isVisible) {
-                //     this._addMineButton.isEnabled = this._mineUpgradeAllow();
-                // }    
+            for (let i in this._buttons) {
+                const button = this._buttons[i];
+
+                const buttonsStructure = this._scene.getStructure(button.name);
+                console.log(buttonsStructure);
+                
+                if (button.button.isVisible) {
+                    if(buttonsStructure.getUpgradeLevel() < buttonsStructure.getUpgradeMax()) {
+                        if (this._scene.mathState.getTotalGold() > buttonsStructure.getUpgradeCostGold() && this._scene.mathState.getTotalFarmers() > buttonsStructure.getUpgradeCostFarmers()) {
+                            button.button.isEnabled = true;
+                        }
+                        else {
+                            button.button.isEnabled = false;
+                        }
+                    }
+                }
+
+            }
 
         });
 
     }
 
-        //mine
-        private _mineUpgradeAllow() {
-            if(this._scene.mine.getUpgradeLevel() < mineUpgradeMax) {
-                if(this._mathState.getTotalGold() > this._scene.mine.getUpgradeCostGold() && this._mathState.getTotalFarmers() > this._scene.mine.getUpgradeCostFarmers()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
 }

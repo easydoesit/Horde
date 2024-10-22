@@ -1,10 +1,10 @@
 import { DEBUGMODE } from "./CONSTANTS";
 
 //lumens
-export const startingLumens = 40000;
+export const startingLumens = 0;
 
 //gold
-export const startingGold = 500;
+export const startingGold = 0;
 
 //eggs
 export function eggDelivery():{option:'gold' | 'lumens', amount:number} {

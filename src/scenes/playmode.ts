@@ -286,4 +286,15 @@ export class PlayMode extends Scene {
         return this._app.gui;
     }
 
+    public getStructure(name:string):StructureStateI {
+        for (let i in this.allStructures) {
+            const structure = this.allStructures[i];
+            
+            if (structure.getName() === name) {
+                return structure;
+            }
+        }
+        
+    }
+
 }
