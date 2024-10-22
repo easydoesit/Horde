@@ -1,4 +1,6 @@
 import { StructureStateChildI } from "../../typings";
+import { GUIPlay } from "../GUI/GUIPlay";
+import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { castleToFarmPaths, DEBUGMODE, Farm01Pos, farmClickBox, farmModels } from "../utils/CONSTANTS";
@@ -18,6 +20,8 @@ export class StructureFarm01 extends StructureState implements StructureStateChi
         this._upgradeCostFarmers = 0;
         this._product = null;
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, farmModels, farmClickBox, Farm01Pos);
+        this._upGradesWindow = new UpgradeWindow(`${this._name} Upgrades`);
+    
     }
 
     public upgradeState() {

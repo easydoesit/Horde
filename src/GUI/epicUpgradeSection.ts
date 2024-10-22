@@ -1,4 +1,4 @@
-import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@babylonjs/gui";
+import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control, ScrollViewer, StackPanel} from "@babylonjs/gui";
 import { DEBUGMODE, GUIFONT1 } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { makeButtonEnabled, calcBarSegment, cleanString, makeFloatDivideBy100 } from "../utils/upgradeHelpers";
@@ -8,8 +8,7 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
     public name:string;
     private _costInLumens:number;
     private _maxNumUpgrades:number;
-    private _container: Rectangle | AdvancedDynamicTexture;
-    private _vertPos:number;
+    private _container: StackPanel;
     private _scene:PlayMode;
     private _upgradable:boolean;
     private _upgrade:EpicUpgradeStateChildI;
@@ -22,7 +21,7 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
     private _upgradeBarWrapper:Rectangle;
     private _upgradeBar:Rectangle;
 
-    constructor(name:string, epicUpgrade:EpicUpgradeStateChildI, container:Rectangle | AdvancedDynamicTexture, vertPos:number, scene:PlayMode, callback:any ) {
+    constructor(name:string, epicUpgrade:EpicUpgradeStateChildI, container:StackPanel, scene:PlayMode, callback:any ) {
         super(name + 'epicUpgradeSection');
         this._upgrade = epicUpgrade;
         this._upgrade.attach(this);
@@ -30,14 +29,15 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
         this._maxNumUpgrades = this._upgrade.getUpgradeNumMax();
         this._container = container;
         this._scene = scene;
-        this._vertPos = vertPos;
 
         this.width = .95;
-        this.height = .1;
+        this.height = '125px';
         this.background = 'blue';
         this.color = 'white';
         this.thickness = 0;
-        this.top = this._vertPos;
+        this.paddingBottom = '6px';
+        this.paddingTop = '6px';
+
         this._container.addControl(this);
 
         this._title = new TextBlock(this.name + 'title', name);

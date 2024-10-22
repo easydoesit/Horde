@@ -3,8 +3,7 @@ import { castleToFarmPaths, DEBUGMODE, GUIFONT1, modelsDir } from "../utils/CONS
 import { PlayMode } from "../scenes/playmode";
 import { wheatUpgradesMax, wheatUpgradeValue, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue, weaponUpgradeValue, forgeUpgradeMax, farmersMaxPerFarm, villagesUpgradeValue, barracksUpgradeMax, lootUpgradeValue, thievesGuildUpgradeMax, goldBarUpgradeValue, workShopUpgradeMax, portalUpgradeValue, towerUpgradeMax, relicUpgradeValue, tavernUpgradeMax } from "../utils/MATHCONSTANTS";
 import { UpgradeSection } from "./upgradeSection";
-import { UpgradeWindow } from "./upgradeWindows";
-import { InSceneStuctureGUI } from "./inSceneStructureGUI";
+import { UpgradeWindow } from "./upgradeWindow";
 import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureStateI, GUIProductCounterI, StructureStateObserverOnCycleI, ProductsT } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
@@ -16,6 +15,7 @@ import { StructureFarm01 } from "../structures/structureFarm01";
 import { StructureFarm02 } from "../structures/structureFarm02";
 import { StructureFarm03 } from "../structures/structureFarm03";
 import { StructureFarm04 } from "../structures/structureFarm04";
+import { EpicUpgradeWindow } from "./epicUpgradeWindow";
 
 export class GUIPlay implements GameStateObserverI, MathStateObserverI, StructureStateObserverOnCycleI {
     private _app:App;
@@ -48,14 +48,15 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
     private _addFarmerBtn:Button;
 
     //epic
-    public GUIWrapperEpicUpgrade:Rectangle;
+    public epicUpgradeWindow:EpicUpgradeWindow;
 
     private _epicUpgradeAddFarmers:EpicUpgradeSection;
     private _epicUpgradeBaseGold:EpicUpgradeSection;
     private _epicUpgradeBaseProduct:EpicUpgradeSection;
     private _epicFasterCycleTime:EpicUpgradeSection;
+    
     //castle
-    public GUIWrapperCastleUpgrade:Rectangle;
+    public GUIWrapperCastleUpgrade:UpgradeWindow;
     private _addMineButton:AddStructureButton;
     private _addForgeButton:AddStructureButton;
     private _addBarracksButton:AddStructureButton;
@@ -65,7 +66,7 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
     private _addTavernButton:AddStructureButton;
  
     //farms
-    public GUIWrapperFarmUpgrade:Rectangle;
+    public GUIWrapperFarmUpgrade:UpgradeWindow;
     public farmersMaxTextBox:TextBlock;
     private _wheatUpgrade:UpgradeSection;
     private _farmUpgrade01Section:UpgradeSection;
@@ -79,37 +80,37 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
     private _addFarmButtons: AddStructureButton[];
 
     //mine
-    public wrapperMineUpgrade:Rectangle;
+    public wrapperMineUpgrade:UpgradeWindow;
     private _mineUpgradeSection:UpgradeSection;
     public mineInSceneGUI:Rectangle;
 
     //forge
-    public wrapperForgeUpgrade:Rectangle;
+    public wrapperForgeUpgrade:UpgradeWindow;
     private _forgeUpgradeSection:UpgradeSection;
     public forgeInSceneGUI:Rectangle;
 
     //barracks
-    public wrapperBarracksUpgrade:Rectangle;
+    public wrapperBarracksUpgrade:UpgradeWindow;
     private _barracksUpgradeSection:UpgradeSection;
     public barracksInSceneGUI:Rectangle;
 
     //thievesGuild
-    public wrapperThievesGuildUpgrade:Rectangle;
+    public wrapperThievesGuildUpgrade:UpgradeWindow;
     private _thievesGuildUpgradeSection:UpgradeSection;
     public thievesGuildInSceneGUI:Rectangle;
 
     //workShop
-    public wrapperWorkShopUpgrade:Rectangle;
+    public wrapperWorkShopUpgrade:UpgradeWindow;
     private _workShopUpgradeSection:UpgradeSection;
     public workShopInSceneGUI:Rectangle;
 
     //tower
-    public wrapperTowerUpgrade:Rectangle;
+    public wrapperTowerUpgrade:UpgradeWindow;
     private _towerUpgradeSection:UpgradeSection;
     public towerInSceneGUI:Rectangle;
 
     //tavern
-    public wrapperTavernUpgrade:Rectangle;
+    public wrapperTavernUpgrade:UpgradeWindow;
     private _tavernUpgradeSection:UpgradeSection;
     public tavernInSceneGUI:Rectangle;
 
@@ -132,10 +133,22 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
             const structure = this.scene.allStructures[i];
             //observers
             structure.attachObserversCycle(this);
+            
+            //in Scene UI
             if (!structure.getName().includes('Farm')) {
                 this.gameGUI.addControl(structure.getInSceneGui());
                 structure.getInSceneGui().linkWithMesh(structure.getStructureModels());
             }
+
+            //UpgradeWindows
+            if (!structure.getName().includes('Farm')) {
+                this.gameGUI.addControl(structure.getUpgradesWindow());
+            }
+
+            if (structure.getName().includes('Farm01')) {
+                this.gameGUI.addControl(structure.getUpgradesWindow());
+            }
+        
         }
         
         //TOP
@@ -182,8 +195,9 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         this._playGUIWrapperBottom.addControl(this._epicUpgradesBtn);
 
         this._epicUpgradesBtn.onPointerDownObservable.add(() => {
-            
-            this.GUIWrapperEpicUpgrade.isVisible = true;
+
+            console.log(this.epicUpgradeWindow);
+            this.epicUpgradeWindow.showWindow();
         
         });
 
@@ -206,117 +220,117 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         });
 
         //Epic Upgrades
-        this.GUIWrapperEpicUpgrade = new UpgradeWindow('EpicUpgradeWindow', 'violet', this);
-        
-        this._epicUpgradeAddFarmers = new EpicUpgradeSection('Running Farmers', this.scene.epicAddFarmersUpgrade, this.GUIWrapperEpicUpgrade, -320, this.scene, null);
-        this._epicUpgradeBaseGold = new EpicUpgradeSection('Gold Production Per Structure', this.scene.epicUpgradeBaseGold, this.GUIWrapperEpicUpgrade, -200, this.scene, null);
-        this._epicUpgradeBaseProduct = new EpicUpgradeSection('Resource Production Per Structure', this.scene.epicUpgradeBaseResource, this.GUIWrapperEpicUpgrade, -80, this.scene, null);
-        this._epicFasterCycleTime = new EpicUpgradeSection('Faster Cycle Time', this.scene.epicFasterCycleTimes, this.GUIWrapperEpicUpgrade, 40, this.scene, null);
+        this.epicUpgradeWindow = new EpicUpgradeWindow('EpicUpgradeWindow');
+        this.gameGUI.addControl(this.epicUpgradeWindow);
+
+        this._epicUpgradeAddFarmers = new EpicUpgradeSection('Running Farmers', this.scene.epicAddFarmersUpgrade, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
+        this._epicUpgradeBaseGold = new EpicUpgradeSection('Gold Production Per Structure', this.scene.epicUpgradeBaseGold, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
+        this._epicUpgradeBaseProduct = new EpicUpgradeSection('Resource Production Per Structure', this.scene.epicUpgradeBaseResource, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
+        this._epicFasterCycleTime = new EpicUpgradeSection('Faster Cycle Time', this.scene.epicFasterCycleTimes, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
 
         //Farm Upgrades
         //this is the GUI that Appears when you click on the Farm to upgrade
-        this.GUIWrapperFarmUpgrade = new UpgradeWindow('FarmUpgradeWindow' , 'brown', this);
 
-        this.farmersMaxTextBox = new TextBlock('MaxFarmers', `Max Famers: ${this._mathState.getFarmersMax()}`);
-        this.farmersMaxTextBox.fontFamily = GUIFONT1;
-        this.farmersMaxTextBox.top = -430;
-        this.farmersMaxTextBox.width = .3;
-        this.farmersMaxTextBox.color= 'white';
-        this.GUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
+        // this.farmersMaxTextBox = new TextBlock('MaxFarmers', `Max Famers: ${this._mathState.getFarmersMax()}`);
+        // this.farmersMaxTextBox.fontFamily = GUIFONT1;
+        // this.farmersMaxTextBox.top = -430;
+        // this.farmersMaxTextBox.width = .3;
+        // this.farmersMaxTextBox.color= 'white';
+        // this.GUIWrapperFarmUpgrade.addControl(this.farmersMaxTextBox);
 
         //this creates the wheat Upgrade section on the Farm Window
-        this._wheatUpgrade = new UpgradeSection('wheatUpgrade', `adds %${wheatUpgradeValue * 100} gold/second`, this._mathState.costOfWheatUpgrade, null, wheatUpgradesMax, this.GUIWrapperFarmUpgrade, -320, this.scene, () => this.wheatUpgradeCallback());
+        //this._wheatUpgrade = new UpgradeSection('wheatUpgrade', `adds %${wheatUpgradeValue * 100} gold/second`, this._mathState.costOfWheatUpgrade, null, wheatUpgradesMax, this.GUIWrapperFarmUpgrade, -320, this.scene, () => this.wheatUpgradeCallback());
 
-        //this creates the farm Upgrade section on the GUI
-        this._farmUpgrade01Section = new UpgradeSection('Farm 01 Upgrades', `next Uprade allows ${this._checkUpgradeFarmersMax(this.scene.farm01)} farmers on this farm`, this.scene.farm01.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -200, this.scene, () => this._farmUpgradeCallBack(this.scene.farm01));
+        // //this creates the farm Upgrade section on the GUI
+        // this._farmUpgrade01Section = new UpgradeSection('Farm 01 Upgrades', `next Uprade allows ${this._checkUpgradeFarmersMax(this.scene.farm01)} farmers on this farm`, this.scene.farm01.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -200, this.scene, () => this._farmUpgradeCallBack(this.scene.farm01));
         
-        this._farmUpgrade02Section = new UpgradeSection('Farm 02 Upgrades', `next Uprade allows ${this._checkUpgradeFarmersMax(this.scene.farm02)} farmers on this farm`, this.scene.farm02.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -80, this.scene, () => this._farmUpgradeCallBack(this.scene.farm02));
-        this._farmUpgrade02Section.wrapperUpgradeContainer.isVisible = false;
+        // this._farmUpgrade02Section = new UpgradeSection('Farm 02 Upgrades', `next Uprade allows ${this._checkUpgradeFarmersMax(this.scene.farm02)} farmers on this farm`, this.scene.farm02.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, -80, this.scene, () => this._farmUpgradeCallBack(this.scene.farm02));
+        // this._farmUpgrade02Section.wrapperUpgradeContainer.isVisible = false;
         
-        this._farmUpgrade03Section = new UpgradeSection('Farm 03 Upgrades', `next Uprade allows ${this._checkUpgradeFarmersMax(this.scene.farm03)} farmers on this farm`, this.scene.farm03.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 40, this.scene, () => this._farmUpgradeCallBack(this.scene.farm03));
-        this._farmUpgrade03Section.wrapperUpgradeContainer.isVisible = false;
+        // this._farmUpgrade03Section = new UpgradeSection('Farm 03 Upgrades', `next Uprade allows ${this._checkUpgradeFarmersMax(this.scene.farm03)} farmers on this farm`, this.scene.farm03.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 40, this.scene, () => this._farmUpgradeCallBack(this.scene.farm03));
+        // this._farmUpgrade03Section.wrapperUpgradeContainer.isVisible = false;
 
-        this._farmUpgrade04Section = new UpgradeSection('Farm 04 Upgrades', `next Uprade allows  ${this._checkUpgradeFarmersMax(this.scene.farm04)} farmers on this farm`, this.scene.farm04.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 160, this.scene, () => this._farmUpgradeCallBack(this.scene.farm04));
-        this._farmUpgrade04Section.wrapperUpgradeContainer.isVisible = false;
-        this._farmUpgradeSections.push(this._farmUpgrade01Section, this._farmUpgrade02Section, this._farmUpgrade03Section, this._farmUpgrade04Section);
+        // this._farmUpgrade04Section = new UpgradeSection('Farm 04 Upgrades', `next Uprade allows  ${this._checkUpgradeFarmersMax(this.scene.farm04)} farmers on this farm`, this.scene.farm04.getUpgradeCostGold(), null, farmUpgradeMax, this.GUIWrapperFarmUpgrade, 160, this.scene, () => this._farmUpgradeCallBack(this.scene.farm04));
+        // this._farmUpgrade04Section.wrapperUpgradeContainer.isVisible = false;
+        // this._farmUpgradeSections.push(this._farmUpgrade01Section, this._farmUpgrade02Section, this._farmUpgrade03Section, this._farmUpgrade04Section);
         
         //ADDFarm Buttons.
-        this._addFarmButtons =[];
+        // this._addFarmButtons =[];
 
-        this._addFarmButton02 = new AddStructureButton('addFarm02Button', this, this._farmUpgrade02Section,this.GUIWrapperFarmUpgrade as UpgradeWindow, -80, this.scene.farm02, () => this._farmAdditionCallback(this.GUIWrapperFarmUpgrade, 'addFarm03Button', this._farmUpgrade02Section, this.scene.farm02));
-        this.GUIWrapperFarmUpgrade.addControl(this._addFarmButton02);
+        // this._addFarmButton02 = new AddStructureButton('addFarm02Button', this, this._farmUpgrade02Section,this.GUIWrapperFarmUpgrade as UpgradeWindow, -80, this.scene.farm02, () => this._farmAdditionCallback(this.GUIWrapperFarmUpgrade, 'addFarm03Button', this._farmUpgrade02Section, this.scene.farm02));
+        // this.GUIWrapperFarmUpgrade.addControl(this._addFarmButton02);
 
-        this._addFarmButton03 = new AddStructureButton('addFarm03Button', this, this._farmUpgrade03Section,this.GUIWrapperFarmUpgrade as UpgradeWindow, 40, this.scene.farm03, () => this._farmAdditionCallback(this.GUIWrapperFarmUpgrade, 'addFarm04Button', this._farmUpgrade03Section, this.scene.farm03));
-        this._addFarmButton03.isEnabled = false;
-        this._addFarmButton03.isVisible = false;
-        this.GUIWrapperFarmUpgrade.addControl(this._addFarmButton03);
+        // this._addFarmButton03 = new AddStructureButton('addFarm03Button', this, this._farmUpgrade03Section,this.GUIWrapperFarmUpgrade as UpgradeWindow, 40, this.scene.farm03, () => this._farmAdditionCallback(this.GUIWrapperFarmUpgrade, 'addFarm04Button', this._farmUpgrade03Section, this.scene.farm03));
+        // this._addFarmButton03.isEnabled = false;
+        // this._addFarmButton03.isVisible = false;
+        // this.GUIWrapperFarmUpgrade.addControl(this._addFarmButton03);
 
-        this._addFarmButton04 = new AddStructureButton('addFarm04Button', this, this._farmUpgrade04Section,this.GUIWrapperFarmUpgrade as UpgradeWindow, 160, this.scene.farm04, () => this._farmAdditionCallback(this.GUIWrapperFarmUpgrade, null, this._farmUpgrade04Section, this.scene.farm04));
-        this._addFarmButton04.isEnabled = false;
-        this._addFarmButton04.isVisible = false;
-        this.GUIWrapperFarmUpgrade.addControl(this._addFarmButton04);
+        // this._addFarmButton04 = new AddStructureButton('addFarm04Button', this, this._farmUpgrade04Section,this.GUIWrapperFarmUpgrade as UpgradeWindow, 160, this.scene.farm04, () => this._farmAdditionCallback(this.GUIWrapperFarmUpgrade, null, this._farmUpgrade04Section, this.scene.farm04));
+        // this._addFarmButton04.isEnabled = false;
+        // this._addFarmButton04.isVisible = false;
+        // this.GUIWrapperFarmUpgrade.addControl(this._addFarmButton04);
 
-        this._addFarmButtons.push(this._addFarmButton02, this._addFarmButton03, this._addFarmButton04);
+        // this._addFarmButtons.push(this._addFarmButton02, this._addFarmButton03, this._addFarmButton04);
 
         //Mine Upgrades
-        this.wrapperMineUpgrade = new UpgradeWindow('mineUpgradeWindow', 'DarkSlateGray', this);
+        this.wrapperMineUpgrade = new UpgradeWindow('mineUpgradeWindow');
         const oreValue = oreUpgradeValue * 100;
         
-        this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.scene.mine.getUpgradeCostGold(), ['farmers', this.scene.mine.getUpgradeCostFarmers()], mineUpgradeMax, this.wrapperMineUpgrade, -320, this.scene, () => {this._mineUpgradeCallback()});
+        this._mineUpgradeSection = new UpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreValue}%`, this.scene.mine.getUpgradeCostGold(), ['farmers', this.scene.mine.getUpgradeCostFarmers()], mineUpgradeMax, this.wrapperMineUpgrade.getPanelContainer(), this.scene, () => {this._mineUpgradeCallback()});
 
         //this.mineInSceneGUI = new InSceneStuctureGUI('MineSceneGui', this, this.scene.mine, 'Ore');
         
         //Forge Upgrades
-        this.wrapperForgeUpgrade = new UpgradeWindow('ForgeUpgradeWindow', 'skyblue', this);
+        this.wrapperForgeUpgrade = new UpgradeWindow('ForgeUpgradeWindow');
         const weaponValue = weaponUpgradeValue * 100;
         
-        this._forgeUpgradeSection = new UpgradeSection('ForgeUpgradeSection', `Speeds Up Weapon Production by ${weaponValue}%`, this.scene.forge.getUpgradeCostGold(), ['farmers', this.scene.forge.getUpgradeCostFarmers()], forgeUpgradeMax, this.wrapperForgeUpgrade, -320, this.scene, () => {this._forgeUpgradeCallback()});
+        this._forgeUpgradeSection = new UpgradeSection('ForgeUpgradeSection', `Speeds Up Weapon Production by ${weaponValue}%`, this.scene.forge.getUpgradeCostGold(), ['farmers', this.scene.forge.getUpgradeCostFarmers()], forgeUpgradeMax, this.wrapperForgeUpgrade.getPanelContainer(), this.scene, () => {this._forgeUpgradeCallback()});
         
         //this.forgeInSceneGUI = new InSceneStuctureGUI('ForgeSceneGui', this, this.scene.forge, 'Weapons')
 
         //Barracks Upgrades
-        this.wrapperBarracksUpgrade = new UpgradeWindow('BarracksUpgradeWindow', 'black', this);
+        this.wrapperBarracksUpgrade = new UpgradeWindow('BarracksUpgradeWindow');
         const villageValue = villagesUpgradeValue * 100;
         
-        this._barracksUpgradeSection = new UpgradeSection('BarrackUpgradeSection', `Speeds Up Village Capture by ${villageValue}%`, this.scene.barracks.getUpgradeCostGold(), ['farmers', this.scene.barracks.getUpgradeCostFarmers()], barracksUpgradeMax, this.wrapperBarracksUpgrade, -320, this.scene, () => {this._barracksUpgradeCallback()});
+        this._barracksUpgradeSection = new UpgradeSection('BarrackUpgradeSection', `Speeds Up Village Capture by ${villageValue}%`, this.scene.barracks.getUpgradeCostGold(), ['farmers', this.scene.barracks.getUpgradeCostFarmers()], barracksUpgradeMax, this.wrapperBarracksUpgrade.getPanelContainer(), this.scene, () => {this._barracksUpgradeCallback()});
         
         //this.barracksInSceneGUI = new InSceneStuctureGUI('BarracksSceneGui', this, this.scene.barracks, 'Villages');
         
         //ThievesGuild Upgrades
-        this.wrapperThievesGuildUpgrade = new UpgradeWindow('ThievesGuildUpgradeWindow', 'orange', this);
+        this.wrapperThievesGuildUpgrade = new UpgradeWindow('ThievesGuildUpgradeWindow');
         const LootValue = lootUpgradeValue * 100;
         
-        this._thievesGuildUpgradeSection = new UpgradeSection('ThievesGuildUpgradeSection', `Speeds Up Loot Capture by ${LootValue}%`, this.scene.thievesGuild.getUpgradeCostGold(), ['farmers', this.scene.thievesGuild.getUpgradeCostFarmers()], thievesGuildUpgradeMax, this.wrapperThievesGuildUpgrade, -320, this.scene, () => {this._thievesGuildUpgradeCallback()});
+        this._thievesGuildUpgradeSection = new UpgradeSection('ThievesGuildUpgradeSection', `Speeds Up Loot Capture by ${LootValue}%`, this.scene.thievesGuild.getUpgradeCostGold(), ['farmers', this.scene.thievesGuild.getUpgradeCostFarmers()], thievesGuildUpgradeMax, this.wrapperThievesGuildUpgrade.getPanelContainer(),  this.scene, () => {this._thievesGuildUpgradeCallback()});
         
         //this.thievesGuildInSceneGUI = new InSceneStuctureGUI('ThievesGuildSceneGui', this, this.scene.thievesGuild, 'Loot');
 
         //WorkShop Upgrades
-        this.wrapperWorkShopUpgrade = new UpgradeWindow('WorkShopUpgradeWindow', 'orange', this);
+        this.wrapperWorkShopUpgrade = new UpgradeWindow('WorkShopUpgradeWindow');
         const goldbarValue = goldBarUpgradeValue * 100;
         
-        this._workShopUpgradeSection = new UpgradeSection('WorkShopUpgradeSection', `Speeds Up GoldBar Creation by ${goldbarValue}%`, this.scene.workShop.getUpgradeCostGold(), ['farmers', this.scene.workShop.getUpgradeCostFarmers()], workShopUpgradeMax, this.wrapperWorkShopUpgrade, -320, this.scene, () => {this._workShopUpgradeCallback()});
+        this._workShopUpgradeSection = new UpgradeSection('WorkShopUpgradeSection', `Speeds Up GoldBar Creation by ${goldbarValue}%`, this.scene.workShop.getUpgradeCostGold(), ['farmers', this.scene.workShop.getUpgradeCostFarmers()], workShopUpgradeMax, this.wrapperWorkShopUpgrade.getPanelContainer(), this.scene, () => {this._workShopUpgradeCallback()});
         
         //this.workShopInSceneGUI = new InSceneStuctureGUI('WorkShopSceneGui', this, this.scene.workShop, 'Goldbars');
 
         //tower Upgrades
-        this.wrapperTowerUpgrade = new UpgradeWindow('TowerUpgradeWindow', 'orange', this);
+        this.wrapperTowerUpgrade = new UpgradeWindow('TowerUpgradeWindow');
         const portalValue = portalUpgradeValue * 100;
         
-        this._towerUpgradeSection = new UpgradeSection('TowerUpgradeSection', `Speeds Up Portal Creation by ${portalValue}%`, this.scene.tower.getUpgradeCostGold(), ['farmers', this.scene.tower.getUpgradeCostFarmers()], towerUpgradeMax, this.wrapperTowerUpgrade, -320, this.scene, () => {this._towerUpgradeCallback()});
+        this._towerUpgradeSection = new UpgradeSection('TowerUpgradeSection', `Speeds Up Portal Creation by ${portalValue}%`, this.scene.tower.getUpgradeCostGold(), ['farmers', this.scene.tower.getUpgradeCostFarmers()], towerUpgradeMax, this.wrapperTowerUpgrade.getPanelContainer(),  this.scene, () => {this._towerUpgradeCallback()});
         
         //this.towerInSceneGUI = new InSceneStuctureGUI('TowerSceneGui', this, this.scene.tower, 'Portals');
 
         //tavern Upgrades
-        this.wrapperTavernUpgrade = new UpgradeWindow('Tavern UpgradeWindow', 'orange', this);
+        this.wrapperTavernUpgrade = new UpgradeWindow('Tavern UpgradeWindow');
         const relicValue = relicUpgradeValue * 100;
         
-        this._tavernUpgradeSection = new UpgradeSection('TavernUpgradeSection', `Speeds Up Relic Creation by ${relicValue}%`, this.scene.tavern.getUpgradeCostGold(), ['farmers', this.scene.tavern.getUpgradeCostFarmers()], tavernUpgradeMax, this.wrapperTavernUpgrade, -320, this.scene, () => {this._tavernUpgradeCallback()});
+        this._tavernUpgradeSection = new UpgradeSection('TavernUpgradeSection', `Speeds Up Relic Creation by ${relicValue}%`, this.scene.tavern.getUpgradeCostGold(), ['farmers', this.scene.tavern.getUpgradeCostFarmers()], tavernUpgradeMax, this.wrapperTavernUpgrade.getPanelContainer(), this.scene, () => {this._tavernUpgradeCallback()});
         
         //this.tavernInSceneGUI = new InSceneStuctureGUI('TavernSceneGui', this, this.scene.tavern, 'Relics');
 
         //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade
-        this.GUIWrapperCastleUpgrade = new UpgradeWindow('castleUpgradeWindow', 'gray', this);
+        this.GUIWrapperCastleUpgrade = new UpgradeWindow('castleUpgradeWindow');
 
         this._addMineButton = new AddStructureButton('addMineButton', this, this._mineUpgradeSection,this.GUIWrapperCastleUpgrade as UpgradeWindow, -320, this.scene.mine, () => {this._mineAdditionCallback()});
         this.GUIWrapperCastleUpgrade.addControl(this._addMineButton);
@@ -351,23 +365,23 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         this.scene.onBeforeRenderObservable.add(() => {
             
             //wheat
-            this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
+            //this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
 
             //farms
-            for (let i in this._farmUpgradeSections) {
-                this._farmUpgradeSections[i].upgradeAble = this._farmUpgradeAllowed(this.scene.farms[i]);
-            }
+            // for (let i in this._farmUpgradeSections) {
+            //     this._farmUpgradeSections[i].upgradeAble = this._farmUpgradeAllowed(this.scene.farms[i]);
+            // }
             
-            for (let i = 0; i < this._addFarmButtons.length; i++) {
+            // for (let i = 0; i < this._addFarmButtons.length; i++) {
                 
-                //there is 3 Add Farm Buttons but 4 Farms so the two arrays compare at different sizes
-                if(this._addFarmButtons[i].isVisible && this._mathState.getTotalGold() >= this.scene.farms[i + 1].getUpgradeCostGold()) {
-                    this._addFarmButtons[i].isEnabled = true;
-                } else if (this._addFarmButtons[i].isVisible && this._mathState.getTotalGold() < this.scene.farms[i + 1].getUpgradeCostGold()) {
-                    this._addFarmButtons[i].isEnabled = false;
-                }
+            //     //there is 3 Add Farm Buttons but 4 Farms so the two arrays compare at different sizes
+            //     if(this._addFarmButtons[i].isVisible && this._mathState.getTotalGold() >= this.scene.farms[i + 1].getUpgradeCostGold()) {
+            //         this._addFarmButtons[i].isEnabled = true;
+            //     } else if (this._addFarmButtons[i].isVisible && this._mathState.getTotalGold() < this.scene.farms[i + 1].getUpgradeCostGold()) {
+            //         this._addFarmButtons[i].isEnabled = false;
+            //     }
             
-            }
+            // }
 
             //mine
             if (this._addMineButton.isVisible) {

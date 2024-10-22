@@ -1,7 +1,8 @@
 import { StructureModel } from "./src/models_structures/structureModels";
-import { Rectangle, TextBlock } from "@babylonjs/gui";
+import { Rectangle, ScrollViewer, StackPanel, TextBlock } from "@babylonjs/gui";
 import { PlayMode } from "./src/scenes/playmode";
 import { InSceneStuctureGUI } from "./src/GUI/inSceneStructureGUI";
+import { UpgradeWindow } from "./src/GUI/upgradeWindow";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
@@ -91,6 +92,7 @@ export interface StructureStateI {
     changeGoldPerCycle(amount:number):void;
 
     getInSceneGui():InSceneStuctureGUI;
+    getUpgradesWindow():UpgradeWindow;
 }
 
 export interface StructureStateChildI extends StructureStateI {
@@ -138,4 +140,13 @@ export interface EpicUpgradeStateChildI extends EpicUpgradeStateI {
 export interface EpicUpgradeStateObserverI {
     name:string;
     updateEpicUpgrade(upgrade:EpicUpgradeStateI):void;
+}
+
+export interface UpgradeWindowI {
+    name:string;
+
+    hideWindow():void;
+    showWindow():void;
+    getScrollViewer():ScrollViewer;
+    getPanelContainer():StackPanel;
 }

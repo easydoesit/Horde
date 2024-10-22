@@ -2,7 +2,7 @@ import { Button, TextBlock } from"@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { GUIPlay } from "./GUIPlay";
 import { MathStateI, StructureStateChildI } from "../../typings";
-import { UpgradeWindow } from "./upgradeWindows";
+import { UpgradeWindow } from "./upgradeWindow";
 import { UpgradeSection } from "./upgradeSection";
 
 export class AddStructureButton extends Button {

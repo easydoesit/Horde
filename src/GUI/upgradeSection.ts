@@ -1,4 +1,4 @@
-import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control} from "@babylonjs/gui";
+import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control, ScrollViewer, StackPanel} from "@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 
@@ -15,20 +15,20 @@ export class UpgradeSection {
     public name:string;
     public instruction:string;
     private _maxNumOfUpgrades:number;
-    private _higherContainer: Rectangle | AdvancedDynamicTexture;
+    private _higherContainer: StackPanel;
     private _scene:PlayMode;
-    private _guiVertPosition:number;
+    //private _guiVertPosition:number;
     public upgradeAble:boolean;
     
     public goldCost:number;
     public otherCost:[name:string, cost:number];
 
-    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:Rectangle | AdvancedDynamicTexture, guiVertPosition:number, scene:PlayMode, callback:any) {
+    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:StackPanel, scene:PlayMode, callback:any) {
         this.name = name;
         this.instruction = instruction;
         this._maxNumOfUpgrades = maxNumberOfUpgrades;
         this._higherContainer = higherContainer;
-        this._guiVertPosition = guiVertPosition;  
+        //this._guiVertPosition = guiVertPosition;  
         this.goldCost = goldCost;
         
         if (otherCost) {
@@ -44,7 +44,7 @@ export class UpgradeSection {
         this.wrapperUpgradeContainer.background = 'blue';
         this.wrapperUpgradeContainer.color = 'white';
         this.wrapperUpgradeContainer.thickness = 0;
-        this.wrapperUpgradeContainer.top = this._guiVertPosition;
+        //this.wrapperUpgradeContainer.top = this._guiVertPosition;
         this._higherContainer.addControl(this.wrapperUpgradeContainer);
 
         this._textBlockUpgradeTitle = new TextBlock(this.name, this.name);

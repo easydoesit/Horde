@@ -5,17 +5,22 @@ import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, modelsDir } from "../utils/CONSTANTS";
 import { Runner } from "../models_characters/runners";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { UpgradeWindow } from "../GUI/upgradeWindow";
 
 export class StructureState implements StructureStateI {
     protected _name:StructureNamesT;
     protected _observersOnUpgrade:StructureStateObserverOnUpgradeI[];
     protected _observersOnCycle:StructureStateObserverOnCycleI[]
+    
     protected _scene:PlayMode;
     protected _character:StructureCharactersT | null;
     protected _animationPaths:Vector3[][];
     protected _structureModels: StructureModel;
-    protected _inSceneGui:InSceneStuctureGUI;
+
     
+    protected _inSceneGui:InSceneStuctureGUI;
+    protected _upGradesWindow:UpgradeWindow;
+
     protected _upgradeMax:number;
     protected _upgradeLevel:number;
     
@@ -256,6 +261,10 @@ export class StructureState implements StructureStateI {
 
     public getInSceneGui(): InSceneStuctureGUI {
         return this._inSceneGui;
+    }
+
+    public getUpgradesWindow(): UpgradeWindow {
+        return this._upGradesWindow;
     }
 
 }

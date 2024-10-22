@@ -162,7 +162,9 @@ export class PlayMode extends Scene {
                     console.log('Farm Clicked');
                 }
 
-                this._app.gui.showUpgrades(this._app.gui.GUIWrapperFarmUpgrade);
+                console.log(this.farm01.getUpgradesWindow());
+                this.farm01.getUpgradesWindow().showWindow();
+
             }
 
             if (hit.pickedMesh === this.castle.clickZone) {
