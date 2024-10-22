@@ -1,14 +1,13 @@
 import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control, ScrollViewer, StackPanel} from "@babylonjs/gui";
-import { DEBUGMODE, GUIFONT1 } from "../utils/CONSTANTS";
-import { PlayMode } from "../scenes/playmode";
-import { makeButtonEnabled, calcBarSegment, cleanString, makeFloatDivideBy100 } from "../utils/upgradeHelpers";
-import { EpicUpgradeStateChildI, EpicUpgradeStateI, EpicUpgradeStateObserverI } from "../../typings";
+import { DEBUGMODE, GUIFONT1 } from "../../utils/CONSTANTS";
+import { PlayMode } from "../../scenes/playmode";
+import { makeButtonEnabled, calcBarSegment, cleanString, makeFloatDivideBy100 } from "../../utils/upgradeHelpers";
+import { EpicUpgradeStateChildI, EpicUpgradeStateI, EpicUpgradeStateObserverI } from "../../../typings";
 
 export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObserverI {
     public name:string;
     private _costInLumens:number;
     private _maxNumUpgrades:number;
-    private _container: StackPanel;
     private _scene:PlayMode;
     private _upgradable:boolean;
     private _upgrade:EpicUpgradeStateChildI;
@@ -21,13 +20,12 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
     private _upgradeBarWrapper:Rectangle;
     private _upgradeBar:Rectangle;
 
-    constructor(name:string, epicUpgrade:EpicUpgradeStateChildI, container:StackPanel, scene:PlayMode, callback:any ) {
+    constructor(name:string, epicUpgrade:EpicUpgradeStateChildI, scene:PlayMode, callback:any ) {
         super(name + 'epicUpgradeSection');
         this._upgrade = epicUpgrade;
         this._upgrade.attach(this);
         this._costInLumens = this._upgrade.getCostToUpgrade();
         this._maxNumUpgrades = this._upgrade.getUpgradeNumMax();
-        this._container = container;
         this._scene = scene;
 
         this.width = .95;
@@ -36,9 +34,7 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
         this.color = 'white';
         this.thickness = 0;
         this.paddingBottom = '6px';
-        this.paddingTop = '6px';
-
-        this._container.addControl(this);
+        this.paddingTop = '6px'
 
         this._title = new TextBlock(this.name + 'title', name);
         this._title.fontFamily = GUIFONT1;

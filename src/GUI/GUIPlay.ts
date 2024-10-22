@@ -10,12 +10,12 @@ import { StartScreen } from "../scenes/start_screen";
 import { AddStructureButton } from "./addStructureButton";
 import { Runner } from "../models_characters/runners";
 import { ProductCounter } from "./productCounter";
-import { EpicUpgradeSection } from "./epicUpgradeSection";
+import { EpicUpgradeSection } from "./Epic Upgrades/epicUpgradeSection";
 import { StructureFarm01 } from "../structures/structureFarm01";
 import { StructureFarm02 } from "../structures/structureFarm02";
 import { StructureFarm03 } from "../structures/structureFarm03";
 import { StructureFarm04 } from "../structures/structureFarm04";
-import { EpicUpgradeWindow } from "./epicUpgradeWindow";
+import { EpicUpgradeWindow } from "./Epic Upgrades/epicUpgradeWindow";
 
 export class GUIPlay implements GameStateObserverI, MathStateObserverI, StructureStateObserverOnCycleI {
     private _app:App;
@@ -49,11 +49,6 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
 
     //epic
     public epicUpgradeWindow:EpicUpgradeWindow;
-
-    private _epicUpgradeAddFarmers:EpicUpgradeSection;
-    private _epicUpgradeBaseGold:EpicUpgradeSection;
-    private _epicUpgradeBaseProduct:EpicUpgradeSection;
-    private _epicFasterCycleTime:EpicUpgradeSection;
     
     //castle
     public GUIWrapperCastleUpgrade:UpgradeWindow;
@@ -220,13 +215,9 @@ export class GUIPlay implements GameStateObserverI, MathStateObserverI, Structur
         });
 
         //Epic Upgrades
-        this.epicUpgradeWindow = new EpicUpgradeWindow('EpicUpgradeWindow');
+        this.epicUpgradeWindow = new EpicUpgradeWindow('EpicUpgradeWindow', this.scene);
         this.gameGUI.addControl(this.epicUpgradeWindow);
 
-        this._epicUpgradeAddFarmers = new EpicUpgradeSection('Running Farmers', this.scene.epicAddFarmersUpgrade, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
-        this._epicUpgradeBaseGold = new EpicUpgradeSection('Gold Production Per Structure', this.scene.epicUpgradeBaseGold, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
-        this._epicUpgradeBaseProduct = new EpicUpgradeSection('Resource Production Per Structure', this.scene.epicUpgradeBaseResource, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
-        this._epicFasterCycleTime = new EpicUpgradeSection('Faster Cycle Time', this.scene.epicFasterCycleTimes, this.epicUpgradeWindow.getPanelContainer(), this.scene, null);
 
         //Farm Upgrades
         //this is the GUI that Appears when you click on the Farm to upgrade
