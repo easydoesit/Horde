@@ -1,9 +1,13 @@
 import { StructureStateChildI } from "../../typings";
+import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
+import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
+import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToForgePaths, forgeClickBox, forgeModels, forgePos } from "../utils/CONSTANTS";
-import { forgeGoldPerCycle, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, timeToMakeWeapon, weaponPerCycle } from "../utils/MATHCONSTANTS";
+import { forgeGoldPerCycle, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, timeToMakeWeapon, weaponPerCycle, weaponUpgradeValue } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -22,7 +26,10 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._goldPerCycle = forgeGoldPerCycle;
         this._productAmountPerCycle = weaponPerCycle;
         this._inSceneGui = new InSceneStuctureGUI('ForgeSceneGui', this,'Weapons');
-
+        this._upgradesWindow = new UpgradeWindow('ForgeUpgradeWindow');
+        this._upgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', `Speeds Up Weapon Production by ${weaponUpgradeValue * 100}%`, this, () => {this._forgeUpgradeCallback()});
+        this._addStructureButton = new AddStructureButton('addForgeButton', this, () => {this._forgeAdditionCallback()});
+        this._addUpgradePanel();
     }
 
     public upgradeState(): void {
@@ -56,7 +63,29 @@ export class StructureForge extends StructureState implements StructureStateChil
             this._upgradeCostGold = Math.round(forgeUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
 
         }
-    }   
+    }
 
+    private _forgeUpgradeCallback() {
+        if (DEBUGMODE) {
+            console.log('forgeUpgradeChangeCalled');
+        }
+        
+        //upgrade the State
+        this.upgradeState();
+
+        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+
+    }
+
+    private _forgeAdditionCallback() {
+        if (DEBUGMODE) {
+            console.log('addForgeCalled');
+        }     
+
+        const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
+        window.hideWindow(); 
+    
+    }
 
 }

@@ -6,6 +6,8 @@ import { DEBUGMODE, modelsDir } from "../utils/CONSTANTS";
 import { Runner } from "../models_characters/runners";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
+import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
+import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 
 export class StructureState implements StructureStateI {
     protected _name:StructureNamesT;
@@ -19,7 +21,9 @@ export class StructureState implements StructureStateI {
 
     
     protected _inSceneGui:InSceneStuctureGUI;
-    protected _upGradesWindow:UpgradeWindow;
+    protected _upgradesWindow:UpgradeWindow;
+    protected _upgradeSection:StructureUpgradeSection;
+    protected _addStructureButton:AddStructureButton;
 
     protected _upgradeMax:number;
     protected _upgradeLevel:number;
@@ -144,11 +148,11 @@ export class StructureState implements StructureStateI {
             //get the farms that have been upgraded
             const usableFarms:StructureStateI[] = [];
     
-            for(let i in this._scene.farms) {
-                if (this._scene.farms[i].getUpgradeLevel() >= 1) {
-                    usableFarms.push(this._scene.farms[i]);
-                }
-            }
+            // for(let i in this._scene.farms) {
+            //     if (this._scene.farms[i].getUpgradeLevel() >= 1) {
+            //         usableFarms.push(this._scene.farms[i]);
+            //     }
+            // }
             
 
             const intervalAmount = (arraySize:number) => {
@@ -264,7 +268,18 @@ export class StructureState implements StructureStateI {
     }
 
     public getUpgradesWindow(): UpgradeWindow {
-        return this._upGradesWindow;
+        return this._upgradesWindow;
     }
 
+    public getUpgradeSection(): StructureUpgradeSection {
+        return this._upgradeSection;
+    }
+
+    public getAddStructureButton(): AddStructureButton {
+        return this._addStructureButton;
+    }
+
+    protected _addUpgradePanel():void {
+        this.getUpgradesWindow().getPanelContainer().addControl(this.getUpgradeSection());
+    }
 }

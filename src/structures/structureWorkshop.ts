@@ -1,9 +1,13 @@
 import { StructureStateChildI } from "../../typings";
+import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
+import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
+import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToWorkShopPaths, workShopClickBox, workShopModels, workShopPos, } from "../utils/CONSTANTS";
-import { goldBarPerCycle, timeToMakeGoldBar, timeToMakeRelic, workShopCreateGoldAmount, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
+import { goldBarPerCycle, goldBarUpgradeValue, timeToMakeGoldBar, timeToMakeRelic, workShopCreateGoldAmount, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -22,6 +26,10 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._goldPerCycle = workShopCreateGoldAmount;
         this._productAmountPerCycle = goldBarPerCycle;
         this._inSceneGui = new InSceneStuctureGUI('WorkShopSceneGui', this, 'Goldbars');
+        this._upgradesWindow = new UpgradeWindow('WorkShopUpgradeWindow')
+        this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', `Speeds Up GoldBar Creation by ${goldBarUpgradeValue * 100}%`, this, () => {this._workShopUpgradeCallback()})
+        this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()})
+        this._addUpgradePanel();
     }
 
     public upgradeState(): void {
@@ -54,4 +62,26 @@ export class StructureWorkShop extends StructureState implements StructureStateC
 
         }
     }   
+
+    private _workShopUpgradeCallback() {
+        if (DEBUGMODE) {
+            console.log('WorkShopUpgradeChangeCalled');
+        }
+        
+        //upgrade the State
+        this.upgradeState();
+
+        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+
+    }
+
+    private _workShopAdditionCallback() {
+        if (DEBUGMODE) {
+            console.log('addWorkshopCalled');
+            
+        }   
+        const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
+        window.hideWindow(); 
+    }
 }

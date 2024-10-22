@@ -1,11 +1,15 @@
 import { StructureStateChildI } from "../../typings";
+import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
+import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToMinePaths, mineClickBox, mineModels, minePos } from "../utils/CONSTANTS";
-import { mineGoldPerCycle, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, orePerCycle, timeToMakeOre } from "../utils/MATHCONSTANTS";
+import { mineGoldPerCycle, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgradeMax, orePerCycle, timeToMakeOre, oreUpgradeValue } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
+import { GUIPlay } from "../GUI/GUIPlay";
 
 export class StructureMine extends StructureState implements StructureStateChildI {
     constructor(scene:PlayMode) {
@@ -22,7 +26,10 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._goldPerCycle = mineGoldPerCycle;
         this._productAmountPerCycle = orePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('MineSceneGui', this, 'Ore');
-
+        this._upgradesWindow = new UpgradeWindow('mineUpgradeWindow');
+        this._upgradeSection = new StructureUpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreUpgradeValue * 100}%`, this, () => {this._mineUpgradeCallback()});
+        this._addStructureButton = new AddStructureButton('addMineButton', this, () => {this._mineAdditionCallback()});
+        this._addUpgradePanel();
     }
 
     public upgradeState(): void {
@@ -52,5 +59,29 @@ export class StructureMine extends StructureState implements StructureStateChild
             this._upgradeCostGold = Math.round(mineUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
 
         }
-    }   
+    }
+    
+    private _mineUpgradeCallback() {
+        if (DEBUGMODE) {
+            console.log('mineUpgradeChangeCalled');
+        }
+        
+        //upgrade the State
+        this.upgradeState();
+
+        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+
+    }
+
+    private _mineAdditionCallback() {
+        if (DEBUGMODE) {
+            console.log('addMineCalled');
+        }
+        
+        const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
+        window.hideWindow(); 
+
+    }
+
 }

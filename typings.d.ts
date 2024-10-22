@@ -3,6 +3,8 @@ import { Rectangle, ScrollViewer, StackPanel, TextBlock } from "@babylonjs/gui";
 import { PlayMode } from "./src/scenes/playmode";
 import { InSceneStuctureGUI } from "./src/GUI/inSceneStructureGUI";
 import { UpgradeWindow } from "./src/GUI/upgradeWindow";
+import { AddStructureButton } from "./src/GUI/structureUpgrades/addStructureButton";
+import { StructureUpgradeSection } from "./src/GUI/structureUpgrades/structureUpgradeSection";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
@@ -93,6 +95,9 @@ export interface StructureStateI {
 
     getInSceneGui():InSceneStuctureGUI;
     getUpgradesWindow():UpgradeWindow;
+    getUpgradeSection():StructureUpgradeSection;
+    getAddStructureButton():AddStructureButton;
+
 }
 
 export interface StructureStateChildI extends StructureStateI {
@@ -147,6 +152,11 @@ export interface UpgradeWindowI {
 
     hideWindow():void;
     showWindow():void;
+
     getScrollViewer():ScrollViewer;
     getPanelContainer():StackPanel;
+}
+
+export interface GUIPlayI {
+    getUpgradeWindow(window:string):UpgradeWindow;
 }

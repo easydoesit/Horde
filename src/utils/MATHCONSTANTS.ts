@@ -141,7 +141,23 @@ export const forgeUpgradeCostGold = (numberOfUpgrades:number) => {
 }
 
 export const forgeUpgradeCostFarmers = (numberOfUpgrades:number) => {
-    return Math.round(1/28*100)/100;
+    switch (numberOfUpgrades) {
+        case 0: {
+            return 24;
+        
+        }
+        case 1:  {
+            return 208;
+        }
+
+        case 2: {
+            return 1130;
+        }
+
+        case 3: {
+            return 5000;
+        }
+    }
 }
 
 //Barracks

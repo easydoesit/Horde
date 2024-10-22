@@ -1,9 +1,13 @@
 import { StructureStateChildI } from "../../typings";
+import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
+import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
+import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToThievesGuildPaths, thievesGuildClickBox, thievesGuildModels, thievesGuildPos } from "../utils/CONSTANTS";
-import { lootPerCycle, theivesGuildCreateGoldAmount, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeLoot } from "../utils/MATHCONSTANTS";
+import { lootPerCycle, lootUpgradeValue, theivesGuildCreateGoldAmount, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeLoot } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -22,8 +26,12 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._goldPerCycle = theivesGuildCreateGoldAmount;
         this._productAmountPerCycle = lootPerCycle;
         this._inSceneGui = new InSceneStuctureGUI('ThievesGuildSceneGui', this, 'Loot');
+        this._upgradesWindow = new UpgradeWindow('ThievesGuildUpgradeWindow');
+        this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', `Speeds Up Loot Capture by ${lootUpgradeValue * 100}%`, this, () => {this._thievesGuildUpgradeCallback()});
+        this._addStructureButton = new AddStructureButton('addThievesGuildButton', this, () => {this._thievesGuildAdditionCallback()});
+        this._addUpgradePanel();
     }
-
+    
     public upgradeState(): void {
         
         if (DEBUGMODE) {
@@ -53,5 +61,26 @@ export class StructureThievesGuild extends StructureState implements StructureSt
             this._upgradeCostGold = Math.round(thievesGuildUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
 
         }
-    }   
+    }
+
+    private _thievesGuildUpgradeCallback() {
+        if (DEBUGMODE) {
+            console.log('thievesGuildUpgradeChangeCalled');
+        }
+        
+        //upgrade the State
+        this.upgradeState();
+
+        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+    }
+
+    private _thievesGuildAdditionCallback() {
+        if (DEBUGMODE) {
+            console.log('addthievesGuildCalled');
+        }
+        
+        const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
+        window.hideWindow(); 
+    }
 }

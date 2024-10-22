@@ -88,21 +88,21 @@ export class PlayMode extends Scene {
         this.castle.position = castlePos;
 
         //load the entry level farms
-        this.farms = [];
-        this.farm01 = new StructureFarm01(this );
-        this.farm01.getStructureModels().position = Farm01Pos;
-        this.farm01.upgradeState();
-        //these start out of view
-        this.farm02 = new StructureFarm02(this)
-        this.farm02.getStructureModels().position = Farm02Pos;
+        // this.farms = [];
+        // this.farm01 = new StructureFarm01(this );
+        // this.farm01.getStructureModels().position = Farm01Pos;
+        // this.farm01.upgradeState();
+        // //these start out of view
+        // this.farm02 = new StructureFarm02(this)
+        // this.farm02.getStructureModels().position = Farm02Pos;
         
-        this.farm03 = new StructureFarm03(this)
-        this.farm03.getStructureModels().position = Farm03Pos;
+        // this.farm03 = new StructureFarm03(this)
+        // this.farm03.getStructureModels().position = Farm03Pos;
 
-        this.farm04 = new StructureFarm04(this)
-        this.farm04.getStructureModels().position = Farm04Pos;
+        // this.farm04 = new StructureFarm04(this)
+        // this.farm04.getStructureModels().position = Farm04Pos;
 
-        this.farms.push(this.farm01,this.farm02,this.farm03,this.farm04);
+        // this.farms.push(this.farm01,this.farm02,this.farm03,this.farm04);
 
         this.mine = new StructureMine(this);    
         this.mine.getStructureModels().position = new Vector3(minePos.x, minePos.y - 10 , minePos.z);
@@ -127,7 +127,7 @@ export class PlayMode extends Scene {
         this.tavern.getStructureModels().position = new Vector3(tavernPos.x, tavernPos.y -20, tavernPos.z);
 
         this.allStructures = []
-        this.allStructures.push(this.farm01, this.farm02,this.farm03,this.farm04,this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
+        this.allStructures.push(this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this);
@@ -141,8 +141,6 @@ export class PlayMode extends Scene {
     
         //load the background
         const background = new PlainsBackground(this);
-
-        this.mathState = new MathState(this);
         
         //epic upgrades
         this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');
@@ -150,22 +148,24 @@ export class PlayMode extends Scene {
         this.epicUpgradeBaseResource = new BaseResourcePercentUpgradeState('Base Resource',this);
         this.epicFasterCycleTimes = new StructuresFasterCyclesState('Cycle Times', this)
 
+        this.mathState = new MathState(this);
+
         //interact with the scene
         this.onPointerDown = function castRay() {
             const ray = this.createPickingRay(this.pointerX, this.pointerY, Matrix.Identity(), this.mainCamera);
 
             const hit = this.pickWithRay(ray);
 
-            if (hit.pickedMesh === this.farm01.getStructureModels().clickZone || hit.pickedMesh === this.farm02.getStructureModels().clickZone ) {
+            // if (hit.pickedMesh === this.farm01.getStructureModels().clickZone || hit.pickedMesh === this.farm02.getStructureModels().clickZone ) {
                 
-                if (DEBUGMODE) {
-                    console.log('Farm Clicked');
-                }
+            //     if (DEBUGMODE) {
+            //         console.log('Farm Clicked');
+            //     }
 
-                console.log(this.farm01.getUpgradesWindow());
-                this.farm01.getUpgradesWindow().showWindow();
+            //     console.log(this.farm01.getUpgradesWindow());
+            //     this.farm01.getUpgradesWindow().showWindow();
 
-            }
+            // }
 
             if (hit.pickedMesh === this.castle.clickZone) {
                 
@@ -173,7 +173,7 @@ export class PlayMode extends Scene {
                     console.log('Castle Clicked');
                 }
 
-                this._app.gui.showUpgrades(this._app.gui.GUIWrapperCastleUpgrade);
+                this._app.gui.castleUpgradeWindow.showWindow();
             }
 
             if (hit.pickedMesh === this.mine.getStructureModels().clickZone) {
@@ -182,7 +182,8 @@ export class PlayMode extends Scene {
                     console.log('Mine Clicked');
                 }
 
-                this._app.gui.showUpgrades(this._app.gui.wrapperMineUpgrade);
+                this.mine.getUpgradesWindow().showWindow();
+      
             }
 
             if (hit.pickedMesh === this.forge.getStructureModels().clickZone) {
@@ -191,7 +192,7 @@ export class PlayMode extends Scene {
                     console.log("Forge Clicked");
                 }
                 
-                this._app.gui.showUpgrades(this._app.gui.wrapperForgeUpgrade);
+                this.forge.getUpgradesWindow().showWindow();;
             }
 
             if (hit.pickedMesh === this.barracks.getStructureModels().clickZone) {
@@ -200,7 +201,7 @@ export class PlayMode extends Scene {
                     console.log("Barracks Clicked");
                 }
                 
-                this._app.gui.showUpgrades(this._app.gui.wrapperBarracksUpgrade);
+                this.barracks.getUpgradesWindow().showWindow();
             }
 
             if (hit.pickedMesh === this.thievesGuild.getStructureModels().clickZone) {
@@ -209,7 +210,7 @@ export class PlayMode extends Scene {
                     console.log("Thieves Guild Clicked");
                 }
                 
-                this._app.gui.showUpgrades(this._app.gui.wrapperThievesGuildUpgrade);
+                this.thievesGuild.getUpgradesWindow().showWindow();
             }
 
             if (hit.pickedMesh === this.workShop.getStructureModels().clickZone) {
@@ -218,7 +219,7 @@ export class PlayMode extends Scene {
                     console.log("Workshop Clicked");
                 }
                 
-                this._app.gui.showUpgrades(this._app.gui.wrapperWorkShopUpgrade);
+                this.workShop.getUpgradesWindow().showWindow();
             }
 
             if (hit.pickedMesh === this.tower.getStructureModels().clickZone) {
@@ -227,7 +228,7 @@ export class PlayMode extends Scene {
                     console.log("Tower Clicked");
                 }
                 
-                this._app.gui.showUpgrades(this._app.gui.wrapperTowerUpgrade);
+                this.tower.getUpgradesWindow().showWindow();
             }
 
             if (hit.pickedMesh === this.tavern.getStructureModels().clickZone) {
@@ -236,7 +237,7 @@ export class PlayMode extends Scene {
                     console.log("Tavern Clicked");
                 }
                 
-                this._app.gui.showUpgrades(this._app.gui.wrapperTavernUpgrade);
+                this.tavern.getUpgradesWindow().showWindow();
             }
             
 

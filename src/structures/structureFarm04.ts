@@ -18,7 +18,7 @@ export class StructureFarm04 extends StructureState implements StructureStateChi
         this._upgradeCostFarmers = 0;
         this._product = null;
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, farmModels, farmClickBox, Farm04Pos);
-        this._upGradesWindow = this._scene.farm01.getUpgradesWindow();//shared Window
+        this._upgradesWindow = this._scene.farm01.getUpgradesWindow();//shared Window
     }
 
     public upgradeState() {

@@ -1,9 +1,13 @@
 import { StructureStateChildI } from "../../typings";
+import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
+import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
+import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToTavernPaths, tavernClickBox, tavernModels, tavernPos,} from "../utils/CONSTANTS";
-import { relicsPerCycle, tavernCreateGoldAmount, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, timeToMakeRelic } from "../utils/MATHCONSTANTS";
+import { relicsPerCycle, relicUpgradeValue, tavernCreateGoldAmount, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, timeToMakeRelic } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 
@@ -22,6 +26,10 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._goldPerCycle = tavernCreateGoldAmount;
         this._productAmountPerCycle = relicsPerCycle;
         this._inSceneGui = new InSceneStuctureGUI('TavernSceneGui', this, 'Relics');
+        this._upgradesWindow = new UpgradeWindow('TavernUpgradeWindow');
+        this._upgradeSection = new StructureUpgradeSection('TavernUpgradeSection', `Speeds Up Relic Creation by ${relicUpgradeValue * 100}%`, this, () => {this._tavernUpgradeCallback()});
+        this._addStructureButton = new AddStructureButton('addTavernButton', this, () => {this._tavernAdditionCallback()})
+        this._addUpgradePanel();
     }
 
     public upgradeState(): void {
@@ -51,5 +59,27 @@ export class StructureTavern extends StructureState implements StructureStateChi
             this._upgradeCostGold = Math.round(tavernUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
 
         }
-    }   
+    }
+
+    private _tavernUpgradeCallback() {
+        if (DEBUGMODE) {
+            console.log('TavernUpgradeChangeCalled');
+        }
+        
+        //upgrade the State
+        this.upgradeState();
+
+        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+
+    }
+
+    private _tavernAdditionCallback() {
+        if (DEBUGMODE) {
+            console.log('addTavernCalled');
+        }
+        
+        const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
+        window.hideWindow(); 
+    }
 }

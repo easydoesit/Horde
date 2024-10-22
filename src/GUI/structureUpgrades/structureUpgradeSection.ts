@@ -1,9 +1,9 @@
 import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control, ScrollViewer, StackPanel} from "@babylonjs/gui";
-import { GUIFONT1 } from "../utils/CONSTANTS";
-import { PlayMode } from "../scenes/playmode";
+import { GUIFONT1 } from "../../utils/CONSTANTS";
+import { PlayMode } from "../../scenes/playmode";
+import { StructureStateChildI } from "../../../typings";
 
-export class UpgradeSection {
-    public wrapperUpgradeContainer:Rectangle;
+export class StructureUpgradeSection extends Rectangle {
     private _textBlockUpgradeTitle:TextBlock;
     public textBlockUpgradeInstruction:TextBlock;
     private _upgradeBarWrapper:Rectangle;
@@ -12,52 +12,45 @@ export class UpgradeSection {
     private _upgradeBtnCostText02:TextBlock;
     private _upgradeBar:Rectangle;
 
+    private _structure:StructureStateChildI;
     public name:string;
     public instruction:string;
     private _maxNumOfUpgrades:number;
-    private _higherContainer: StackPanel;
     private _scene:PlayMode;
-    //private _guiVertPosition:number;
     public upgradeAble:boolean;
     
-    public goldCost:number;
-    public otherCost:[name:string, cost:number];
+    private _goldCost:number;
+    private _farmerCost:number;
 
-    constructor(name:string, instruction:string, goldCost:number, otherCost:[name:string, cost:number] | null, maxNumberOfUpgrades:number, higherContainer:StackPanel, scene:PlayMode, callback:any) {
+    constructor(name:string, instruction:string, structure:StructureStateChildI, callback:(...args:any)=>any | null) {
+        super(name);
         this.name = name;
         this.instruction = instruction;
-        this._maxNumOfUpgrades = maxNumberOfUpgrades;
-        this._higherContainer = higherContainer;
-        //this._guiVertPosition = guiVertPosition;  
-        this.goldCost = goldCost;
-        
-        if (otherCost) {
-            this.otherCost = otherCost;
-        }
-        
-        this._scene = scene;
+        this._structure = structure;
+        this._maxNumOfUpgrades = this._structure.getUpgradeMax();
+        this._goldCost = this._structure.getUpgradeCostGold();
+        this._farmerCost = this._structure.getUpgradeCostFarmers();
+
+        this._scene = structure.getScene();
         this.upgradeAble = false;
 
-        this.wrapperUpgradeContainer = new Rectangle('wrapperUpgradeBar');
-        this.wrapperUpgradeContainer.width = .95;
-        this.wrapperUpgradeContainer.height = .1;
-        this.wrapperUpgradeContainer.background = 'blue';
-        this.wrapperUpgradeContainer.color = 'white';
-        this.wrapperUpgradeContainer.thickness = 0;
-        //this.wrapperUpgradeContainer.top = this._guiVertPosition;
-        this._higherContainer.addControl(this.wrapperUpgradeContainer);
+        this.width = .95;
+        this.height = "125px";
+        this.background = 'blue';
+        this.color = 'white';
+        this.thickness = 0;
 
         this._textBlockUpgradeTitle = new TextBlock(this.name, this.name);
         this._textBlockUpgradeTitle.fontFamily = GUIFONT1;
         this._textBlockUpgradeTitle.color = 'white';
         this._textBlockUpgradeTitle.top = -35;
-        this.wrapperUpgradeContainer.addControl(this._textBlockUpgradeTitle);
+        this.addControl(this._textBlockUpgradeTitle);
 
         this.textBlockUpgradeInstruction = new TextBlock(this.instruction, this.instruction);
         this.textBlockUpgradeInstruction.fontFamily = GUIFONT1;
         this.textBlockUpgradeInstruction.color = 'white';
         this.textBlockUpgradeInstruction.top = -15;
-        this.wrapperUpgradeContainer.addControl(this.textBlockUpgradeInstruction);
+        this.addControl(this.textBlockUpgradeInstruction);
 
         this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', `upgrade`);
         this._upgradeBtn.fontFamily = GUIFONT1;
@@ -69,7 +62,7 @@ export class UpgradeSection {
         this._upgradeBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this._upgradeBtn.isEnabled = false;
 
-        this.wrapperUpgradeContainer.addControl(this._upgradeBtn);
+        this.addControl(this._upgradeBtn);
         
         this._upgradeBtn.onPointerDownObservable.add(() => {
             //change the size of the upgrade bar
@@ -93,13 +86,13 @@ export class UpgradeSection {
             } 
         });
 
-        this._upgradeBtnCostText01 = new TextBlock(`${this.name}_cost`, `${this.goldCost}g`);
+        this._upgradeBtnCostText01 = new TextBlock(`${this.name}_cost`, `${this._goldCost}g`);
         this._upgradeBtnCostText01.fontFamily = GUIFONT1;
         this._upgradeBtnCostText01.top = 20;
         this._upgradeBtn.addControl(this._upgradeBtnCostText01);
 
-        if (this.otherCost) {
-            this._upgradeBtnCostText02 = new TextBlock(`otherCost`, `+ ${this.otherCost[1]} ${this.otherCost[0]}`);
+        if (this._farmerCost) {
+            this._upgradeBtnCostText02 = new TextBlock(`farmer`, `+ ${this._farmerCost} farmers`);
             this._upgradeBtnCostText02.fontFamily = GUIFONT1;
             this._upgradeBtnCostText02.top = 40;
             this._upgradeBtn.addControl(this._upgradeBtnCostText02);
@@ -112,7 +105,7 @@ export class UpgradeSection {
         this._upgradeBarWrapper.left = -55;
         this._upgradeBarWrapper.top = 20;
         this._upgradeBarWrapper.thickness = 0;
-        this.wrapperUpgradeContainer.addControl(this._upgradeBarWrapper);
+        this.addControl(this._upgradeBarWrapper);
 
         this._upgradeBar = new Rectangle('upgradeBar');
         this._upgradeBar.background = 'green';
@@ -126,9 +119,9 @@ export class UpgradeSection {
         //GameLoop
         this._scene.onBeforeRenderObservable.add(() => {
             
-            this._upgradeBtnCostText01.text = `${this.goldCost}g`;
-            if(this.otherCost) {
-                this._upgradeBtnCostText02.text = `${this.otherCost[1]} ${this.otherCost[0]}`;
+            this._upgradeBtnCostText01.text = `${this._goldCost}g`;
+            if(this._farmerCost) {
+                this._upgradeBtnCostText02.text = `${this._farmerCost} farmers`;
             }
             this._makeButtonEnabled();
         })
@@ -167,6 +160,22 @@ export class UpgradeSection {
         } else {
             this._upgradeBtn.isEnabled = false;
         }
+    }
+
+    public getGoldCost():number {
+        return this._goldCost;
+    }
+
+    public changeGoldCost(amount:number):void {
+        this._goldCost = amount;
+    }
+
+    public getFarmerCost():number {
+        return this._farmerCost;
+    }
+
+    public changeFarmerCost(amount:number):void {
+        this._farmerCost = amount;
     }
 
 }
