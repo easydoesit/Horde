@@ -9,6 +9,7 @@ import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToTowerPaths, towerClickBox, towerModels, towerPos  } from "../utils/CONSTANTS";
 import { portalsPerCycle, portalUpgradeValue, timeToMakePortal, towerCreateGoldAmount, towerUpgradeCostFarmers, towerUpgradeCostGold, towerUpgradeMax } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
+import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureTower extends StructureState implements StructureStateChildI {
@@ -31,6 +32,12 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', `Speeds Up Portal Creation by ${portalUpgradeValue * 100}%`, this, () => {this._towerUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTowerButton', this, () => {this._towerAdditionCallback()});
         this._addUpgradePanel();
+
+        this._scene.onBeforeRenderObservable.add(() => {
+
+            this.getUpgradeSection().upgradeAble = structureUpgradeAllowed(this);
+
+        })
     }
 
     public upgradeState(): void {

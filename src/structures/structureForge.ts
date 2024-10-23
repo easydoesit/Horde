@@ -9,6 +9,7 @@ import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToForgePaths, forgeClickBox, forgeModels, forgePos } from "../utils/CONSTANTS";
 import { forgeGoldPerCycle, forgeUpgradeCostFarmers, forgeUpgradeCostGold, forgeUpgradeMax, timeToMakeWeapon, weaponPerCycle, weaponUpgradeValue } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
+import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureForge extends StructureState implements StructureStateChildI {
@@ -30,6 +31,12 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._upgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', `Speeds Up Weapon Production by ${weaponUpgradeValue * 100}%`, this, () => {this._forgeUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addForgeButton', this, () => {this._forgeAdditionCallback()});
         this._addUpgradePanel();
+
+        this._scene.onBeforeRenderObservable.add(() => {
+
+            this.getUpgradeSection().upgradeAble = structureUpgradeAllowed(this);
+
+        })
     }
 
     public upgradeState(): void {
@@ -73,8 +80,8 @@ export class StructureForge extends StructureState implements StructureStateChil
         //upgrade the State
         this.upgradeState();
 
-        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
-        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+        this.getUpgradeSection().changeGoldCost(this.getUpgradeCostGold());
+        this.getUpgradeSection().changeFarmerCost(this.getUpgradeCostFarmers());
 
     }
 

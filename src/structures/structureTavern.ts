@@ -9,6 +9,7 @@ import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToTavernPaths, tavernClickBox, tavernModels, tavernPos,} from "../utils/CONSTANTS";
 import { relicsPerCycle, relicUpgradeValue, tavernCreateGoldAmount, tavernUpgradeCostFarmers, tavernUpgradeCostGold, tavernUpgradeMax, timeToMakeRelic } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
+import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureTavern extends StructureState implements StructureStateChildI {
@@ -30,6 +31,12 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._upgradeSection = new StructureUpgradeSection('TavernUpgradeSection', `Speeds Up Relic Creation by ${relicUpgradeValue * 100}%`, this, () => {this._tavernUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTavernButton', this, () => {this._tavernAdditionCallback()})
         this._addUpgradePanel();
+
+        this._scene.onBeforeRenderObservable.add(() => {
+
+            this.getUpgradeSection().upgradeAble = structureUpgradeAllowed(this);
+
+        })
     }
 
     public upgradeState(): void {

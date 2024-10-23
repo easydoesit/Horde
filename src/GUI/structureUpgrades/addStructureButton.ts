@@ -58,8 +58,8 @@ export class AddStructureButton extends Button {
     }
 
     private async waitForScene(callback:(...args:any[]) => any):Promise<void> {
-        await this._structure.getScene().whenReadyAsync()
         
+        await this._structure.getScene().whenReadyAsync()
         .then(() => {
             this._mathState = this._structure.getScene().mathState;
   

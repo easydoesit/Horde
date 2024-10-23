@@ -14,8 +14,8 @@ import { StructureFarm01 } from "../structures/structureFarm01";
 import { StructureFarm02 } from "../structures/structureFarm02";
 import { StructureFarm03 } from "../structures/structureFarm03";
 import { StructureFarm04 } from "../structures/structureFarm04";
-import { EpicUpgradeWindow } from "./EpicUpgrades/epicUpgradeWindow";
-import { CastleUpgradeWindow } from "./CastleUpgrades/CastleUpgradeWindow";
+import { EpicUpgradeWindow } from "./epicUpgrades/epicUpgradeWindow";
+import { CastleUpgradeWindow } from "./castleUpgrades/CastleUpgradeWindow";
 
 export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI, StructureStateObserverOnCycleI {
     private _app:App;
@@ -382,109 +382,7 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
 
         return total;
     }
-
-    // private _farmAdditionCallback(wrapper:Rectangle, nextButton:string | null, upgradeSection:StructureUpgradeSection, farm:StructureStateI) {
-    //     //show the section in the GUI
-    //     upgradeSection.wrapperUpgradeContainer.isVisible = true;
-
-    //     //make the next add Farm Button Available
-    //     if(nextButton !== null) {
-    //         const searchedButton = wrapper.getChildByName(nextButton) as Button;
-    //         searchedButton.isVisible = true;
-    //     }
-
-    //     //update the GUI
-    //     for (let i in this._farmUpgradeSections) {
-    //         this._farmUpgradeSections[i].instruction = `next Upgrade allows ${this._checkUpgradeFarmersMax(this.scene.farms[i])} farmers on this farm`
-    //         this._farmUpgradeSections[i].textBlockUpgradeInstruction.text = this._farmUpgradeSections[i].instruction;
-    //     }
-
-    //     this.farmersMaxTextBox.text = `Max Farmers: ${this._mathState.getFarmersMax()}`;
-
-    // }
-
-    // private _farmUpgradeCallBack(farm:StructureFarm01 | StructureFarm02 | StructureFarm03 | StructureFarm04) {
-
-    //     farm.upgradeState();
-
-    //     for(let i in this._farmUpgradeSections) {
-    //         this._farmUpgradeSections[i].changeGoldCost(this.scene.farms[i].getUpgradeCostGold());
-    //     }
-
-    //     this.farmersMaxTextBox.text = `Max Farmers: ${this._mathState.getFarmersMax()}`;
-
-    // }
     
-   
-
-    //forge
-    private _forgeUpgradeAllow() {
-        if(this.scene.forge.getUpgradeLevel() < forgeUpgradeMax) {
-            if(this._mathState.getTotalGold() > this.scene.forge.getUpgradeCostGold() && this._mathState.getTotalFarmers() > this.scene.forge.getUpgradeCostFarmers()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-
-    //barracks
-    private _barracksUpgradeAllow() {
-        if(this.scene.barracks.getUpgradeLevel() < barracksUpgradeMax) {
-            if(this._mathState.getTotalGold() > this.scene.barracks.getUpgradeCostGold() && this._mathState.getTotalFarmers() > this.scene.barracks.getUpgradeCostFarmers()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    //thievesGuild
-    private _thievesGuildUpgradeAllow() {
-        if(this.scene.thievesGuild.getUpgradeLevel() < thievesGuildUpgradeMax) {
-            if(this._mathState.getTotalGold() > this.scene.thievesGuild.getUpgradeCostGold() && this._mathState.getTotalFarmers() > this.scene.thievesGuild.getUpgradeCostFarmers()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }    
-
-    //workShop
-    private _workShopUpgradeAllow() {
-        if(this.scene.workShop.getUpgradeLevel() < workShopUpgradeMax) {
-            if(this._mathState.getTotalGold() > this.scene.workShop.getUpgradeCostGold() && this._mathState.getTotalFarmers() > this.scene.workShop.getUpgradeCostFarmers()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-
-    //tower
-    private _towerUpgradeAllow() {
-        if(this.scene.tower.getUpgradeLevel() < towerUpgradeMax) {
-            if(this._mathState.getTotalGold() > this.scene.tower.getUpgradeCostGold() && this._mathState.getTotalFarmers() > this.scene.tower.getUpgradeCostFarmers()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-
-    //tavern
-    private _tavernUpgradeAllow() {
-        if(this.scene.tavern.getUpgradeLevel() < tavernUpgradeMax) {
-            if(this._mathState.getTotalGold() > this.scene.tavern.getUpgradeCostGold() && this._mathState.getTotalFarmers() > this.scene.tavern.getUpgradeCostFarmers()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 
     //GUI functions
     public showUpgrades(wrapper:Rectangle) {

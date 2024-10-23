@@ -9,6 +9,7 @@ import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToWorkShopPaths, workShopClickBox, workShopModels, workShopPos, } from "../utils/CONSTANTS";
 import { goldBarPerCycle, goldBarUpgradeValue, timeToMakeGoldBar, timeToMakeRelic, workShopCreateGoldAmount, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
+import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureWorkShop extends StructureState implements StructureStateChildI {
@@ -30,6 +31,12 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', `Speeds Up GoldBar Creation by ${goldBarUpgradeValue * 100}%`, this, () => {this._workShopUpgradeCallback()})
         this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()})
         this._addUpgradePanel();
+
+        this._scene.onBeforeRenderObservable.add(() => {
+
+            this.getUpgradeSection().upgradeAble = structureUpgradeAllowed(this);
+
+        })
     }
 
     public upgradeState(): void {

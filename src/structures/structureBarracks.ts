@@ -10,6 +10,7 @@ import { StructureState } from "./structureState";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { GUIPlay } from "../GUI/GUIPlay";
+import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 
 export class StructureBarracks extends StructureState implements StructureStateChildI {
     constructor(scene:PlayMode) {
@@ -30,6 +31,12 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._upgradeSection = new StructureUpgradeSection('BarrackUpgradeSection', `Speeds Up Village Capture by ${villagesUpgradeValue * 100}%`, this, () => {this._barracksUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addBarracksButton', this, () => {this._barracksAdditionCallback()});
         this._addUpgradePanel();
+
+        this._scene.onBeforeRenderObservable.add(() => {
+
+            this.getUpgradeSection().upgradeAble = structureUpgradeAllowed(this);
+
+        })
     }
 
     public upgradeState(): void {
@@ -59,7 +66,6 @@ export class StructureBarracks extends StructureState implements StructureStateC
             this.notifyObserversOnUpgrade();
 
             this._upgradeCostFarmers = barracksUpgradeCostFarmers(this.getUpgradeLevel());
-
             this._upgradeCostGold = Math.round(barracksUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
 
         }

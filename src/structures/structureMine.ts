@@ -10,6 +10,7 @@ import { mineGoldPerCycle, mineUpgradeCostFarmers, mineUpgradeCostGold, mineUpgr
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 import { GUIPlay } from "../GUI/GUIPlay";
+import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 
 export class StructureMine extends StructureState implements StructureStateChildI {
     constructor(scene:PlayMode) {
@@ -30,6 +31,12 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._upgradeSection = new StructureUpgradeSection('MineUpgradeSection', `Speeds Up Ore Production by ${oreUpgradeValue * 100}%`, this, () => {this._mineUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addMineButton', this, () => {this._mineAdditionCallback()});
         this._addUpgradePanel();
+
+        this._scene.onBeforeRenderObservable.add(() => {
+
+            this.getUpgradeSection().upgradeAble = structureUpgradeAllowed(this);
+
+        })
     }
 
     public upgradeState(): void {
@@ -69,8 +76,8 @@ export class StructureMine extends StructureState implements StructureStateChild
         //upgrade the State
         this.upgradeState();
 
-        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
-        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+        this.getUpgradeSection().changeGoldCost(this.getUpgradeCostGold());
+        this.getUpgradeSection().changeFarmerCost(this.getUpgradeCostFarmers());
 
     }
 

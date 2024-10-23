@@ -1,9 +1,12 @@
 import { StructureStateChildI } from "../../typings";
+import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
+import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { castleToFarmPaths, DEBUGMODE, Farm04Pos, farmClickBox, farmModels } from "../utils/CONSTANTS";
 import { farmUpgradeCostGold, farmUpgradeMax } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
+import { checkUpgradeFarmersMax, farmAdditionAllowed, farmUpgradeAllowed, farmUpgradeCallBack } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureFarm04 extends StructureState implements StructureStateChildI {
@@ -19,6 +22,16 @@ export class StructureFarm04 extends StructureState implements StructureStateChi
         this._product = null;
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, farmModels, farmClickBox, Farm04Pos);
         this._upgradesWindow = this._scene.farm01.getUpgradesWindow();//shared Window
+        this._upgradeSection = new StructureUpgradeSection('4th Farm Upgrades', `next Upgrade allows ${checkUpgradeFarmersMax(this)} farmers on your 4th farm`, this, () => {farmUpgradeCallBack(this)});
+        this._addStructureButton = new AddStructureButton('Farm 4', this, null);
+        this._addUpgradePanel();
+        this._upgradeSection.isVisible = false;
+
+        this._scene.onBeforeRenderObservable.add(() => {
+        
+            this.getUpgradeSection().upgradeAble = farmUpgradeAllowed(this);
+            farmAdditionAllowed(this);
+        })
     }
 
     public upgradeState() {
@@ -41,7 +54,13 @@ export class StructureFarm04 extends StructureState implements StructureStateChi
 
             this.notifyObserversOnUpgrade();
 
+            this.getUpgradeSection().instruction = `Next upgrade allows ${checkUpgradeFarmersMax(this)} farmers on your 1st farm`
+            this.getUpgradeSection().textBlockUpgradeInstruction.text = this.getUpgradeSection().instruction;
+
+            this._upgradeCostGold = Math.round(farmUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
+
         }
 
     }
+    
 }

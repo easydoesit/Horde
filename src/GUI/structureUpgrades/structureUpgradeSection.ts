@@ -22,11 +22,14 @@ export class StructureUpgradeSection extends Rectangle {
     private _goldCost:number;
     private _farmerCost:number;
 
+    private _callback:(...args:any)=>any | null
+
     constructor(name:string, instruction:string, structure:StructureStateChildI, callback:(...args:any)=>any | null) {
         super(name);
         this.name = name;
         this.instruction = instruction;
         this._structure = structure;
+        this._callback = callback;
         this._maxNumOfUpgrades = this._structure.getUpgradeMax();
         this._goldCost = this._structure.getUpgradeCostGold();
         this._farmerCost = this._structure.getUpgradeCostFarmers();
@@ -39,6 +42,8 @@ export class StructureUpgradeSection extends Rectangle {
         this.background = 'blue';
         this.color = 'white';
         this.thickness = 0;
+        this.paddingBottom = '6px'
+        this.paddingTop = '6px'
 
         this._textBlockUpgradeTitle = new TextBlock(this.name, this.name);
         this._textBlockUpgradeTitle.fontFamily = GUIFONT1;
@@ -79,9 +84,9 @@ export class StructureUpgradeSection extends Rectangle {
                         this._upgradeBtn.isEnabled = false;
                     }
                 }
-                
-                if (callback) {
-                    callback();
+                //anything you want to do to the state is in the callback
+                if (this._callback) {
+                    this._callback();
                 }
             } 
         });

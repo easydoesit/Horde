@@ -9,6 +9,7 @@ import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, farmToThievesGuildPaths, thievesGuildClickBox, thievesGuildModels, thievesGuildPos } from "../utils/CONSTANTS";
 import { lootPerCycle, lootUpgradeValue, theivesGuildCreateGoldAmount, thievesGuildUpgradeCostFarmers, thievesGuildUpgradeCostGold, thievesGuildUpgradeMax, timeToMakeLoot } from "../utils/MATHCONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
+import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
 
 export class StructureThievesGuild extends StructureState implements StructureStateChildI {
@@ -30,6 +31,12 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', `Speeds Up Loot Capture by ${lootUpgradeValue * 100}%`, this, () => {this._thievesGuildUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addThievesGuildButton', this, () => {this._thievesGuildAdditionCallback()});
         this._addUpgradePanel();
+
+        this._scene.onBeforeRenderObservable.add(() => {
+
+            this.getUpgradeSection().upgradeAble = structureUpgradeAllowed(this);
+
+        })
     }
     
     public upgradeState(): void {

@@ -23,7 +23,7 @@ export class StructureState implements StructureStateI {
     protected _inSceneGui:InSceneStuctureGUI;
     protected _upgradesWindow:UpgradeWindow;
     protected _upgradeSection:StructureUpgradeSection;
-    protected _addStructureButton:AddStructureButton;
+    protected _addStructureButton:AddStructureButton | null;
 
     protected _upgradeMax:number;
     protected _upgradeLevel:number;

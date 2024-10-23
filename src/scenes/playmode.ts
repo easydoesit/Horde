@@ -50,7 +50,7 @@ export class PlayMode extends Scene {
     public tower:StructureTower;
     public tavern:StructureTavern;
 
-    public allStructures:StructureStateI[];
+    public allStructures:StructureStateChildI[];
 
     //Epic upgrades
     public epicAddFarmersUpgrade:AddFarmerUpgradeState;
@@ -87,22 +87,23 @@ export class PlayMode extends Scene {
         this.castle = new StructureModel('Castle', this, castleModels, castlClickBox, castlePos );
         this.castle.position = castlePos;
 
-        //load the entry level farms
-        // this.farms = [];
-        // this.farm01 = new StructureFarm01(this );
-        // this.farm01.getStructureModels().position = Farm01Pos;
-        // this.farm01.upgradeState();
-        // //these start out of view
-        // this.farm02 = new StructureFarm02(this)
-        // this.farm02.getStructureModels().position = Farm02Pos;
+        //load the entry level structures as hidden
+        this.farms = [];
+        this.farm01 = new StructureFarm01(this);
+        this.farm01.getStructureModels().position = Farm01Pos;
+        this.farm01.upgradeState();
         
-        // this.farm03 = new StructureFarm03(this)
-        // this.farm03.getStructureModels().position = Farm03Pos;
+        // //these start out of view
+        this.farm02 = new StructureFarm02(this)
+        this.farm02.getStructureModels().position = Farm02Pos;
+        
+        this.farm03 = new StructureFarm03(this)
+        this.farm03.getStructureModels().position = Farm03Pos;
 
-        // this.farm04 = new StructureFarm04(this)
-        // this.farm04.getStructureModels().position = Farm04Pos;
+        this.farm04 = new StructureFarm04(this)
+        this.farm04.getStructureModels().position = Farm04Pos;
 
-        // this.farms.push(this.farm01,this.farm02,this.farm03,this.farm04);
+        this.farms.push(this.farm01, this.farm02, this.farm03, this.farm04);
 
         this.mine = new StructureMine(this);    
         this.mine.getStructureModels().position = new Vector3(minePos.x, minePos.y - 10 , minePos.z);
@@ -127,7 +128,7 @@ export class PlayMode extends Scene {
         this.tavern.getStructureModels().position = new Vector3(tavernPos.x, tavernPos.y -20, tavernPos.z);
 
         this.allStructures = []
-        this.allStructures.push(this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
+        this.allStructures.push(...this.farms, this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this);
@@ -148,7 +149,9 @@ export class PlayMode extends Scene {
         this.epicUpgradeBaseResource = new BaseResourcePercentUpgradeState('Base Resource',this);
         this.epicFasterCycleTimes = new StructuresFasterCyclesState('Cycle Times', this)
 
+        //load the mathState
         this.mathState = new MathState(this);
+        
 
         //interact with the scene
         this.onPointerDown = function castRay() {
@@ -156,16 +159,15 @@ export class PlayMode extends Scene {
 
             const hit = this.pickWithRay(ray);
 
-            // if (hit.pickedMesh === this.farm01.getStructureModels().clickZone || hit.pickedMesh === this.farm02.getStructureModels().clickZone ) {
+            if (hit.pickedMesh === this.farm01.getStructureModels().clickZone || hit.pickedMesh === this.farm02.getStructureModels().clickZone ) {
                 
-            //     if (DEBUGMODE) {
-            //         console.log('Farm Clicked');
-            //     }
+                if (DEBUGMODE) {
+                    console.log('Farm Clicked');
+                }
 
-            //     console.log(this.farm01.getUpgradesWindow());
-            //     this.farm01.getUpgradesWindow().showWindow();
+                this.farm01.getUpgradesWindow().showWindow();
 
-            // }
+            }
 
             if (hit.pickedMesh === this.castle.clickZone) {
                 
@@ -271,10 +273,12 @@ export class PlayMode extends Scene {
 
         //--SCENE FINISHED LOADING--
         
-        await this.whenReadyAsync();
-
-        //change the GUI
+        await this.whenReadyAsync()
+        .then(() => {
+            //change the GUI
         engine.hideLoadingUI();
+        });
+        
        
     }
 
