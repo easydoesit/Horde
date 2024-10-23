@@ -91,7 +91,6 @@ export class PlayMode extends Scene {
         this.farms = [];
         this.farm01 = new StructureFarm01(this);
         this.farm01.getStructureModels().position = Farm01Pos;
-        this.farm01.upgradeState();
         
         // //these start out of view
         this.farm02 = new StructureFarm02(this)
@@ -151,7 +150,7 @@ export class PlayMode extends Scene {
 
         //load the mathState
         this.mathState = new MathState(this);
-        
+        this.farm01.upgradeState();
 
         //interact with the scene
         this.onPointerDown = function castRay() {
@@ -276,7 +275,7 @@ export class PlayMode extends Scene {
         await this.whenReadyAsync()
         .then(() => {
             //change the GUI
-        engine.hideLoadingUI();
+            engine.hideLoadingUI();
         });
         
        

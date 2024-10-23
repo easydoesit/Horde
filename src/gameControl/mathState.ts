@@ -106,14 +106,10 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
 
     //Gold
     private changeFinalGold() {    
-
-        //const frame = this._scene.getEngine().getDeltaTime()/1000;
         
         const goldPerFrame = this.getGoldPerSecond() * (this._scene.getEngine().getDeltaTime()/1000);
 
         this.addGold(goldPerFrame);
-
-
     
     }
 
@@ -132,7 +128,13 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     }
 
     public spendGold(amount:number) {
-        this._totalGold -= amount;
+        
+        if (this._totalGold - amount >= 0) {
+            this._totalGold -= amount;
+        } else {
+            this._totalGold = 0;
+        }
+
     }
 
     public getTotalGold():number {
@@ -162,7 +164,13 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     }
 
     public spendFarmers(amount:number) {
-        this._totalFarmers -= amount;
+
+        if(this._totalFarmers - amount >= 0) {
+            this._totalFarmers -= amount;
+        } else {
+            this._totalFarmers = 0;
+        }
+    
     }
 
     private _farmerMultiplyByBaseVal(_totalFarmers:number) {
@@ -211,15 +219,18 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     public updateStructureOnUpgrade(structure: StructureStateI): void {
         if (DEBUGMODE) {
             console.log(`updating ${this.name} from ${structure.getName()}`);
-            console.log(`Cost of Farmers is ${structure.getUpgradeCostFarmers()}`);
-            console.log(`Cost of Gold is ${structure.getUpgradeCostGold()}`);
+            console.log(`Cost in Farmers is ${structure.getUpgradeCostFarmers()}`);
+            console.log(`Cost in Gold is ${structure.getUpgradeCostGold()}`);
             console.log(`The Product is $${structure.getProductName()}`);
         }
 
-        this._totalFarmers -= Math.round(structure.getUpgradeCostFarmers());
-        this._totalGold -= Math.round(structure.getUpgradeCostGold() * 1000)/1000;
+        this.spendFarmers(Math.round(structure.getUpgradeCostFarmers()));
+        this.spendGold(Math.round(structure.getUpgradeCostGold() * 1000)/1000);
+        // this._totalFarmers -= ;
+        // this._totalGold -= Math.round(structure.getUpgradeCostGold() * 1000)/1000;
 
         if (structure.getName().includes("Farm")){
+            console.log('')
             this.changeFarmersMax();
         } 
     }
