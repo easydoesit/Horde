@@ -63,7 +63,7 @@ export class StructureState implements StructureStateI {
         this._observersOnUpgrade.push(observer);
         
         if (DEBUGMODE) {
-            console.log(`${this.getName()} attached ${observer.name}`);
+            console.log(`${this.getName()} attached ${observer.name} on Upgrade`);
         }
     }
 
@@ -103,7 +103,7 @@ export class StructureState implements StructureStateI {
         this._observersOnCycle.push(observer);
         
         if (DEBUGMODE) {
-            console.log(`${this.getName()} attached ${observer.name}`);
+            console.log(`${this.getName()} attached ${observer.name} on Cycle`);
         }
     }
 

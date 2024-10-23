@@ -1,4 +1,4 @@
-import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control, ScrollViewer, StackPanel} from "@babylonjs/gui";
+import { Button, Rectangle, TextBlock, Control } from "@babylonjs/gui";
 import { GUIFONT1 } from "../../utils/CONSTANTS";
 import { PlayMode } from "../../scenes/playmode";
 import { StructureStateChildI } from "../../../typings";
@@ -22,14 +22,11 @@ export class StructureUpgradeSection extends Rectangle {
     private _goldCost:number;
     private _farmerCost:number;
 
-    private _callback:(...args:any)=>any | null
-
-    constructor(name:string, instruction:string, structure:StructureStateChildI, callback:(...args:any)=>any | null) {
+    constructor(name:string, instruction:string, structure:StructureStateChildI, callback:(...args:any[])=>any | null) {
         super(name);
         this.name = name;
         this.instruction = instruction;
         this._structure = structure;
-        this._callback = callback;
         this._maxNumOfUpgrades = this._structure.getUpgradeMax();
         this._goldCost = this._structure.getUpgradeCostGold();
         this._farmerCost = this._structure.getUpgradeCostFarmers();
@@ -85,8 +82,8 @@ export class StructureUpgradeSection extends Rectangle {
                     }
                 }
                 //anything you want to do to the state is in the callback
-                if (this._callback) {
-                    this._callback();
+                if (callback) {
+                    callback();
                 }
             } 
         });

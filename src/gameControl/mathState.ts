@@ -219,6 +219,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     public updateStructureOnUpgrade(structure: StructureStateI): void {
         if (DEBUGMODE) {
             console.log(`updating ${this.name} from ${structure.getName()}`);
+            console.log(`${structure.getName()} is now at level ${structure.getUpgradeLevel()}`)
             console.log(`Cost in Farmers is ${structure.getUpgradeCostFarmers()}`);
             console.log(`Cost in Gold is ${structure.getUpgradeCostGold()}`);
             console.log(`The Product is $${structure.getProductName()}`);
@@ -226,11 +227,8 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
 
         this.spendFarmers(Math.round(structure.getUpgradeCostFarmers()));
         this.spendGold(Math.round(structure.getUpgradeCostGold() * 1000)/1000);
-        // this._totalFarmers -= ;
-        // this._totalGold -= Math.round(structure.getUpgradeCostGold() * 1000)/1000;
 
         if (structure.getName().includes("Farm")){
-            console.log('')
             this.changeFarmersMax();
         } 
     }

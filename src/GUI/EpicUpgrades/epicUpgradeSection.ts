@@ -21,7 +21,7 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
     private _upgradeBar:Rectangle;
 
     constructor(name:string, epicUpgrade:EpicUpgradeStateChildI, scene:PlayMode, callback:any ) {
-        super(name + 'epicUpgradeSection');
+        super(name + ' as epicUpgradeSection');
         this._upgrade = epicUpgrade;
         this._upgrade.attach(this);
         this._costInLumens = this._upgrade.getCostToUpgrade();

@@ -11,9 +11,6 @@ export class FarmUpgradeWindow extends UpgradeWindow {
 
     private _farmersMaxTextBox:TextBlock;
     private _addFarmButtons:AddStructureButton[];
-    // private _addFarmButton02:AddStructureButton;
-    // private _addFarmButton03:AddStructureButton;
-    // private _addFarmButton04:AddStructureButton;
 
     constructor(name:string, scene:PlayMode) {
         super(name);
@@ -28,8 +25,9 @@ export class FarmUpgradeWindow extends UpgradeWindow {
         this._farmersMaxTextBox.color= 'white';
         this.addControl(this._farmersMaxTextBox);
 
-        this._addFarmButtons =[]
+        this._addFarmButtons =[];
 
+        //Since the GUI loads after all the scene elements
         this._waitSceneLoad();
     
     }

@@ -7,7 +7,6 @@ import { StructureUpgradeSection } from "./structureUpgradeSection";
 export class AddStructureButton extends Button {
     private _mathState:MathStateI;
     private _structure:StructureStateChildI;
-    private _wrapper:UpgradeWindow;
 
     public available:boolean;
     public visible:boolean;
@@ -20,8 +19,6 @@ export class AddStructureButton extends Button {
         super(name);
 
         this._structure = structure;
-        this._wrapper = this._wrapper;
-        console.log('this Wrapper: ', this._wrapper);
         this.available = false;
         this.visible = false;
 
@@ -97,9 +94,9 @@ export class AddStructureButton extends Button {
         this.isVisible = false;
 
         //move the _structure into view
-        const _structure = this._structure.getStructureModels();
-        _structure.position.y = _structure.gamePosition.y;
-        _structure.showModel(0);
+        const structure = this._structure.getStructureModels();
+        structure.position.y = structure.gamePosition.y;
+        structure.showModel(0);
 
         //do the scene animations here
 

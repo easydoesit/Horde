@@ -49,6 +49,7 @@ export  const checkUpgradeFarmersMax = (farm:StructureStateChildI) => {
 }
 
 export const farmUpgradeCallBack = (farm:StructureStateChildI) => {
+    console.log('CALLBACK CALLLED');
     console.log('farmUpgradeCost', farm.getUpgradeCostGold());
     farm.upgradeState();
 
@@ -70,6 +71,8 @@ export const farmUpgradeAllowed = (farm:StructureStateChildI) => {
 }
 
 export const  farmAdditionCallback = (thisFarm:StructureStateChildI, nextButton:Button) => {
+    console.log('Farm Addition Callback Called');
+    
     //show the upgrade section for this farm
     thisFarm.getUpgradeSection().isVisible = true;
 

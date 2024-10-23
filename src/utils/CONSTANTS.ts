@@ -20,9 +20,9 @@ export const farmModels = ['farm01.glb', 'farm02.glb'];
 export const farmClickBox = 'farmClickBox.glb';
 
 export const Farm01Pos = new Vector3(0,.5,-4);
-export const Farm02Pos = new Vector3(0,-10,4);
-export const Farm03Pos = new Vector3(0,-10,-12);
-export const Farm04Pos = new Vector3(0,-10,12);
+export const Farm02Pos = new Vector3(0,.5,4);
+export const Farm03Pos = new Vector3(0,.5,-12);
+export const Farm04Pos = new Vector3(0,.5,12);
 
 export const farmHouse01Pos = new Vector3(-10,1.25,-4);
 export const FarmHouse02Pos = new Vector3(-10,1.25,4);

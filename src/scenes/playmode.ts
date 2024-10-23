@@ -94,13 +94,13 @@ export class PlayMode extends Scene {
         
         // //these start out of view
         this.farm02 = new StructureFarm02(this)
-        this.farm02.getStructureModels().position = Farm02Pos;
+        this.farm02.getStructureModels().position = new Vector3(Farm02Pos.x, Farm02Pos.y - 10 , Farm02Pos.z);
         
         this.farm03 = new StructureFarm03(this)
-        this.farm03.getStructureModels().position = Farm03Pos;
+        this.farm03.getStructureModels().position = new Vector3(Farm03Pos.x, Farm03Pos.y - 10 , Farm03Pos.z);
 
         this.farm04 = new StructureFarm04(this)
-        this.farm04.getStructureModels().position = Farm04Pos;
+        this.farm04.getStructureModels().position = new Vector3(Farm04Pos.x, Farm04Pos.y - 10 , Farm04Pos.z);
 
         this.farms.push(this.farm01, this.farm02, this.farm03, this.farm04);
 
@@ -150,7 +150,6 @@ export class PlayMode extends Scene {
 
         //load the mathState
         this.mathState = new MathState(this);
-        this.farm01.upgradeState();
 
         //interact with the scene
         this.onPointerDown = function castRay() {

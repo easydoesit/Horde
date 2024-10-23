@@ -1,10 +1,10 @@
 import { DEBUGMODE } from "./CONSTANTS";
 
 //lumens
-export const startingLumens = 0;
+export const startingLumens = 1000;
 
 //gold
-export const startingGold = 0;
+export const startingGold = 5000;
 
 //eggs
 export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
@@ -40,7 +40,7 @@ export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
 }
 
 //Farmers
-export const startingFarmers = 200;
+export const startingFarmers = 4000;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
 export const ogreIntervalTime = 1000; //how fast the ogre ruins farmers.
 export const ogreScaresFarmers = 2; //how much the ogre removes farmers per ogreBeat
