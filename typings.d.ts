@@ -5,11 +5,12 @@ import { InSceneStuctureGUI } from "./src/GUI/inSceneStructureGUI";
 import { UpgradeWindow } from "./src/GUI/upgradeWindow";
 import { AddStructureButton } from "./src/GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "./src/GUI/structureUpgrades/structureUpgradeSection";
+import { Vector3 } from "@babylonjs/core";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
-export type ProductsT = 'Ore' | 'Weapons' | 'Villages' | 'Loot' | 'Goldbars' | 'Portals' | 'Relics';
+export type ResourcesT = 'Ore' | 'Weapons' | 'Villages' | 'Loot' | 'Goldbars' | 'Portals' | 'Relics';
 export type StructureNamesT = 'Farm01' | 'Farm02' | 'Farm03' | 'Farm04' | 'Mine' | 'Forge' | 'Barracks' | 'Thieves Guild' | 'Workshop' | 'Tower' | 'Tavern';
 export type StructureCharactersT = 'farmer' | 'miner' | 'blacksmith' | 'soldier' | 'thief' | 'alchemist' | 'wizard' | 'adventurer';
 
@@ -27,10 +28,6 @@ export interface GameStateObserverI {
 }
 
 export interface MathStateI {        
-    wheatValue:number;
-    costOfWheatUpgrade:number;
-    wheatUpgrades:number;
-
     attach(observer:MathStateObserverI):void;
     detach(observer:MathStateObserverI):void;
     notify():void;
@@ -47,16 +44,16 @@ export interface MathStateI {
     addFarmers(number:number):void;
     spendFarmers(amount:number):void;
     changeFarmersMax():void;
-    
+
     changeGoldPerSecond():number;
     getGoldPerSecond():number;
     addGold(amount:number):void;
     spendGold(amount:number):void;
     getTotalGold():number;
 
-    upgradeWheat():void;
-    changeCostOfWheatUpgrade():void;
-    changeWheatValue():void;
+    getWheatValue():number;
+    changeWheatValue(value:number):void;
+
 }
 
 export interface MathStateObserverI { 
@@ -76,27 +73,34 @@ export interface StructureStateI {
     
     getName():StructureNamesT;
     getScene():PlayMode;
+    
     getUpgradeCostFarmers():number;
     getUpgradeCostGold():number;
+    getUpgradeCostResources():number;
     getUpgradeLevel():number;
-    
-    getProductName():ProductsT | null;
-    addProduct(amount:number):void;
-    removeProduct(amount:number):void;
-    getTotalProductAmount():number;
-    getProductPerCycle():number;
-    changeProductPerCycle(newValue:number):void;
-    getProductCycleTime():number;
-    changeProductCycleTime(newTime:number):void;
     getUpgradeMax():number;
-    getStructureModels():StructureModel;
+    
+    getResourceName():ResourcesT | null;
+    addResource(amount:number):void;
+    removeResource(amount:number):void;
+    
+    getTotalResourceAmount():number;
+    
+    getResourcePerCycle():number;
+    changeResourcePerCycle(newValue:number):void;
+    getResourceCycleTime():number;
+    changeResourceCycleTime(newTime:number):void;
     getGoldPerCycle():number;
     changeGoldPerCycle(amount:number):void;
-
+    
+    getStructureModels():StructureModel;
+    
     getInSceneGui():InSceneStuctureGUI;
     getUpgradesWindow():UpgradeWindow;
     getUpgradeSection():StructureUpgradeSection;
     getAddStructureButton():AddStructureButton;
+
+    getAnimationPaths():Vector3[][];
 
 }
 
@@ -112,10 +116,10 @@ export interface StructureStateObserverOnUpgradeI {
 
 export interface StructureStateObserverOnCycleI {
     name:string;
-    updateStructureOnCycle(product:ProductsT, productAmount:number, goldPerCycle:number ):void;
+    updateStructureOnCycle(resource:ResourcesT, resourceAmount:number, goldPerCycle:number ):void;
 }
 
-export interface GUIProductCounterI {
+export interface GUIResourceCounterI {
     counterBlock:TextBlock;
     changeText:(string:string) => void;
 }
@@ -147,6 +151,48 @@ export interface EpicUpgradeStateObserverI {
     updateEpicUpgrade(upgrade:EpicUpgradeStateI):void;
 }
 
+export interface StandardUpgradeStateI {
+    name:string;
+
+    attach(observer:StandardUpgradeStateObserverI):void;
+    detach(observer:StandardUpgradeStateObserverI):void;
+    notify():void;
+
+    getObservers():StandardUpgradeStateObserverI[];
+
+    getMaxNumUpgrades():number;
+    changeMaxNumberUpgrades(value:number):void;
+    
+    getCurrentUpgradeLevel():number;
+    
+    getCostToUpgradeGold():number;
+    changeCostToUpgradeGold(amount:number):void;
+
+    getCostToUpgradeFarmers():number;
+    changeCostToUpgradeFarmers(amount:number):void;
+
+    getCostToUpgradeResources():number;
+    changeCostToUpgradeResources(amount:number):void;
+
+    getEffectValue():number;
+    getIncrement():number;
+
+    getInstructions():string;
+    changeInstructions(text:string):void;
+
+    getStructure():StructureStateChildI;
+    
+}
+
+export interface StandardUpgradeStateChildI extends StandardUpgradeStateI {
+    updateState():void;
+}
+
+export interface StandardUpgradeStateObserverI {
+    name:string;
+    updateStandardUpgrade(upgradeState:StandardUpgradeStateI):void;
+}
+
 export interface UpgradeWindowI {
     name:string;
 
@@ -159,4 +205,30 @@ export interface UpgradeWindowI {
 
 export interface GUIPlayI {
     getUpgradeWindow(window:string):UpgradeWindow;
+}
+
+export type StructureConstantsT = {
+    name:StructureNamesT;
+    models:string[];
+    clickbox:string;
+    gamePos:Vector3;
+    paths:Vector3[][];
+    upgradeMax:number;
+    nextUpgradeCostInGold:(upgradeLevel:number) => number | number;
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => number | number | null;
+    nextUpgradeCostInResources:(upgradeLevel:number) => number | number | null;
+    goldPerCycle:number;
+    character:StructureCharactersT;
+    resource: {
+        name:ResourcesT;
+        resourceUpgradeValue:number;
+        resourcePerCycle:number;
+        initialCycleTime:number;
+        resourceDependant:ResourcesT | null;
+        costOfResourceDependant:number | null;
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => number | number;
+    } | null;
+    otherProps: {
+        [key: string]:any;
+    } | null
 }

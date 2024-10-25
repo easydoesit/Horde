@@ -3,8 +3,7 @@ import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton"
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { castleToFarmPaths, DEBUGMODE, Farm04Pos, farmClickBox, farmModels } from "../utils/CONSTANTS";
-import { farmUpgradeCostGold, farmUpgradeMax } from "../utils/MATHCONSTANTS";
+import { DEBUGMODE, farm04 } from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { checkUpgradeFarmersMax, farmAdditionAllowed, farmAdditionCallback, farmUpgradeAllowed, farmUpgradeCallBack } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -13,19 +12,20 @@ export class StructureFarm04 extends StructureState implements StructureStateChi
     
     constructor(scene:PlayMode){
         super(scene);
-        this._name = 'Farm04'
-        this._character = 'farmer';
-        this._animationPaths = castleToFarmPaths;
-        this._upgradeMax = farmUpgradeMax;
-        this._upgradeCostGold = Math.round(farmUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
-        this._upgradeCostFarmers = 0;
-        this._product = null;
-        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, farmModels, farmClickBox, Farm04Pos);
+        this._name = farm04.name;
+        this._character = farm04.character;
+        this._animationPaths = farm04.paths;
+        this._upgradeMax = farm04.upgradeMax;
+        this._upgradeCostGold = farm04.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, farm04.models, farm04.clickbox, farm04.gamePos);
         this._upgradesWindow = this._scene.farm01.getUpgradesWindow();//shared Window
         this._upgradeSection = new StructureUpgradeSection('4th Farm Upgrades', `next Upgrade allows ${checkUpgradeFarmersMax(this)} farmers on your 4th farm`, this, () => {farmUpgradeCallBack(this)});
         this._addStructureButton = new AddStructureButton('Farm 4', this, () => {farmAdditionCallback(this, null)});
         this._addUpgradePanel();
+        
         this._upgradeSection.isVisible = false;
+
+        this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
         
@@ -54,10 +54,9 @@ export class StructureFarm04 extends StructureState implements StructureStateChi
 
             this.notifyObserversOnUpgrade();
 
-            this.getUpgradeSection().instruction = `Next upgrade allows ${checkUpgradeFarmersMax(this)} farmers on your 1st farm`
-            this.getUpgradeSection().textBlockUpgradeInstruction.text = this.getUpgradeSection().instruction;
+            this.getUpgradeSection().changeInstruction(`Next upgrade allows ${checkUpgradeFarmersMax(this)} farmers on your 4th farm`);
 
-            this._upgradeCostGold = Math.round(farmUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
+            this._upgradeCostGold = farm04.nextUpgradeCostInGold(this._upgradeLevel);
 
         }
 

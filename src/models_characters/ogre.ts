@@ -1,9 +1,7 @@
 import { AbstractMesh, TransformNode, Vector3, SceneLoader, Curve3,LinesMesh, Animation } from "@babylonjs/core";
-import { ogreLoopMaxMin, ogrePaths, ogreClicks } from "../utils/CONSTANTS";
-import { GUIPlay } from "../GUI/GUIPlay";
+import { ogreLoopMaxMin, ogrePaths, ogreClicks, ogreCycleTime } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { MatClickBox } from "../reusedAssets/materials";
-import { ogreIntervalTime } from "../utils/MATHCONSTANTS";
 
 export class Ogre extends TransformNode {
     public models:{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}[];
@@ -13,7 +11,6 @@ export class Ogre extends TransformNode {
     private _importedModels:string[];
 
     public animations:Animation[];
-    private _animationStartFrame:number;
 
     public scene:PlayMode;
 
@@ -150,7 +147,7 @@ export class Ogre extends TransformNode {
                     if(this.scene.mathState.getTotalFarmers() > 0) {
                         this.scene.mathState.spendFarmers(1);
                     }
-                },ogreIntervalTime);
+                },ogreCycleTime);
             }
         } else {
             this.ogreAttack = false;

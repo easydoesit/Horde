@@ -1,4 +1,4 @@
-import { AdvancedDynamicTexture, Button, Rectangle, TextBlock, Control, ScrollViewer, StackPanel} from "@babylonjs/gui";
+import { Button, Rectangle, TextBlock, Control } from "@babylonjs/gui";
 import { DEBUGMODE, GUIFONT1 } from "../../utils/CONSTANTS";
 import { PlayMode } from "../../scenes/playmode";
 import { makeButtonEnabled, calcBarSegment, cleanString, makeFloatDivideBy100 } from "../../utils/upgradeHelpers";
@@ -69,8 +69,6 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
             
 
             if (this._upgradable) {
-                
-                //this._upgradeBtn.isEnabled = true;
                 
                 if(sizeAsFloat < 1) {
                     const newSize = calcBarSegment(sizeAsFloat, this._maxNumUpgrades);

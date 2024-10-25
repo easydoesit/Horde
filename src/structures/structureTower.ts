@@ -6,8 +6,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, farmToTowerPaths, towerClickBox, towerModels, towerPos  } from "../utils/CONSTANTS";
-import { portalsPerCycle, portalUpgradeValue, timeToMakePortal, towerCreateGoldAmount, towerUpgradeCostFarmers, towerUpgradeCostGold, towerUpgradeMax } from "../utils/MATHCONSTANTS";
+import { DEBUGMODE, tower } from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -15,23 +14,25 @@ import { StructureState } from "./structureState";
 export class StructureTower extends StructureState implements StructureStateChildI {
     constructor(scene:PlayMode) {
         super(scene);
-        this._name = 'Tower';
-        this._character = 'wizard';
-        this._animationPaths = farmToTowerPaths;
-        this._upgradeMax = towerUpgradeMax;
-        this._upgradeLevel = 0;
-        this._upgradeCostGold = Math.round(towerUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
-        this._upgradeCostFarmers = Math.round(towerUpgradeCostFarmers(this.getUpgradeLevel()));
-        this._product = 'Portals';
-        this._cycleTime = timeToMakePortal(this.getUpgradeLevel());
-        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, towerModels, towerClickBox, towerPos);
-        this._goldPerCycle = towerCreateGoldAmount;
-        this._productAmountPerCycle = portalsPerCycle;
-        this._inSceneGui = new InSceneStuctureGUI('TowerSceneGui', this, 'Portals');
+        this._name = tower.name;
+        this._character = tower.character;
+        this._animationPaths = tower.paths;
+        this._upgradeMax = tower.upgradeMax;
+        this._upgradeCostGold = tower.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostFarmers = tower.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._upgradeCostResources = tower.nextUpgradeCostInResources(this.getUpgradeLevel());
+        this._resource = tower.resource.name;
+        this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue);
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, tower.models, tower.clickbox, tower.gamePos);
+        this._goldPerCycle = tower.goldPerCycle;
+        this._resourceAmountPerCycle = tower.resource.resourcePerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('TowerSceneGui', this, `${this._resource}`);
         this._upgradesWindow = new UpgradeWindow('TowerUpgradeWindow');
-        this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', `Speeds Up Portal Creation by ${portalUpgradeValue * 100}%`, this, () => {this._towerUpgradeCallback()});
+        this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue * 100}%`, this, () => {this._towerUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTowerButton', this, () => {this._towerAdditionCallback()});
         this._addUpgradePanel();
+
+        this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
@@ -61,13 +62,14 @@ export class StructureTower extends StructureState implements StructureStateChil
             //update the variables
             //these ones are before the notify
             this._upgradeLevel += 1;
-            this._cycleTime = timeToMakePortal(this.getUpgradeLevel());
+            this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue);
       
             //update the observers
             this.notifyObserversOnUpgrade();
 
-            this._upgradeCostFarmers = towerUpgradeCostFarmers(this.getUpgradeLevel());
-            this._upgradeCostGold = Math.round(towerUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
+            this._upgradeCostGold = tower.nextUpgradeCostInGold(this.getUpgradeLevel());
+            this._upgradeCostFarmers = tower.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+            this._upgradeCostResources = tower.nextUpgradeCostInResources(this.getUpgradeLevel());
 
         }
     }   

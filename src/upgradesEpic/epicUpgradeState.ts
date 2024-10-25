@@ -30,7 +30,7 @@ export class EpicUpgradeState implements EpicUpgradeStateI{
         this._observers.push(observer);
         
         if (DEBUGMODE) {
-            console.log(`${this.name} attached ${observer.name}`);
+            console.log(`${this.name} epic Upgrade attached ${observer.name}`);
         }
     }
 

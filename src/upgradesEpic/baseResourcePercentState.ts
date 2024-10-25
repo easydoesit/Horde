@@ -39,11 +39,11 @@ export class BaseResourcePercentUpgradeState extends EpicUpgradeState implements
             const structure = structures[i];
 
             if (!structure.getName().includes('Farm')) {
-                const currentProductPerCycleLevel = structure.getProductPerCycle();
-                const newProductPerCycleLevel = Math.round((currentProductPerCycleLevel * this._increment)*100)/100;
+                const currentResourcePerCycleLevel = structure.getResourcePerCycle();
+                const newResourcePerCycleLevel = Math.round((currentResourcePerCycleLevel * this._increment)*100)/100;
                 
-                structure.changeProductPerCycle(newProductPerCycleLevel);
-                structure.getInSceneGui().changeInfoText(`${structure.getProductPerCycle().toFixed(3)} ${structure.getProductName()}/cycle`)
+                structure.changeResourcePerCycle(newResourcePerCycleLevel);
+                structure.getInSceneGui().changeInfoText(`${structure.getResourcePerCycle().toFixed(3)} ${structure.getResourceName()}/cycle`)
             }
         }
 

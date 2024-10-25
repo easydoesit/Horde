@@ -1,10 +1,27 @@
 import { Vector3 } from "@babylonjs/core";
+import { StructureConstantsT } from "../../typings";
 
 export const DEBUGMODE = true;
 
+//GUI
 export const GUIFONT1 = 'Arial';
 
+//directories
 export const modelsDir = './models/';
+
+//lumens
+export const startingLumens = 1000;
+
+//gold
+export const startingGold = 5000;
+
+//Farmers
+export const startingFarmers = 4000;
+export const farmerBaseValue = 0.001; //base amount of gold persecond
+
+//Ogre
+export const ogreCycleTime = 1000; //how fast the ogre ruins farmers milliseconds.
+export const ogreScaresFarmers = 1; //how much the ogre removes farmers per 
 
 //hill
 export const hillModels = ['hill.glb'];
@@ -14,242 +31,793 @@ export const castleModels = ['castle01.glb', 'castle02.glb'];
 export const castlClickBox = 'castleClickBox.glb';
 export const castlePos = new Vector3(-.2, 7.3, .4);
 
-//farms
+/////Structures////
 
-export const farmModels = ['farm01.glb', 'farm02.glb'];
-export const farmClickBox = 'farmClickBox.glb';
+////////////////////////////////
+///////////  Farms  ////////////
+////////////////////////////////
+export const farm01:StructureConstantsT = {
+    name:'Farm01',
+    models:['farm01.glb', 'farm02.glb'],
+    clickbox:'farmClickBox.glb',
+    gamePos:new Vector3(0,.5,-4),
+    otherProps: {
+        farmHousePos:new Vector3(-10,1.25,-4)
+    },
+    paths:(function() { 
+            return [
+            new Vector3(-2.8552, 6.0224, -0.29624),
+            new Vector3(-2.3188, 5.3886, 0.96662),
+            new Vector3(-3.7859, 2.5797, -1.9741),
+            new Vector3(-4.064, 2.0743, 1.3783),
+            new Vector3(-4.9398, 1.318, -0.38271),
+            this.otherProps!.farmHousePos
+        ];
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 10;
+        const goldCostCurve = 3.4;
 
-export const Farm01Pos = new Vector3(0,.5,-4);
-export const Farm02Pos = new Vector3(0,.5,4);
-export const Farm03Pos = new Vector3(0,.5,-12);
-export const Farm04Pos = new Vector3(0,.5,12);
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-export const farmHouse01Pos = new Vector3(-10,1.25,-4);
-export const FarmHouse02Pos = new Vector3(-10,1.25,4);
-export const FarmHouse03Pos = new Vector3(-10,1.25,-10);
-export const FarmHouse04Pos = new Vector3(-10,1.25,10);
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:null,
+    nextUpgradeCostInResources:null,
+    goldPerCycle:0,
+    character:'farmer',
+    resource:null,
+};
 
-//mines
-export const mineModels = ['mine01.glb', 'mine02.glb'];
-export const mineClickBox = 'mineClickBox.glb';
-export const minePos = new Vector3(-5,1.25,1);
+export const farm02:StructureConstantsT = {
+    name:'Farm02',
+    models:['farm01.glb', 'farm02.glb'],
+    clickbox:'farmClickBox.glb',
+    gamePos:new Vector3(0,.5,4),
+    otherProps: {
+        farmHousePos:new Vector3(-10,1.25,4)
+    },
+    paths:(function() { 
+            return [
+            new Vector3(-2.8552, 6.0224, -0.29624),
+            new Vector3(-2.3188, 5.3886, 0.96662),
+            new Vector3(-3.7859, 2.5797, -1.9741),
+            new Vector3(-4.064, 2.0743, 1.3783),
+            new Vector3(-4.9398, 1.318, -0.38271),
+            this.otherProps!.farmHousePos
+        ];
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 10;
+        const goldCostCurve = 3.4;
 
-//forge
-export const forgeModels = ['forge01.glb', 'forge02.glb'];
-export const forgeClickBox = 'forgeClickBox.glb';
-export const forgePos = new Vector3(-5, 3.5, -1.5);
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-//barracks
-export const barracksModels = ['barracks01.glb', 'barracks02.glb'];
-export const barracksClickBox = 'barracksClickBox.glb';
-export const barracksPos = new Vector3(-5, 1.2, - 2.25);
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:null,
+    nextUpgradeCostInResources:null,
+    goldPerCycle:0,
+    character:'farmer',
+    resource:null,
+};
 
-//thievesGuild
-export const thievesGuildModels = ['thievesGuild01.glb', 'thievesGuild02.glb'];
-export const thievesGuildClickBox = 'thievesGuildClickBox.glb';
-export const thievesGuildPos = new Vector3(0, 1, 5);
+export const farm03:StructureConstantsT = {
+    name:'Farm03',
+    models:['farm01.glb', 'farm02.glb'],
+    clickbox:'farmClickBox.glb',
+    gamePos:new Vector3(0,.5,-12),
+    otherProps: {
+        farmHousePos:new Vector3(-10,1.25,-10)
+    },
+    paths:(function() { 
+            return [
+            new Vector3(-2.8552, 6.0224, -0.29624),
+            new Vector3(-2.3188, 5.3886, 0.96662),
+            new Vector3(-3.7859, 2.5797, -1.9741),
+            new Vector3(-4.064, 2.0743, 1.3783),
+            new Vector3(-4.9398, 1.318, -0.38271),
+            this.otherProps!.farmHousePos
+        ];
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 10;
+        const goldCostCurve = 3.4;
 
-//workShop
-export const workShopModels = ['workShop01.glb', 'workShop02.glb'];
-export const workShopClickBox = 'workShopClickBox.glb';
-export const workShopPos = new Vector3(-5, 4.25, 1.5);
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-//tower
-export const towerModels = ['tower01.glb', 'tower02.glb'];
-export const towerClickBox = 'towerClickBox.glb';
-export const towerPos = new Vector3(-1, 6.5, -1.5);
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:null,
+    nextUpgradeCostInResources:null,
+    goldPerCycle:0,
+    character:'farmer',
+    resource:null,
+};
 
-//tavern
-export const tavernModels = ['tavern01.glb', 'tavern02.glb'];
-export const tavernClickBox = 'tavernClickBox.glb';
-export const tavernPos = new Vector3(2, 1, -5);
+export const farm04:StructureConstantsT = {
+    name:'Farm04',
+    models:['farm01.glb', 'farm02.glb'],
+    clickbox:'farmClickBox.glb',
+    gamePos:new Vector3(0,.5,12),
+    otherProps: {
+        farmHousePos:new Vector3(-10,1.25,10)
+    },
+    paths:(function() { 
+            return [
+            new Vector3(-2.8552, 6.0224, -0.29624),
+            new Vector3(-2.3188, 5.3886, 0.96662),
+            new Vector3(-3.7859, 2.5797, -1.9741),
+            new Vector3(-4.064, 2.0743, 1.3783),
+            new Vector3(-4.9398, 1.318, -0.38271),
+            this.otherProps!.farmHousePos
+        ];
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 10;
+        const goldCostCurve = 3.4;
 
-//paths
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-const castleToFarmPath = [
-    new Vector3(-2.8552, 6.0224, -0.29624),
-    new Vector3(-2.3188, 5.3886, 0.96662),
-    new Vector3(-3.7859, 2.5797, -1.9741),
-    new Vector3(-4.064, 2.0743, 1.3783),
-    new Vector3(-4.9398, 1.318, -0.38271),
-    farmHouse01Pos,
-]
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:null,
+    nextUpgradeCostInResources:null,
+    goldPerCycle:0,
+    character:'farmer',
+    resource:null,
+};
 
-export const castleToFarmPaths = [castleToFarmPath];
+export const farmersMaxPerFarm = (currentUpgradeAmount:number) => {
 
-const farmToMinePath01 = [
-    farmHouse01Pos,
-    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
-    minePos,
+    const a = 2.35;
+    const baseFarmerMultiplyer = 120;
+
+    return currentUpgradeAmount * a * baseFarmerMultiplyer;
+} 
+
+////////////////////////////////
+///////////  Mine  /////////////
+////////////////////////////////
+export const mine:StructureConstantsT = {
     
-]
-const farmToMinePath02 = [
-    FarmHouse02Pos,
-    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    minePos,
-]
-const farmToMinePath03 = [
-    FarmHouse03Pos,
-    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    minePos,
-]
-const farmToMinePath04 = [
-    FarmHouse04Pos,
-    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    minePos,
-]
+    name:'Mine',
+    models:['mine01.glb', 'mine02.glb'],
+    clickbox:'mineClickBox.glb',
+    gamePos:new Vector3(-5,1.25,1),
+    paths:(function () { 
+        return [
+            [
+                farm01.otherProps.farmHousePos,
+                new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+        
+            ],
+            [
+                farm02.otherProps.farmHousePos,
+                new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm03.otherProps.farmHousePos,,
+                new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm04.otherProps.farmHousePos,
+                new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ]
+        ]
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 48;
+        const goldCostCurve = 3.4;
 
-export const farmToMinePaths = [farmToMinePath01, farmToMinePath02, farmToMinePath03, farmToMinePath04];
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-///
-const farmToForgePath01 = [
-    farmHouse01Pos,
-    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
-    forgePos,
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const initFarmerCost = 630;
+        const farmerValueCurve = 4.2;
+
+        let finalValue = nextUpgradeLevel * initFarmerCost * farmerValueCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInResources:null,
+    goldPerCycle: 10, 
+    character:'miner',
+    resource: {
+        name:'Ore',
+        resourceUpgradeValue:0.05, //percent
+        resourcePerCycle:4,
+        initialCycleTime:5, //seconds
+        resourceDependant:null,
+        costOfResourceDependant:null,
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
+            let time = 1;
+
+            const seconds = 1/initCycleTime;
+
+            if (upgradeLevel === 0) {
+                time = seconds;
+            } else {
+                time = seconds - (seconds * resourceUpgradeValue);
+            }
+
+            return time;
+        },
+        
+    },
+    otherProps:null,
+
+}
+
+////////////////////////////////
+//////////// Forge /////////////
+////////////////////////////////
+
+export const forge:StructureConstantsT = {
     
-]
-const farmToForgePath02 = [
-    FarmHouse02Pos,
-    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    forgePos,
-]
-const farmToForgePath03 = [
-    FarmHouse03Pos,
-    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    forgePos,
-]
-const farmToForgePath04 = [
-    FarmHouse04Pos,
-    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    forgePos,
-]
+    name:'Forge',
+    models:['forge01.glb', 'forge02.glb'],
+    clickbox:'forgeClickBox.glb',
+    gamePos:new Vector3(-5, 3.5, -1.5),
+    paths:(function () { 
+        return [
+            [
+                farm01.otherProps.farmHousePos,
+                new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+                
+            ],
+            [
+                farm02.otherProps.farmHousePos,,
+                new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm03.otherProps.farmHousePos,,
+                new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm04.otherProps.farmHousePos,
+                new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ]
+        ]
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 228;
+        const goldCostCurve = 5;
 
-export const farmToForgePaths = [farmToForgePath01, farmToForgePath02, farmToForgePath03, farmToForgePath04];
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-///
-const farmToBarracksPath01 = [
-    farmHouse01Pos,
-    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
-    barracksPos,
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const initFarmerCost = 3969;
+        const farmerValueCurve = 4.2;
+
+        let finalValue = nextUpgradeLevel * initFarmerCost * farmerValueCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInResources:(upgradeLevel) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const resourceGrowthCurve = 2.8;
+        const initResourceCost = 2266;
     
-]
-const farmToBarracksPath02 = [
-    FarmHouse02Pos,
-    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    barracksPos,
-]
-const farmToBarracksPath03 = [
-    FarmHouse03Pos,
-    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    barracksPos,
-]
-const farmToBarracksPath04 = [
-    FarmHouse04Pos,
-    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    barracksPos,
-]
+        let finalValue = nextUpgradeLevel * resourceGrowthCurve * initResourceCost
 
-export const farmToBarracksPaths = [farmToBarracksPath01, farmToBarracksPath02, farmToBarracksPath03, farmToBarracksPath04];
+        return finalValue;
+    },
+    goldPerCycle: 48, 
+    character:'blacksmith',
+    resource: {
+        name:'Weapons',
+        resourceUpgradeValue:0.05, //percent
+        resourcePerCycle:16,
+        initialCycleTime:5, //seconds'
+        resourceDependant:'Ore',
+        costOfResourceDependant:10,
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
+            let time = 1;
 
-///
-const farmToThievesGuildPath01 = [
-    farmHouse01Pos,
-    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
-    thievesGuildPos,
+            const seconds = 1/initCycleTime;
+
+            if (upgradeLevel === 0) {
+                time = seconds;
+            } else {
+                time = seconds - (seconds * resourceUpgradeValue);
+            }
+
+            return time;
+        },
+        
+    },
+    otherProps:null,
+
+}
+
+////////////////////////////////
+////////// Barracks ////////////
+////////////////////////////////
+
+export const barracks:StructureConstantsT = {
     
-]
-const farmToThievesGuildPath02 = [
-    FarmHouse02Pos,
-    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    thievesGuildPos,
-]
-const farmToThievesGuildPath03 = [
-    FarmHouse03Pos,
-    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    thievesGuildPos,
-]
-const farmToThievesGuildPath04 = [
-    FarmHouse04Pos,
-    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    thievesGuildPos,
-]
+    name:'Barracks',
+    models:['barracks01.glb', 'barracks02.glb'],
+    clickbox:'barracksClickBox.glb',
+    gamePos:new Vector3(-5, 1.2, - 2.25),
+    paths:(function () { 
+        return [
+            [
+                farm01.otherProps.farmHousePos,
+                new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+                
+            ],
+            [
+                farm02.otherProps.farmHousePos,,
+                new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm03.otherProps.farmHousePos,,
+                new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm04.otherProps.farmHousePos,
+                new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+        ]
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 8635;
+        const goldCostCurve = 5;
 
-export const farmToThievesGuildPaths = [farmToThievesGuildPath01, farmToThievesGuildPath02, farmToThievesGuildPath03, farmToThievesGuildPath04];
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-///
-const farmToWorkShopPath01 = [
-    farmHouse01Pos,
-    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
-    workShopPos,
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const initFarmerCost = 25005;
+        const farmerValueCurve = 4.2;
+
+        let finalValue = nextUpgradeLevel * initFarmerCost * farmerValueCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInResources:(upgradeLevel) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const resourceGrowthCurve = 2.8;
+        const initResourceCost = 476;
     
-]
-const farmToWorkShopPath02 = [
-    FarmHouse02Pos,
-    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    workShopPos,
-]
-const farmToWorkShopPath03 = [
-    FarmHouse03Pos,
-    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    workShopPos,
-]
-const farmToWorkShopPath04 = [
-    FarmHouse04Pos,
-    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    workShopPos,
-]
+        let finalValue = nextUpgradeLevel * resourceGrowthCurve * initResourceCost
 
-export const farmToWorkShopPaths = [farmToWorkShopPath01, farmToWorkShopPath02, farmToWorkShopPath03, farmToWorkShopPath04];
+        return finalValue;
+    },
+    goldPerCycle: 160, 
+    character:'soldier',
+    resource: {
+        name:'Villages',
+        resourceUpgradeValue:0.05, //percent
+        resourcePerCycle:64,
+        initialCycleTime:28, //seconds'
+        resourceDependant:'Weapons',
+        costOfResourceDependant:100,
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
+            let time = 1;
 
-///
-const farmToTowerPath01 = [
-    farmHouse01Pos,
-    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
-    towerPos,
+            const seconds = 1/initCycleTime;
+
+            if (upgradeLevel === 0) {
+                time = seconds;
+            } else {
+                time = seconds - (seconds * resourceUpgradeValue);
+            }
+
+            return time;
+        },
+        
+    },
+    otherProps:null,
+
+}
+
+////////////////////////////////
+//////// Thieves Guild /////////
+////////////////////////////////
+
+export const thievesGuild:StructureConstantsT = {
     
-]
-const farmToTowerPath02 = [
-    FarmHouse02Pos,
-    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    towerPos,
-]
-const farmToTowerPath03 = [
-    FarmHouse03Pos,
-    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    towerPos,
-]
-const farmToTowerPath04 = [
-    FarmHouse04Pos,
-    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    towerPos,
-]
+    name:'Thieves Guild',
+    models:['thievesGuild01.glb', 'thievesGuild02.glb'],
+    clickbox:'thievesGuildClickBox.glb',
+    gamePos:new Vector3(0, 1, 5),
+    paths:(function () { 
+        return [
+            [
+                farm01.otherProps.farmHousePos,
+                new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+                
+            ],
+            [
+                farm02.otherProps.farmHousePos,,
+                new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm03.otherProps.farmHousePos,,
+                new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm04.otherProps.farmHousePos,
+                new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ]
+        ]
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 41103;
+        const goldCostCurve = 5;
 
-export const farmToTowerPaths = [farmToTowerPath01, farmToTowerPath02, farmToTowerPath03, farmToTowerPath04];
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
 
-///
-const farmToTavernPath01 = [
-    farmHouse01Pos,
-    new Vector3(farmHouse01Pos.x + 2, 1.25, -0.38271),
-    tavernPos,
+        return finalValue
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const initFarmerCost = 157532;
+        const farmerValueCurve = 4.2;
+
+        let finalValue = nextUpgradeLevel * initFarmerCost * farmerValueCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInResources:(upgradeLevel) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const resourceGrowthCurve = 2.8;
+        const initResourceCost = 266;
     
-]
-const farmToTavernPath02 = [
-    FarmHouse02Pos,
-    new Vector3(FarmHouse02Pos.x + 2, 1.25, -0.38271),
-    tavernPos,
-]
-const farmToTavernPath03 = [
-    FarmHouse03Pos,
-    new Vector3(FarmHouse03Pos.x + 2, 1.25, -0.38271),
-    tavernPos,
-]
-const farmToTavernPath04 = [
-    FarmHouse04Pos,
-    new Vector3(FarmHouse04Pos.x + 2, 1.25, -0.38271),
-    tavernPos,
-]
+        let finalValue = nextUpgradeLevel * resourceGrowthCurve * initResourceCost
 
-export const farmToTavernPaths = [farmToTavernPath01, farmToTavernPath02, farmToTavernPath03, farmToTavernPath04];
+        return finalValue;
+    },
+    goldPerCycle: 640, 
+    character:'thief',
+    resource: {
+        name:'Loot',
+        resourceUpgradeValue:0.05, //percent
+        resourcePerCycle:256,
+        initialCycleTime:64, //seconds'
+        resourceDependant:'Villages',
+        costOfResourceDependant:0,
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
+            let time = 1;
+
+            const seconds = 1/initCycleTime;
+
+            if (upgradeLevel === 0) {
+                time = seconds;
+            } else {
+                time = seconds - (seconds * resourceUpgradeValue);
+            }
+
+            return time;
+        },
+        
+    },
+    otherProps:null,
+
+};
+
+////////////////////////////////
+/////////// Workshop ///////////
+////////////////////////////////
+
+export const workShop:StructureConstantsT = {
+    
+    name:'Workshop',
+    models:['workShop01.glb', 'workShop02.glb'],
+    clickbox:'workShopClickBox.glb',
+    gamePos:new Vector3(-5, 4.25, 1.5),
+    paths:(function () { 
+        return [
+            [
+                farm01.otherProps.farmHousePos,
+                new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+                
+            ],
+            [
+                farm02.otherProps.farmHousePos,,
+                new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm03.otherProps.farmHousePos,,
+                new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm04.otherProps.farmHousePos,
+                new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ]
+        ]
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 195650;
+        const goldCostCurve = 5;
+
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const initFarmerCost = 25005;
+        const farmerValueCurve = 4.2;
+
+        let finalValue = nextUpgradeLevel * initFarmerCost * farmerValueCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInResources:(upgradeLevel) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const resourceGrowthCurve = 2.8;
+        const initResourceCost = 476;
+    
+        let finalValue = nextUpgradeLevel * resourceGrowthCurve * initResourceCost
+
+        return finalValue;
+    },
+    goldPerCycle: 2560, 
+    character:'alchemist',
+    resource: {
+        name:'Goldbars',
+        resourceUpgradeValue:0.05, //percent
+        resourcePerCycle:1024,
+        initialCycleTime:147, //seconds'
+        resourceDependant:'Villages',
+        costOfResourceDependant:0,
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
+            let time = 1;
+
+            const seconds = 1/initCycleTime;
+
+            if (upgradeLevel === 0) {
+                time = seconds;
+            } else {
+                time = seconds - (seconds * resourceUpgradeValue);
+            }
+
+            return time;
+        },
+        
+    },
+    otherProps:null,
+
+}
+
+////////////////////////////////
+//////////// Tower /////////////
+////////////////////////////////
+
+export const tower:StructureConstantsT = {
+    
+    name:'Tower',
+    models:['tower01.glb', 'tower02.glb'],
+    clickbox:'towerClickBox.glb',
+    gamePos:new Vector3(-1, 6.5, -1.5),
+    paths:(function () { 
+        return [
+            [
+                farm01.otherProps.farmHousePos,
+                new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+                
+            ],
+            [
+                farm02.otherProps.farmHousePos,,
+                new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm03.otherProps.farmHousePos,,
+                new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,,
+            ],
+            [
+                farm04.otherProps.farmHousePos,
+                new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ]
+        ]
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 117025;
+        const goldCostCurve = 5;
+
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const initFarmerCost = 20480;
+        const farmerValueCurve = 4.2;
+
+        let finalValue = nextUpgradeLevel * initFarmerCost * farmerValueCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInResources:(upgradeLevel) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const resourceGrowthCurve = 2.8;
+        const initResourceCost = 476;
+    
+        let finalValue = nextUpgradeLevel * resourceGrowthCurve * initResourceCost
+
+        return finalValue;
+    },
+    goldPerCycle: 10240, 
+    character:'wizard',
+    resource: {
+        name:'Portals',
+        resourceUpgradeValue:0.05, //percent
+        resourcePerCycle:4096,
+        initialCycleTime:338, //seconds'
+        resourceDependant:'Goldbars',
+        costOfResourceDependant:476,
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
+            let time = 1;
+
+            const seconds = 1/initCycleTime;
+
+            if (upgradeLevel === 0) {
+                time = seconds;
+            } else {
+                time = seconds - (seconds * resourceUpgradeValue);
+            }
+
+            return time;
+        },
+        
+    },
+    otherProps:null,
+
+}
+
+////////////////////////////////
+//////////// Tavern ////////////
+////////////////////////////////
+
+export const tavern:StructureConstantsT = {
+    
+    name:'Tavern',
+    models:['tavern01.glb', 'tavern02.glb'],
+    clickbox:'tavernClickBox.glb',
+    gamePos:new Vector3(2, 1, -5),
+    paths:(function () { 
+        return [
+            [
+                farm01.otherProps.farmHousePos,
+                new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+                
+            ],
+            [
+                farm02.otherProps.farmHousePos,,
+                new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm03.otherProps.farmHousePos,,
+                new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ],
+            [
+                farm04.otherProps.farmHousePos,
+                new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+                this.gamePos,
+            ]
+        ]
+    }).bind(this),
+    upgradeMax:20,
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 557039;
+        const goldCostCurve = 5;
+
+        let finalValue = nextUpgradeLevel * baseGoldCost * goldCostCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const initFarmerCost = 25005;
+        const farmerValueCurve = 4.2;
+
+        let finalValue = nextUpgradeLevel * initFarmerCost * farmerValueCurve;
+
+        return finalValue;
+    },
+    nextUpgradeCostInResources:(upgradeLevel) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const resourceGrowthCurve = 2.8;
+        const initResourceCost = 476;
+    
+        let finalValue = nextUpgradeLevel * resourceGrowthCurve * initResourceCost
+
+        return finalValue;
+    },
+    goldPerCycle: 40960, 
+    character:'adventurer',
+    resource: {
+        name:'Relics',
+        resourceUpgradeValue:0.05, //percent
+        resourcePerCycle:16384,
+        initialCycleTime:777, //seconds'
+        resourceDependant:'Portals',
+        costOfResourceDependant:476,
+        cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
+            let time = 1;
+
+            const seconds = 1/initCycleTime;
+
+            if (upgradeLevel === 0) {
+                time = seconds;
+            } else {
+                time = seconds - (seconds * resourceUpgradeValue);
+            }
+
+            return time;
+        },
+        
+    },
+    otherProps:null,
+
+}
+
+////Characters
+
+////////////////////////////////
+//////////// Dragon ////////////
+////////////////////////////////
+
 
 //define dragon flight paths - Not Exported
 export const dragonPath01 = [
@@ -293,7 +861,42 @@ export const eggFallPath = (dragonPosition:Vector3) => {
     return path;
 }
 
-//Ogre
+export function eggDelivery():{option:'gold' | 'lumens', amount:number} {
+    
+    const gold = [100, 500, 1000, 2000];//these are temporary values and should be
+    const lumens = [10, 50,100, 200];//replaced by math formulas
+    const options = [gold, lumens]; 
+    const option = Math.floor(Math.random() *  options.length);
+    let optionName:'gold' | 'lumens' = 'gold';
+    const amountIndex = Math.floor(Math.random() * options[option].length);
+    let amount:number;
+
+    if(option === 0) {
+        optionName = 'gold';
+        amount = options[0][amountIndex];
+    } else if(option === 1 ) {
+        optionName = 'lumens';
+        amount = options[1][amountIndex];
+    }   
+
+    const delivery = {
+        option: optionName,
+        amount:amount,
+
+    }
+
+    if (DEBUGMODE) {
+       console.log(delivery);
+    }
+    
+    return delivery;
+    
+}
+
+////////////////////////////////
+///////////// Ogre /////////////
+////////////////////////////////
+
 export const ogreLoopMaxMin = [10 * 60 * 1000, 3 * 60 * 1000];
 
 const ogrePathEnter = [
@@ -309,5 +912,8 @@ const ogrePathExit = [
 
 //export all the paths into array. Add as many as we want
 export const ogrePaths = [ogrePathEnter, ogrePathExit];
-
 export const ogreClicks = 10;
+
+
+
+

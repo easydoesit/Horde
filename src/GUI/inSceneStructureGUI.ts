@@ -1,10 +1,6 @@
 import { Rectangle, TextBlock, Control} from "@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
-import { GUIPlay } from "./GUIPlay";
-import { TransformNode } from "@babylonjs/core";
-import { DEBUGMODE } from "../utils/CONSTANTS";
-
-import { ProductsT, StructureStateChildI } from "../../typings";
+import { ResourcesT, StructureStateChildI } from "../../typings";
 
 export class InSceneStuctureGUI extends Rectangle {
     private _animatedBarWrapper:Rectangle;
@@ -15,12 +11,12 @@ export class InSceneStuctureGUI extends Rectangle {
 
     public name:string;
 
-    constructor(name:string, structure:StructureStateChildI, product:ProductsT) {
+    constructor(name:string, structure:StructureStateChildI, resource:ResourcesT) {
         super(name);
         
         this._structure = structure;
 
-        this._speed = this._structure.getProductCycleTime();
+        this._speed = this._structure.getResourceCycleTime();
 
         this.width = '125px';
         this.height = '40px';
@@ -28,7 +24,7 @@ export class InSceneStuctureGUI extends Rectangle {
         this.linkOffsetY = -90;
         this.zIndex = -100;
 
-        this._infoText = new TextBlock (`${product}_info`,`${this._structure.getProductPerCycle().toFixed(3)} ${product}/cycle`)
+        this._infoText = new TextBlock (`${resource}_info`,`${this._structure.getResourcePerCycle().toFixed(3)} ${resource}/cycle`)
         this._infoText.fontFamily = GUIFONT1;
         this._infoText.fontSize = 12;
         this._infoText.color = 'white';
@@ -54,7 +50,7 @@ export class InSceneStuctureGUI extends Rectangle {
         this._animatedBarWrapper.addControl(this._animatedBar);
 
         this._structure.getScene().onBeforeRenderObservable.add(() => {
-            this._speed = this._structure.getProductCycleTime();
+            this._speed = this._structure.getResourceCycleTime();
 
             if(this._structure.getUpgradeLevel() > 0) {
                 this._moveBar();
@@ -73,9 +69,9 @@ export class InSceneStuctureGUI extends Rectangle {
         } else {
         
             this._animatedBar.width = 0;
-            //add _product to the game.
+            //add _resource to the game.
        
-            this._structure.addProduct(this._structure.getProductPerCycle());
+            this._structure.addResource(this._structure.getResourcePerCycle());
             this._structure.notifyObserversOnCycle();
         }
 

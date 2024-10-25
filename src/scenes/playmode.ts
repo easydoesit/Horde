@@ -1,5 +1,5 @@
 import { Engine, Scene, Vector3, FreeCamera, Color4, DirectionalLight, Matrix} from "@babylonjs/core";
-import { barracksPos, castlClickBox, castleModels, castlePos, towerPos, DEBUGMODE, Farm01Pos, Farm02Pos, Farm03Pos, Farm04Pos, hillModels, minePos, forgePos, thievesGuildPos, tavernPos, workShopPos } from "../utils/CONSTANTS";
+import { castlClickBox, castleModels, castlePos, DEBUGMODE, hillModels } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
 import { StructureModel } from "../models_structures/structureModels";
@@ -24,6 +24,7 @@ import { StructureTower } from "../structures/structureTower";
 import { StructureTavern } from "../structures/structureTavern";
 import { BaseResourcePercentUpgradeState } from "../upgradesEpic/baseResourcePercentState";
 import { StructuresFasterCyclesState } from "../upgradesEpic/structureFasterCycle";
+import { WheatState } from "../upgradesStandard/wheat";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -51,6 +52,9 @@ export class PlayMode extends Scene {
     public tavern:StructureTavern;
 
     public allStructures:StructureStateChildI[];
+
+    //standard upgrades
+    public wheat:WheatState;
 
     //Epic upgrades
     public epicAddFarmersUpgrade:AddFarmerUpgradeState;
@@ -90,41 +94,51 @@ export class PlayMode extends Scene {
         //load the entry level structures as hidden
         this.farms = [];
         this.farm01 = new StructureFarm01(this);
-        this.farm01.getStructureModels().position = Farm01Pos;
+        this.farm01.getStructureModels().position = this.farm01.getStructureModels().gamePosition;
         
-        // //these start out of view
-        this.farm02 = new StructureFarm02(this)
-        this.farm02.getStructureModels().position = new Vector3(Farm02Pos.x, Farm02Pos.y - 10 , Farm02Pos.z);
+        //Once imported all of these are moved out of view.
+        this.farm02 = new StructureFarm02(this);
+        const farm02Position  = this.farm02.getStructureModels().position;
+        this.farm02.getStructureModels().position = new Vector3(farm02Position.x, farm02Position.y - 20 , farm02Position.z);
         
         this.farm03 = new StructureFarm03(this)
-        this.farm03.getStructureModels().position = new Vector3(Farm03Pos.x, Farm03Pos.y - 10 , Farm03Pos.z);
+        const farm03Position  = this.farm03.getStructureModels().position;
+        this.farm03.getStructureModels().position = new Vector3(farm03Position.x, farm03Position.y - 20 , farm03Position.z);
 
         this.farm04 = new StructureFarm04(this)
-        this.farm04.getStructureModels().position = new Vector3(Farm04Pos.x, Farm04Pos.y - 10 , Farm04Pos.z);
-
+        const farm04Position  = this.farm04.getStructureModels().position;
+        this.farm04.getStructureModels().position = new Vector3(farm04Position.x, farm04Position.y - 20 , farm04Position.z);
+        
         this.farms.push(this.farm01, this.farm02, this.farm03, this.farm04);
 
         this.mine = new StructureMine(this);    
-        this.mine.getStructureModels().position = new Vector3(minePos.x, minePos.y - 10 , minePos.z);
+        const minePosition  = this.mine.getStructureModels().position;
+        this.mine.getStructureModels().position = new Vector3(minePosition.x, minePosition.y - 20 , minePosition.z);
 
         this.forge = new StructureForge(this);
-        this.forge.getStructureModels().position = new Vector3(forgePos.x, forgePos.y -20, forgePos.z);
+        const forgePosition  = this.forge.getStructureModels().position;
+        this.forge.getStructureModels().position = new Vector3(forgePosition.x, forgePosition.y - 20 , forgePosition.z);
 
         this.barracks = new StructureBarracks( this); 
-        this.barracks.getStructureModels().position = new Vector3(barracksPos.x, barracksPos.y -20, barracksPos.z);
-        
+        const barracksPosition  = this.barracks.getStructureModels().position;
+        this.barracks.getStructureModels().position = new Vector3(barracksPosition.x, barracksPosition.y - 20 , barracksPosition.z);
+
         this.thievesGuild = new StructureThievesGuild(this );
-        this.thievesGuild.getStructureModels().position = new Vector3(thievesGuildPos.x, thievesGuildPos.y -20, thievesGuildPos.z);
+        const thievesGuildPosition  = this.thievesGuild.getStructureModels().position;
+        this.thievesGuild.getStructureModels().position = new Vector3(thievesGuildPosition.x, thievesGuildPosition.y - 20 , thievesGuildPosition.z);
 
         this.workShop = new StructureWorkShop( this );
-        this.workShop.getStructureModels().position = new Vector3(workShopPos.x, workShopPos.y -20, workShopPos.z);
+        const workShopPosition  = this.workShop.getStructureModels().position;
+        this.workShop.getStructureModels().position = new Vector3(workShopPosition.x, workShopPosition.y - 20 , workShopPosition.z);
 
         this.tower = new StructureTower(this );
-        this.tower.getStructureModels().position = new Vector3(towerPos.x, towerPos.y -20, towerPos.z);
-        this.tower.getStructureModels().rotation.y = -45;
+        const towerPosition  = this.tower.getStructureModels().position;
+        this.tower.getStructureModels().position = new Vector3(towerPosition.x, towerPosition.y - 20 , towerPosition.z);
+
 
         this.tavern  = new StructureTavern(this);
-        this.tavern.getStructureModels().position = new Vector3(tavernPos.x, tavernPos.y -20, tavernPos.z);
+        const tavernPosition  = this.tavern.getStructureModels().position;
+        this.tavern.getStructureModels().position = new Vector3(tavernPosition.x, tavernPosition.y - 20 , tavernPosition.z);
 
         this.allStructures = []
         this.allStructures.push(...this.farms, this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
@@ -141,6 +155,9 @@ export class PlayMode extends Scene {
     
         //load the background
         const background = new PlainsBackground(this);
+
+        //standardUpgrades
+        this.wheat = new WheatState('Wheat', this);
         
         //epic upgrades
         this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');

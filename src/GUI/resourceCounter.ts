@@ -1,8 +1,8 @@
 import {Control, TextBlock, Rectangle } from "@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
-import { GUIProductCounterI } from "../../typings";
+import { GUIResourceCounterI } from "../../typings";
 
-export class ProductCounter implements GUIProductCounterI {
+export class ResourceCounter implements GUIResourceCounterI {
     private _fullWrapper:Rectangle;
     private _counterWrapper:Rectangle;
     private _titleWrapper:Rectangle;

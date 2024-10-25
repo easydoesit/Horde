@@ -1,19 +1,12 @@
 import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@babylonjs/gui";
-import { castleToFarmPaths, DEBUGMODE, GUIFONT1, modelsDir } from "../utils/CONSTANTS";
+import { DEBUGMODE, GUIFONT1, modelsDir } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
-import { wheatUpgradesMax, wheatUpgradeValue, farmUpgradeMax, mineUpgradeMax, oreUpgradeValue, weaponUpgradeValue, forgeUpgradeMax, farmersMaxPerFarm, villagesUpgradeValue, barracksUpgradeMax, lootUpgradeValue, thievesGuildUpgradeMax, goldBarUpgradeValue, workShopUpgradeMax, portalUpgradeValue, towerUpgradeMax, relicUpgradeValue, tavernUpgradeMax } from "../utils/MATHCONSTANTS";
-import { StructureUpgradeSection } from "./structureUpgrades/structureUpgradeSection";
 import { UpgradeWindow } from "./upgradeWindow";
-import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureStateI, GUIProductCounterI, StructureStateObserverOnCycleI, ProductsT, GUIPlayI } from "../../typings";
+import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureStateI, GUIResourceCounterI, StructureStateObserverOnCycleI, ResourcesT, GUIPlayI } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
-import { AddStructureButton } from "./structureUpgrades/addStructureButton";
 import { Runner } from "../models_characters/runners";
-import { ProductCounter } from "./productCounter";
-import { StructureFarm01 } from "../structures/structureFarm01";
-import { StructureFarm02 } from "../structures/structureFarm02";
-import { StructureFarm03 } from "../structures/structureFarm03";
-import { StructureFarm04 } from "../structures/structureFarm04";
+import { ResourceCounter } from "./resourceCounter";
 import { EpicUpgradeWindow } from "./epicUpgrades/epicUpgradeWindow";
 import { CastleUpgradeWindow } from "./castleUpgrades/CastleUpgradeWindow";
 
@@ -29,17 +22,17 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
     
     //Top
     private _wrapperTop:Rectangle;
-    private _farmersCount:GUIProductCounterI;
-    private _goldPerSecondCount:GUIProductCounterI;
-    private _goldCount:GUIProductCounterI;
-    private _lumenCount:GUIProductCounterI;
-    private _oreCount:GUIProductCounterI;
-    private _weaponCount:GUIProductCounterI;
-    private _villageCount:GUIProductCounterI;
-    private _lootCount:GUIProductCounterI;
-    private _goldBarsCount:GUIProductCounterI;
-    private _portalsCount:GUIProductCounterI;
-    private _relicsCount:GUIProductCounterI;
+    private _farmersCount:GUIResourceCounterI;
+    private _goldPerSecondCount:GUIResourceCounterI;
+    private _goldCount:GUIResourceCounterI;
+    private _lumenCount:GUIResourceCounterI;
+    private _oreCount:GUIResourceCounterI;
+    private _weaponCount:GUIResourceCounterI;
+    private _villageCount:GUIResourceCounterI;
+    private _lootCount:GUIResourceCounterI;
+    private _goldBarsCount:GUIResourceCounterI;
+    private _portalsCount:GUIResourceCounterI;
+    private _relicsCount:GUIResourceCounterI;
 
 
     //Bottom
@@ -50,24 +43,8 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
     //epic
     public epicUpgradeWindow:EpicUpgradeWindow;
     
-    //castle
+    //castle TODO move this to a structure
     public castleUpgradeWindow:UpgradeWindow;
- 
-    //farms
-    public GUIWrapperFarmUpgrade:UpgradeWindow;
-    public farmersMaxTextBox:TextBlock;
-    private _wheatUpgrade:StructureUpgradeSection;
-    private _farmUpgrade01Section:StructureUpgradeSection;
-    private _farmUpgrade02Section:StructureUpgradeSection;
-    private _farmUpgrade03Section:StructureUpgradeSection;
-    private _farmUpgrade04Section:StructureUpgradeSection;
-    private _farmUpgradeSections:StructureUpgradeSection[];
-    private _addFarmButton02:AddStructureButton;
-    private _addFarmButton03:AddStructureButton;
-    private _addFarmButton04:AddStructureButton;
-    private _addFarmButtons: AddStructureButton[];
-
-  
 
     constructor(app:App, scene:PlayMode) {
         this.name='GUIPlay';
@@ -76,8 +53,6 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
         this._mathState = this.scene.mathState
         this._mathState.attach(this);
         this._app.gameState.attach(this);
-        
-        this._farmUpgradeSections = [];//there are multiple farm upgrades so we need this array to hold them.
         
         //GUI//
         this.gameGUI = AdvancedDynamicTexture.CreateFullscreenUI('GameGui')
@@ -115,18 +90,18 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
         this._wrapperTop.top = -400;
         this.gameGUI.addControl(this._wrapperTop);
 
-        //Products
-        this._farmersCount = new ProductCounter('Farmers', 0, 0, `${this._mathState.getTotalFarmers()}`, this._wrapperTop);
-        this._goldPerSecondCount = new ProductCounter('Gold/Second', 24, 0, `${this._mathState.getGoldPerSecond()}`, this._wrapperTop);
-        this._goldCount = new ProductCounter('Gold', 48, 0, `${this._mathState.getTotalGold()}`, this._wrapperTop);
-        this._lumenCount = new ProductCounter('Lumens', 0, -300, `${this._mathState.getTotalLumens()}`, this._wrapperTop);
-        this._oreCount = new ProductCounter('Ore', 0, 300, `${this.scene.mine.getTotalProductAmount()}`, this._wrapperTop);
-        this._weaponCount = new ProductCounter('Weapons', 24, 300,`${this.scene.forge.getTotalProductAmount()}`, this._wrapperTop);
-        this._villageCount = new ProductCounter('Villages', 48, 300, `${this.scene.barracks.getTotalProductAmount()}`, this._wrapperTop);
-        this._lootCount = new ProductCounter('Loot', 72, 300, `${this.scene.thievesGuild.getTotalProductAmount()}`, this._wrapperTop);
-        this._goldBarsCount = new ProductCounter('Goldbars', 0, 600, `${this.scene.workShop.getTotalProductAmount()}`, this._wrapperTop);
-        this._portalsCount = new ProductCounter('Portals', 24, 600, `${this.scene.tower.getTotalProductAmount()}`, this._wrapperTop);
-        this._relicsCount = new ProductCounter('Relics', 48, 600, `${this.scene.tavern.getTotalProductAmount()}`, this._wrapperTop);
+        //Resources
+        this._farmersCount = new ResourceCounter('Farmers', 0, 0, `${this._mathState.getTotalFarmers()}`, this._wrapperTop);
+        this._goldPerSecondCount = new ResourceCounter('Gold/Second', 24, 0, `${this._mathState.getGoldPerSecond()}`, this._wrapperTop);
+        this._goldCount = new ResourceCounter('Gold', 48, 0, `${this._mathState.getTotalGold()}`, this._wrapperTop);
+        this._lumenCount = new ResourceCounter('Lumens', 0, -300, `${this._mathState.getTotalLumens()}`, this._wrapperTop);
+        this._oreCount = new ResourceCounter('Ore', 0, 300, `${this.scene.mine.getTotalResourceAmount()}`, this._wrapperTop);
+        this._weaponCount = new ResourceCounter('Weapons', 24, 300,`${this.scene.forge.getTotalResourceAmount()}`, this._wrapperTop);
+        this._villageCount = new ResourceCounter('Villages', 48, 300, `${this.scene.barracks.getTotalResourceAmount()}`, this._wrapperTop);
+        this._lootCount = new ResourceCounter('Loot', 72, 300, `${this.scene.thievesGuild.getTotalResourceAmount()}`, this._wrapperTop);
+        this._goldBarsCount = new ResourceCounter('Goldbars', 0, 600, `${this.scene.workShop.getTotalResourceAmount()}`, this._wrapperTop);
+        this._portalsCount = new ResourceCounter('Portals', 24, 600, `${this.scene.tower.getTotalResourceAmount()}`, this._wrapperTop);
+        this._relicsCount = new ResourceCounter('Relics', 48, 600, `${this.scene.tavern.getTotalResourceAmount()}`, this._wrapperTop);
 
         //Bottom
         //playGUIBottom
@@ -180,7 +155,7 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
 
     
         //this creates the wheat Upgrade section on the Farm Window
-        //this._wheatUpgrade = new StructureUpgradeSection('wheatUpgrade', `adds %${wheatUpgradeValue * 100} gold/second`, this._mathState.costOfWheatUpgrade, null, wheatUpgradesMax, this.GUIWrapperFarmUpgrade, -320, this.scene, () => this.wheatUpgradeCallback());
+        //this._wheatUpgrade = new StructureUpgradeSection('wheatUpgrade', `adds %${wheatUpgradeValue * 100} gold/second`, this._mathState.costOfWheatUpgrade, null, wheatUpgradesMax, this.farmUpgradeWindow, -320, this.scene, () => this.wheatUpgradeCallback());
 
         //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade
@@ -190,11 +165,9 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
         this.gameGUI.addControl(this.castleUpgradeWindow);
 
         //GAMELOOP//
-        this.scene.onBeforeRenderObservable.add(() => {
+        // this.scene.onBeforeRenderObservable.add(() => {
             
-            //wheat
-            //this._wheatUpgrade.upgradeAble = this._wheatUpgradeAllowed();
-        });
+        // });
 
         if (DEBUGMODE) {
             console.log('In Playmode, this should be the last thing to load if true: GOOD!');
@@ -221,86 +194,50 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
         this._lumenCount.changeText(`${this._mathState.getTotalLumens()}`);
     }
 
-    public updateStructureOnCycle(product: ProductsT, productAmount: number): void {
+    public updateStructureOnCycle(resource: ResourcesT, resourceAmount: number): void {
         if (DEBUGMODE) {
-            console.log(`${this.name} is running ${product} cycle`);
+            console.log(`${this.name} is running ${resource} cycle`);
         }
 
-        switch (product) {
+        switch (resource) {
             case 'Ore': {
-                this._oreCount.changeText(`${productAmount}`);
+                this._oreCount.changeText(`${resourceAmount}`);
             }
             break;
 
             case 'Weapons' : {
-                this._weaponCount.changeText(`${productAmount}`);
+                this._weaponCount.changeText(`${resourceAmount}`);
             }
             break;
 
             case 'Villages': {
-                this._villageCount.changeText(`${productAmount}`);
+                this._villageCount.changeText(`${resourceAmount}`);
             }
             break;
 
             case 'Loot' : {
-                this._lootCount.changeText(`${productAmount}`);
+                this._lootCount.changeText(`${resourceAmount}`);
             }
             break;
 
             case 'Goldbars' : {
-                this._goldBarsCount.changeText(`${productAmount}`);
+                this._goldBarsCount.changeText(`${resourceAmount}`);
             }
             break;
 
             case 'Portals': {
-                this._portalsCount.changeText(`${productAmount}`);
+                this._portalsCount.changeText(`${resourceAmount}`);
             }
             break;
 
             case 'Relics' : {
-                this._relicsCount.changeText(`${productAmount}`);
+                this._relicsCount.changeText(`${resourceAmount}`);
             }
             break;
 
         }
 
     }
-
-
-    //wheat
-    private _wheatUpgradeAllowed() {
-        if (this._mathState.getTotalGold() > this._mathState.costOfWheatUpgrade) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-     //Wheat
-     public wheatUpgradeCallback() {
-    
-        if (this._mathState.wheatValue < wheatUpgradeValue * wheatUpgradesMax) {
-            if (this._mathState.getTotalGold() > this._mathState.costOfWheatUpgrade) {
-            
-            //apply the value changes
-            this._mathState.changeWheatValue();
-            this._mathState.changeGoldPerSecond();
-
-            //use gold
-            this._mathState.spendGold(this._mathState.costOfWheatUpgrade);
-            
-            //apply cost change
-            this._mathState.upgradeWheat();
-            this._mathState.changeCostOfWheatUpgrade();
-
-            this._wheatUpgrade.changeGoldCost(this._mathState.costOfWheatUpgrade);
-
-            }
-
-        }
-        
-    }
-    
 
     //GUI functions
     public showUpgrades(wrapper:Rectangle) {
@@ -330,7 +267,7 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
                 if(currentCount < farmersMax && intervalCount > 0) {
                     //let the mathstate know there is 1 runner
                     this._mathState.makeFarmerRun(1);
-                    new Runner('farmer', currentCount, modelsDir, 'farmer.glb', this.scene, 0, castleToFarmPaths, () => {this.scene.mathState.addFarmers(1); this._mathState.endFarmerRun()});
+                    new Runner('farmer', currentCount, modelsDir, 'farmer.glb', this.scene, 0, this.scene.farm01.getAnimationPaths(), () => {this.scene.mathState.addFarmers(1); this._mathState.endFarmerRun()});
 
                     intervalCount -= 1;
 

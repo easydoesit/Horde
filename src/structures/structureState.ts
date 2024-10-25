@@ -1,5 +1,5 @@
 import { Vector3 } from "@babylonjs/core";
-import { ProductsT, StructureCharactersT, StructureNamesT, StructureStateI, StructureStateObserverOnUpgradeI, StructureStateObserverOnCycleI } from "../../typings";
+import { ResourcesT, StructureCharactersT, StructureNamesT, StructureStateI, StructureStateObserverOnUpgradeI, StructureStateObserverOnCycleI } from "../../typings";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, modelsDir } from "../utils/CONSTANTS";
@@ -30,24 +30,26 @@ export class StructureState implements StructureStateI {
     
     protected _upgradeCostGold:number;
     protected _upgradeCostFarmers:number | null;
+    protected _upgradeCostResources:number | null;
     
-    protected _product: ProductsT | null;
-    protected _totalProductAmount:number;
+    protected _resource: ResourcesT | null;
+    protected _totalResourceAmount:number;
     
     protected _cycleTime:number | null;
     protected _goldPerCycle:number;
-    protected _productAmountPerCycle:number;
+    protected _resourceAmountPerCycle:number;
     
 
     constructor(scene:PlayMode) {
         this._scene = scene;
         this._observersOnUpgrade = [];
         this._observersOnCycle = [];
-        this._totalProductAmount = 0;
+        this._totalResourceAmount = 0;
         this._upgradeLevel = 0;
         this._cycleTime = 0;
         this._goldPerCycle = 0;
-        this._productAmountPerCycle = 0;
+        this._resourceAmountPerCycle = 0;
+
     }
 
     //Observers
@@ -127,7 +129,7 @@ export class StructureState implements StructureStateI {
     public notifyObserversOnCycle(): void {
   
         for(const observer of this._observersOnCycle) {
-            observer.updateStructureOnCycle(this.getProductName(), this.getTotalProductAmount(), this.getGoldPerCycle());
+            observer.updateStructureOnCycle(this.getResourceName(), this.getTotalResourceAmount(), this.getGoldPerCycle());
         }
   
     }
@@ -204,39 +206,43 @@ export class StructureState implements StructureStateI {
         return this._upgradeCostGold;    
     }
 
+    public getUpgradeCostResources():number {
+        return this._upgradeCostResources;
+    }
+
     public getUpgradeLevel(): number {
         return this._upgradeLevel;
     }
 
-    public getProductName(): ProductsT {
-        return this._product;
+    public getResourceName(): ResourcesT {
+        return this._resource;
     }
 
-    public addProduct(amount: number): void {
-        this._totalProductAmount += amount;
+    public addResource(amount: number): void {
+        this._totalResourceAmount += amount;
     }
 
-    public removeProduct(amount: number): void {
-        this._totalProductAmount -= amount;
+    public removeResource(amount: number): void {
+        this._totalResourceAmount -= amount;
     }
 
-    public getTotalProductAmount(): number {
-        return this._totalProductAmount;
+    public getTotalResourceAmount(): number {
+        return this._totalResourceAmount;
     }
 
-    public getProductPerCycle(): number {
-        return this._productAmountPerCycle;
+    public getResourcePerCycle(): number {
+        return this._resourceAmountPerCycle;
     }
 
-    public changeProductPerCycle(newValue: number): void {
-        this._productAmountPerCycle = newValue;
+    public changeResourcePerCycle(newValue: number): void {
+        this._resourceAmountPerCycle = newValue;
     }
 
-    public getProductCycleTime(): number {
+    public getResourceCycleTime(): number {
         return this._cycleTime;
     }
 
-    public changeProductCycleTime(newTime: number): void {
+    public changeResourceCycleTime(newTime: number): void {
         this._cycleTime = newTime;
     }
 
@@ -279,7 +285,15 @@ export class StructureState implements StructureStateI {
         return this._addStructureButton;
     }
 
+    public getAnimationPaths(): Vector3[][] {
+        return this._animationPaths;
+    }
+
     protected _addUpgradePanel():void {
         this.getUpgradesWindow().getPanelContainer().addControl(this.getUpgradeSection());
+    }
+
+    protected _moveStructuresToGamePosition():void{
+        this.getStructureModels().position = this.getStructureModels().gamePosition;
     }
 }

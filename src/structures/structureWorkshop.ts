@@ -6,8 +6,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, farmToWorkShopPaths, workShopClickBox, workShopModels, workShopPos, } from "../utils/CONSTANTS";
-import { goldBarPerCycle, goldBarUpgradeValue, timeToMakeGoldBar, timeToMakeRelic, workShopCreateGoldAmount, workShopUpgradeCostFarmers, workShopUpgradeCostGold, workShopUpgradeMax } from "../utils/MATHCONSTANTS";
+import { DEBUGMODE, tower, workShop } from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -15,22 +14,25 @@ import { StructureState } from "./structureState";
 export class StructureWorkShop extends StructureState implements StructureStateChildI {
     constructor(scene:PlayMode) {
         super(scene);
-        this._name = 'Workshop';
-        this._character = 'alchemist';
-        this._animationPaths = farmToWorkShopPaths;
-        this._upgradeMax = workShopUpgradeMax;
-        this._upgradeCostGold = Math.round(workShopUpgradeCostGold(this.getUpgradeLevel())*1000/1000);
-        this._upgradeCostFarmers = Math.round(workShopUpgradeCostFarmers(this.getUpgradeLevel()));
-        this._product = 'Goldbars';
-        this._cycleTime = timeToMakeRelic(this.getUpgradeLevel());
-        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, workShopModels, workShopClickBox, workShopPos);
-        this._goldPerCycle = workShopCreateGoldAmount;
-        this._productAmountPerCycle = goldBarPerCycle;
-        this._inSceneGui = new InSceneStuctureGUI('WorkShopSceneGui', this, 'Goldbars');
+        this._name = workShop.name;
+        this._character = workShop.character;
+        this._animationPaths = workShop.paths;
+        this._upgradeMax = workShop.upgradeMax;
+        this._upgradeCostGold = workShop.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostFarmers = workShop.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._upgradeCostResources = workShop.nextUpgradeCostInResources(this.getUpgradeLevel());
+        this._resource = 'Goldbars';
+        this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue);
+        this._structureModels = new StructureModel(`${this._name}_models`, this._scene, workShop.models, workShop.clickbox, workShop.gamePos);
+        this._goldPerCycle = workShop.goldPerCycle;
+        this._resourceAmountPerCycle = workShop.resource.resourcePerCycle;
+        this._inSceneGui = new InSceneStuctureGUI('WorkShopSceneGui', this, this._resource);
         this._upgradesWindow = new UpgradeWindow('WorkShopUpgradeWindow')
-        this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', `Speeds Up GoldBar Creation by ${goldBarUpgradeValue * 100}%`, this, () => {this._workShopUpgradeCallback()})
+        this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue * 100}%`, this, () => {this._workShopUpgradeCallback()})
         this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()})
         this._addUpgradePanel();
+
+        this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
@@ -58,14 +60,14 @@ export class StructureWorkShop extends StructureState implements StructureStateC
             this._animateCharacters();
 
             this._upgradeLevel += 1;
-            this._cycleTime = timeToMakeGoldBar(this.getUpgradeLevel());
+            this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue);
       
             //update the observers
             this.notifyObserversOnUpgrade();
 
-            this._upgradeCostFarmers = workShopUpgradeCostFarmers(this.getUpgradeLevel());
-
-            this._upgradeCostGold = Math.round(workShopUpgradeCostGold(this.getUpgradeLevel())*1000)/1000;
+            this._upgradeCostGold = workShop.nextUpgradeCostInGold(this.getUpgradeLevel());
+            this._upgradeCostFarmers = workShop.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+            this._upgradeCostResources = workShop.nextUpgradeCostInResources(this.getUpgradeLevel());
 
         }
     }   

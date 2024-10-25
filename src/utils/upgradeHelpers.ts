@@ -1,6 +1,6 @@
 import { Button } from "@babylonjs/gui";
 import { StructureStateChildI } from "../../typings";
-import { farmersMaxPerFarm } from "./MATHCONSTANTS";
+import { farmersMaxPerFarm } from "./CONSTANTS";
 import { FarmUpgradeWindow } from "../GUI/farmUpgrades/farmUpgradeWindow";
 
 export const makeButtonEnabled = (button:Button, upgradable:boolean, currentNumUpgrades:number ,maxNumUpgrades:number) => {
@@ -49,8 +49,7 @@ export  const checkUpgradeFarmersMax = (farm:StructureStateChildI) => {
 }
 
 export const farmUpgradeCallBack = (farm:StructureStateChildI) => {
-    console.log('CALLBACK CALLLED');
-    console.log('farmUpgradeCost', farm.getUpgradeCostGold());
+    
     farm.upgradeState();
 
     farm.getUpgradeSection().changeGoldCost(farm.getUpgradeCostGold());
@@ -108,12 +107,11 @@ export const  farmAdditionCallback = (thisFarm:StructureStateChildI, nextButton:
 
         const otherFarm = thisFarm.getScene().farms[i];
 
-        otherFarm.getUpgradeSection().instruction = `next Upgrade allows ${checkUpgradeFarmersMax(otherFarm)} farmers on your ${text(i)} farm`
-        otherFarm.getUpgradeSection().textBlockUpgradeInstruction.text = otherFarm.getUpgradeSection().instruction;
+        otherFarm.getUpgradeSection().changeInstruction(`next Upgrade allows ${checkUpgradeFarmersMax(otherFarm)} farmers on your ${text(i)} farm`);
+
     }
 
     (thisFarm.getUpgradesWindow() as FarmUpgradeWindow).changeFarmersMaxText(`Max Farmers: ${thisFarm.getScene().mathState.getFarmersMax()}`);
-
 }
 
 export const farmAdditionAllowed = (farm:StructureStateChildI) => {

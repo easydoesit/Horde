@@ -39,10 +39,10 @@ export class StructuresFasterCyclesState extends EpicUpgradeState implements Epi
             const structure = structures[i];
 
             if(!structures[i].getName().includes('Farm')) {
-                const currentCycleTime = structure.getProductCycleTime();
+                const currentCycleTime = structure.getResourceCycleTime();
                 const cycleTime = currentCycleTime * 1.05;
                 console.log(cycleTime);
-                structure.changeProductCycleTime(cycleTime);
+                structure.changeResourceCycleTime(cycleTime);
 
             }
         }

@@ -1,9 +1,10 @@
-import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ProductsT, StructureStateI, StructureStateObserverOnCycleI, StructureStateObserverOnUpgradeI} from "../../typings";
-import { farmerBaseValue,farmersMaxPerFarm, startingFarmers,startingGold,startingLumens,wheatUpgradeCostGold, wheatUpgradeValue } from "../utils/MATHCONSTANTS";
+import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ResourcesT, StandardUpgradeStateI, StandardUpgradeStateObserverI, StructureStateI, StructureStateObserverOnCycleI, StructureStateObserverOnUpgradeI} from "../../typings";
+import { farmersMaxPerFarm} from "../utils/CONSTANTS";
+import { WheatState } from "../upgradesStandard/wheat";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE } from "../utils/CONSTANTS";
+import { DEBUGMODE, startingFarmers, startingGold, startingLumens, farmerBaseValue } from "../utils/CONSTANTS";
 
-export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, StructureStateObserverOnCycleI{
+export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, StructureStateObserverOnCycleI {
     public name:string;
     private _observers:MathStateObserverI[];
     private _scene:PlayMode;
@@ -21,9 +22,8 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     private _totalLumens:number;
 
     //wheat
-    public wheatValue:number;
-    public costOfWheatUpgrade:number;
-    public wheatUpgrades:number;
+    private _wheatValue:number;
+
 
     constructor(scene:PlayMode) {
         this.name = "MathState"
@@ -40,9 +40,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
 
         this._totalLumens = startingLumens;
         
-        this.wheatValue = 0;
-        this.wheatUpgrades = 0;
-        this.costOfWheatUpgrade = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)*1000)/1000;
+        this._wheatValue = 0;
 
         //Structures
         //farms
@@ -115,7 +113,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
 
     public changeGoldPerSecond() {
 
-        return Math.round((1 + this.wheatValue) * this._farmerMultiplyByBaseVal(this._totalFarmers)* 1000) /1000;
+        return (1 + this._wheatValue) * this._farmerMultiplyByBaseVal(this._totalFarmers);
 
     }
 
@@ -202,18 +200,13 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     public getFarmersMax():number {
         return this._farmersMax;
     }
-    
-    //wheat
-    public upgradeWheat() {
-        this.wheatUpgrades += 1;
+
+    public getWheatValue(): number {
+        return this._wheatValue;
     }
 
-    public changeCostOfWheatUpgrade() {
-        this.costOfWheatUpgrade = Math.round(wheatUpgradeCostGold(this.wheatUpgrades + 1)* 1000)/1000;
-    }
-
-    public changeWheatValue() {
-        this.wheatValue =  Math.round((this.wheatValue + wheatUpgradeValue)*100)/100;
+    public changeWheatValue(value: number): void {
+        this._wheatValue = value;
     }
 
     public updateStructureOnUpgrade(structure: StructureStateI): void {
@@ -222,9 +215,10 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
             console.log(`${structure.getName()} is now at level ${structure.getUpgradeLevel()}`)
             console.log(`Cost in Farmers is ${structure.getUpgradeCostFarmers()}`);
             console.log(`Cost in Gold is ${structure.getUpgradeCostGold()}`);
-            console.log(`The Product is $${structure.getProductName()}`);
+            console.log(`The Resource is $${structure.getResourceName()}`);
         }
-
+        
+        //these should go back to the state to spend the money.
         this.spendFarmers(Math.round(structure.getUpgradeCostFarmers()));
         this.spendGold(Math.round(structure.getUpgradeCostGold() * 1000)/1000);
 
@@ -233,16 +227,8 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         } 
     }
 
-    public updateStructureOnCycle(product: ProductsT, productAmountPerCycle: number, goldPerCycle: number): void {
+    public updateStructureOnCycle(resource: ResourcesT, resourceAmountPerCycle: number, goldPerCycle: number): void {
         this.addGold(goldPerCycle);
-    }
-
-    public updateEpicUpgrade(upgrade: EpicUpgradeStateI): void {
-        if (DEBUGMODE) {
-            console.log(`updating ${this.name} from ${upgrade.name}`)
-        }
-
-
     }
 
 }

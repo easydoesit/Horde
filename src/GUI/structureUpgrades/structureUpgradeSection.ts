@@ -1,11 +1,12 @@
 import { Button, Rectangle, TextBlock, Control } from "@babylonjs/gui";
-import { GUIFONT1 } from "../../utils/CONSTANTS";
+import { farm01, GUIFONT1 } from "../../utils/CONSTANTS";
 import { PlayMode } from "../../scenes/playmode";
 import { StructureStateChildI } from "../../../typings";
+import { StructureFarm01 } from "../../structures/structureFarm01";
 
 export class StructureUpgradeSection extends Rectangle {
-    private _textBlockUpgradeTitle:TextBlock;
-    public textBlockUpgradeInstruction:TextBlock;
+    private _textBlockTitle:TextBlock;
+    private _textBlockInstruction:TextBlock;
     private _upgradeBarWrapper:Rectangle;
     private _upgradeBtn:Button;
     private _upgradeBtnCostText01:TextBlock;
@@ -14,7 +15,7 @@ export class StructureUpgradeSection extends Rectangle {
 
     private _structure:StructureStateChildI;
     public name:string;
-    public instruction:string;
+    private _instruction:string;
     private _maxNumOfUpgrades:number;
     private _scene:PlayMode;
     public upgradeAble:boolean;
@@ -25,7 +26,7 @@ export class StructureUpgradeSection extends Rectangle {
     constructor(name:string, instruction:string, structure:StructureStateChildI, callback:(...args:any[])=>any | null) {
         super(name);
         this.name = name;
-        this.instruction = instruction;
+        this._instruction = instruction;
         this._structure = structure;
         this._maxNumOfUpgrades = this._structure.getUpgradeMax();
         this._goldCost = this._structure.getUpgradeCostGold();
@@ -42,17 +43,17 @@ export class StructureUpgradeSection extends Rectangle {
         this.paddingBottom = '6px'
         this.paddingTop = '6px'
 
-        this._textBlockUpgradeTitle = new TextBlock(this.name, this.name);
-        this._textBlockUpgradeTitle.fontFamily = GUIFONT1;
-        this._textBlockUpgradeTitle.color = 'white';
-        this._textBlockUpgradeTitle.top = -35;
-        this.addControl(this._textBlockUpgradeTitle);
+        this._textBlockTitle = new TextBlock(this.name, this.name);
+        this._textBlockTitle.fontFamily = GUIFONT1;
+        this._textBlockTitle.color = 'white';
+        this._textBlockTitle.top = -35;
+        this.addControl(this._textBlockTitle);
 
-        this.textBlockUpgradeInstruction = new TextBlock(this.instruction, this.instruction);
-        this.textBlockUpgradeInstruction.fontFamily = GUIFONT1;
-        this.textBlockUpgradeInstruction.color = 'white';
-        this.textBlockUpgradeInstruction.top = -15;
-        this.addControl(this.textBlockUpgradeInstruction);
+        this._textBlockInstruction = new TextBlock(this._instruction, this._instruction);
+        this._textBlockInstruction.fontFamily = GUIFONT1;
+        this._textBlockInstruction.color = 'white';
+        this._textBlockInstruction.top = -15;
+        this.addControl(this._textBlockInstruction);
 
         this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', `upgrade`);
         this._upgradeBtn.fontFamily = GUIFONT1;
@@ -178,6 +179,11 @@ export class StructureUpgradeSection extends Rectangle {
 
     public changeFarmerCost(amount:number):void {
         this._farmerCost = amount;
+    }
+
+    public changeInstruction(text:string):void {
+        this._instruction = text;
+        this._textBlockInstruction.text = this._instruction;
     }
 
 }

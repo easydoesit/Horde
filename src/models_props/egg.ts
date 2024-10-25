@@ -2,12 +2,9 @@ import { AbstractMesh, TransformNode, Vector3, SceneLoader, Curve3,LinesMesh, An
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { PlayMode } from "../scenes/playmode";
-
-
 import { createCurve, createAnimationPath, showPath} from "../utils/animations";
 import { Dragon } from "../models_characters/dragon";
-import { eggFallPath } from "../utils/CONSTANTS";
-import { eggDelivery } from "../utils/MATHCONSTANTS";
+import { eggFallPath, eggDelivery } from "../utils/CONSTANTS";
 
 export class Egg extends TransformNode {
     public model:{root:AbstractMesh, allMeshes:AbstractMesh[]};
