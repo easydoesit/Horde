@@ -37,6 +37,7 @@ export const makeFloatDivideBy100 = (number:number) => {
 }
 
 export  const checkUpgradeFarmersMax = (farm:StructureStateChildI) => {
+
     let total = null;
 
     if (farm.getUpgradeLevel() < farm.getUpgradeMax()) {
@@ -49,11 +50,11 @@ export  const checkUpgradeFarmersMax = (farm:StructureStateChildI) => {
 }
 
 export const farmUpgradeCallBack = (farm:StructureStateChildI) => {
-    
     farm.upgradeState();
 
     farm.getUpgradeSection().changeGoldCost(farm.getUpgradeCostGold());
-    (farm.getUpgradesWindow() as FarmUpgradeWindow).changeFarmersMaxText(`Max Farmers: ${farm.getScene().mathState.getFarmersMax()}`);
+    (farm.getUpgradesWindow() as FarmUpgradeWindow).changeFarmersMaxText(`Max Farmers: ${farm.getScene().mathState.getFarmersMax().toFixed()}`);
+    
 
 }
 

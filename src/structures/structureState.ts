@@ -38,6 +38,8 @@ export class StructureState implements StructureStateI {
     protected _cycleTime:number | null;
     protected _goldPerCycle:number;
     protected _resourceAmountPerCycle:number;
+
+    protected _goldMultiplyer;
     
 
     constructor(scene:PlayMode) {
@@ -49,6 +51,7 @@ export class StructureState implements StructureStateI {
         this._cycleTime = 0;
         this._goldPerCycle = 0;
         this._resourceAmountPerCycle = 0;
+        this._goldMultiplyer = 1;
 
     }
 
@@ -150,11 +153,11 @@ export class StructureState implements StructureStateI {
             //get the farms that have been upgraded
             const usableFarms:StructureStateI[] = [];
     
-            // for(let i in this._scene.farms) {
-            //     if (this._scene.farms[i].getUpgradeLevel() >= 1) {
-            //         usableFarms.push(this._scene.farms[i]);
-            //     }
-            // }
+            for(let i in this._scene.farms) {
+                if (this._scene.farms[i].getUpgradeLevel() >= 1) {
+                    usableFarms.push(this._scene.farms[i]);
+                }
+            }
             
 
             const intervalAmount = (arraySize:number) => {
@@ -267,6 +270,14 @@ export class StructureState implements StructureStateI {
 
     public changeGoldPerCycle(amount:number) {
         this._goldPerCycle = amount;
+    }
+
+    public getGoldMultiplyer(): number {
+        return this._goldMultiplyer;
+    }
+
+    public changeGoldMultiplyer(newValue: number): void {
+        this._goldMultiplyer = newValue;
     }
 
     public getInSceneGui(): InSceneStuctureGUI {

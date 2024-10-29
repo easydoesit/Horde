@@ -1,8 +1,8 @@
 import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock} from "@babylonjs/gui";
-import { DEBUGMODE, GUIFONT1, modelsDir } from "../utils/CONSTANTS";
+import { castleToFarmPaths, DEBUGMODE, GUIFONT1, modelsDir } from "../utils/CONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { UpgradeWindow } from "./upgradeWindow";
-import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, StructureStateI, GUIResourceCounterI, StructureStateObserverOnCycleI, ResourcesT, GUIPlayI } from "../../typings";
+import { GameStateObserverI, GameStateI, MathStateObserverI, MathStateI, GUIResourceCounterI, StructureStateObserverOnCycleI, ResourcesT, GUIPlayI } from "../../typings";
 import { App } from "../app";
 import { StartScreen } from "../scenes/start_screen";
 import { Runner } from "../models_characters/runners";
@@ -153,10 +153,6 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
         this.epicUpgradeWindow = new EpicUpgradeWindow('EpicUpgradeWindow', this.scene);
         this.gameGUI.addControl(this.epicUpgradeWindow);
 
-    
-        //this creates the wheat Upgrade section on the Farm Window
-        //this._wheatUpgrade = new StructureUpgradeSection('wheatUpgrade', `adds %${wheatUpgradeValue * 100} gold/second`, this._mathState.costOfWheatUpgrade, null, wheatUpgradesMax, this.farmUpgradeWindow, -320, this.scene, () => this.wheatUpgradeCallback());
-
         //Castle Upgrades
         //this is the GUI that Appears when you click on the Castle to upgrade
         this.castleUpgradeWindow = new CastleUpgradeWindow('castleUpgradeWindow', this.scene);
@@ -164,10 +160,6 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
         //this.castleUpgradeWindow.isVisible = true;
         this.gameGUI.addControl(this.castleUpgradeWindow);
 
-        //GAMELOOP//
-        // this.scene.onBeforeRenderObservable.add(() => {
-            
-        // });
 
         if (DEBUGMODE) {
             console.log('In Playmode, this should be the last thing to load if true: GOOD!');
@@ -188,10 +180,10 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
     public updateMathState(mathState: MathStateI): void {
         
         //Everytime the MathState Class runs the game loop these update.
-        this._farmersCount.changeText(`${mathState.getTotalFarmers()}`);
-        this._goldPerSecondCount.changeText(`${mathState.getGoldPerSecond().toFixed(3)}`);
-        this._goldCount.changeText(`${mathState.getTotalGold().toFixed(3)}`);
-        this._lumenCount.changeText(`${this._mathState.getTotalLumens()}`);
+        this._farmersCount.changeText(`${mathState.getTotalFarmers().toFixed()}`);
+        this._goldPerSecondCount.changeText(`${mathState.getGoldPerSecond().toFixed(4)}`);
+        this._goldCount.changeText(`${mathState.getTotalGold().toFixed(4)}`);
+        this._lumenCount.changeText(`${this._mathState.getTotalLumens().toFixed()}`);
     }
 
     public updateStructureOnCycle(resource: ResourcesT, resourceAmount: number): void {
@@ -267,8 +259,9 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
                 if(currentCount < farmersMax && intervalCount > 0) {
                     //let the mathstate know there is 1 runner
                     this._mathState.makeFarmerRun(1);
-                    new Runner('farmer', currentCount, modelsDir, 'farmer.glb', this.scene, 0, this.scene.farm01.getAnimationPaths(), () => {this.scene.mathState.addFarmers(1); this._mathState.endFarmerRun()});
-
+                    
+                    new Runner('farmer', currentCount, modelsDir, 'farmer.glb', this.scene, 0, castleToFarmPaths, () => {this.scene.mathState.addFarmers(1); this._mathState.endFarmerRun()});
+                    
                     intervalCount -= 1;
 
                 }

@@ -6,7 +6,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, tower, workShop } from "../utils/CONSTANTS";
+import { DEBUGMODE, farmToWorkShopPaths, tower, workShop } from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -16,7 +16,7 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         super(scene);
         this._name = workShop.name;
         this._character = workShop.character;
-        this._animationPaths = workShop.paths;
+        this._animationPaths = farmToWorkShopPaths;
         this._upgradeMax = workShop.upgradeMax;
         this._upgradeCostGold = workShop.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = workShop.nextUpgradeCostInFarmers(this.getUpgradeLevel());

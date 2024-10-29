@@ -6,7 +6,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, thievesGuild} from "../utils/CONSTANTS";
+import { DEBUGMODE, farmToThievesGuildPaths, thievesGuild} from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -16,7 +16,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         super(scene);
         this._name = thievesGuild.name;
         this._character = thievesGuild.character;
-        this._animationPaths = thievesGuild.paths;
+        this._animationPaths = farmToThievesGuildPaths;
         this._upgradeMax = thievesGuild.upgradeMax;
         this._upgradeCostGold = thievesGuild.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = thievesGuild.nextUpgradeCostInFarmers(this.getUpgradeLevel());

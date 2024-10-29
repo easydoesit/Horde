@@ -30,7 +30,6 @@ export class Runner extends TransformNode {
 
     public async initialize(): Promise<void> {
         this.model = await this.createCharacter();
-        
         this.model.root.parent = this;
         
         let path:Vector3[];
@@ -39,7 +38,7 @@ export class Runner extends TransformNode {
         
         switch(this._departLoc) {
             case 0:  {
-                curve = createCurve(this._paths[0])
+                curve = createCurve(this._paths[0]);
             }
             break;
 
@@ -61,6 +60,7 @@ export class Runner extends TransformNode {
             }
             break;
         }
+        console.log('curve', curve);
 
         name = this._departLoc.toLocaleString();
         path = createAnimationPath(curve);

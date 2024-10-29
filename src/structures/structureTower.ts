@@ -6,7 +6,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, tower } from "../utils/CONSTANTS";
+import { DEBUGMODE, farmToTowerPaths, tower } from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -16,7 +16,7 @@ export class StructureTower extends StructureState implements StructureStateChil
         super(scene);
         this._name = tower.name;
         this._character = tower.character;
-        this._animationPaths = tower.paths;
+        this._animationPaths = farmToTowerPaths;
         this._upgradeMax = tower.upgradeMax;
         this._upgradeCostGold = tower.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = tower.nextUpgradeCostInFarmers(this.getUpgradeLevel());

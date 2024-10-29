@@ -3,7 +3,7 @@ import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton"
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, barracks} from "../utils/CONSTANTS";
+import { DEBUGMODE, barracks, farmToBarracksPaths} from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
@@ -16,7 +16,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
         super(scene);
         this._name = barracks.name;
         this._character = barracks.character;
-        this._animationPaths = barracks.paths;
+        this._animationPaths = farmToBarracksPaths;
         this._upgradeMax = barracks.upgradeMax;
         this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());

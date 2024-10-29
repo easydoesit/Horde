@@ -6,7 +6,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, tavern} from "../utils/CONSTANTS";
+import { DEBUGMODE, farmToTavernPaths, tavern} from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -16,7 +16,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
         super(scene);
         this._name = tavern.name;
         this._character = tavern.character;
-        this._animationPaths = tavern.paths;
+        this._animationPaths = farmToTavernPaths;
         this._upgradeMax = tavern.upgradeMax;
         this._upgradeCostGold = tavern.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = tavern.nextUpgradeCostInFarmers(this.getUpgradeLevel());

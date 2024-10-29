@@ -1,6 +1,5 @@
-import { EpicUpgradeStateI, MathStateI, MathStateObserverI, ResourcesT, StandardUpgradeStateI, StandardUpgradeStateObserverI, StructureStateI, StructureStateObserverOnCycleI, StructureStateObserverOnUpgradeI} from "../../typings";
+import { MathStateI, MathStateObserverI, ResourcesT, StructureStateI, StructureStateObserverOnCycleI, StructureStateObserverOnUpgradeI} from "../../typings";
 import { farmersMaxPerFarm} from "../utils/CONSTANTS";
-import { WheatState } from "../upgradesStandard/wheat";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE, startingFarmers, startingGold, startingLumens, farmerBaseValue } from "../utils/CONSTANTS";
 
@@ -17,6 +16,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     //gold
     private _totalGold:number;
     private _goldPerSecond:number;
+    private _goldMultiplyer:number;
 
     //lumens
     private _totalLumens:number;
@@ -37,6 +37,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     
         this._totalGold = startingGold;
         this._goldPerSecond = 0;
+        this._goldMultiplyer = 1;
 
         this._totalLumens = startingLumens;
         
@@ -113,7 +114,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
 
     public changeGoldPerSecond() {
 
-        return (1 + this._wheatValue) * this._farmerMultiplyByBaseVal(this._totalFarmers);
+        return (1 + this.getWheatValue()) * this._farmerMultiplyByBaseVal(this.getTotalFarmers()) * this.getGoldMultiplyer();
 
     }
 
@@ -139,13 +140,21 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         return this._totalGold;
     }
 
+    public getGoldMultiplyer(): number {
+        return this._goldMultiplyer;
+    }
+
+    public changeGoldMultiplyer(changeValue: number):void {
+        this._goldMultiplyer = this.getGoldMultiplyer() * changeValue;
+    }
+
     //Lumens
     public addLumens(amount: number): void {
-        Math.round(this._totalLumens  += amount)
+        this._totalLumens  += amount
     }
 
     public spendLumens(amount:number):void {
-        Math.round(this._totalLumens -= amount);
+       this._totalLumens -= amount;
     }
 
     public getTotalLumens():number {
@@ -171,8 +180,8 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     
     }
 
-    private _farmerMultiplyByBaseVal(_totalFarmers:number) {
-        return Math.round((_totalFarmers * farmerBaseValue) * 1000) /1000;
+    private _farmerMultiplyByBaseVal(totalFarmers:number) {
+        return totalFarmers * farmerBaseValue;
     }
 
     public makeFarmerRun(number:number) {
@@ -191,7 +200,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         let total = 0;
 
         for (let i in this._scene.farms) {
-            total += Math.round(farmersMaxPerFarm(this._scene.farms[i].getUpgradeLevel()));
+            total += farmersMaxPerFarm(this._scene.farms[i].getUpgradeLevel());
         }
         
         this._farmersMax = total;
@@ -216,11 +225,15 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
             console.log(`Cost in Farmers is ${structure.getUpgradeCostFarmers()}`);
             console.log(`Cost in Gold is ${structure.getUpgradeCostGold()}`);
             console.log(`The Resource is $${structure.getResourceName()}`);
+            console.log(`The Gold Multiplyer is ${structure.getGoldMultiplyer()}`);
         }
         
         //these should go back to the state to spend the money.
-        this.spendFarmers(Math.round(structure.getUpgradeCostFarmers()));
-        this.spendGold(Math.round(structure.getUpgradeCostGold() * 1000)/1000);
+        this.spendFarmers(structure.getUpgradeCostFarmers());
+        this.spendGold(structure.getUpgradeCostGold());
+        const newGoldMultiplyer = this.getGoldMultiplyer() + (this.getGoldMultiplyer() * structure.getGoldMultiplyer()/100);
+        this.changeGoldMultiplyer(newGoldMultiplyer);
+
 
         if (structure.getName().includes("Farm")){
             this.changeFarmersMax();

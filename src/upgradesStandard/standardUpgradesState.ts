@@ -1,6 +1,5 @@
 import { StandardUpgradeStateI, StandardUpgradeStateObserverI, StructureStateChildI } from "../../typings";
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
-import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 

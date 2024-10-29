@@ -1,8 +1,7 @@
 import { StandardUpgradeState } from "./standardUpgradesState";
-import { wheat } from "../utils/STANDARDUPGRADESCOSTANTS";
+import { wheat } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { PlayMode } from "../scenes/playmode";
 import { StandardUpgradeStateChildI } from "../../typings";
-import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 
@@ -17,8 +16,9 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         
         //all of these are updatable
         this._effectValue = wheat.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._instructions = `Raises amount of gold per farmer by ${this._increment * 100}%`;
-        this._upgradeCostGold = wheat.wheatNextUpgradeCostGold(this._currentUpgradeLevel);
+        console.log('Wheat Effect Value', this._effectValue);     
+        this._instructions = this._makeIntructions();
+        this._upgradeCostGold = wheat.nextUpgradeCostGold(this._currentUpgradeLevel);
         this._upgradeCostFarmers = 0;
         this._upgradeCostResources = 0;
         
@@ -45,8 +45,9 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         //update all the properties here
         this._currentUpgradeLevel += 1;
         this._effectValue = wheat.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = wheat.wheatNextUpgradeCostGold(this._currentUpgradeLevel);
-      
+        this._upgradeCostGold = wheat.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._instructions = this._makeIntructions(); 
+
         //increase the value of wheat
         this._scene.mathState.changeWheatValue(this.getEffectValue());
         
@@ -76,6 +77,13 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         } else {
             return false;
         }
+    }
+
+    private _makeIntructions():string {
+        const effectValue = wheat.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement()) * 100;
+        const evString = effectValue.toFixed(2);
+
+        return `Raises amount of gold per farmer by ${evString}%`
     }
 
 }

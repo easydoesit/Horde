@@ -46,6 +46,8 @@ export interface MathStateI {
     changeFarmersMax():void;
 
     changeGoldPerSecond():number;
+    changeGoldMultiplyer(changeValue:number):void;
+    getGoldMultiplyer():number;
     getGoldPerSecond():number;
     addGold(amount:number):void;
     spendGold(amount:number):void;
@@ -90,8 +92,12 @@ export interface StructureStateI {
     changeResourcePerCycle(newValue:number):void;
     getResourceCycleTime():number;
     changeResourceCycleTime(newTime:number):void;
+    
     getGoldPerCycle():number;
     changeGoldPerCycle(amount:number):void;
+
+    getGoldMultiplyer():number;
+    changeGoldMultiplyer(newValue:number):void;
     
     getStructureModels():StructureModel;
     
@@ -174,8 +180,8 @@ export interface StandardUpgradeStateI {
     getCostToUpgradeResources():number;
     changeCostToUpgradeResources(amount:number):void;
 
-    getEffectValue():number;
     getIncrement():number;
+    getEffectValue():number;
 
     getInstructions():string;
     changeInstructions(text:string):void;
@@ -207,17 +213,17 @@ export interface GUIPlayI {
     getUpgradeWindow(window:string):UpgradeWindow;
 }
 
-export type StructureConstantsT = {
+export interface StructureConstantsI {
     name:StructureNamesT;
     models:string[];
     clickbox:string;
-    gamePos:Vector3;
-    paths:Vector3[][];
+    gamePos:Vector3; 
     upgradeMax:number;
-    nextUpgradeCostInGold:(upgradeLevel:number) => number | number;
-    nextUpgradeCostInFarmers:(upgradeLevel:number) => number | number | null;
-    nextUpgradeCostInResources:(upgradeLevel:number) => number | number | null;
+    nextUpgradeCostInGold:(upgradeLevel:number) => number;
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => number;
+    nextUpgradeCostInResources:(upgradeLevel:number) => number;
     goldPerCycle:number;
+    goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => number;
     character:StructureCharactersT;
     resource: {
         name:ResourcesT;

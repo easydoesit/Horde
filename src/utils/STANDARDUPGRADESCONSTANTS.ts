@@ -12,15 +12,15 @@ export const wheat = {
 
         const logTarget = 1;
         const currentLevel = upgradeLevel;
-        const upgradeLimit = upgradeMax; //E12
-        const curveBalance = 5;  //B14
-        const incrementValue = incrementalValue; //as percent
+        const upgradeLimit = upgradeMax; 
+        const curveBalance = 5; 
+        const incrementValue = incrementalValue;
 
         return logTarget * (Math.log(currentLevel)/Math.log(upgradeLimit)/curveBalance) + incrementValue;
         
     },
     
-    wheatNextUpgradeCostGold: (upgradeLevel:number) => {
+    nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
         const baseGoldCost = 10;
         const goldCostGrowthCurve = 3.4;
@@ -29,5 +29,6 @@ export const wheat = {
     
         return finalValue
     }
+
 
 }

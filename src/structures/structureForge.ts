@@ -6,7 +6,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, forge} from "../utils/CONSTANTS";
+import { DEBUGMODE, farmToForgePaths, forge} from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
 import { StructureState } from "./structureState";
@@ -16,7 +16,7 @@ export class StructureForge extends StructureState implements StructureStateChil
         super(scene);
         this._name = forge.name;
         this._character = forge.character;
-        this._animationPaths = forge.paths;
+        this._animationPaths = farmToForgePaths;
         this._upgradeMax = forge.upgradeMax;
         this._upgradeCostGold = forge.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = forge.nextUpgradeCostInFarmers(this.getUpgradeLevel());

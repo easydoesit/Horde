@@ -5,7 +5,7 @@ import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgra
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, mine } from "../utils/CONSTANTS";
+import { DEBUGMODE, farmToMinePaths, mine } from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 import { GUIPlay } from "../GUI/GUIPlay";
@@ -16,7 +16,7 @@ export class StructureMine extends StructureState implements StructureStateChild
         super(scene);
         this._name = mine.name
         this._character = mine.character;
-        this._animationPaths = mine.paths;
+        this._animationPaths = farmToMinePaths;
         this._upgradeMax = mine.upgradeMax;
         this._upgradeCostGold = mine.nextUpgradeCostInGold(this._upgradeLevel);
         this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this._upgradeLevel);
