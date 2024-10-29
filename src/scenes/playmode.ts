@@ -27,6 +27,7 @@ import { StructuresFasterCyclesState } from "../upgradesEpic/structureFasterCycl
 import { WheatState } from "../upgradesStandard/wheat";
 import { increaseOreValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { IncreaseOreValueState } from "../upgradesStandard/increaseOreVal";
+import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpeed";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -58,6 +59,7 @@ export class PlayMode extends Scene {
     //standard upgrades
     public wheat:WheatState;
     public increaseOreValue:IncreaseOreValueState;
+    public increaseMiningSpeed:IncreaseMiningSpeedState;
 
     //Epic upgrades
     public epicAddFarmersUpgrade:AddFarmerUpgradeState;
@@ -162,7 +164,8 @@ export class PlayMode extends Scene {
         //standardUpgrades
         this.wheat = new WheatState('Wheat', this);
         this.increaseOreValue = new IncreaseOreValueState('Increase Ore Value', this);
-        
+        this.increaseMiningSpeed = new IncreaseMiningSpeedState('Increase Mining Speed', this);
+
         //epic upgrades
         this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');
         this.epicUpgradeBaseGold = new BaseGoldPercentUpgradeState('Base Gold', this);

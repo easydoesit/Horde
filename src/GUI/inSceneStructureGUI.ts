@@ -1,8 +1,8 @@
-import { Rectangle, TextBlock, Control} from "@babylonjs/gui";
+import { Rectangle, TextBlock, Control, Button} from "@babylonjs/gui";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { ResourcesT, StructureStateChildI } from "../../typings";
 
-export class InSceneStuctureGUI extends Rectangle {
+export class InSceneStuctureGUI extends Button {
     private _animatedBarWrapper:Rectangle;
     private _animatedBar:Rectangle
     private _structure:StructureStateChildI
