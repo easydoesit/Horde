@@ -16,7 +16,7 @@ export const startingLumens = 1000;
 export const startingGold = 5000;
 
 //Farmers
-export const startingFarmers = 0;
+export const startingFarmers = 20000;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
 
 //Ogre
@@ -179,15 +179,19 @@ export const farm04:StructureConstantsI = {
     },
     goldPerCycle:0,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
-        const logTarget = 1;
-        const UGLevel = upgradeLevel;
-        const UGLimit = upgradeLimit;
-        const curveBalance = 5
-        const initUGImprovement = 2
+        if (upgradeLevel === 0 ) {
+            return 0;
+        } else {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
 
-        const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
-        
-        return finalValue;
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        }
     },
     character:'farmer',
     resource:null,
@@ -243,38 +247,65 @@ export const mine:StructureConstantsI = {
     },
     goldPerCycle: 10,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
-        const logTarget = 1;
-        const UGLevel = upgradeLevel;
-        const UGLimit = upgradeLimit;
-        const curveBalance = 5
-        const initUGImprovement = 2
+        if (upgradeLevel === 0 ) {
+            return 0;
+        } else {
 
-        const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
-        
-        return finalValue;
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            return finalValue;
+        }
     },
     character:'miner',
     resource: {
         name:'Ore',
-        resourceUpgradeValue:0.05, //percent
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
+            if (upgradeLevel === 0 ) {
+                return 0;
+            } else {
+
+                const logTarget = 1;
+                const UGLevel = upgradeLevel;
+                const UGLimit = upgradeLimit;
+                const curveBalance = 5
+                const initUGImprovement = 2
+        
+                const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+                return finalValue;
+            }
+        },
         resourcePerCycle:4,
         initialCycleTime:5, //seconds
         resourceDependant:null,
         costOfResourceDependant:null,
         cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
             let time = 1;
-
             const seconds = 1/initCycleTime;
 
             if (upgradeLevel === 0) {
                 time = seconds;
             } else {
-                time = seconds - (seconds * resourceUpgradeValue);
+                time = seconds - (seconds * resourceUpgradeValue/100);
             }
 
             return time;
         },
-        
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        },
     },
     otherProps:null,
 
@@ -331,7 +362,17 @@ export const forge:StructureConstantsI = {
     character:'blacksmith',
     resource: {
         name:'Weapons',
-        resourceUpgradeValue:0.05, //percent
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        },
         resourcePerCycle:16,
         initialCycleTime:5, //seconds'
         resourceDependant:'Ore',
@@ -348,6 +389,17 @@ export const forge:StructureConstantsI = {
             }
 
             return time;
+        },
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
         },
         
     },
@@ -406,7 +458,17 @@ export const barracks:StructureConstantsI = {
     character:'soldier',
     resource: {
         name:'Villages',
-        resourceUpgradeValue:0.05, //percent
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        },
         resourcePerCycle:64,
         initialCycleTime:28, //seconds'
         resourceDependant:'Weapons',
@@ -423,6 +485,17 @@ export const barracks:StructureConstantsI = {
             }
 
             return time;
+        },
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
         },
         
     },
@@ -481,7 +554,17 @@ export const thievesGuild:StructureConstantsI = {
     character:'thief',
     resource: {
         name:'Loot',
-        resourceUpgradeValue:0.05, //percent
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        },
         resourcePerCycle:256,
         initialCycleTime:64, //seconds'
         resourceDependant:'Villages',
@@ -498,6 +581,17 @@ export const thievesGuild:StructureConstantsI = {
             }
 
             return time;
+        },
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
         },
         
     },
@@ -556,7 +650,17 @@ export const workShop:StructureConstantsI = {
     character:'alchemist',
     resource: {
         name:'Goldbars',
-        resourceUpgradeValue:0.05, //percent
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        },
         resourcePerCycle:1024,
         initialCycleTime:147, //seconds'
         resourceDependant:'Villages',
@@ -573,6 +677,17 @@ export const workShop:StructureConstantsI = {
             }
 
             return time;
+        },
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
         },
         
     },
@@ -631,7 +746,17 @@ export const tower:StructureConstantsI = {
     character:'wizard',
     resource: {
         name:'Portals',
-        resourceUpgradeValue:0.05, //percent
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        },
         resourcePerCycle:4096,
         initialCycleTime:338, //seconds'
         resourceDependant:'Goldbars',
@@ -648,6 +773,17 @@ export const tower:StructureConstantsI = {
             }
 
             return time;
+        },
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
         },
         
     },
@@ -706,7 +842,17 @@ export const tavern:StructureConstantsI = {
     character:'adventurer',
     resource: {
         name:'Relics',
-        resourceUpgradeValue:0.05, //percent
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        },
         resourcePerCycle:16384,
         initialCycleTime:777, //seconds'
         resourceDependant:'Portals',
@@ -723,6 +869,17 @@ export const tavern:StructureConstantsI = {
             }
 
             return time;
+        },
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+    
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
         },
         
     },

@@ -22,13 +22,14 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._upgradeCostFarmers = tavern.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = tavern.nextUpgradeCostInResources(this.getUpgradeLevel())
         this._resource = tavern.resource.name;
-        this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue);
+        this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, tavern.models, tavern.clickbox, tavern.gamePos);
         this._goldPerCycle = tavern.goldPerCycle;
         this._resourceAmountPerCycle = tavern.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('TavernSceneGui', this, this._resource);
         this._upgradesWindow = new UpgradeWindow('TavernUpgradeWindow');
-        this._upgradeSection = new StructureUpgradeSection('TavernUpgradeSection', `Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue * 100}%`, this, () => {this._tavernUpgradeCallback()});
+        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSection = new StructureUpgradeSection('TavernUpgradeSection', this, () => {this._tavernUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTavernButton', this, () => {this._tavernAdditionCallback()})
         this._addUpgradePanel();
 
@@ -60,8 +61,9 @@ export class StructureTavern extends StructureState implements StructureStateChi
             this._animateCharacters();
     
             this._upgradeLevel += 1;
-            this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue);
-      
+            this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+            this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+
             this.notifyObserversOnUpgrade();
 
             this._upgradeCostFarmers = tavern.nextUpgradeCostInFarmers(this.getUpgradeLevel());

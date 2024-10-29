@@ -21,13 +21,14 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._resource = barracks.resource.name;
-        this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue);
+        this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, barracks.models, barracks.clickbox, barracks.gamePos);
         this._goldPerCycle = barracks.goldPerCycle;
         this._resourceAmountPerCycle = barracks.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('BarracksSceneGui', this, this.getResourceName());
         this._upgradesWindow = new UpgradeWindow('BarracksUpgradeWindow');
-        this._upgradeSection = new StructureUpgradeSection('BarrackUpgradeSection', `Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue * 100}%`, this, () => {this._barracksUpgradeCallback()});
+        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSection = new StructureUpgradeSection('BarrackUpgradeSection', this, () => {this._barracksUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addBarracksButton', this, () => {this._barracksAdditionCallback()});
         this._addUpgradePanel();
 
@@ -61,8 +62,9 @@ export class StructureBarracks extends StructureState implements StructureStateC
             //update the variables
             //these ones are before the notify
             this._upgradeLevel += 1;
-            this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue);
-      
+            this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+            this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+
             //update the observers
             this.notifyObserversOnUpgrade();
 

@@ -22,13 +22,14 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._upgradeCostFarmers = tower.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = tower.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._resource = tower.resource.name;
-        this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue);
+        this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, tower.models, tower.clickbox, tower.gamePos);
         this._goldPerCycle = tower.goldPerCycle;
         this._resourceAmountPerCycle = tower.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('TowerSceneGui', this, `${this._resource}`);
         this._upgradesWindow = new UpgradeWindow('TowerUpgradeWindow');
-        this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue * 100}%`, this, () => {this._towerUpgradeCallback()});
+        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', this, () => {this._towerUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTowerButton', this, () => {this._towerAdditionCallback()});
         this._addUpgradePanel();
 
@@ -62,8 +63,8 @@ export class StructureTower extends StructureState implements StructureStateChil
             //update the variables
             //these ones are before the notify
             this._upgradeLevel += 1;
-            this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue);
-      
+            this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+            this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
             //update the observers
             this.notifyObserversOnUpgrade();
 

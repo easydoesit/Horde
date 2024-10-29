@@ -91,7 +91,7 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
         this.gameGUI.addControl(this._wrapperTop);
 
         //Resources
-        this._farmersCount = new ResourceCounter('Farmers', 0, 0, `${this._mathState.getTotalFarmers()}`, this._wrapperTop);
+        this._farmersCount = new ResourceCounter('Farmers', 0, 0, `${this._mathState.getTotalFarmers().toFixed()}`, this._wrapperTop);
         this._goldPerSecondCount = new ResourceCounter('Gold/Second', 24, 0, `${this._mathState.getGoldPerSecond()}`, this._wrapperTop);
         this._goldCount = new ResourceCounter('Gold', 48, 0, `${this._mathState.getTotalGold()}`, this._wrapperTop);
         this._lumenCount = new ResourceCounter('Lumens', 0, -300, `${this._mathState.getTotalLumens()}`, this._wrapperTop);
@@ -193,37 +193,37 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
 
         switch (resource) {
             case 'Ore': {
-                this._oreCount.changeText(`${resourceAmount}`);
+                this._oreCount.changeText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Weapons' : {
-                this._weaponCount.changeText(`${resourceAmount}`);
+                this._weaponCount.changeText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Villages': {
-                this._villageCount.changeText(`${resourceAmount}`);
+                this._villageCount.changeText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Loot' : {
-                this._lootCount.changeText(`${resourceAmount}`);
+                this._lootCount.changeText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Goldbars' : {
-                this._goldBarsCount.changeText(`${resourceAmount}`);
+                this._goldBarsCount.changeText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Portals': {
-                this._portalsCount.changeText(`${resourceAmount}`);
+                this._portalsCount.changeText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Relics' : {
-                this._relicsCount.changeText(`${resourceAmount}`);
+                this._relicsCount.changeText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 

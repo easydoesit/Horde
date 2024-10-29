@@ -23,6 +23,8 @@ export class StructureState implements StructureStateI {
     protected _inSceneGui:InSceneStuctureGUI;
     protected _upgradesWindow:UpgradeWindow;
     protected _upgradeSection:StructureUpgradeSection;
+    protected _upgradeSectionInstructions:string;
+    
     protected _addStructureButton:AddStructureButton | null;
 
     protected _upgradeMax:number;
@@ -34,6 +36,8 @@ export class StructureState implements StructureStateI {
     
     protected _resource: ResourcesT | null;
     protected _totalResourceAmount:number;
+    protected _resourceMultiplyer:number;
+    protected _resourceUpgradeValue:number;
     
     protected _cycleTime:number | null;
     protected _goldPerCycle:number;
@@ -52,6 +56,7 @@ export class StructureState implements StructureStateI {
         this._goldPerCycle = 0;
         this._resourceAmountPerCycle = 0;
         this._goldMultiplyer = 1;
+        this._resourceMultiplyer = 1;
 
     }
 
@@ -217,6 +222,10 @@ export class StructureState implements StructureStateI {
         return this._upgradeLevel;
     }
 
+    public getNextUpgradeLevel(): number {
+        return this._upgradeLevel + 1;
+    }
+
     public getResourceName(): ResourcesT {
         return this._resource;
     }
@@ -247,6 +256,22 @@ export class StructureState implements StructureStateI {
 
     public changeResourceCycleTime(newTime: number): void {
         this._cycleTime = newTime;
+    }
+
+    public getResourceMultiplyer(): number {
+        return this._resourceMultiplyer;
+    }
+
+    public changeResourceMultiplyer(newValue: number): void {
+        this._resourceMultiplyer = newValue;
+    }
+
+    public getResourceUpgradeValue(): number {
+        return this._resourceUpgradeValue;
+    }
+
+    public changeResourceUpgradeValue(newValue: number): void {
+        this._resourceUpgradeValue = newValue;
     }
 
     public getUpgradeMax(): number {
@@ -307,4 +332,13 @@ export class StructureState implements StructureStateI {
     protected _moveStructuresToGamePosition():void{
         this.getStructureModels().position = this.getStructureModels().gamePosition;
     }
+
+    public getUpgradeSectionInstructions(): string {
+        return this._upgradeSectionInstructions;
+    }
+
+    public changeUpgradeSectionInstructions(newText:string): void {
+        this._upgradeSectionInstructions = newText;
+    }
+
 }

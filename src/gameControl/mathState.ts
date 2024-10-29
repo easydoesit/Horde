@@ -225,7 +225,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
             console.log(`Cost in Farmers is ${structure.getUpgradeCostFarmers()}`);
             console.log(`Cost in Gold is ${structure.getUpgradeCostGold()}`);
             console.log(`The Resource is $${structure.getResourceName()}`);
-            console.log(`The Gold Multiplyer is ${structure.getGoldMultiplyer()}`);
+            console.log(`The Gold Multiplyer from structure is ${structure.getGoldMultiplyer()}`);
         }
         
         //these should go back to the state to spend the money.
@@ -238,6 +238,11 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         if (structure.getName().includes("Farm")){
             this.changeFarmersMax();
         } 
+
+        if (DEBUGMODE) {
+            console.log(`New MathState Gold Multiplyer: ${this.getGoldMultiplyer()}`);
+        }
+    
     }
 
     public updateStructureOnCycle(resource: ResourcesT, resourceAmountPerCycle: number, goldPerCycle: number): void {

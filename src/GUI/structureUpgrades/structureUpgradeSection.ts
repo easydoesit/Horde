@@ -1,39 +1,57 @@
 import { Button, Rectangle, TextBlock, Control } from "@babylonjs/gui";
-import { farm01, GUIFONT1 } from "../../utils/CONSTANTS";
+import { DEBUGMODE, GUIFONT1 } from "../../utils/CONSTANTS";
 import { PlayMode } from "../../scenes/playmode";
-import { StructureStateChildI } from "../../../typings";
-import { StructureFarm01 } from "../../structures/structureFarm01";
+import { StructureStateChildI, StructureStateI, StructureStateObserverOnUpgradeI } from "../../../typings";
 
-export class StructureUpgradeSection extends Rectangle {
-    private _textBlockTitle:TextBlock;
-    private _textBlockInstruction:TextBlock;
-    private _upgradeBarWrapper:Rectangle;
-    private _upgradeBtn:Button;
-    private _upgradeBtnCostText01:TextBlock;
-    private _upgradeBtnCostText02:TextBlock;
-    private _upgradeBar:Rectangle;
-
-    private _structure:StructureStateChildI;
+export class StructureUpgradeSection extends Rectangle implements StructureStateObserverOnUpgradeI{
     public name:string;
-    private _instruction:string;
-    private _maxNumOfUpgrades:number;
-    private _scene:PlayMode;
-    public upgradeAble:boolean;
     
+    private _scene:PlayMode;
+    private _structure:StructureStateChildI;
+    private _instructions:string;
+    private _maxNumOfUpgrades:number;
+    public upgradeAble:boolean;
+
     private _goldCost:number;
     private _farmerCost:number;
+    private _resourceCost:number;
+    
+    private _tBTitle:TextBlock;
+    private _tBInstruction:TextBlock;
 
-    constructor(name:string, instruction:string, structure:StructureStateChildI, callback:(...args:any[])=>any | null) {
+    private _upgradeBtn:Button;
+
+    private _btnRectGold:Rectangle;
+    private _tBCostGold:TextBlock;
+    private _tBGold:TextBlock;
+
+    private _btnRectFarmers:Rectangle;
+    private _tBCostFarmers:TextBlock;
+    private _tBFarmers:TextBlock;
+
+    private _btnRectResources:Rectangle;
+    private _tBCostResources:TextBlock;
+    private _tBResources:TextBlock;
+    
+    private _upgradeBar:Rectangle;
+    private _upgradeBarWrapper:Rectangle;
+    
+    private _upgradeBtnCostText01:TextBlock;
+    private _upgradeBtnCostText02:TextBlock;
+
+    constructor(name:string, structure:StructureStateChildI, callback:(...args:any[])=>any | null) {
         super(name);
-        this.name = name;
-        this._instruction = instruction;
         this._structure = structure;
+        this.upgradeAble = false;
+        this.name = name;
         this._maxNumOfUpgrades = this._structure.getUpgradeMax();
+        this._scene = structure.getScene();
         this._goldCost = this._structure.getUpgradeCostGold();
         this._farmerCost = this._structure.getUpgradeCostFarmers();
+        this._resourceCost = this._structure.getUpgradeCostResources();
+        this._instructions = this._structure.getUpgradeSectionInstructions();
 
-        this._scene = structure.getScene();
-        this.upgradeAble = false;
+        this._structure.attachObserversUpgrade(this);
 
         this.width = .95;
         this.height = "125px";
@@ -43,19 +61,22 @@ export class StructureUpgradeSection extends Rectangle {
         this.paddingBottom = '6px'
         this.paddingTop = '6px'
 
-        this._textBlockTitle = new TextBlock(this.name, this.name);
-        this._textBlockTitle.fontFamily = GUIFONT1;
-        this._textBlockTitle.color = 'white';
-        this._textBlockTitle.top = -35;
-        this.addControl(this._textBlockTitle);
+        this._tBTitle = new TextBlock(this.name, this.name);
+        this._tBTitle.fontFamily = GUIFONT1;
+        this._tBTitle.color = 'white';
+        this._tBTitle.top = -35;
+        this.addControl(this._tBTitle);
 
-        this._textBlockInstruction = new TextBlock(this._instruction, this._instruction);
-        this._textBlockInstruction.fontFamily = GUIFONT1;
-        this._textBlockInstruction.color = 'white';
-        this._textBlockInstruction.top = -15;
-        this.addControl(this._textBlockInstruction);
+        this._tBInstruction = new TextBlock(this._instructions, this._instructions);
+        this._tBInstruction.fontFamily = GUIFONT1;
+        this._tBInstruction.color = 'white';
+        this._tBInstruction.top = -15;
+        this.addControl(this._tBInstruction);
 
-        this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', `upgrade`);
+        this._upgradeBtn = Button.CreateSimpleButton('upgradeButton', 'Upgrade');
+        this._upgradeBtn.textBlock.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        this._upgradeBtn.textBlock.height = .2;
+        this._upgradeBtn.textBlock.top = 10;
         this._upgradeBtn.fontFamily = GUIFONT1;
         this._upgradeBtn.background = 'Green';
         this._upgradeBtn.width = .1;
@@ -89,22 +110,87 @@ export class StructureUpgradeSection extends Rectangle {
             } 
         });
 
-        this._upgradeBtnCostText01 = new TextBlock(`${this.name}_cost`, `${this._goldCost}g`);
-        this._upgradeBtnCostText01.fontFamily = GUIFONT1;
-        this._upgradeBtnCostText01.top = 20;
-        this._upgradeBtn.addControl(this._upgradeBtnCostText01);
+        this._btnRectGold = new Rectangle('GoldRect');
+        this._btnRectGold.height = .2;
+        this._btnRectGold.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        this._btnRectGold.width = 1;
+        this._btnRectGold.thickness = 0;
+        this._btnRectGold.top = 35;
+        this._upgradeBtn.addControl(this._btnRectGold);
 
-        if (this._farmerCost) {
-            this._upgradeBtnCostText02 = new TextBlock(`farmer`, `+ ${this._farmerCost} farmers`);
-            this._upgradeBtnCostText02.fontFamily = GUIFONT1;
-            this._upgradeBtnCostText02.top = 40;
-            this._upgradeBtn.addControl(this._upgradeBtnCostText02);
+        this._tBCostGold = new TextBlock(`${this.name} cost in Gold`, `${this.getGoldCost()}`);
+        this._tBCostGold.fontFamily = GUIFONT1;
+        this._tBCostGold.color = 'gold';
+        this._tBCostGold.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        this._tBCostGold.width = .8;
+        this._tBCostGold.left = 10
+        this._btnRectGold.addControl(this._tBCostGold);
+       
+        
+        this._tBGold = new TextBlock(`${this.name} Gold`, 'g:');
+        this._tBGold.fontFamily = GUIFONT1;
+        this._tBGold.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this._tBGold.color = 'gold';
+        this._tBGold.width = .2;
+        this._tBGold.left = 10
+        this._btnRectGold.addControl(this._tBGold);
+
+        if (this._farmerCost > 0) {
+            this._btnRectFarmers = new Rectangle('FarmerRect');
+            this._btnRectFarmers.height = .2;
+            this._btnRectFarmers.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+            this._btnRectFarmers.width = 1;
+            this._btnRectFarmers.thickness = 0;
+            this._btnRectFarmers.top = 60;
+            this._upgradeBtn.addControl(this._btnRectFarmers);
+
+            this._tBCostFarmers = new TextBlock(`${this.name} cost in Farmers`, `${this.getFarmerCost()}`);
+            this._tBCostFarmers.fontFamily = GUIFONT1;
+            this._tBCostFarmers.color = 'pink';
+            this._tBCostFarmers.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+            this._tBCostFarmers.width = .8;
+            this._tBCostFarmers.left = 10
+            this._btnRectFarmers.addControl(this._tBCostFarmers);
+            
+            this._tBFarmers = new TextBlock(`${this.name} Farmers`, 'f:');
+            this._tBFarmers.fontFamily = GUIFONT1;
+            this._tBFarmers.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+            this._tBFarmers.color = 'pink';
+            this._tBFarmers.width = .2;
+            this._tBFarmers.left = 10
+            this._btnRectFarmers.addControl(this._tBFarmers);        
         }
 
+        if (this._resourceCost > 0) {
+            this._btnRectResources = new Rectangle('ResourceRect');
+            this._btnRectResources.height = .2;
+            this._btnRectResources.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+            this._btnRectResources.width = 1;
+            this._btnRectResources.thickness = 0;
+            this._btnRectResources.top = 85;
+            this._upgradeBtn.addControl(this._btnRectResources);
+
+            this._tBCostResources = new TextBlock(`${this.name} cost in Resources`, `${this.getResourceCost()}`);
+            this._tBCostResources.fontFamily = GUIFONT1;
+            this._tBCostResources.color = 'orange';
+            this._tBCostResources.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+            this._tBCostResources.width = .8;
+            this._tBCostResources.left = 10
+            this._btnRectResources.addControl(this._tBCostResources);
+            
+            this._tBResources = new TextBlock(`${this.name} Resources`, 'r:');
+            this._tBResources.fontFamily = GUIFONT1;
+            this._tBResources.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+            this._tBResources.color = 'orange';
+            this._tBResources.width = .2;
+            this._tBResources.left = 10
+            this._btnRectResources.addControl(this._tBResources);
+        }
+        
         this._upgradeBarWrapper = new Rectangle('upgradeBarWrapper');
         this._upgradeBarWrapper.background = 'lightblue';
         this._upgradeBarWrapper.height = .2;
-        this._upgradeBarWrapper.width = .88;
+        this._upgradeBarWrapper.width = .9;
         this._upgradeBarWrapper.left = -55;
         this._upgradeBarWrapper.top = 20;
         this._upgradeBarWrapper.thickness = 0;
@@ -122,10 +208,6 @@ export class StructureUpgradeSection extends Rectangle {
         //GameLoop
         this._scene.onBeforeRenderObservable.add(() => {
             
-            this._upgradeBtnCostText01.text = `${this._goldCost}g`;
-            if(this._farmerCost) {
-                this._upgradeBtnCostText02.text = `${this._farmerCost} farmers`;
-            }
             this._makeButtonEnabled();
         })
 
@@ -181,9 +263,50 @@ export class StructureUpgradeSection extends Rectangle {
         this._farmerCost = amount;
     }
 
-    public changeInstruction(text:string):void {
-        this._instruction = text;
-        this._textBlockInstruction.text = this._instruction;
+    private getResourceCost():number {
+        return this._resourceCost;
+    }
+
+    private changeResourceCost(amount:number):void {
+        this._resourceCost = amount;
+    }
+
+    private getMaxNumUpgrades():number {
+        return this._maxNumOfUpgrades;
+    }
+
+    public changeMaxNumUpgrades(newMax:number):void {
+        this._maxNumOfUpgrades = newMax;
+    }
+
+    public changeInstructions(text:string):void {
+        this._instructions = text;
+        this._tBInstruction.text = this._instructions;
+    }
+
+    public updateStructureOnUpgrade(structure: StructureStateI): void {
+        if (DEBUGMODE) {
+            console.log(`${this.name} STRUCTURE upgrade section as observer is updated from ${structure.getName()}.`);
+        }
+        
+        this.changeMaxNumUpgrades(structure.getUpgradeMax());
+        this.changeInstructions(structure.getUpgradeSectionInstructions());
+
+        if (this._tBCostGold) {
+            this.changeGoldCost(structure.getUpgradeCostGold());
+            this._tBCostGold.text = Math.round(this.getGoldCost()).toString();
+        }
+        
+        if (this._tBCostFarmers) {
+            this.changeFarmerCost(structure.getUpgradeCostFarmers());
+            this._tBCostFarmers.text = Math.round(this.getFarmerCost()).toString();
+        }
+
+        if (this._tBCostResources) {
+            this.changeResourceCost(structure.getUpgradeCostResources());
+            this._tBCostResources.text = Math.round(this.getResourceCost()).toString();
+        }
+        
     }
 
 }

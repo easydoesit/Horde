@@ -80,7 +80,10 @@ export interface StructureStateI {
     getUpgradeCostGold():number;
     getUpgradeCostResources():number;
     getUpgradeLevel():number;
+    getNextUpgradeLevel():number;
     getUpgradeMax():number;
+    getUpgradeSectionInstructions():string;
+    changeUpgradeSectionInstructions(newText:string):void;
     
     getResourceName():ResourcesT | null;
     addResource(amount:number):void;
@@ -92,7 +95,11 @@ export interface StructureStateI {
     changeResourcePerCycle(newValue:number):void;
     getResourceCycleTime():number;
     changeResourceCycleTime(newTime:number):void;
-    
+    getResourceMultiplyer():number;
+    changeResourceMultiplyer(newValue:number):void;
+    getResourceUpgradeValue():number;
+    changeResourceUpgradeValue(newValue:number):void;
+
     getGoldPerCycle():number;
     changeGoldPerCycle(amount:number):void;
 
@@ -179,6 +186,7 @@ export interface StandardUpgradeStateI {
 
     getCostToUpgradeResources():number;
     changeCostToUpgradeResources(amount:number):void;
+    getResourceSource():StructureStateChildI;
 
     getIncrement():number;
     getEffectValue():number;
@@ -227,12 +235,13 @@ export interface StructureConstantsI {
     character:StructureCharactersT;
     resource: {
         name:ResourcesT;
-        resourceUpgradeValue:number;
+        resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => number;
         resourcePerCycle:number;
         initialCycleTime:number;
         resourceDependant:ResourcesT | null;
         costOfResourceDependant:number | null;
         cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => number | number;
+        multiplyer:(upgradeLevel:number, upgradeLimit:number) => number;
     } | null;
     otherProps: {
         [key: string]:any;

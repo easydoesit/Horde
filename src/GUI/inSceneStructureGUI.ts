@@ -50,8 +50,9 @@ export class InSceneStuctureGUI extends Rectangle {
         this._animatedBarWrapper.addControl(this._animatedBar);
 
         this._structure.getScene().onBeforeRenderObservable.add(() => {
-            this._speed = this._structure.getResourceCycleTime();
 
+            this._speed = this._structure.getResourceCycleTime();
+            
             if(this._structure.getUpgradeLevel() > 0) {
                 this._moveBar();
             }
@@ -59,7 +60,6 @@ export class InSceneStuctureGUI extends Rectangle {
 
     }
         
-    //costOfItem:number, otherCostofItem:number | null,
     private _moveBar() {
      
         if (this._animatedBar._width.value < 1) {
@@ -69,10 +69,14 @@ export class InSceneStuctureGUI extends Rectangle {
         } else {
         
             this._animatedBar.width = 0;
-            //add _resource to the game.
+            //add resource to the game.
        
             this._structure.addResource(this._structure.getResourcePerCycle());
             this._structure.notifyObserversOnCycle();
+
+            //add gold to MathState
+            this._structure.getScene().mathState.addGold(this._structure.getGoldPerCycle());
+
         }
 
     }

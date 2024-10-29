@@ -21,13 +21,15 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._upgradeCostGold = mine.nextUpgradeCostInGold(this._upgradeLevel);
         this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this._upgradeLevel);
         this._resource = mine.resource.name;
-        this._cycleTime = mine.resource.cycleTime(this._upgradeLevel, mine.resource.initialCycleTime, mine.resource.resourceUpgradeValue);
+        this._resourceUpgradeValue = mine.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax());
+        this._cycleTime = mine.resource.cycleTime(this._upgradeLevel, mine.resource.initialCycleTime, this.getResourceUpgradeValue());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, mine.models, mine.clickbox, mine.gamePos);
         this._goldPerCycle = mine.goldPerCycle;
         this._resourceAmountPerCycle = mine.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('MineSceneGui', this, 'Ore');
         this._upgradesWindow = new UpgradeWindow('mineUpgradeWindow');
-        this._upgradeSection = new StructureUpgradeSection('MineUpgradeSection', `Speeds Up ${this._resource} production by ${mine.resource.resourceUpgradeValue * 100}%`, this, () => {this._mineUpgradeCallback()});
+        this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
+        this._upgradeSection = new StructureUpgradeSection('Mine Upgrades', this, () => {this._mineUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addMineButton', this, () => {this._mineAdditionCallback()});
         this._addUpgradePanel();
 
@@ -59,12 +61,17 @@ export class StructureMine extends StructureState implements StructureStateChild
             this._animateCharacters();
     
             this._upgradeLevel += 1;
-            this._cycleTime = mine.resource.cycleTime(this.getUpgradeLevel(), mine.resource.initialCycleTime, mine.resource.resourceUpgradeValue);
-      
+            this._cycleTime = mine.resource.cycleTime(this.getUpgradeLevel(), mine.resource.initialCycleTime, mine.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+            this._goldMultiplyer = mine.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
+            this.changeUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
+        
             this.notifyObserversOnUpgrade();
 
-            this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this._upgradeLevel);
-            this._upgradeCostGold = mine.nextUpgradeCostInGold(this._upgradeLevel);
+            this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+            this._upgradeCostGold = mine.nextUpgradeCostInGold(this.getUpgradeLevel());
+            this._resourceMultiplyer = mine.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+            this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
+            
 
         }
     }
@@ -79,7 +86,9 @@ export class StructureMine extends StructureState implements StructureStateChild
 
         this.getUpgradeSection().changeGoldCost(this.getUpgradeCostGold());
         this.getUpgradeSection().changeFarmerCost(this.getUpgradeCostFarmers());
-
+        this.getInSceneGui().changeInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        
+        //this.getUpgradeSection().changeInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
     }
 
     private _mineAdditionCallback() {
@@ -89,6 +98,7 @@ export class StructureMine extends StructureState implements StructureStateChild
         
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
+        this.getInSceneGui().changeInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
 
     }
 

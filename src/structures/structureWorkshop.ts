@@ -22,13 +22,14 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._upgradeCostFarmers = workShop.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = workShop.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._resource = 'Goldbars';
-        this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue);
+        this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, workShop.models, workShop.clickbox, workShop.gamePos);
         this._goldPerCycle = workShop.goldPerCycle;
         this._resourceAmountPerCycle = workShop.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('WorkShopSceneGui', this, this._resource);
         this._upgradesWindow = new UpgradeWindow('WorkShopUpgradeWindow')
-        this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue * 100}%`, this, () => {this._workShopUpgradeCallback()})
+        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', this, () => {this._workShopUpgradeCallback()})
         this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()})
         this._addUpgradePanel();
 
@@ -60,8 +61,9 @@ export class StructureWorkShop extends StructureState implements StructureStateC
             this._animateCharacters();
 
             this._upgradeLevel += 1;
-            this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue);
-      
+            this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+            this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+
             //update the observers
             this.notifyObserversOnUpgrade();
 

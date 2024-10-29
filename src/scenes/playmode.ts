@@ -25,6 +25,8 @@ import { StructureTavern } from "../structures/structureTavern";
 import { BaseResourcePercentUpgradeState } from "../upgradesEpic/baseResourcePercentState";
 import { StructuresFasterCyclesState } from "../upgradesEpic/structureFasterCycle";
 import { WheatState } from "../upgradesStandard/wheat";
+import { increaseOreValue } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { IncreaseOreValueState } from "../upgradesStandard/increaseOreVal";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -55,6 +57,7 @@ export class PlayMode extends Scene {
 
     //standard upgrades
     public wheat:WheatState;
+    public increaseOreValue:IncreaseOreValueState;
 
     //Epic upgrades
     public epicAddFarmersUpgrade:AddFarmerUpgradeState;
@@ -158,6 +161,7 @@ export class PlayMode extends Scene {
 
         //standardUpgrades
         this.wheat = new WheatState('Wheat', this);
+        this.increaseOreValue = new IncreaseOreValueState('Increase Ore Value', this);
         
         //epic upgrades
         this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');

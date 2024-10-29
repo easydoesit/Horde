@@ -60,17 +60,12 @@ export class Runner extends TransformNode {
             }
             break;
         }
-        console.log('curve', curve);
 
         name = this._departLoc.toLocaleString();
         path = createAnimationPath(curve);
 
         this._makeAnimation(path);
         this.playAnimation(path, curve, this._endOfAnim);
-
-        if (DEBUGMODE) {
-            console.log(this.name);
-        }
     
     }
 

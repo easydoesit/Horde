@@ -108,7 +108,7 @@ export const  farmAdditionCallback = (thisFarm:StructureStateChildI, nextButton:
 
         const otherFarm = thisFarm.getScene().farms[i];
 
-        otherFarm.getUpgradeSection().changeInstruction(`next Upgrade allows ${checkUpgradeFarmersMax(otherFarm)} farmers on your ${text(i)} farm`);
+        otherFarm.getUpgradeSection().changeInstructions(`next Upgrade allows ${checkUpgradeFarmersMax(otherFarm)} farmers on your ${text(i)} farm`);
 
     }
 

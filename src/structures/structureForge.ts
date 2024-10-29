@@ -22,13 +22,14 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._upgradeCostFarmers = forge.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = forge.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._resource = forge.resource.name;
-        this._cycleTime = forge.resource.cycleTime(this.getUpgradeLevel(), forge.resource.initialCycleTime, forge.resource.resourceUpgradeValue);
+        this._cycleTime = forge.resource.cycleTime(this.getUpgradeLevel(), forge.resource.initialCycleTime, forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, forge.models, forge.clickbox, forge.gamePos);
         this._goldPerCycle = forge.goldPerCycle;
         this._resourceAmountPerCycle = forge.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('ForgeSceneGui', this, this.getResourceName());
         this._upgradesWindow = new UpgradeWindow('ForgeUpgradeWindow');
-        this._upgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', `Speeds Up Weapon Resourceion by ${forge.resource.resourceUpgradeValue * 100}%`, this, () => {this._forgeUpgradeCallback()});
+        this._upgradeSectionInstructions = `Speeds Up Weapon Resourceion by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`
+        this._upgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', this, () => {this._forgeUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addForgeButton', this, () => {this._forgeAdditionCallback()});
         this._addUpgradePanel();
 
@@ -62,8 +63,8 @@ export class StructureForge extends StructureState implements StructureStateChil
             //update the variables
             //these ones are before the notify
             this._upgradeLevel += 1;
-            this._cycleTime = forge.resource.cycleTime(this.getUpgradeLevel(),forge.resource.initialCycleTime, forge.resource.resourceUpgradeValue);
-      
+            this._cycleTime = forge.resource.cycleTime(this.getUpgradeLevel(),forge.resource.initialCycleTime, forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+            this.changeUpgradeSectionInstructions(`Speeds Up Weapon Resourceion by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
             //update the observers
             this.notifyObserversOnUpgrade();
 

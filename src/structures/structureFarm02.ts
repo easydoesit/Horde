@@ -21,7 +21,8 @@ export class StructureFarm02 extends StructureState implements StructureStateChi
         this._upgradeCostResources = farm02.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, farm02.models, farm02.clickbox, farm02.gamePos);
         this._upgradesWindow = this._scene.farm01.getUpgradesWindow();//shared Window
-        this._upgradeSection = new StructureUpgradeSection('2nd Farm Upgrades', `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 2nd farm`, this, () => {farmUpgradeCallBack(this)})
+        this._upgradeSectionInstructions = `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 2nd farm`;
+        this._upgradeSection = new StructureUpgradeSection('2nd Farm Upgrades', this, () => {farmUpgradeCallBack(this)})
         this._addStructureButton = new AddStructureButton('Farm 2', this, () => {farmAdditionCallback(this, this._scene.farm03.getAddStructureButton())});
         this._addUpgradePanel();
 
@@ -54,10 +55,9 @@ export class StructureFarm02 extends StructureState implements StructureStateChi
     
             this._upgradeLevel += 1;
             this._goldMultiplyer = farm02.goldMultiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+            this.changeUpgradeSectionInstructions(`next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 2nd farm`);
 
             this.notifyObserversOnUpgrade();
-
-            this.getUpgradeSection().changeInstruction(`Next upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 2nd farm`);
             
             this._upgradeCostGold = farm02.nextUpgradeCostInGold(this._upgradeLevel);
             this._upgradeCostFarmers = farm02.nextUpgradeCostInFarmers(this.getUpgradeLevel());

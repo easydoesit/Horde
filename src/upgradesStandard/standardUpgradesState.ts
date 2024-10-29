@@ -18,6 +18,7 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
     protected _instructions:string;
     protected _scene:PlayMode
     protected _upgradeSection:StandardUpgradeSection;
+    protected _resourceSource:StructureStateChildI;
 
     constructor(name:string, scene:PlayMode){
         this.name = name;
@@ -109,6 +110,10 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
 
     public changeCostToUpgradeResources(amount:number):void {
         this._upgradeCostResources = amount;
+    }
+
+    public getResourceSource(): StructureStateChildI {
+        return this._resourceSource;
     }
 
     public getInstructions(): string {

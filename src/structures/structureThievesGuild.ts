@@ -22,13 +22,14 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._upgradeCostFarmers = thievesGuild.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = thievesGuild.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._resource = thievesGuild.resource.name;
-        this._cycleTime = thievesGuild.resource.cycleTime(this._upgradeLevel, thievesGuild.resource.initialCycleTime, thievesGuild.resource.resourceUpgradeValue);
+        this._cycleTime = thievesGuild.resource.cycleTime(this._upgradeLevel, thievesGuild.resource.initialCycleTime, thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this._structureModels = new StructureModel(`${this._name}_models`, this._scene, thievesGuild.models, thievesGuild.clickbox, thievesGuild.gamePos);
         this._goldPerCycle = thievesGuild.goldPerCycle;
         this._resourceAmountPerCycle = thievesGuild.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('ThievesGuildSceneGui', this, this._resource);
         this._upgradesWindow = new UpgradeWindow('ThievesGuildUpgradeWindow');
-        this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', `Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue * 100}%`, this, () => {this._thievesGuildUpgradeCallback()});
+        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', this, () => {this._thievesGuildUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addThievesGuildButton', this, () => {this._thievesGuildAdditionCallback()});
         this._addUpgradePanel();
 
@@ -60,8 +61,8 @@ export class StructureThievesGuild extends StructureState implements StructureSt
             this._animateCharacters();
 
             this._upgradeLevel += 1;
-            this._cycleTime = thievesGuild.resource.cycleTime(this._upgradeLevel, thievesGuild.resource.initialCycleTime, thievesGuild.resource.resourceUpgradeValue);
-      
+            this._cycleTime = thievesGuild.resource.cycleTime(this._upgradeLevel, thievesGuild.resource.initialCycleTime, thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+            this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
             //update the observers
             this.notifyObserversOnUpgrade();
 
