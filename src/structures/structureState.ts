@@ -175,7 +175,7 @@ export class StructureState implements StructureStateI {
             const usableFarms:StructureStateI[] = [];
     
             for(let i in this._scene.farms) {
-                if (this._scene.farms[i].getUpgradeLevel() >= 1) {
+                if (this._scene.farms[i].getAlive()) {
                     usableFarms.push(this._scene.farms[i]);
                 }
             }

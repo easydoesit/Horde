@@ -100,7 +100,8 @@ export class PlayMode extends Scene {
         this.farms = [];
         this.farm01 = new StructureFarm01(this);
         this.farm01.getStructureModels().position = this.farm01.getStructureModels().gamePosition;
-        
+        this.farm01.makeAlive();
+
         //Once imported all of these are moved out of view.
         this.farm02 = new StructureFarm02(this);
         const farm02Position  = this.farm02.getStructureModels().position;
