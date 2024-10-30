@@ -1,6 +1,7 @@
 import { StructureStateChildI } from "../../typings";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
@@ -16,6 +17,7 @@ export class StructureForge extends StructureState implements StructureStateChil
         super(scene);
         this._name = forge.name;
         this._character = forge.character;
+        this._stewardCost = forge.stewardCost;
         this._animationPaths = farmToForgePaths;
         this._upgradeMax = forge.upgradeMax;
         this._upgradeCostGold = forge.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -31,6 +33,7 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._upgradeSectionInstructions = `Speeds Up Weapon Resourceion by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`
         this._upgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', this, () => {this._forgeUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addForgeButton', this, () => {this._forgeAdditionCallback()});
+        this._addStewartButton = new AddStewardButton('addForgeStewardButton', this);
         this._addUpgradePanel();
 
         this._moveStructuresToGamePosition();

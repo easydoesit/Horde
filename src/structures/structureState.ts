@@ -8,6 +8,7 @@ import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 
 export class StructureState implements StructureStateI {
     protected _name:StructureNamesT;
@@ -18,12 +19,15 @@ export class StructureState implements StructureStateI {
     protected _character:StructureCharactersT | null;
     protected _animationPaths:Vector3[][];
     protected _structureModels: StructureModel;
-
     
     protected _inSceneGui:InSceneStuctureGUI;
     protected _upgradesWindow:UpgradeWindow;
     protected _upgradeSection:StructureUpgradeSection;
     protected _upgradeSectionInstructions:string;
+    
+    protected _steward:boolean;
+    protected _stewardCost:number;
+    protected _addStewartButton:AddStewardButton;
     
     protected _addStructureButton:AddStructureButton | null;
 
@@ -57,6 +61,7 @@ export class StructureState implements StructureStateI {
         this._resourceAmountPerCycle = 0;
         this._goldMultiplyer = 1;
         this._resourceMultiplyer = 1;
+        this._steward = false;
 
     }
 
@@ -341,4 +346,15 @@ export class StructureState implements StructureStateI {
         this._upgradeSectionInstructions = newText;
     }
 
+    public getSteward(): boolean {
+        return this._steward;
+    }
+
+    public changeSteward(state: boolean): void {
+        this._steward = state;
+    }
+
+    public getStewardCost(): number {
+        return this._stewardCost;
+    }
 }

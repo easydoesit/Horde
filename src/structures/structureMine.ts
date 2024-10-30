@@ -10,12 +10,14 @@ import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 
 export class StructureMine extends StructureState implements StructureStateChildI {
     constructor(scene:PlayMode) {
         super(scene);
         this._name = mine.name
         this._character = mine.character;
+        this._stewardCost = mine.stewardCost;
         this._animationPaths = farmToMinePaths;
         this._upgradeMax = mine.upgradeMax;
         this._upgradeCostGold = mine.nextUpgradeCostInGold(this._upgradeLevel);
@@ -31,6 +33,8 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('Mine Upgrades', this, () => {this._mineUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addMineButton', this, () => {this._mineAdditionCallback()});
+        this._addStewartButton = new AddStewardButton('addMineStewardButton', this);
+
         this._addUpgradePanel();
 
         this._moveStructuresToGamePosition();
@@ -88,7 +92,6 @@ export class StructureMine extends StructureState implements StructureStateChild
         this.getUpgradeSection().changeFarmerCost(this.getUpgradeCostFarmers());
         this.getInSceneGui().changeInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
         
-        //this.getUpgradeSection().changeInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
     }
 
     private _mineAdditionCallback() {

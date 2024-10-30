@@ -113,6 +113,10 @@ export interface StructureStateI {
     getUpgradeSection():StructureUpgradeSection;
     getAddStructureButton():AddStructureButton;
 
+    getSteward():boolean;
+    changeSteward(state:boolean):void;
+    getStewardCost():number;
+
     getAnimationPaths():Vector3[][];
 
 }
@@ -233,6 +237,7 @@ export interface StructureConstantsI {
     goldPerCycle:number;
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => number;
     character:StructureCharactersT;
+    stewardCost:number | null;
     resource: {
         name:ResourcesT;
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => number;

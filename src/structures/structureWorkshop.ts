@@ -1,6 +1,7 @@
 import { StructureStateChildI } from "../../typings";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
@@ -16,6 +17,7 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         super(scene);
         this._name = workShop.name;
         this._character = workShop.character;
+        this._stewardCost = workShop.stewardCost;
         this._animationPaths = farmToWorkShopPaths;
         this._upgradeMax = workShop.upgradeMax;
         this._upgradeCostGold = workShop.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -29,8 +31,9 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._inSceneGui = new InSceneStuctureGUI('WorkShopSceneGui', this, this._resource);
         this._upgradesWindow = new UpgradeWindow('WorkShopUpgradeWindow')
         this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
-        this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', this, () => {this._workShopUpgradeCallback()})
-        this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()})
+        this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', this, () => {this._workShopUpgradeCallback()});
+        this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()});
+        this._addStewartButton = new AddStewardButton('addWorkshopStewardButton', this);
         this._addUpgradePanel();
 
         this._moveStructuresToGamePosition();

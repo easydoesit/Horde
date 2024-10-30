@@ -8,6 +8,8 @@ export class InSceneStuctureGUI extends Button {
     private _structure:StructureStateChildI
     private _speed:number;
     private _infoText:TextBlock;
+    private _barMoving:boolean;
+    private _barMoveRequested:boolean
 
     public name:string;
 
@@ -15,12 +17,19 @@ export class InSceneStuctureGUI extends Button {
         super(name);
         
         this._structure = structure;
+        this._barMoving = false;
+        this._barMoveRequested = false;
 
         this._speed = this._structure.getResourceCycleTime();
 
         this.width = '125px';
         this.height = '40px';
-        
+
+        this.onPointerDownObservable.add(() => {
+            this._structure.getUpgradesWindow().isVisible = true;
+        });
+
+
         this.linkOffsetY = -90;
         this.zIndex = -100;
 
@@ -52,37 +61,57 @@ export class InSceneStuctureGUI extends Button {
         this._structure.getScene().onBeforeRenderObservable.add(() => {
 
             this._speed = this._structure.getResourceCycleTime();
-            
-            if(this._structure.getUpgradeLevel() > 0) {
-                this._moveBar();
+
+            //if the steward exist automatically animate the bar
+            if(this._structure.getSteward()) {
+                
+                if(this._structure.getUpgradeLevel() > 0) {
+                    this.moveBar();
+                }
+
+            } else if (this._barMoveRequested){
+                if(this._structure.getUpgradeLevel() > 0) {
+                    this.moveBar();
+                }
             }
+
         })
 
     }
         
-    private _moveBar() {
-     
-        if (this._animatedBar._width.value < 1) {
+    public moveBar() {
+        this._barMoving = true;
         
+        if (this._animatedBar._width.value < 1) {
+
             this._animatedBar.width = this._animatedBar._width.value + (this._speed * this._structure.getScene().getEngine().getDeltaTime()/1000);
         
         } else {
         
             this._animatedBar.width = 0;
             //add resource to the game.
-       
+        
             this._structure.addResource(this._structure.getResourcePerCycle());
             this._structure.notifyObserversOnCycle();
 
             //add gold to MathState
             this._structure.getScene().mathState.addGold(this._structure.getGoldPerCycle());
-
+            
+            this._barMoving = false;
+            this._barMoveRequested = false;
         }
-
+        
     }
 
     public changeInfoText(text:string) {
         this._infoText.text = text;
+    }
+
+    public requestBarMove() {
+        
+        if (!this._barMoving) {
+            this._barMoveRequested = true;
+        } 
     }
 
 }

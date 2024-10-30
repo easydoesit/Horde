@@ -1,6 +1,7 @@
 import { StructureStateChildI } from "../../typings";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
@@ -16,6 +17,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
         super(scene);
         this._name = tavern.name;
         this._character = tavern.character;
+        this._stewardCost = tavern.stewardCost;
         this._animationPaths = farmToTavernPaths;
         this._upgradeMax = tavern.upgradeMax;
         this._upgradeCostGold = tavern.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -30,7 +32,8 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._upgradesWindow = new UpgradeWindow('TavernUpgradeWindow');
         this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
         this._upgradeSection = new StructureUpgradeSection('TavernUpgradeSection', this, () => {this._tavernUpgradeCallback()});
-        this._addStructureButton = new AddStructureButton('addTavernButton', this, () => {this._tavernAdditionCallback()})
+        this._addStructureButton = new AddStructureButton('addTavernButton', this, () => {this._tavernAdditionCallback()});
+        this._addStewartButton = new AddStewardButton('addTavernStewardButton', this);
         this._addUpgradePanel();
 
         this._moveStructuresToGamePosition();

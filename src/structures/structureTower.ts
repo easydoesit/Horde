@@ -1,6 +1,7 @@
 import { StructureStateChildI } from "../../typings";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
@@ -16,6 +17,7 @@ export class StructureTower extends StructureState implements StructureStateChil
         super(scene);
         this._name = tower.name;
         this._character = tower.character;
+        this._stewardCost = tower.stewardCost;
         this._animationPaths = farmToTowerPaths;
         this._upgradeMax = tower.upgradeMax;
         this._upgradeCostGold = tower.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -31,6 +33,7 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
         this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', this, () => {this._towerUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTowerButton', this, () => {this._towerAdditionCallback()});
+        this._addStewartButton = new AddStewardButton('addTowerStewardButton', this);
         this._addUpgradePanel();
 
         this._moveStructuresToGamePosition();

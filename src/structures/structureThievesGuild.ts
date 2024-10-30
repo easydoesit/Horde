@@ -1,6 +1,7 @@
 import { StructureStateChildI } from "../../typings";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
@@ -16,6 +17,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         super(scene);
         this._name = thievesGuild.name;
         this._character = thievesGuild.character;
+        this._stewardCost = thievesGuild.stewardCost;
         this._animationPaths = farmToThievesGuildPaths;
         this._upgradeMax = thievesGuild.upgradeMax;
         this._upgradeCostGold = thievesGuild.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -31,6 +33,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._upgradeSectionInstructions = `Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
         this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', this, () => {this._thievesGuildUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addThievesGuildButton', this, () => {this._thievesGuildAdditionCallback()});
+        this._addStewartButton = new AddStewardButton('addThievesGuildStewardButton', this);
         this._addUpgradePanel();
 
         this._moveStructuresToGamePosition();

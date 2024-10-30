@@ -10,12 +10,14 @@ import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { structureUpgradeAllowed } from "../utils/upgradeHelpers";
+import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 
 export class StructureBarracks extends StructureState implements StructureStateChildI {
     constructor(scene:PlayMode) {
         super(scene);
         this._name = barracks.name;
         this._character = barracks.character;
+        this._stewardCost = barracks.stewardCost;
         this._animationPaths = farmToBarracksPaths;
         this._upgradeMax = barracks.upgradeMax;
         this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -30,6 +32,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._upgradeSectionInstructions = `Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
         this._upgradeSection = new StructureUpgradeSection('BarrackUpgradeSection', this, () => {this._barracksUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addBarracksButton', this, () => {this._barracksAdditionCallback()});
+        this._addStewartButton = new AddStewardButton('addBarracksStewardButton', this);
         this._addUpgradePanel();
 
         this._moveStructuresToGamePosition();

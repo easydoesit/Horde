@@ -206,7 +206,9 @@ export class PlayMode extends Scene {
                     console.log('Mine Clicked');
                 }
 
-                this.mine.getUpgradesWindow().showWindow();
+                if (!this.mine.getSteward()) {
+                    this.mine.getInSceneGui().requestBarMove();
+                }
       
             }
 

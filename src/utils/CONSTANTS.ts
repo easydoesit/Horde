@@ -76,6 +76,7 @@ export const farm01:StructureConstantsI = {
         }
     },
     character:'farmer',
+    stewardCost:null,
     resource:null,
 };
 
@@ -114,6 +115,7 @@ export const farm02:StructureConstantsI = {
         return finalValue;
     },
     character:'farmer',
+    stewardCost:null,
     resource:null,
 };
 
@@ -152,6 +154,7 @@ export const farm03:StructureConstantsI = {
         return finalValue;
     },
     character:'farmer',
+    stewardCost:null,
     resource:null,
 };
 
@@ -194,6 +197,7 @@ export const farm04:StructureConstantsI = {
         }
     },
     character:'farmer',
+    stewardCost:null,
     resource:null,
 };
 
@@ -262,6 +266,7 @@ export const mine:StructureConstantsI = {
         }
     },
     character:'miner',
+    stewardCost:980,
     resource: {
         name:'Ore',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -360,6 +365,7 @@ export const forge:StructureConstantsI = {
         return finalValue;
     },
     character:'blacksmith',
+    stewardCost:4666,
     resource: {
         name:'Weapons',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -456,6 +462,7 @@ export const barracks:StructureConstantsI = {
         return finalValue;
     },
     character:'soldier',
+    stewardCost:22210,
     resource: {
         name:'Villages',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -552,6 +559,7 @@ export const thievesGuild:StructureConstantsI = {
         return finalValue;
     },
     character:'thief',
+    stewardCost:105716,
     resource: {
         name:'Loot',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -648,6 +656,7 @@ export const workShop:StructureConstantsI = {
         return finalValue;
     },
     character:'alchemist',
+    stewardCost:503208,
     resource: {
         name:'Goldbars',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -744,6 +753,7 @@ export const tower:StructureConstantsI = {
         return finalValue;
     },
     character:'wizard',
+    stewardCost:2395268,
     resource: {
         name:'Portals',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -840,6 +850,7 @@ export const tavern:StructureConstantsI = {
         return finalValue;
     },
     character:'adventurer',
+    stewardCost:16018257,
     resource: {
         name:'Relics',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
