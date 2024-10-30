@@ -72,25 +72,24 @@ export interface StructureStateI {
     attachObserversCycle(observer:StructureStateObserverOnCycleI):void;
     detachObserversCycle(observer:StructureStateObserverOnCycleI):void;
     notifyObserversOnCycle():void;
+
+    getAlive():boolean;
+    makeAlive():void;
     
     getName():StructureNamesT;
     getScene():PlayMode;
-    
-    getUpgradeCostFarmers():number;
-    getUpgradeCostGold():number;
-    getUpgradeCostResources():number;
+
     getUpgradeLevel():number;
     getNextUpgradeLevel():number;
     getUpgradeMax():number;
     getUpgradeSectionInstructions():string;
     changeUpgradeSectionInstructions(newText:string):void;
     
+    getUpgradeCostResources():number;
     getResourceName():ResourcesT | null;
     addResource(amount:number):void;
     removeResource(amount:number):void;
-    
-    getTotalResourceAmount():number;
-    
+    getTotalResourceAmount():number;  
     getResourcePerCycle():number;
     changeResourcePerCycle(newValue:number):void;
     getResourceCycleTime():number;
@@ -99,13 +98,19 @@ export interface StructureStateI {
     changeResourceMultiplyer(newValue:number):void;
     getResourceUpgradeValue():number;
     changeResourceUpgradeValue(newValue:number):void;
+    getInitResourceCost():number;
+    getInitResourceName():ResourcesT;
 
+    getUpgradeCostGold():number;
     getGoldPerCycle():number;
     changeGoldPerCycle(amount:number):void;
-
     getGoldMultiplyer():number;
     changeGoldMultiplyer(newValue:number):void;
-    
+    getInitGoldCost():number;
+
+    getUpgradeCostFarmers():number;
+    getInitFarmerCost():number;
+
     getStructureModels():StructureModel;
     
     getInSceneGui():InSceneStuctureGUI;
@@ -118,7 +123,7 @@ export interface StructureStateI {
     getStewardCost():number;
 
     getAnimationPaths():Vector3[][];
-
+    animateCharacters():void;
 }
 
 export interface StructureStateChildI extends StructureStateI {
@@ -231,6 +236,12 @@ export interface StructureConstantsI {
     clickbox:string;
     gamePos:Vector3; 
     upgradeMax:number;
+    initCosts:{
+        gold:number,
+        farmers:number,
+        resources:number,
+        resourceName:ResourcesT | null;
+    };
     nextUpgradeCostInGold:(upgradeLevel:number) => number;
     nextUpgradeCostInFarmers:(upgradeLevel:number) => number;
     nextUpgradeCostInResources:(upgradeLevel:number) => number;

@@ -18,6 +18,10 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._name = workShop.name;
         this._character = workShop.character;
         this._stewardCost = workShop.stewardCost;
+        this._initGoldCost = workShop.initCosts.gold;
+        this._initFarmerCost = workShop.initCosts.farmers;
+        this._initResourceCost = workShop.initCosts.resources;
+        this._initResource = workShop.initCosts.resourceName;
         this._animationPaths = farmToWorkShopPaths;
         this._upgradeMax = workShop.upgradeMax;
         this._upgradeCostGold = workShop.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -61,7 +65,7 @@ export class StructureWorkShop extends StructureState implements StructureStateC
                 break;
             }
 
-            this._animateCharacters();
+            this.animateCharacters();
 
             this._upgradeLevel += 1;
             this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));

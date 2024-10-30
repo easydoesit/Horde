@@ -65,12 +65,12 @@ export class InSceneStuctureGUI extends Button {
             //if the steward exist automatically animate the bar
             if(this._structure.getSteward()) {
                 
-                if(this._structure.getUpgradeLevel() > 0) {
+                if(this._structure.getAlive() === true) {
                     this.moveBar();
                 }
 
             } else if (this._barMoveRequested){
-                if(this._structure.getUpgradeLevel() > 0) {
+                if(this._structure.getAlive() === true) {
                     this.moveBar();
                 }
             }

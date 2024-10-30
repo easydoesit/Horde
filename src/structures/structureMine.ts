@@ -18,6 +18,10 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._name = mine.name
         this._character = mine.character;
         this._stewardCost = mine.stewardCost;
+        this._initGoldCost = mine.initCosts.gold;
+        this._initFarmerCost = mine.initCosts.farmers;
+        this._initResourceCost = mine.initCosts.resources;
+        this._initResource = mine.initCosts.resourceName;
         this._animationPaths = farmToMinePaths;
         this._upgradeMax = mine.upgradeMax;
         this._upgradeCostGold = mine.nextUpgradeCostInGold(this._upgradeLevel);
@@ -62,7 +66,7 @@ export class StructureMine extends StructureState implements StructureStateChild
                 break;
             }
 
-            this._animateCharacters();
+            this.animateCharacters();
     
             this._upgradeLevel += 1;
             this._cycleTime = mine.resource.cycleTime(this.getUpgradeLevel(), mine.resource.initialCycleTime, mine.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));

@@ -12,6 +12,7 @@ import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
 
 export class StructureState implements StructureStateI {
     protected _name:StructureNamesT;
+    protected _alive:boolean;
     protected _observersOnUpgrade:StructureStateObserverOnUpgradeI[];
     protected _observersOnCycle:StructureStateObserverOnCycleI[]
     
@@ -37,6 +38,10 @@ export class StructureState implements StructureStateI {
     protected _upgradeCostGold:number;
     protected _upgradeCostFarmers:number | null;
     protected _upgradeCostResources:number | null;
+    protected _initGoldCost:number;
+    protected _initFarmerCost:number;
+    protected _initResourceCost:number;
+    protected _initResource:ResourcesT;
     
     protected _resource: ResourcesT | null;
     protected _totalResourceAmount:number;
@@ -47,11 +52,11 @@ export class StructureState implements StructureStateI {
     protected _goldPerCycle:number;
     protected _resourceAmountPerCycle:number;
 
-    protected _goldMultiplyer;
+    protected _goldMultiplyer:number;
     
-
     constructor(scene:PlayMode) {
         this._scene = scene;
+        this._alive = false;
         this._observersOnUpgrade = [];
         this._observersOnCycle = [];
         this._totalResourceAmount = 0;
@@ -155,11 +160,17 @@ export class StructureState implements StructureStateI {
         
     }
 
-    protected _animateCharacters() {
+    public animateCharacters() {
           //animate characters
           if(this._character) {
-            let characterCount = this._upgradeCostFarmers;
+            let characterCount = 0;
 
+            if (this.getUpgradeLevel() === 0) {
+                characterCount = this.getInitFarmerCost();
+            } else {
+                characterCount = this.getUpgradeCostFarmers();
+            }
+            
             //get the farms that have been upgraded
             const usableFarms:StructureStateI[] = [];
     
@@ -356,5 +367,29 @@ export class StructureState implements StructureStateI {
 
     public getStewardCost(): number {
         return this._stewardCost;
+    }
+
+    public getInitFarmerCost(): number {
+        return this._initFarmerCost;
+    }
+
+    public getInitGoldCost(): number {
+        return this._initGoldCost;
+    }
+
+    public getInitResourceCost(): number {
+        return this._initResourceCost;
+    }
+
+    public getInitResourceName(): ResourcesT {
+        return this._initResource;
+    }
+
+    public getAlive(): boolean {
+        return this._alive;
+    }
+
+    public makeAlive(): void {
+        this._alive = true;
     }
 }

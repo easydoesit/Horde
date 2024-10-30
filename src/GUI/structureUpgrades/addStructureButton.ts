@@ -1,7 +1,6 @@
-import { Button, TextBlock } from"@babylonjs/gui";
+import { Button, TextBlock, Control } from"@babylonjs/gui";
 import { GUIFONT1 } from "../../utils/CONSTANTS";
 import { MathStateI, StructureStateChildI } from "../../../typings";
-import { UpgradeWindow } from "../upgradeWindow";
 import { StructureUpgradeSection } from "./structureUpgradeSection";
 
 export class AddStructureButton extends Button {
@@ -11,7 +10,7 @@ export class AddStructureButton extends Button {
     public available:boolean;
     public visible:boolean;
 
-    private _text:TextBlock;
+    private _TitleText:TextBlock;
     private _costGoldText:TextBlock;
     private _costFarmersText:TextBlock;
 
@@ -23,29 +22,46 @@ export class AddStructureButton extends Button {
         this.visible = false;
 
         this.background = 'Green';
-        this.width = .95;
-        this.height = '100px';
-        this.paddingBottom = '6px';
-        this.paddingTop = '6px';
+        this.width = 1;
+        this.height = '125px';
+        this.paddingBottom = '3px';
+        this.paddingTop = '3px';
         this.thickness = 0;
-        this.left =0;
 
-        this._text = new TextBlock(`add${structure.getName()}`, `Add ${structure.getName()}`);
-        this._text.fontFamily = GUIFONT1;
-        this._text.color = 'white';
-        this._text.top = -20;
-        this.addControl(this._text);
+        this._TitleText = new TextBlock(`add${structure.getName()}`, `Add ${structure.getName()}`);
+        this._TitleText.fontFamily = GUIFONT1;
+        this._TitleText.color = 'white';
+        this._TitleText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        this._TitleText.height = '20px';
+        this._TitleText.top = 10;
+        this.addControl(this._TitleText);
 
-        this._costGoldText = new TextBlock('costInGold', `Cost Gold: ${this._structure.getUpgradeCostGold()}`);
+        this._costGoldText = new TextBlock('costInGold', `Cost Gold: ${this._structure.getInitGoldCost()}`);
         this._costGoldText.fontFamily = GUIFONT1;
-        this._costGoldText.color = 'white';
+        this._costGoldText.color = 'gold';
+        this._costGoldText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        this._costGoldText.height = '20px';
+        this._costGoldText.top = 35;
         this.addControl(this._costGoldText);
 
-        if (this._structure.getUpgradeCostFarmers()) {
-            this._costFarmersText = new TextBlock('costInFarmers', `Cost Farmers: ${this._structure.getUpgradeCostFarmers()}`);
+        if (this._structure.getInitFarmerCost()) {
+            this._costFarmersText = new TextBlock('costInFarmers', `Cost Farmers: ${this._structure.getInitFarmerCost()}`);
             this._costFarmersText.fontFamily = GUIFONT1;
-            this._costFarmersText.color = 'white';
-            this._costFarmersText.top = 20;
+            this._costFarmersText.color = 'pink';
+            this._costFarmersText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+            this._costFarmersText.height = '20px';
+            this._costFarmersText.top = 60;
+
+            this.addControl(this._costFarmersText);
+        }
+
+        if (this._structure.getInitResourceCost()) {
+            this._costFarmersText = new TextBlock('costInFarmers', `Cost ${this._structure.getInitResourceName()}: ${this._structure.getInitResourceCost()}`);
+            this._costFarmersText.fontFamily = GUIFONT1;
+            this._costFarmersText.color = 'orange';
+            this._costFarmersText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+            this._costFarmersText.height = '20px';
+            this._costFarmersText.top = 85;
 
             this.addControl(this._costFarmersText);
         }
@@ -61,27 +77,61 @@ export class AddStructureButton extends Button {
             this._mathState = this._structure.getScene().mathState;
   
             this.onPointerDownObservable.add(() => {
+                const scene = this._structure.getScene();
+
+                let enoughResourses = false;
+                let enoughFarmers = false;
+                let enoughGold = false;
+                //check to see if there is enough resources
+
+                if (this._structure.getInitResourceCost()) {
             
-                if (this._structure.getUpgradeCostFarmers()) {
-    
-                    if(this._mathState.getTotalGold() >= this._structure.getUpgradeCostGold() && this._mathState.getTotalFarmers() >= this._structure.getUpgradeCostFarmers()) {
+                    for (let i in scene.allStructures) {
+                        const structure = scene.allStructures[i];
                     
-                        this._addStructureFlow(this._structure.getUpgradeSection());
-    
+                        if (structure.getResourceName() === this._structure.getInitResourceName()) {
+                            if (structure.getTotalResourceAmount() >= this._structure.getInitResourceCost()) {
+                                enoughResourses = true;
+                            }
+                        }
+        
                     }
-                    
                 } else {
+                    enoughResourses = true;
+                }
+                console.log("enough Resources: ", enoughResourses);
+
+                //check to see if there is enough farmers
+
+                if (this._structure.getInitFarmerCost()) {
                     
-                    if(this._mathState.getTotalGold() >= this._structure.getUpgradeCostGold()) {
-    
-                        this._addStructureFlow(this._structure.getUpgradeSection());
-    
+                    if (this._mathState.getTotalFarmers() >= this._structure.getInitFarmerCost()) {
+                        enoughFarmers = true;
                     }
-    
+
+                } else {
+                    enoughFarmers = true;
                 }
     
-                if (callback) {
-                    callback();
+                console.log("enough Farmers: ", enoughFarmers);
+
+                //check to see if there is enough gold
+
+                if(this._mathState.getTotalGold() >= this._structure.getInitGoldCost()) {
+                    enoughGold = true;
+                }
+
+                console.log("enough Gold: ", enoughGold);
+
+                //if enough resources, farmers and gold proceed
+
+                if(enoughResourses && enoughFarmers && enoughGold) {
+                    this._addStructureFlow(this._structure.getUpgradeSection());
+                    
+                    if (callback) {
+                        callback();
+                    }
+                
                 }
     
             });
@@ -99,15 +149,33 @@ export class AddStructureButton extends Button {
         structure.showModel(0);
 
         //do the scene animations here
+        this._structure.animateCharacters();
 
-        //upgrade the state
-        this._structure.upgradeState();
+        //make structure alive
+        this._structure.makeAlive();
 
-        //update the GUI
-        upgradeSection.changeGoldCost(this._structure.getUpgradeCostGold());
+        //pay for the structure
+        const scene = this._structure.getScene();
+        const mathState = scene.mathState;
+
+        if (this._structure.getInitGoldCost()) {
+            mathState.spendGold(this._structure.getInitGoldCost());
+        }
         
-        if (this._structure.getUpgradeCostFarmers()) {
-            upgradeSection.changeFarmerCost(this._structure.getUpgradeCostFarmers());
+        if (this._structure.getInitFarmerCost()) {
+            mathState.spendFarmers(this._structure.getInitFarmerCost());
+        }
+        
+        if (this._structure.getInitResourceCost()) {
+            
+            for (let i in scene.allStructures) {
+                const structure = scene.allStructures[i];
+            
+                if (structure.getResourceName() === this._structure.getInitResourceName()) {
+                    structure.removeResource(this._structure.getInitResourceCost());
+                }
+
+            }
         }
 
     }

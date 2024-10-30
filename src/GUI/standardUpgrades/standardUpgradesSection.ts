@@ -45,6 +45,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         this._farmerCost = upgrade.getCostToUpgradeFarmers();
         this._resourceCost = upgrade.getCostToUpgradeResources();
         this._instructions = upgrade.getInstructions();
+        
         upgrade.attach(this);
 
         this.width = .95;

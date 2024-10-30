@@ -18,6 +18,10 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._name = tower.name;
         this._character = tower.character;
         this._stewardCost = tower.stewardCost;
+        this._initGoldCost = tower.initCosts.gold;
+        this._initFarmerCost = tower.initCosts.farmers;
+        this._initResourceCost = tower.initCosts.resources;
+        this._initResource = tower.initCosts.resourceName;
         this._animationPaths = farmToTowerPaths;
         this._upgradeMax = tower.upgradeMax;
         this._upgradeCostGold = tower.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -61,7 +65,7 @@ export class StructureTower extends StructureState implements StructureStateChil
                 break;
             }
 
-            this._animateCharacters();
+            this.animateCharacters();
     
             //update the variables
             //these ones are before the notify

@@ -45,6 +45,7 @@ export const farm01:StructureConstantsI = {
         farmHousePos:new Vector3(-10,1.25,-4)
     },
     upgradeMax:20,
+    initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//you start with one farm
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 80;
         const goldCostGrowthCurve = 3.4;
@@ -89,6 +90,7 @@ export const farm02:StructureConstantsI = {
         farmHousePos:new Vector3(-10,1.25,4)
     },
     upgradeMax:20,
+    initCosts:{gold:80, farmers:100, resources:0, resourceName:null},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 80;
         const goldCostGrowthCurve = 3.4;
@@ -128,6 +130,7 @@ export const farm03:StructureConstantsI = {
         farmHousePos:new Vector3(-10,1.25,-10)
     },
     upgradeMax:20,
+    initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//this is taken from upgrade costs
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 80;
         const goldCostGrowthCurve = 3.4;
@@ -167,6 +170,7 @@ export const farm04:StructureConstantsI = {
         farmHousePos:new Vector3(-10,1.25,10)
     },
     upgradeMax:20,
+    initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//this is taken from upgrade costs
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 80;
         const goldCostGrowthCurve = 3.4;
@@ -230,6 +234,7 @@ export const mine:StructureConstantsI = {
     clickbox:'mineClickBox.glb',
     gamePos:new Vector3(-5,1.25,1),
     upgradeMax:20,
+    initCosts:{gold:250, farmers:20, resources:0 , resourceName:null},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 381;
         const goldCostGrowthCurve = 4.2;
@@ -327,6 +332,7 @@ export const forge:StructureConstantsI = {
     clickbox:'forgeClickBox.glb',
     gamePos:new Vector3(-5, 3.5, -1.5),
     upgradeMax:20,
+    initCosts:{gold:1000, farmers:80, resources:100, resourceName:'Ore'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 1814;
         const goldCostGrowthCurve = 2.8;
@@ -424,6 +430,7 @@ export const barracks:StructureConstantsI = {
     clickbox:'barracksClickBox.glb',
     gamePos:new Vector3(-5, 1.2, - 2.25),
     upgradeMax:20,
+    initCosts:{gold:4000, farmers:320, resources:180, resourceName:'Weapons'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 8635;
         const goldCostGrowthCurve = 3.4;
@@ -521,6 +528,7 @@ export const thievesGuild:StructureConstantsI = {
     clickbox:'thievesGuildClickBox.glb',
     gamePos:new Vector3(0, 1, 5),
     upgradeMax:20,
+    initCosts:{gold:16000, farmers:1280, resources:324, resourceName:'Villages'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 41103;
         const goldCostGrowthCurve = 3.4;
@@ -618,6 +626,7 @@ export const workShop:StructureConstantsI = {
     clickbox:'workShopClickBox.glb',
     gamePos:new Vector3(-5, 4.25, 1.5),
     upgradeMax:20,
+    initCosts:{gold:64000, farmers:5120, resources:583, resourceName:'Loot'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 195650;
         const goldCostGrowthCurve = 3.4;
@@ -715,6 +724,7 @@ export const tower:StructureConstantsI = {
     clickbox:'towerClickBox.glb',
     gamePos:new Vector3(-1, 6.5, -1.5),
     upgradeMax:20,
+    initCosts:{gold:256000, farmers:20480, resources:1049, resourceName:'Goldbars'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 117025;
         const goldCostGrowthCurve = 3.4;
@@ -812,6 +822,7 @@ export const tavern:StructureConstantsI = {
     clickbox:'tavernClickBox.glb',
     gamePos:new Vector3(2, 1, -5),
     upgradeMax:20,
+    initCosts:{gold:1024000, farmers:81920, resources:1888, resourceName:'Portals'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 557039;
         const goldCostGrowthCurve = 3.4;

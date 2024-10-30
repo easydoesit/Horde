@@ -20,6 +20,10 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._stewardCost = barracks.stewardCost;
         this._animationPaths = farmToBarracksPaths;
         this._upgradeMax = barracks.upgradeMax;
+        this._initGoldCost = barracks.initCosts.gold;
+        this._initFarmerCost = barracks.initCosts.farmers;
+        this._initResourceCost = barracks.initCosts.resources;
+        this._initResource = barracks.initCosts.resourceName;
         this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._resource = barracks.resource.name;
@@ -60,7 +64,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
                 break;
             }
 
-            this._animateCharacters();
+            this.animateCharacters();
     
             //update the variables
             //these ones are before the notify

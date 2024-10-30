@@ -18,6 +18,10 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._name = thievesGuild.name;
         this._character = thievesGuild.character;
         this._stewardCost = thievesGuild.stewardCost;
+        this._initGoldCost = thievesGuild.initCosts.gold;
+        this._initFarmerCost = thievesGuild.initCosts.farmers;
+        this._initResourceCost = thievesGuild.initCosts.resources;
+        this._initResource = thievesGuild.initCosts.resourceName;
         this._animationPaths = farmToThievesGuildPaths;
         this._upgradeMax = thievesGuild.upgradeMax;
         this._upgradeCostGold = thievesGuild.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -61,7 +65,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
                 break;
             }
 
-            this._animateCharacters();
+            this.animateCharacters();
 
             this._upgradeLevel += 1;
             this._cycleTime = thievesGuild.resource.cycleTime(this._upgradeLevel, thievesGuild.resource.initialCycleTime, thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));

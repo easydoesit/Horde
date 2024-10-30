@@ -18,6 +18,10 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._name = tavern.name;
         this._character = tavern.character;
         this._stewardCost = tavern.stewardCost;
+        this._initGoldCost = tavern.initCosts.gold;
+        this._initFarmerCost = tavern.initCosts.farmers;
+        this._initResourceCost = tavern.initCosts.resources;
+        this._initResource = tavern.initCosts.resourceName;
         this._animationPaths = farmToTavernPaths;
         this._upgradeMax = tavern.upgradeMax;
         this._upgradeCostGold = tavern.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -61,7 +65,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
                 break;
             }
 
-            this._animateCharacters();
+            this.animateCharacters();
     
             this._upgradeLevel += 1;
             this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));

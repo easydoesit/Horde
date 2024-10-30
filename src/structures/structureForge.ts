@@ -18,6 +18,10 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._name = forge.name;
         this._character = forge.character;
         this._stewardCost = forge.stewardCost;
+        this._initGoldCost = forge.initCosts.gold;
+        this._initFarmerCost = forge.initCosts.farmers;
+        this._initResourceCost = forge.initCosts.resources;
+        this._initResource = forge.initCosts.resourceName;
         this._animationPaths = farmToForgePaths;
         this._upgradeMax = forge.upgradeMax;
         this._upgradeCostGold = forge.nextUpgradeCostInGold(this.getUpgradeLevel());
@@ -61,7 +65,7 @@ export class StructureForge extends StructureState implements StructureStateChil
                 break;
             }
 
-            this._animateCharacters();
+            this.animateCharacters();
     
             //update the variables
             //these ones are before the notify
