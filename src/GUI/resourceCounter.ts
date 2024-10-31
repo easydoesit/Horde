@@ -59,7 +59,7 @@ export class ResourceCounter implements GUIResourceCounterI {
         this._titleWrapper.addControl(this._titleBlock);
     }
 
-    public changeText(string:string) {
+    public setText(string:string) {
         this.counterBlock.text = string;
     }
 

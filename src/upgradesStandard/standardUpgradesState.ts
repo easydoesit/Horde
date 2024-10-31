@@ -76,7 +76,7 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         return this._maxNumUpgrades;
     }
 
-    public changeMaxNumberUpgrades(value: number): void {
+    public setMaxNumberUpgrades(value: number): void {
         this._maxNumUpgrades = value;
     }
 
@@ -92,7 +92,7 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         return this._upgradeCostGold;
     }
 
-    public changeCostToUpgradeGold(amount:number):void {
+    public setCostToUpgradeGold(amount:number):void {
         this._upgradeCostGold = amount;
     }
 
@@ -100,7 +100,7 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         return this._upgradeCostFarmers;
     }
 
-    public changeCostToUpgradeFarmers(amount:number):void {
+    public setCostToUpgradeFarmers(amount:number):void {
         this._upgradeCostFarmers = amount;
     }
 
@@ -108,7 +108,7 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         return this._upgradeCostResources;
     }
 
-    public changeCostToUpgradeResources(amount:number):void {
+    public setCostToUpgradeResources(amount:number):void {
         this._upgradeCostResources = amount;
     }
 
@@ -120,7 +120,7 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         return this._instructions;    
     }
 
-    public changeInstructions(text:string):void {
+    public setInstructions(text:string):void {
         this._instructions = text;
     }
 

@@ -103,7 +103,7 @@ export class InSceneStuctureGUI extends Button {
         
     }
 
-    public changeInfoText(text:string) {
+    public setInfoText(text:string) {
         this._infoText.text = text;
     }
 

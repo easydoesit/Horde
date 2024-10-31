@@ -27,7 +27,7 @@ export class IncreaseOreValueState extends StandardUpgradeState implements Stand
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.changeUpgradableStatus(this._increaseOreValueUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseOreValueUpgradeAllowed());
         
         });
 
@@ -50,7 +50,7 @@ export class IncreaseOreValueState extends StandardUpgradeState implements Stand
         }
         //spend Resources
         if (this.getCostToUpgradeResources() > 0) {
-            console.error('Resources are not available for Increase Ore Val Upgrade! Change the nextUpgradeCostResources to return 0 or change this line of code in the upgrade State.');
+            console.error('Resources are not available for Increase Ore Val Upgrade! Change the nextUpgradeCostResources to return 0 or set this line of code in the upgrade State.');
         }
 
         //update all the properties here
@@ -64,18 +64,18 @@ export class IncreaseOreValueState extends StandardUpgradeState implements Stand
         //increase the value of Ore
         const origMultiplyer = this._scene.mine.getResourceMultiplyer();
         const newMultiplyer = origMultiplyer + this.getEffectValue();
-        this._scene.mine.changeResourceMultiplyer(newMultiplyer);
+        this._scene.mine.setResourceMultiplyer(newMultiplyer);
 
         //increase the value of Gold
         const origGoldPerCycle = this._scene.mine.getGoldPerCycle();
         const newGoldPerCycle = origGoldPerCycle + this.getEffectValue();
-        this._scene.mine.changeGoldPerCycle(newGoldPerCycle);
+        this._scene.mine.setGoldPerCycle(newGoldPerCycle);
         //notify the observers
         this.notify();
 
         //update insceneGUI
-        this._structure.changeResourcePerCycle(this._structure.getResourcePerCycle() + (this._structure.getResourcePerCycle() * this._structure.getResourceMultiplyer()/100))
-        this._structure.getInSceneGui().changeInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Ore/cycle`)
+        this._structure.setResourcePerCycle(this._structure.getResourcePerCycle() + (this._structure.getResourcePerCycle() * this._structure.getResourceMultiplyer()/100))
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Ore/cycle`)
 
     }
 

@@ -268,7 +268,7 @@ export class StructureState implements StructureStateI {
         return this._resourceAmountPerCycle;
     }
 
-    public changeResourcePerCycle(newValue: number): void {
+    public setResourcePerCycle(newValue: number): void {
         this._resourceAmountPerCycle = newValue;
     }
 
@@ -276,7 +276,7 @@ export class StructureState implements StructureStateI {
         return this._cycleTime;
     }
 
-    public changeResourceCycleTime(newTime: number): void {
+    public setResourceCycleTime(newTime: number): void {
         this._cycleTime = newTime;
     }
 
@@ -284,7 +284,7 @@ export class StructureState implements StructureStateI {
         return this._resourceMultiplyer;
     }
 
-    public changeResourceMultiplyer(newValue: number): void {
+    public setResourceMultiplyer(newValue: number): void {
         this._resourceMultiplyer = newValue;
     }
 
@@ -292,7 +292,7 @@ export class StructureState implements StructureStateI {
         return this._resourceUpgradeValue;
     }
 
-    public changeResourceUpgradeValue(newValue: number): void {
+    public setResourceUpgradeValue(newValue: number): void {
         this._resourceUpgradeValue = newValue;
     }
 
@@ -315,7 +315,7 @@ export class StructureState implements StructureStateI {
         }
     }
 
-    public changeGoldPerCycle(amount:number) {
+    public setGoldPerCycle(amount:number) {
         this._goldPerCycle = amount;
     }
 
@@ -323,7 +323,7 @@ export class StructureState implements StructureStateI {
         return this._goldMultiplyer;
     }
 
-    public changeGoldMultiplyer(newValue: number): void {
+    public setGoldMultiplyer(newValue: number): void {
         this._goldMultiplyer = newValue;
     }
 
@@ -365,7 +365,7 @@ export class StructureState implements StructureStateI {
         return this._upgradeSectionInstructions;
     }
 
-    public changeUpgradeSectionInstructions(newText:string): void {
+    public setUpgradeSectionInstructions(newText:string): void {
         this._upgradeSectionInstructions = newText;
     }
 
@@ -373,7 +373,7 @@ export class StructureState implements StructureStateI {
         return this._steward;
     }
 
-    public changeSteward(state: boolean): void {
+    public setSteward(state: boolean): void {
         this._steward = state;
     }
 

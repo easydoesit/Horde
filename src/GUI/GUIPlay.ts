@@ -176,10 +176,10 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
     public updateMathState(mathState: MathStateI): void {
         
         //Everytime the MathState Class runs the game loop these update.
-        this._farmersCount.changeText(`${mathState.getTotalFarmers().toFixed()}`);
-        this._goldPerSecondCount.changeText(`${mathState.getGoldPerSecond().toFixed(4)}`);
-        this._goldCount.changeText(`${mathState.getTotalGold().toFixed(4)}`);
-        this._lumenCount.changeText(`${this._mathState.getTotalLumens().toFixed()}`);
+        this._farmersCount.setText(`${mathState.getTotalFarmers().toFixed()}`);
+        this._goldPerSecondCount.setText(`${mathState.getGoldPerSecond().toFixed(4)}`);
+        this._goldCount.setText(`${mathState.getTotalGold().toFixed(4)}`);
+        this._lumenCount.setText(`${this._mathState.getTotalLumens().toFixed()}`);
     }
 
     public updateStructureOnCycle(resource: ResourcesT, resourceAmount: number): void {
@@ -189,37 +189,37 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
 
         switch (resource) {
             case 'Ore': {
-                this._oreCount.changeText(`${resourceAmount.toFixed(3)}`);
+                this._oreCount.setText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Weapons' : {
-                this._weaponCount.changeText(`${resourceAmount.toFixed(3)}`);
+                this._weaponCount.setText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Villages': {
-                this._villageCount.changeText(`${resourceAmount.toFixed(3)}`);
+                this._villageCount.setText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Loot' : {
-                this._lootCount.changeText(`${resourceAmount.toFixed(3)}`);
+                this._lootCount.setText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Goldbars' : {
-                this._goldBarsCount.changeText(`${resourceAmount.toFixed(3)}`);
+                this._goldBarsCount.setText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Portals': {
-                this._portalsCount.changeText(`${resourceAmount.toFixed(3)}`);
+                this._portalsCount.setText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 
             case 'Relics' : {
-                this._relicsCount.changeText(`${resourceAmount.toFixed(3)}`);
+                this._relicsCount.setText(`${resourceAmount.toFixed(3)}`);
             }
             break;
 

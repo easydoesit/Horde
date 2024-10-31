@@ -43,10 +43,10 @@ export interface MathStateI {
     getRunningFarmers():number;
     addFarmers(number:number):void;
     spendFarmers(amount:number):void;
-    changeFarmersMax():void;
+    setFarmersMax():void;
 
-    changeGoldPerSecond():number;
-    changeGoldMultiplyer(changeValue:number):void;
+    setGoldPerSecond():number;
+    setGoldMultiplyer(setValue:number):void;
     getGoldMultiplyer():number;
     getGoldPerSecond():number;
     addGold(amount:number):void;
@@ -54,7 +54,7 @@ export interface MathStateI {
     getTotalGold():number;
 
     getWheatValue():number;
-    changeWheatValue(value:number):void;
+    setWheatValue(value:number):void;
 
 }
 
@@ -83,7 +83,7 @@ export interface StructureStateI {
     getNextUpgradeLevel():number;
     getUpgradeMax():number;
     getUpgradeSectionInstructions():string;
-    changeUpgradeSectionInstructions(newText:string):void;
+    setUpgradeSectionInstructions(newText:string):void;
     
     getUpgradeCostResources():number;
     getResourceName():ResourcesT | null;
@@ -91,22 +91,22 @@ export interface StructureStateI {
     removeResource(amount:number):void;
     getTotalResourceAmount():number;  
     getResourcePerCycle():number;
-    changeResourcePerCycle(newValue:number):void;
+    setResourcePerCycle(newValue:number):void;
     getResourceCycleTime():number;
-    changeResourceCycleTime(newTime:number):void;
+    setResourceCycleTime(newTime:number):void;
     getResourceMultiplyer():number;
-    changeResourceMultiplyer(newValue:number):void;
+    setResourceMultiplyer(newValue:number):void;
     getResourceUpgradeValue():number;
-    changeResourceUpgradeValue(newValue:number):void;
+    setResourceUpgradeValue(newValue:number):void;
     getInitResourceCost():number;
     getInitResourceName():ResourcesT;
 
     getUpgradeCostGold():number;
     setUpgradeCostGold(newCost:number):void;
     getGoldPerCycle():number;
-    changeGoldPerCycle(amount:number):void;
+    setGoldPerCycle(amount:number):void;
     getGoldMultiplyer():number;
-    changeGoldMultiplyer(newValue:number):void;
+    setGoldMultiplyer(newValue:number):void;
     getInitGoldCost():number;
 
     getUpgradeCostFarmers():number;
@@ -121,7 +121,7 @@ export interface StructureStateI {
     getAddStructureButton():AddStructureButton;
 
     getSteward():boolean;
-    changeSteward(state:boolean):void;
+    setSteward(state:boolean):void;
     getStewardCost():number;
 
     getAnimationPaths():Vector3[][];
@@ -145,7 +145,7 @@ export interface StructureStateObserverOnCycleI {
 
 export interface GUIResourceCounterI {
     counterBlock:TextBlock;
-    changeText:(string:string) => void;
+    setText:(string:string) => void;
 }
 
 export interface EpicUpgradeStateI {
@@ -185,25 +185,25 @@ export interface StandardUpgradeStateI {
     getObservers():StandardUpgradeStateObserverI[];
 
     getMaxNumUpgrades():number;
-    changeMaxNumberUpgrades(value:number):void;
+    setMaxNumberUpgrades(value:number):void;
     
     getCurrentUpgradeLevel():number;
     
     getCostToUpgradeGold():number;
-    changeCostToUpgradeGold(amount:number):void;
+    setCostToUpgradeGold(amount:number):void;
 
     getCostToUpgradeFarmers():number;
-    changeCostToUpgradeFarmers(amount:number):void;
+    setCostToUpgradeFarmers(amount:number):void;
 
     getCostToUpgradeResources():number;
-    changeCostToUpgradeResources(amount:number):void;
+    setCostToUpgradeResources(amount:number):void;
     getResourceSource():StructureStateChildI;
 
     getIncrement():number;
     getEffectValue():number;
 
     getInstructions():string;
-    changeInstructions(text:string):void;
+    setInstructions(text:string):void;
 
     getStructure():StructureStateChildI;
     

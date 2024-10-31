@@ -220,7 +220,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         }
     }
 
-    public changeUpgradableStatus(status:boolean) {
+    public setUpgradableStatus(status:boolean) {
         this._upgradeAble = status;
     }
 
@@ -232,7 +232,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         return this._goldCost
     }
 
-    private changeGoldCost(amount:number):void {
+    private setGoldCost(amount:number):void {
         this._goldCost = amount;
     }
 
@@ -240,7 +240,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         return this._farmerCost
     }
 
-    private changeFarmerCost(amount:number):void {
+    private setFarmerCost(amount:number):void {
         this._farmerCost = amount;
     }
 
@@ -248,7 +248,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         return this._resourceCost;
     }
 
-    private changeResourceCost(amount:number):void {
+    private setResourceCost(amount:number):void {
         this._resourceCost = amount;
     }
 
@@ -256,7 +256,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         return this._maxNumUpgrades;
     }
 
-    public changeMaxNumUpgrades(newMax:number):void {
+    public setMaxNumUpgrades(newMax:number):void {
         this._maxNumUpgrades = newMax;
     }
 
@@ -264,7 +264,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         return this._instructions
     } 
 
-    private changeInstructions(newText:string) {
+    private setInstructions(newText:string) {
         this._instructions = newText;
         this._tBInstruction.text = this._instructions;
     }
@@ -275,21 +275,21 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         }
         
         
-        this.changeMaxNumUpgrades(upgradeState.getMaxNumUpgrades());
-        this.changeInstructions(upgradeState.getInstructions());
+        this.setMaxNumUpgrades(upgradeState.getMaxNumUpgrades());
+        this.setInstructions(upgradeState.getInstructions());
         
         if (this._tBCostGold) {
-            this.changeGoldCost(upgradeState.getCostToUpgradeGold());
+            this.setGoldCost(upgradeState.getCostToUpgradeGold());
             this._tBCostGold.text = Math.round(this.getGoldCost()).toString();
         }
         
         if (this._tBCostFarmers) {
-            this.changeFarmerCost(upgradeState.getCostToUpgradeFarmers());
+            this.setFarmerCost(upgradeState.getCostToUpgradeFarmers());
             this._tBCostFarmers.text = Math.round(this.getFarmerCost()).toString();
         }
 
         if (this._tBCostResources) {
-            this.changeResourceCost(upgradeState.getCostToUpgradeResources());
+            this.setResourceCost(upgradeState.getCostToUpgradeResources());
             this._tBCostResources.text = Math.round(this.getResourceCost()).toString();
         }
     }

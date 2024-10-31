@@ -66,7 +66,7 @@ export class FarmUpgradeWindow extends UpgradeWindow {
             })
     }
 
-    public changeFarmersMaxText(newText:string) {
+    public setFarmersMaxText(newText:string) {
         this._farmersMaxTextBox.text = newText;
     }
 }

@@ -87,7 +87,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         this.addControl(this._upgradeBtn);
         
         this._upgradeBtn.onPointerDownObservable.add(() => {
-            //change the size of the upgrade bar
+            //set the size of the upgrade bar
             const cleanString = this._cleanString(this._upgradeBar.width);
             const sizeAsFloat = this._makeFloatDivideBy100(cleanString);
             
@@ -250,7 +250,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         return this._goldCost;
     }
 
-    public changeGoldCost(amount:number):void {
+    public setGoldCost(amount:number):void {
         this._goldCost = amount;
     }
 
@@ -258,7 +258,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         return this._farmerCost;
     }
 
-    public changeFarmerCost(amount:number):void {
+    public setFarmerCost(amount:number):void {
         this._farmerCost = amount;
     }
 
@@ -266,7 +266,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         return this._resourceCost;
     }
 
-    private changeResourceCost(amount:number):void {
+    private setResourceCost(amount:number):void {
         this._resourceCost = amount;
     }
 
@@ -274,11 +274,11 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         return this._maxNumOfUpgrades;
     }
 
-    public changeMaxNumUpgrades(newMax:number):void {
+    public setMaxNumUpgrades(newMax:number):void {
         this._maxNumOfUpgrades = newMax;
     }
 
-    public changeInstructions(text:string):void {
+    public setInstructions(text:string):void {
         this._instructions = text;
         this._tBInstruction.text = this._instructions;
     }
@@ -287,27 +287,27 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         if (DEBUGMODE) {
             console.log(`${this.name} STRUCTURE upgrade section as observer is updated from ${structure.getName()}.`);
         }
-        //this is incase a bonus for max upgrades has changed in the structure
+        //this is incase a bonus for max upgrades has setd in the structure
         if (!structure.getName().includes('Farms')) {
-            this.changeMaxNumUpgrades(structure.getUpgradeMax());
+            this.setMaxNumUpgrades(structure.getUpgradeMax());
         } else {
-            this.changeMaxNumUpgrades((structure as StructureFarms).getUpgradeMax()/(structure as StructureFarms).getAllFarms().length);
+            this.setMaxNumUpgrades((structure as StructureFarms).getUpgradeMax()/(structure as StructureFarms).getAllFarms().length);
         }
 
-        this.changeInstructions(structure.getUpgradeSectionInstructions());
+        this.setInstructions(structure.getUpgradeSectionInstructions());
 
         if (this._tBCostGold) {
-            this.changeGoldCost(structure.getUpgradeCostGold());
+            this.setGoldCost(structure.getUpgradeCostGold());
             this._tBCostGold.text = Math.round(this.getGoldCost()).toString();
         }
         
         if (this._tBCostFarmers) {
-            this.changeFarmerCost(structure.getUpgradeCostFarmers());
+            this.setFarmerCost(structure.getUpgradeCostFarmers());
             this._tBCostFarmers.text = Math.round(this.getFarmerCost()).toString();
         }
 
         if (this._tBCostResources) {
-            this.changeResourceCost(structure.getUpgradeCostResources());
+            this.setResourceCost(structure.getUpgradeCostResources());
             this._tBCostResources.text = Math.round(this.getResourceCost()).toString();
         }
         

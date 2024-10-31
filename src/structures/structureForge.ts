@@ -61,7 +61,7 @@ export class StructureForge extends StructureState implements StructureStateChil
         //these ones are before the notify
         this._upgradeLevel += 1;
         this._cycleTime = forge.resource.cycleTime(this.getUpgradeLevel(),forge.resource.initialCycleTime, forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
-        this.changeUpgradeSectionInstructions(`Speeds Up Weapon Resourceion by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+        this.setUpgradeSectionInstructions(`Speeds Up Weapon Resourceion by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
         //update the observers
         this.notifyObserversOnUpgrade();
 
@@ -69,10 +69,10 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._upgradeCostResources = forge.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._upgradeCostGold = forge.nextUpgradeCostInGold(this.getUpgradeLevel());
 
-        //change models
+        //set models
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
             console.log('switch says level is:', this.getUpgradeLevel());
-            //change the structures
+            //set the structures
             switch(this.getUpgradeLevel()) {
                 
                 case 1 :  {
@@ -98,8 +98,8 @@ export class StructureForge extends StructureState implements StructureStateChil
         //upgrade the State
         this.upgradeState();
 
-        this.getUpgradeSection().changeGoldCost(this.getUpgradeCostGold());
-        this.getUpgradeSection().changeFarmerCost(this.getUpgradeCostFarmers());
+        this.getUpgradeSection().setGoldCost(this.getUpgradeCostGold());
+        this.getUpgradeSection().setFarmerCost(this.getUpgradeCostFarmers());
 
     }
 

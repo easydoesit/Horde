@@ -46,7 +46,7 @@ export class AddStewardButton extends Button {
             this._structure.getUpgradesWindow().getPanelContainer().addControl(this);
             
             this.onPointerDownObservable.add(() => {
-                this._structure.changeSteward(true);
+                this._structure.setSteward(true);
                 this.isEnabled = false;
                 
             })

@@ -26,7 +26,7 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
     
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.changeUpgradableStatus(this._wheatUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._wheatUpgradeAllowed());
         
         });
 
@@ -43,11 +43,11 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         }
         //spend Farmers
         if (this.getCostToUpgradeFarmers() > 0) {
-            console.error('Farmers are not available for Wheat Upgrade! Change the nextUpgradeCostFarmers to return 0 or change this line of code in the upgrade State.');
+            console.error('Farmers are not available for Wheat Upgrade! Change the nextUpgradeCostFarmers to return 0 or set this line of code in the upgrade State.');
         }
         //spend Resources
         if (this.getCostToUpgradeResources() > 0) {
-            console.error('Resources are not available for Wheat Upgrade! Change the nextUpgradeCostResources to return 0 or change this line of code in the upgrade State.');
+            console.error('Resources are not available for Wheat Upgrade! Change the nextUpgradeCostResources to return 0 or set this line of code in the upgrade State.');
         }
         
         //update all the properties here
@@ -59,7 +59,7 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         this._instructions = this._makeInstructions(); 
 
         //increase the value of wheat
-        this._scene.mathState.changeWheatValue(this.getEffectValue());
+        this._scene.mathState.setWheatValue(this.getEffectValue());
 
         //notify the observers
         this.notify();

@@ -26,7 +26,7 @@ export class BaseGoldPercentUpgradeState extends EpicUpgradeState implements Epi
             this._currentUpgradeLevel += 1;
             this._costToUpgrade = Math.round(baseGoldPercentCostLumens(this._currentUpgradeLevel, this._upgradeNumMax, this._baseCostLumens));
             this._instructions = baseGoldPercentInstructions(this._currentUpgradeLevel, this._increment);
-            this._changeValue(); //comes from parent class
+            this._setValue(); //comes from parent class
             this._updateStructures();
             this.notify(); //comes from parent class
         }
@@ -41,7 +41,7 @@ export class BaseGoldPercentUpgradeState extends EpicUpgradeState implements Epi
                 const currentAmount = structures[i].getGoldPerCycle();
                 const newAmount = this._currentValue * currentAmount;
 
-                structures[i].changeGoldPerCycle(newAmount);
+                structures[i].setGoldPerCycle(newAmount);
             
             }
         }

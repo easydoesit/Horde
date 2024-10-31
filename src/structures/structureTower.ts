@@ -61,7 +61,7 @@ export class StructureTower extends StructureState implements StructureStateChil
         //these ones are before the notify
         this._upgradeLevel += 1;
         this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
-        this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+        this.setUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
         //update the observers
         this.notifyObserversOnUpgrade();
 
@@ -69,10 +69,10 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._upgradeCostFarmers = tower.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = tower.nextUpgradeCostInResources(this.getUpgradeLevel());
 
-        //change models
+        //set models
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
             console.log('switch says level is:', this.getUpgradeLevel());
-            //change the structures
+            //set the structures
             switch(this.getUpgradeLevel()) {
                 
                 case 1 :  {
@@ -98,8 +98,8 @@ export class StructureTower extends StructureState implements StructureStateChil
         //upgrade the State
         this.upgradeState();
 
-        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
-        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+        this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
 
     }
 

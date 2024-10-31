@@ -82,7 +82,7 @@ export class EpicUpgradeState implements EpicUpgradeStateI{
         return this._costToUpgrade;
     }
 
-    protected _changeValue():void {   
+    protected _setValue():void {   
         this._currentValue = this._currentUpgradeLevel * this._increment;
     }
 }

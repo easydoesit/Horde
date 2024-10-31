@@ -122,8 +122,8 @@ export class StructureFarms extends StructureState implements StructureStateChil
         for (let i in this._allFarms) {
             const farm = this._allFarms[i];
 
-            farm.upgradeSection.changeInstructions(farm.upgradeSectionInstructions);
-            farm.upgradeSection.changeMaxNumUpgrades(this.getUpgradeMax()/this.getAllFarms().length);
+            farm.upgradeSection.setInstructions(farm.upgradeSectionInstructions);
+            farm.upgradeSection.setMaxNumUpgrades(this.getUpgradeMax()/this.getAllFarms().length);
         
         }
 
@@ -149,7 +149,7 @@ export class StructureFarms extends StructureState implements StructureStateChil
 
         this._upgradeLevel += 1;
         this._goldMultiplyer = farms.goldMultiplyer(this.getNextUpgradeLevel(), this.getUpgradeMax());
-        (this.getUpgradesWindow() as FarmUpgradeWindow).changeFarmersMaxText(this.getScene().mathState.getFarmersMax().toFixed());
+        (this.getUpgradesWindow() as FarmUpgradeWindow).setFarmersMaxText(this.getScene().mathState.getFarmersMax().toFixed());
 
         this.setUpgradeCostGold(farms.nextUpgradeCostInGold(this._upgradeLevel));
         
@@ -169,8 +169,8 @@ export class StructureFarms extends StructureState implements StructureStateChil
         for (let i in this._allFarms) {
             const farm = this._allFarms[i];
             farm.upgradeSectionInstructions = `Next Upgrade allows ${(this.getScene().mathState.getFarmersMax()/amountAlive).toFixed()} farmers on ${farm.name}`;
-            farm.upgradeSection.changeInstructions(farm.upgradeSectionInstructions);
-            farm.upgradeSection.changeGoldCost(this.getUpgradeCostGold());
+            farm.upgradeSection.setInstructions(farm.upgradeSectionInstructions);
+            farm.upgradeSection.setGoldCost(this.getUpgradeCostGold());
             
             if (farm.addStructureButton !== null) {
                 farm.addStructureButton.setGoldCostText(`Cost Gold: ${this.getUpgradeCostGold().toFixed()}`);

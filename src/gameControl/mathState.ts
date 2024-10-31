@@ -33,7 +33,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         this._totalFarmers = startingFarmers;
         this._runningFarmers = 0;
         this._farmersMax = 0;
-        this.changeFarmersMax();
+        this.setFarmersMax();
     
         this._totalGold = startingGold;
         this._goldPerSecond = 0;
@@ -52,8 +52,8 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
 
         this._scene.onBeforeRenderObservable.add(() => {
             
-            this._goldPerSecond = this.changeGoldPerSecond();
-            this.changeFinalGold();
+            this._goldPerSecond = this.setGoldPerSecond();
+            this.setFinalGold();
             this.notify();
         
         })
@@ -103,7 +103,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     }
 
     //Gold
-    private changeFinalGold() {    
+    private setFinalGold() {    
         
         const goldPerFrame = this.getGoldPerSecond() * (this._scene.getEngine().getDeltaTime()/1000);
 
@@ -111,7 +111,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     
     }
 
-    public changeGoldPerSecond() {
+    public setGoldPerSecond() {
 
         return (1 + this.getWheatValue()) * this._farmerMultiplyByBaseVal(this.getTotalFarmers()) * this.getGoldMultiplyer();
 
@@ -143,8 +143,8 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         return this._goldMultiplyer;
     }
 
-    public changeGoldMultiplyer(changeValue: number):void {
-        this._goldMultiplyer = this.getGoldMultiplyer() * changeValue;
+    public setGoldMultiplyer(setValue: number):void {
+        this._goldMultiplyer = this.getGoldMultiplyer() * setValue;
     }
 
     //Lumens
@@ -195,7 +195,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         return this._runningFarmers;
     }
 
-    public changeFarmersMax():void {
+    public setFarmersMax():void {
         let total = 0;
 
         total += farmersMaxPerFarm(this._scene.farms.getUpgradeLevel());
@@ -211,7 +211,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         return this._wheatValue;
     }
 
-    public changeWheatValue(value: number): void {
+    public setWheatValue(value: number): void {
         this._wheatValue = value;
     }
 
@@ -224,11 +224,11 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         this.spendFarmers(structure.getUpgradeCostFarmers());
         this.spendGold(structure.getUpgradeCostGold());
         const newGoldMultiplyer = this.getGoldMultiplyer() + (this.getGoldMultiplyer() * structure.getGoldMultiplyer()/100);
-        this.changeGoldMultiplyer(newGoldMultiplyer);
+        this.setGoldMultiplyer(newGoldMultiplyer);
 
 
         if (structure.getName().includes("Farms")){
-            this.changeFarmersMax();
+            this.setFarmersMax();
         } 
 
         if (DEBUGMODE) {

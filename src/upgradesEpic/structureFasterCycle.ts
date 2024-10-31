@@ -25,7 +25,7 @@ export class StructuresFasterCyclesState extends EpicUpgradeState implements Epi
             this._currentUpgradeLevel +=1;
             this._costToUpgrade  = Math.round(structureFasterCyclesCostLumens(this._currentUpgradeLevel, this._upgradeNumMax, this._baseCostLumens))
             this._instructions = structureFasterCyclesInstructions(this._currentUpgradeLevel, this._increment);
-            this._changeValue();
+            this._setValue();
             this._updateStructures();
             this.notify();
         }
@@ -42,7 +42,7 @@ export class StructuresFasterCyclesState extends EpicUpgradeState implements Epi
                 const currentCycleTime = structure.getResourceCycleTime();
                 const cycleTime = currentCycleTime * 1.05;
                 console.log(cycleTime);
-                structure.changeResourceCycleTime(cycleTime);
+                structure.setResourceCycleTime(cycleTime);
 
             }
         }

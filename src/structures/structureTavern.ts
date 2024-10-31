@@ -59,7 +59,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
 
         this._upgradeLevel += 1;
         this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
-        this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+        this.setUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
 
         this.notifyObserversOnUpgrade();
 
@@ -67,10 +67,10 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._upgradeCostGold = tavern.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostResources = tavern.nextUpgradeCostInResources(this._upgradeLevel);
 
-        //change models
+        //set models
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
             console.log('switch says level is:', this.getUpgradeLevel());
-            //change the structures
+            //set the structures
             switch(this.getUpgradeLevel()) {
                 
                 case 1 :  {
@@ -98,8 +98,8 @@ export class StructureTavern extends StructureState implements StructureStateChi
 
         this.notifyObserversOnUpgrade();
 
-        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
-        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+        this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
 
     }
 

@@ -27,7 +27,7 @@ export class IncreaseMiningSpeedState extends StandardUpgradeState implements St
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.changeUpgradableStatus(this._increaseMiningSpeedUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseMiningSpeedUpgradeAllowed());
         
         });
 
@@ -44,11 +44,11 @@ export class IncreaseMiningSpeedState extends StandardUpgradeState implements St
         }
         //spend Farmers
         if (this.getCostToUpgradeFarmers() > 0) {
-            console.error('Farmers are not available for Increase Ore Val Upgrade! Change the nextUpgradeCostFarmers to return 0 or change this line of code in the upgrade State.');
+            console.error('Farmers are not available for Increase Ore Val Upgrade! Change the nextUpgradeCostFarmers to return 0 or set this line of code in the upgrade State.');
         }
         //spend Resources
         if (this.getCostToUpgradeResources() > 0) {
-            console.error('Resources are not available for Increase Ore Val Upgrade! Change the nextUpgradeCostResources to return 0 or change this line of code in the upgrade State.');
+            console.error('Resources are not available for Increase Ore Val Upgrade! Change the nextUpgradeCostResources to return 0 or set this line of code in the upgrade State.');
         }
 
         //update all the properties here
@@ -62,7 +62,7 @@ export class IncreaseMiningSpeedState extends StandardUpgradeState implements St
         //increase the mining Speed
         const oldCycleTime = this._structure.getResourceCycleTime();
         const newCycleTime = oldCycleTime + (oldCycleTime * this.getEffectValue());
-        this._structure.changeResourceCycleTime(newCycleTime);
+        this._structure.setResourceCycleTime(newCycleTime);
 
         //notify the observers
         this.notify();

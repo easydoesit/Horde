@@ -59,7 +59,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
 
         this._upgradeLevel += 1;
         this._cycleTime = thievesGuild.resource.cycleTime(this._upgradeLevel, thievesGuild.resource.initialCycleTime, thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
-        this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+        this.setUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
         //update the observers
         this.notifyObserversOnUpgrade();
 
@@ -67,10 +67,10 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._upgradeCostFarmers = thievesGuild.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = thievesGuild.nextUpgradeCostInResources(this.getUpgradeLevel());
 
-        //change models
+        //set models
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
             console.log('switch says level is:', this.getUpgradeLevel());
-            //change the structures
+            //set the structures
             switch(this.getUpgradeLevel()) {
                 
                 case 1 :  {
@@ -96,8 +96,8 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         //upgrade the State
         this.upgradeState();
 
-        this._upgradeSection.changeGoldCost(this.getUpgradeCostGold());
-        this._upgradeSection.changeFarmerCost(this.getUpgradeCostFarmers());
+        this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
+        this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
     }
 
     private _thievesGuildAdditionCallback() {
