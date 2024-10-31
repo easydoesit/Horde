@@ -40,7 +40,8 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._addStewartButton = new AddStewardButton('addTavernStewardButton', this);
         this._addUpgradePanel();
 
-        this._moveStructuresToGamePosition();
+        this._moveStructureToStartPosition();
+        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

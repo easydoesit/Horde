@@ -40,7 +40,8 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._addStewartButton = new AddStewardButton('addThievesGuildStewardButton', this);
         this._addUpgradePanel();
 
-        this._moveStructuresToGamePosition();
+        this._moveStructureToStartPosition();
+        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

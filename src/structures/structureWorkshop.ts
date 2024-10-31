@@ -40,7 +40,8 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._addStewartButton = new AddStewardButton('addWorkshopStewardButton', this);
         this._addUpgradePanel();
 
-        this._moveStructuresToGamePosition();
+        this._moveStructureToStartPosition();
+        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

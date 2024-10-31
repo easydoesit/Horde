@@ -40,7 +40,8 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._addStewartButton = new AddStewardButton('addTowerStewardButton', this);
         this._addUpgradePanel();
 
-        this._moveStructuresToGamePosition();
+        this._moveStructureToStartPosition();
+        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

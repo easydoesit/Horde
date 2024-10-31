@@ -144,8 +144,8 @@ export class AddStructureButton extends Button {
         this.isVisible = false;
 
         //move the _structure into view
+        this._structure.moveStructuresToGamePosition();
         const structure = this._structure.getStructureModels();
-        structure.position.y = structure.gamePosition.y;
         structure.showModel(0);
 
         //do the scene animations here

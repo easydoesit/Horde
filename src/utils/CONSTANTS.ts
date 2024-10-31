@@ -39,7 +39,7 @@ export const castlePos = new Vector3(-.2, 7.3, .4);
 
 export const farms:StructureConstantsI = {
     name: 'Farms',
-    models:['farm01.glb', 'farm02.glb'],
+    models:['farms.glb', 'farm02.glb'],
     clickbox:'farmClickBox.glb',
     gamePos:new Vector3(0,.5,-4),
     otherProps: {
@@ -77,180 +77,10 @@ export const farms:StructureConstantsI = {
     },
     goldPerCycle:0,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
-        if (upgradeLevel = 1) { //farm01 starts without an upgrade Associated with it.
+        if (upgradeLevel = 1) { //farms starts without an upgrade Associated with it.
             return 1;           //so we want to make sure we return 1.
         } else {
 
-            const logTarget = 1;
-            const UGLevel = upgradeLevel;
-            const UGLimit = upgradeLimit;
-            const curveBalance = 5
-            const initUGImprovement = 2
-
-            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
-            
-            return finalValue;
-        }
-    },
-    character:'farmer',
-    stewardCost:null,
-    resource:null,
-};
-
-
-export const farm01:StructureConstantsI = {
-    name:'Farm01',
-    models:['farm01.glb', 'farm02.glb'],
-    clickbox:'farmClickBox.glb',
-    gamePos:new Vector3(0,.5,-4),
-    otherProps: {
-        farmHousePos:new Vector3(-10,1.25,-4)
-    },
-    upgradeMax:20,
-    initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//you start with one farm
-    nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 80;
-        const goldCostGrowthCurve = 3.4;
-        const UGLevel = upgradeLevel + 1;
-
-        return initGoldCost * goldCostGrowthCurve * UGLevel;
-    },
-    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        return 0
-    },
-    nextUpgradeCostInResources: (upgradeLevel:number) => {
-        return 0
-    },
-    goldPerCycle:0,
-    goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
-        if (upgradeLevel = 1) { //farm01 starts without an upgrade Associated with it.
-            return 1;           //so we want to make sure we return 1.
-        } else {
-
-            const logTarget = 1;
-            const UGLevel = upgradeLevel;
-            const UGLimit = upgradeLimit;
-            const curveBalance = 5
-            const initUGImprovement = 2
-
-            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
-            
-            return finalValue;
-        }
-    },
-    character:'farmer',
-    stewardCost:null,
-    resource:null,
-};
-
-export const farm02:StructureConstantsI = {
-    name:'Farm02',
-    models:['farm01.glb', 'farm02.glb'],
-    clickbox:'farmClickBox.glb',
-    gamePos:new Vector3(0,.5,4),
-    otherProps: {
-        farmHousePos:new Vector3(-10,1.25,4)
-    },
-    upgradeMax:20,
-    initCosts:{gold:80, farmers:100, resources:0, resourceName:null},
-    nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 80;
-        const goldCostGrowthCurve = 3.4;
-        const UGLevel = upgradeLevel + 1;
-
-        return initGoldCost * goldCostGrowthCurve * UGLevel;
-    },
-    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        return 0
-    },
-    nextUpgradeCostInResources: (upgradeLevel:number) => {
-        return 0
-    },
-    goldPerCycle:0,
-    goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
-        const logTarget = 1;
-        const UGLevel = upgradeLevel;
-        const UGLimit = upgradeLimit;
-        const curveBalance = 5
-        const initUGImprovement = 2
-
-        const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
-        
-        return finalValue;
-    },
-    character:'farmer',
-    stewardCost:null,
-    resource:null,
-};
-
-export const farm03:StructureConstantsI = {
-    name:'Farm03',
-    models:['farm01.glb', 'farm02.glb'],
-    clickbox:'farmClickBox.glb',
-    gamePos:new Vector3(0,.5,-12),
-    otherProps: {
-        farmHousePos:new Vector3(-10,1.25,-10)
-    },
-    upgradeMax:20,
-    initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//this is taken from upgrade costs
-    nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 80;
-        const goldCostGrowthCurve = 3.4;
-        const UGLevel = upgradeLevel + 1;
-
-        return initGoldCost * goldCostGrowthCurve * UGLevel;
-    },
-    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        return 0
-    },
-    nextUpgradeCostInResources: (upgradeLevel:number) => {
-        return 0
-    },
-    goldPerCycle:0,
-    goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
-        const logTarget = 1;
-        const UGLevel = upgradeLevel;
-        const UGLimit = upgradeLimit;
-        const curveBalance = 5
-        const initUGImprovement = 2
-
-        const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
-        
-        return finalValue;
-    },
-    character:'farmer',
-    stewardCost:null,
-    resource:null,
-};
-
-export const farm04:StructureConstantsI = {
-    name:'Farm04',
-    models:['farm01.glb', 'farm02.glb'],
-    clickbox:'farmClickBox.glb',
-    gamePos:new Vector3(0,.5,12),
-    otherProps: {
-        farmHousePos:new Vector3(-10,1.25,10)
-    },
-    upgradeMax:20,
-    initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//this is taken from upgrade costs
-    nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 80;
-        const goldCostGrowthCurve = 3.4;
-        const UGLevel = upgradeLevel + 1;
-
-        return initGoldCost * goldCostGrowthCurve * UGLevel;
-    },
-    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        return 0
-    },
-    nextUpgradeCostInResources: (upgradeLevel:number) => {
-        return 0
-    },
-    goldPerCycle:0,
-    goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
-        if (upgradeLevel === 0 ) {
-            return 0;
-        } else {
             const logTarget = 1;
             const UGLevel = upgradeLevel;
             const UGLimit = upgradeLimit;
@@ -279,17 +109,6 @@ export const farmersMaxPerFarm = (upgradeLevel:number) => {
         return upgradeLevel * a * baseFarmerMultiplyer;
     }
 } 
-
-const castleToFarmPath = [
-    new Vector3(-2.8552, 6.0224, -0.29624),
-    new Vector3(-2.3188, 5.3886, 0.96662),
-    new Vector3(-3.7859, 2.5797, -1.9741),
-    new Vector3(-4.064, 2.0743, 1.3783),
-    new Vector3(-4.9398, 1.318, -0.38271),
-    farm01.otherProps.farmHousePos,
-]
-
-export const castleToFarmPaths = [castleToFarmPath];
 
 ////////////////////////////////
 ///////////  Mine  /////////////
@@ -978,169 +797,180 @@ export const tavern:StructureConstantsI = {
 
 ///Paths
 
+const castleToFarmPath = [
+    new Vector3(-2.8552, 6.0224, -0.29624),
+    new Vector3(-2.3188, 5.3886, 0.96662),
+    new Vector3(-3.7859, 2.5797, -1.9741),
+    new Vector3(-4.064, 2.0743, 1.3783),
+    new Vector3(-4.9398, 1.318, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+]
+
+export const castleToFarmPaths = [castleToFarmPath];
+
 const farmToMinePath01 = [
-    farm01.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+    new Vector3(farms.otherProps.farm01.farmHousePos.x + 2, 1.25, -0.38271),
     mine.gamePos,
     
 ];
 const farmToMinePath02 = [
-    farm02.otherProps.farmHousePos,
-    new Vector3(farm02.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm02.farmHousePos,
+    new Vector3(farms.otherProps.farm02.farmHousePos.x + 2, 1.25, -0.38271),
     mine.gamePos,
 ];
 const farmToMinePath03 = [
-    farm03.otherProps.farmHousePos,
-    new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm03.farmHousePos,
+    new Vector3(farms.otherProps.farm03.farmHousePos.x + 2, 1.25, -0.38271),
     mine.gamePos,
 ];
 const farmToMinePath04 = [
-    farm04.otherProps.farmHousePos.x,
-    new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm04.farmHousePoss.x,
+    new Vector3(farms.otherProps.farm04.farmHousePos.x + 2, 1.25, -0.38271),
     mine.gamePos,
 ];
 
 export const farmToMinePaths = [farmToMinePath01, farmToMinePath02, farmToMinePath03, farmToMinePath04];
 
 const farmToForgePath01 = [
-    farm01.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+    new Vector3(farms.otherProps.farm01.farmHousePos.x + 2, 1.25, -0.38271),
     forge.gamePos,
     
 ];
 const farmToForgePath02 = [
-    farm02.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm02.farmHousePos,
+    new Vector3(farms.otherProps.farm02.farmHousePos.x + 2, 1.25, -0.38271),
     forge.gamePos,
 ];
 const farmToForgePath03 = [
-    farm03.otherProps.farmHousePos,
-    new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm03.farmHousePoss,
+    new Vector3(farms.otherProps.farm03.farmHousePos.x + 2, 1.25, -0.38271),
     forge.gamePos,
 ];
 const farmToForgePath04 = [
-    farm04.otherProps.farmHousePos,
-    new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm04.farmHousePos,
+    new Vector3(farms.otherProps.farm04.farmHousePos.x + 2, 1.25, -0.38271),
     forge.gamePos,
 ];
 
 export const farmToForgePaths = [farmToForgePath01, farmToForgePath02, farmToForgePath03, farmToForgePath04];
 
 const farmToBarracksPath01 = [
-    farm01.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+    new Vector3(farms.otherProps.farm01.farmHousePos.x + 2, 1.25, -0.38271),
     barracks.gamePos,
     
 ];
 const farmToBarracksPath02 = [
-    farm02.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm02.farmHousePos,
+    new Vector3(farms.otherProps.farm02.farmHousePos.x + 2, 1.25, -0.38271),
     barracks.gamePos,
 ];
 const farmToBarracksPath03 = [
-    farm03.otherProps.farmHousePos,
-    new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm03.farmHousePos,
+    new Vector3(farms.otherProps.farm03.farmHousePos.x + 2, 1.25, -0.38271),
     barracks.gamePos,
 ];
 const farmToBarracksPath04 = [
-    farm04.otherProps.farmHousePos,
-    new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm04.farmHousePos,
+    new Vector3(farms.otherProps.farm04.farmHousePos.x + 2, 1.25, -0.38271),
     barracks.gamePos,
 ];
 
 export const farmToBarracksPaths = [farmToBarracksPath01, farmToBarracksPath02, farmToBarracksPath03, farmToBarracksPath04];
 
 const farmToThievesGuildPath01 = [
-    farm01.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+    new Vector3(farms.otherProps.farm01.farmHousePos.x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
     
 ];
 const farmToThievesGuildPath02 = [
-    farm02.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm02.farmHousePos,
+    new Vector3(farms.otherProps.farm02.farmHousePos.x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
 ];
 const farmToThievesGuildPath03 = [
-    farm03.otherProps.farmHousePos,
-    new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm03.farmHousePos,
+    new Vector3(farms.otherProps.farm03.farmHousePos.x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
 ];
 const farmToThievesGuildPath04 = [
-    farm04.otherProps.farmHousePos,
-    new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm04.farmHousePos,
+    new Vector3(farms.otherProps.farm04.farmHousePos.x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
 ];
 
 export const farmToThievesGuildPaths = [farmToThievesGuildPath01, farmToThievesGuildPath02, farmToThievesGuildPath03, farmToThievesGuildPath04];
 
 const farmToWorkShopPath01 = [
-    farm01.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+    new Vector3(farms.otherProps.farm01.farmHousePos.x + 2, 1.25, -0.38271),
     workShop.gamePos,
     
 ];
 const farmToWorkShopPath02 = [
-    farm02.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm02.farmHousePos,
+    new Vector3(farms.otherProps.farm02.farmHousePos.x + 2, 1.25, -0.38271),
     workShop.gamePos,
 ];
 const farmToWorkShopPath03 = [
-    farm03.otherProps.farmHousePos,
-    new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm03.farmHousePos,
+    new Vector3(farms.otherProps.farm03.farmHousePos.x + 2, 1.25, -0.38271),
     workShop.gamePos,
 ];
 const farmToWorkShopPath04 = [
-    farm04.otherProps.farmHousePos,
-    new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm04.farmHousePos,
+    new Vector3(farms.otherProps.farm04.farmHousePoss.x + 2, 1.25, -0.38271),
     workShop.gamePos,
 ];
 
 export const farmToWorkShopPaths = [farmToWorkShopPath01, farmToWorkShopPath02, farmToWorkShopPath03, farmToWorkShopPath04];
 
 const farmToTowerPath01 = [
-    farm01.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+    new Vector3(farms.otherProps.farm01.farmHousePos.x + 2, 1.25, -0.38271),
     tower.gamePos,
     
 ];
 const farmToTowerPath02 = [
-    farm02.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm02.farmHousePos,
+    new Vector3(farms.otherProps.farm02.farmHousePos.x + 2, 1.25, -0.38271),
     tower.gamePos,
 ];
 const farmToTowerPath03 = [
-    farm03.otherProps.farmHousePos,
-    new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm03.farmHousePos,
+    new Vector3(farms.otherProps.farm03.farmHousePos.x + 2, 1.25, -0.38271),
     tower.gamePos,
 ];
 const farmToTowerPath04 = [
-    farm04.otherProps.farmHousePos,
-    new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm04.farmHousePos,
+    new Vector3(farms.otherProps.farm04.farmHousePos.x + 2, 1.25, -0.38271),
     tower.gamePos,
 ];
 
 export const farmToTowerPaths = [farmToTowerPath01, farmToTowerPath02, farmToTowerPath03, farmToTowerPath04];
 
 const farmToTavernPath01 = [
-    farm01.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm01.farmHousePos,
+    new Vector3(farms.otherProps.farm01.farmHousePos.x + 2, 1.25, -0.38271),
     tavern.gamePos,
     
 ];
 const farmToTavernPath02 = [
-    farm02.otherProps.farmHousePos,
-    new Vector3(farm01.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm02.farmHousePos,
+    new Vector3(farms.otherProps.farm02.farmHousePos.x + 2, 1.25, -0.38271),
     tavern.gamePos,
 ];
 const farmToTavernPath03 = [
-    farm03.otherProps.farmHousePos,
-    new Vector3(farm03.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm03.farmHousePos,
+    new Vector3(farms.otherProps.farm03.farmHousePos.x + 2, 1.25, -0.38271),
     tavern.gamePos,
 ];
 const farmToTavernPath04 = [
-    farm04.otherProps.farmHousePos,
-    new Vector3(farm04.otherProps.farmHousePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.farm04.farmHousePos,
+    new Vector3(farms.otherProps.farm04.farmHousePos.x + 2, 1.25, -0.38271),
     tavern.gamePos,
 ];
 

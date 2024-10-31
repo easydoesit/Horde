@@ -178,7 +178,7 @@ export class StructureState implements StructureStateI {
             for(let i in this._scene.farms.getAllFarms()) {
                 const farm = this._scene.farms.getAllFarms()[i];
                 
-                if (this._scene.farms._alive === true) {
+                if (farm.alive === true) {
                     usableFarms.push(farm);
                 }
             }
@@ -351,8 +351,15 @@ export class StructureState implements StructureStateI {
         this.getUpgradesWindow().getPanelContainer().addControl(this.getUpgradeSection());
     }
 
-    protected _moveStructuresToGamePosition():void{
+    public moveStructuresToGamePosition():void{
+        console.log(this.getStructureModels().position);
+        console.log(this.getStructureModels().gamePosition);
         this.getStructureModels().position = this.getStructureModels().gamePosition;
+    }
+
+    protected _moveStructureToStartPosition():void {
+        this.getStructureModels().position = this.getStructureModels().gamePosition;
+        this.getStructureModels().position.y = this.getStructureModels().position.y -20;
     }
 
     public getUpgradeSectionInstructions(): string {

@@ -40,7 +40,8 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._addStewartButton = new AddStewardButton('addForgeStewardButton', this);
         this._addUpgradePanel();
 
-        this._moveStructuresToGamePosition();
+        this._moveStructureToStartPosition();
+        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

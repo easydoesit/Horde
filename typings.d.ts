@@ -113,6 +113,7 @@ export interface StructureStateI {
     getInitFarmerCost():number;
 
     getStructureModels():StructureModel;
+    moveStructuresToGamePosition():void
     
     getInSceneGui():InSceneStuctureGUI;
     getUpgradesWindow():UpgradeWindow;
