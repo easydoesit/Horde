@@ -9,6 +9,7 @@ import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
+import { farmsT } from "./structureFarms";
 
 export class StructureState implements StructureStateI {
     protected _name:StructureNamesT;
@@ -172,11 +173,13 @@ export class StructureState implements StructureStateI {
             }
             
             //get the farms that have been upgraded
-            const usableFarms:StructureStateI[] = [];
+            const usableFarms:farmsT[] = [];
     
-            for(let i in this._scene.farms) {
-                if (this._scene.farms[i].getAlive()) {
-                    usableFarms.push(this._scene.farms[i]);
+            for(let i in this._scene.farms.getAllFarms()) {
+                const farm = this._scene.farms.getAllFarms()[i];
+                
+                if (this._scene.farms._alive === true) {
+                    usableFarms.push(farm);
                 }
             }
             
@@ -228,6 +231,9 @@ export class StructureState implements StructureStateI {
 
     public getUpgradeCostGold(): number {
         return this._upgradeCostGold;    
+    }
+    setUpgradeCostGold(newCost: number): void {
+        this._upgradeCostGold = newCost;
     }
 
     public getUpgradeCostResources():number {

@@ -1,7 +1,7 @@
 import { Button } from "@babylonjs/gui";
 import { StructureStateChildI } from "../../typings";
 import { farmersMaxPerFarm } from "./CONSTANTS";
-import { FarmUpgradeWindow } from "../GUI/farmUpgrades/farmUpgradeWindow";
+import { farmsT, StructureFarms } from "../structures/structureFarms";
 
 export const makeButtonEnabled = (button:Button, upgradable:boolean, currentNumUpgrades:number ,maxNumUpgrades:number) => {
 
@@ -49,20 +49,15 @@ export  const checkUpgradeFarmersMax = (farm:StructureStateChildI) => {
     return total;
 }
 
-export const farmUpgradeCallBack = (farm:StructureStateChildI) => {
-    farm.upgradeState();
-
-    farm.getUpgradeSection().changeGoldCost(farm.getUpgradeCostGold());
-    (farm.getUpgradesWindow() as FarmUpgradeWindow).changeFarmersMaxText(`Max Farmers: ${farm.getScene().mathState.getFarmersMax().toFixed()}`);
-    
-
+export const farmsUpgradeCallBack = (farms:StructureFarms) => {
+    farms.upgradeState();
 }
 
-export const farmUpgradeAllowed = (farm:StructureStateChildI) => {
+export const farmUpgradeAllowed = (farms:StructureStateChildI) => {
     
-    if (farm.getUpgradeLevel() < farm.getUpgradeMax()) {
+    if (farms.getUpgradeLevel() < farms.getUpgradeMax()) {
 
-        if (farm.getScene().mathState.getTotalGold() >= farm.getUpgradeCostGold()) {
+        if (farms.getScene().mathState.getTotalGold() >= farms.getUpgradeCostGold()) {
             return true;
         } else {
             return false;
@@ -70,56 +65,12 @@ export const farmUpgradeAllowed = (farm:StructureStateChildI) => {
     }
 }
 
-export const  farmAdditionCallback = (thisFarm:StructureStateChildI, nextButton:Button) => {
-    console.log('Farm Addition Callback Called');
+export const farmAdditionAllowed = (farm:farmsT, farms:StructureStateChildI) => {
     
-    //show the upgrade section for this farm
-    thisFarm.getUpgradeSection().isVisible = true;
-
-    //make the next add Farm Button Available
-    if(nextButton !== null) {
-        nextButton.isVisible = true;
-    }
-
-    //hide the current add button
-    thisFarm.getAddStructureButton().isVisible = false;
-
-    //update the GUI
-    for (let i = 0; i < thisFarm.getScene().farms.length; i++) {
-        
-        const text = (index:number) => {
-            switch(index) {
-                case 0: {
-                    return '1st';
-                }
-            
-                case 1: {
-                    return '2nd';
-                }
-
-                case 2: {
-                    return '3rd';
-                }
-
-                case 3: {
-                    return '4th'
-                }
-        }}
-
-        const otherFarm = thisFarm.getScene().farms[i];
-
-        otherFarm.getUpgradeSection().changeInstructions(`next Upgrade allows ${checkUpgradeFarmersMax(otherFarm)} farmers on your ${text(i)} farm`);
-
-    }
-
-    (thisFarm.getUpgradesWindow() as FarmUpgradeWindow).changeFarmersMaxText(`Max Farmers: ${thisFarm.getScene().mathState.getFarmersMax()}`);
-}
-
-export const farmAdditionAllowed = (farm:StructureStateChildI) => {
-    if (farm.getAddStructureButton().isVisible && farm.getScene().mathState.getTotalGold() >= farm.getUpgradeCostGold()) {
-        farm.getAddStructureButton().isEnabled = true;
+    if (farm.addStructureButton.isVisible && farms.getScene().mathState.getTotalGold() >= farms.getUpgradeCostGold()) {
+        farm.addStructureButton.isEnabled = true;
     } else {
-        farm.getAddStructureButton().isEnabled = false;
+        farm.addStructureButton.isEnabled = false;
     }
 }
 

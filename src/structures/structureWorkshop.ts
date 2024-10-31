@@ -98,7 +98,7 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         if (DEBUGMODE) {
             console.log('addWorkshopCalled');
             
-        }   
+        }
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
     }

@@ -11,7 +11,7 @@ import { Vector3 } from "@babylonjs/core";
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 
 export type ResourcesT = 'Ore' | 'Weapons' | 'Villages' | 'Loot' | 'Goldbars' | 'Portals' | 'Relics';
-export type StructureNamesT = 'Farm01' | 'Farm02' | 'Farm03' | 'Farm04' | 'Mine' | 'Forge' | 'Barracks' | 'Thieves Guild' | 'Workshop' | 'Tower' | 'Tavern';
+export type StructureNamesT = 'Farms' | 'Farm01' | 'Farm02' | 'Farm03' | 'Farm04' | 'Mine' | 'Forge' | 'Barracks' | 'Thieves Guild' | 'Workshop' | 'Tower' | 'Tavern';
 export type StructureCharactersT = 'farmer' | 'miner' | 'blacksmith' | 'soldier' | 'thief' | 'alchemist' | 'wizard' | 'adventurer';
 
 export interface GameStateI {
@@ -102,6 +102,7 @@ export interface StructureStateI {
     getInitResourceName():ResourcesT;
 
     getUpgradeCostGold():number;
+    setUpgradeCostGold(newCost:number):void;
     getGoldPerCycle():number;
     changeGoldPerCycle(amount:number):void;
     getGoldMultiplyer():number;

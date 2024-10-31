@@ -3,14 +3,14 @@ import { PlayMode } from "../../scenes/playmode";
 import { UpgradeWindow } from "../upgradeWindow";
 import { GUIFONT1 } from "../../utils/CONSTANTS";
 import { MathStateI } from "../../../typings";
-import { AddStructureButton } from "../structureUpgrades/addStructureButton";
+import { AddFarmButton } from "./addFarmButton";
 
 export class FarmUpgradeWindow extends UpgradeWindow {
     private _scene:PlayMode;
     private _mathState:MathStateI;
 
     private _farmersMaxTextBox:TextBlock;
-    private _addFarmButtons:AddStructureButton[];
+    private _addFarmButtons:AddFarmButton[];
 
     constructor(name:string, scene:PlayMode) {
         super(name);
@@ -38,12 +38,13 @@ export class FarmUpgradeWindow extends UpgradeWindow {
             .then(() => {
                 this._mathState = this._scene.mathState;
                 this._farmersMaxTextBox.text = `Max Farmers: ${this._mathState.getFarmersMax()}`
-            
-                for (let i = 0; i < this._scene.farms.length; i++) {
-                    const farm = this._scene.farms[i];
+                
+
+                for (let i = 0; i < this._scene.farms.getAllFarms().length; i++) {
+                    const farm = this._scene.farms.getAllFarms()[i];
         
-                    if (farm.getAddStructureButton()) {
-                        const button = farm.getAddStructureButton();
+                    if (farm.addStructureButton) {
+                        const button = farm.addStructureButton;
         
                         this.getPanelContainer().addControl(button);
                         this._addFarmButtons.push(button);
@@ -53,7 +54,13 @@ export class FarmUpgradeWindow extends UpgradeWindow {
                             button.isVisible = false;
                         }
                     }
-        
+
+                    this.getPanelContainer().addControl(farm.upgradeSection);
+
+                    if (i > 0) {
+                        farm.upgradeSection.isVisible = false;
+                    }
+                     
                 }
             
             })

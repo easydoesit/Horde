@@ -11,7 +11,7 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         super(name, scene);
         this._maxNumUpgrades = wheat.upgradeMax;
         this._increment= wheat.incrementValue;
-        this._structure = this._scene.farm01 ;
+        this._structure = this._scene.farms ;
         
         //all of these are updatable
         this._effectValue = wheat.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
@@ -22,7 +22,7 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         
         //create it's section
         this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._wheatUpgradeCallback()});
-        this._scene.farm01.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this.getStructure().getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
     
         this._scene.onBeforeRenderObservable.add(() => {
         

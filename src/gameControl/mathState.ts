@@ -44,7 +44,6 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         this._wheatValue = 0;
 
         //Structures
-        //farms
 
         for (let i in this._scene.allStructures) {
             this._scene.allStructures[i].attachObserversUpgrade(this);
@@ -197,11 +196,10 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     }
 
     public changeFarmersMax():void {
+        console.log('changeFarmersMaxCalled');
         let total = 0;
 
-        for (let i in this._scene.farms) {
-            total += farmersMaxPerFarm(this._scene.farms[i].getUpgradeLevel());
-        }
+        total += farmersMaxPerFarm(this._scene.farms.getUpgradeLevel());
         
         this._farmersMax = total;
     }
@@ -235,7 +233,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         this.changeGoldMultiplyer(newGoldMultiplyer);
 
 
-        if (structure.getName().includes("Farm")){
+        if (structure.getName().includes("Farms")){
             this.changeFarmersMax();
         } 
 

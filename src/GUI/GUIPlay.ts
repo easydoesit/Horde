@@ -71,13 +71,9 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
             }
 
             //UpgradeWindows
-            if (!structure.getName().includes('Farm')) {
-                this.gameGUI.addControl(structure.getUpgradesWindow());
-            }
 
-            if (structure.getName().includes('Farm01')) {
-                this.gameGUI.addControl(structure.getUpgradesWindow());
-            }
+            this.gameGUI.addControl(structure.getUpgradesWindow());
+
         
         }
         

@@ -2,6 +2,7 @@ import { Button, Rectangle, TextBlock, Control } from "@babylonjs/gui";
 import { DEBUGMODE, GUIFONT1 } from "../../utils/CONSTANTS";
 import { PlayMode } from "../../scenes/playmode";
 import { StructureStateChildI, StructureStateI, StructureStateObserverOnUpgradeI } from "../../../typings";
+import { StructureFarms } from "../../structures/structureFarms";
 
 export class StructureUpgradeSection extends Rectangle implements StructureStateObserverOnUpgradeI{
     public name:string;
@@ -35,9 +36,6 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
     
     private _upgradeBar:Rectangle;
     private _upgradeBarWrapper:Rectangle;
-    
-    private _upgradeBtnCostText01:TextBlock;
-    private _upgradeBtnCostText02:TextBlock;
 
     constructor(name:string, structure:StructureStateChildI, callback:(...args:any[])=>any | null) {
         super(name);
@@ -288,8 +286,13 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         if (DEBUGMODE) {
             console.log(`${this.name} STRUCTURE upgrade section as observer is updated from ${structure.getName()}.`);
         }
-        
-        this.changeMaxNumUpgrades(structure.getUpgradeMax());
+        //this is incase a bonus for max upgrades has changed in the structure
+        if (!structure.getName().includes('Farms')) {
+            this.changeMaxNumUpgrades(structure.getUpgradeMax());
+        } else {
+            this.changeMaxNumUpgrades((structure as StructureFarms).getUpgradeMax()/(structure as StructureFarms).getAllFarms().length);
+        }
+
         this.changeInstructions(structure.getUpgradeSectionInstructions());
 
         if (this._tBCostGold) {

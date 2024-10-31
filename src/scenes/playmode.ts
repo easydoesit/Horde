@@ -11,10 +11,6 @@ import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { AddFarmerUpgradeState } from "../upgradesEpic/addFarmerUpgradeState";
 import { BaseGoldPercentUpgradeState } from "../upgradesEpic/baseGoldPercentUpgradeState";
-import { StructureFarm01 } from "../structures/structureFarm01";
-import { StructureFarm02 } from "../structures/structureFarm02";
-import { StructureFarm03 } from "../structures/structureFarm03";
-import { StructureFarm04 } from "../structures/structureFarm04";
 import { StructureMine } from "../structures/structureMine";
 import { StructureForge } from "../structures/structureForge";
 import { StructureBarracks } from "../structures/structureBarracks";
@@ -28,6 +24,7 @@ import { WheatState } from "../upgradesStandard/wheat";
 import { increaseOreValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { IncreaseOreValueState } from "../upgradesStandard/increaseOreVal";
 import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpeed";
+import { StructureFarms } from "../structures/structureFarms";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -40,11 +37,7 @@ export class PlayMode extends Scene {
     //interacative
     public castle:StructureModel;
 
-    public farm01:StructureFarm01;
-    public farm02:StructureFarm02;
-    public farm03:StructureFarm03;
-    public farm04:StructureFarm04;
-    public farms:StructureStateChildI[];
+    public farms:StructureFarms;
     
     public mine:StructureMine;
     public forge: StructureForge;
@@ -62,6 +55,7 @@ export class PlayMode extends Scene {
     public increaseMiningSpeed:IncreaseMiningSpeedState;
 
     //Epic upgrades
+    public allEpicUpgrades:any[];
     public epicAddFarmersUpgrade:AddFarmerUpgradeState;
     public epicUpgradeBaseGold:BaseGoldPercentUpgradeState;
     public epicUpgradeBaseResource:BaseResourcePercentUpgradeState;
@@ -97,25 +91,7 @@ export class PlayMode extends Scene {
         this.castle.position = castlePos;
 
         //load the entry level structures as hidden
-        this.farms = [];
-        this.farm01 = new StructureFarm01(this);
-        this.farm01.getStructureModels().position = this.farm01.getStructureModels().gamePosition;
-        this.farm01.makeAlive();
-
-        //Once imported all of these are moved out of view.
-        this.farm02 = new StructureFarm02(this);
-        const farm02Position  = this.farm02.getStructureModels().position;
-        this.farm02.getStructureModels().position = new Vector3(farm02Position.x, farm02Position.y - 20 , farm02Position.z);
-        
-        this.farm03 = new StructureFarm03(this)
-        const farm03Position  = this.farm03.getStructureModels().position;
-        this.farm03.getStructureModels().position = new Vector3(farm03Position.x, farm03Position.y - 20 , farm03Position.z);
-
-        this.farm04 = new StructureFarm04(this)
-        const farm04Position  = this.farm04.getStructureModels().position;
-        this.farm04.getStructureModels().position = new Vector3(farm04Position.x, farm04Position.y - 20 , farm04Position.z);
-        
-        this.farms.push(this.farm01, this.farm02, this.farm03, this.farm04);
+        this.farms = new StructureFarms(this);
 
         this.mine = new StructureMine(this);    
         const minePosition  = this.mine.getStructureModels().position;
@@ -147,7 +123,7 @@ export class PlayMode extends Scene {
         this.tavern.getStructureModels().position = new Vector3(tavernPosition.x, tavernPosition.y - 20 , tavernPosition.z);
 
         this.allStructures = []
-        this.allStructures.push(...this.farms, this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
+        this.allStructures.push(this.farms, this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);
 
         //Characters TODO- Add them all so they should be cloned.
         this.dragon = new Dragon('Dragon', this);
@@ -168,13 +144,17 @@ export class PlayMode extends Scene {
         this.increaseMiningSpeed = new IncreaseMiningSpeedState('Increase Mining Speed', this);
 
         //epic upgrades
+        this.allEpicUpgrades = []
         this.epicAddFarmersUpgrade = new AddFarmerUpgradeState('Add Farmers');
         this.epicUpgradeBaseGold = new BaseGoldPercentUpgradeState('Base Gold', this);
         this.epicUpgradeBaseResource = new BaseResourcePercentUpgradeState('Base Resource',this);
         this.epicFasterCycleTimes = new StructuresFasterCyclesState('Cycle Times', this)
 
+        this.allEpicUpgrades.push(this.epicAddFarmersUpgrade,this.epicUpgradeBaseGold,this.epicUpgradeBaseResource,this.epicFasterCycleTimes);
+
         //load the mathState
         this.mathState = new MathState(this);
+        console.log('mathstate:', this.mathState)
 
         //interact with the scene
         this.onPointerDown = function castRay() {
@@ -182,13 +162,14 @@ export class PlayMode extends Scene {
 
             const hit = this.pickWithRay(ray);
 
-            if (hit.pickedMesh === this.farm01.getStructureModels().clickZone || hit.pickedMesh === this.farm02.getStructureModels().clickZone ) {
+            if (hit.pickedMesh === this.farms.getFarm01().models.clickZone || hit.pickedMesh === this.farms.getFarm02().models.clickZone ) {
                 
                 if (DEBUGMODE) {
                     console.log('Farm Clicked');
+                    console.log(this.farms.getUpgradesWindow())
                 }
 
-                this.farm01.getUpgradesWindow().showWindow();
+                this.farms.getUpgradesWindow().showWindow();
 
             }
 

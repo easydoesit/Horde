@@ -36,6 +36,68 @@ export const castlePos = new Vector3(-.2, 7.3, .4);
 ////////////////////////////////
 ///////////  Farms  ////////////
 ////////////////////////////////
+
+export const farms:StructureConstantsI = {
+    name: 'Farms',
+    models:['farm01.glb', 'farm02.glb'],
+    clickbox:'farmClickBox.glb',
+    gamePos:new Vector3(0,.5,-4),
+    otherProps: {
+        farm01:{
+            gamePos:new Vector3(0,.5,-4),
+            housePos:new Vector3(-10,1.25,-4)
+        },
+        farm02: {
+            gamePos:new Vector3(0,.5,4),
+            housePos:new Vector3(-10,1.25,4)
+        },
+        farm03:{
+            gamePos:new Vector3(0,.5,-12),
+            housePos:new Vector3(-10,1.25,-10)
+        },
+        farm04:{
+            gamePos:new Vector3(0,.5,12),
+            housePos:new Vector3(-10,1.25,10)
+        }
+    },
+    upgradeMax:20,
+    initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//you start with one farm
+    nextUpgradeCostInGold:(upgradeLevel:number) => {
+        const initGoldCost = 80;
+        const goldCostGrowthCurve = 3.4;
+        const UGLevel = upgradeLevel + 1;
+
+        return initGoldCost * goldCostGrowthCurve * UGLevel;
+    },
+    nextUpgradeCostInFarmers:(upgradeLevel:number) => {
+        return 0
+    },
+    nextUpgradeCostInResources: (upgradeLevel:number) => {
+        return 0
+    },
+    goldPerCycle:0,
+    goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
+        if (upgradeLevel = 1) { //farm01 starts without an upgrade Associated with it.
+            return 1;           //so we want to make sure we return 1.
+        } else {
+
+            const logTarget = 1;
+            const UGLevel = upgradeLevel;
+            const UGLimit = upgradeLimit;
+            const curveBalance = 5
+            const initUGImprovement = 2
+
+            const finalValue = logTarget * (Math.log(UGLevel)/Math.log(UGLimit)/curveBalance)+ initUGImprovement;
+            
+            return finalValue;
+        }
+    },
+    character:'farmer',
+    stewardCost:null,
+    resource:null,
+};
+
+
 export const farm01:StructureConstantsI = {
     name:'Farm01',
     models:['farm01.glb', 'farm02.glb'],
@@ -205,12 +267,17 @@ export const farm04:StructureConstantsI = {
     resource:null,
 };
 
-export const farmersMaxPerFarm = (currentUpgradeAmount:number) => {
+export const farmersMaxPerFarm = (upgradeLevel:number) => {
+    console.log('farm current Upgrade: ', upgradeLevel);
+    if (upgradeLevel === 0 ) {
+        return 64;
+    } else {
+ 
+        const a = 2.35;
+        const baseFarmerMultiplyer = 120;
 
-    const a = 2.35;
-    const baseFarmerMultiplyer = 120;
-
-    return currentUpgradeAmount * a * baseFarmerMultiplyer;
+        return upgradeLevel * a * baseFarmerMultiplyer;
+    }
 } 
 
 const castleToFarmPath = [
