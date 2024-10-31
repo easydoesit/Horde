@@ -41,7 +41,6 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._addUpgradePanel();
 
         this._moveStructureToStartPosition();
-        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

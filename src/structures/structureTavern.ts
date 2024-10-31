@@ -41,7 +41,6 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._addUpgradePanel();
 
         this._moveStructureToStartPosition();
-        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

@@ -352,14 +352,13 @@ export class StructureState implements StructureStateI {
     }
 
     public moveStructuresToGamePosition():void{
-        console.log(this.getStructureModels().position);
-        console.log(this.getStructureModels().gamePosition);
-        this.getStructureModels().position = this.getStructureModels().gamePosition;
+        const gamePos = this.getStructureModels().gamePosition;
+        this.getStructureModels().position = gamePos;
     }
 
     protected _moveStructureToStartPosition():void {
-        this.getStructureModels().position = this.getStructureModels().gamePosition;
-        this.getStructureModels().position.y = this.getStructureModels().position.y -20;
+        const gamePos = this.getStructureModels().gamePosition;
+        this.getStructureModels().position = new Vector3(gamePos.x, gamePos.y -20, gamePos.z);
     }
 
     public getUpgradeSectionInstructions(): string {

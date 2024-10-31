@@ -40,7 +40,6 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._addUpgradePanel();
 
         this._moveStructureToStartPosition();
-        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

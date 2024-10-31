@@ -94,33 +94,18 @@ export class PlayMode extends Scene {
         this.farms = new StructureFarms(this);
 
         this.mine = new StructureMine(this);    
-        const minePosition  = this.mine.getStructureModels().position;
-        this.mine.getStructureModels().position = new Vector3(minePosition.x, minePosition.y - 20 , minePosition.z);
 
         this.forge = new StructureForge(this);
-        const forgePosition  = this.forge.getStructureModels().position;
-        this.forge.getStructureModels().position = new Vector3(forgePosition.x, forgePosition.y - 20 , forgePosition.z);
 
         this.barracks = new StructureBarracks( this); 
-        const barracksPosition  = this.barracks.getStructureModels().position;
-        this.barracks.getStructureModels().position = new Vector3(barracksPosition.x, barracksPosition.y - 20 , barracksPosition.z);
 
         this.thievesGuild = new StructureThievesGuild(this );
-        const thievesGuildPosition  = this.thievesGuild.getStructureModels().position;
-        this.thievesGuild.getStructureModels().position = new Vector3(thievesGuildPosition.x, thievesGuildPosition.y - 20 , thievesGuildPosition.z);
 
         this.workShop = new StructureWorkShop( this );
-        const workShopPosition  = this.workShop.getStructureModels().position;
-        this.workShop.getStructureModels().position = new Vector3(workShopPosition.x, workShopPosition.y - 20 , workShopPosition.z);
 
         this.tower = new StructureTower(this );
-        const towerPosition  = this.tower.getStructureModels().position;
-        this.tower.getStructureModels().position = new Vector3(towerPosition.x, towerPosition.y - 20 , towerPosition.z);
-
 
         this.tavern  = new StructureTavern(this);
-        const tavernPosition  = this.tavern.getStructureModels().position;
-        this.tavern.getStructureModels().position = new Vector3(tavernPosition.x, tavernPosition.y - 20 , tavernPosition.z);
 
         this.allStructures = []
         this.allStructures.push(this.farms, this.mine, this.forge, this.barracks, this.thievesGuild, this.workShop, this.tower, this.tavern);

@@ -43,7 +43,7 @@ export class AddFarmButton extends Button {
         this._TitleText.top = 10;
         this.addControl(this._TitleText);
 
-        this._costGoldText = new TextBlock('costInGold', `Cost Gold: ${this._farms.getUpgradeCostGold()}`);
+        this._costGoldText = new TextBlock('costInGold', `Cost Gold: ${this._farms.getUpgradeCostGold().toFixed()}`);
         this._costGoldText.fontFamily = GUIFONT1;
         this._costGoldText.color = 'gold';
         this._costGoldText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -96,5 +96,9 @@ export class AddFarmButton extends Button {
         //pay for the structure
         this._mathState.spendGold(this._farms.getUpgradeCostGold());
 
+    }
+
+    public setGoldCostText(newText:string):void {
+        this._costGoldText.text = newText;
     }
 }

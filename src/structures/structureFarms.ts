@@ -161,9 +161,11 @@ export class StructureFarms extends StructureState implements StructureStateChil
             const farm = this._allFarms[i];
             farm.upgradeSectionInstructions = `Next Upgrade allows ${(this.getScene().mathState.getFarmersMax()/amountAlive).toFixed()} farmers on ${farm.name}`;
             farm.upgradeSection.changeInstructions(farm.upgradeSectionInstructions);
-            console.log('farms UpgradeCostG:', this.getUpgradeCostGold());
+            //console.log('farms UpgradeCostG:', this.getUpgradeCostGold());
             farm.upgradeSection.changeGoldCost(this.getUpgradeCostGold());
-
+            if (farm.addStructureButton !== null) {
+                farm.addStructureButton.setGoldCostText(`Cost Gold: ${this.getUpgradeCostGold().toFixed()}`);
+            }
         }
         
     }

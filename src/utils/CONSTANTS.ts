@@ -825,7 +825,7 @@ const farmToMinePath03 = [
     mine.gamePos,
 ];
 const farmToMinePath04 = [
-    farms.otherProps.farm04.housePos.x,
+    farms.otherProps.farm04.housePos,
     new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
     mine.gamePos,
 ];

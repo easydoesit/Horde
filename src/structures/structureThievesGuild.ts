@@ -41,7 +41,6 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._addUpgradePanel();
 
         this._moveStructureToStartPosition();
-        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 

@@ -42,7 +42,6 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._addUpgradePanel();
 
         this._moveStructureToStartPosition();
-        //this._moveStructuresToGamePosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
