@@ -56,30 +56,37 @@ export class StructureMine extends StructureState implements StructureStateChild
             debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
+        this.animateCharacters();
+
+        this._upgradeLevel += 1;
+        this._cycleTime = mine.resource.cycleTime(this.getUpgradeLevel(), mine.resource.initialCycleTime, mine.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+        this._goldMultiplyer = mine.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
+        this.changeUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
+    
+        this.notifyObserversOnUpgrade();
+
+        this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._upgradeCostGold = mine.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._resourceMultiplyer = mine.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+        this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
+
+        //change models
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            console.log('switch says level is:', this.getUpgradeLevel());
             //change the structures
             switch(this.getUpgradeLevel()) {
+                
                 case 1 :  {
                     this._structureModels.hideModel(0);
                     this._structureModels.showModel(1);
                 }
                 break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
             }
-
-            this.animateCharacters();
-    
-            this._upgradeLevel += 1;
-            this._cycleTime = mine.resource.cycleTime(this.getUpgradeLevel(), mine.resource.initialCycleTime, mine.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
-            this._goldMultiplyer = mine.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
-            this.changeUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
-        
-            this.notifyObserversOnUpgrade();
-
-            this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this.getUpgradeLevel());
-            this._upgradeCostGold = mine.nextUpgradeCostInGold(this.getUpgradeLevel());
-            this._resourceMultiplyer = mine.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
-            this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
-            
 
         }
     }

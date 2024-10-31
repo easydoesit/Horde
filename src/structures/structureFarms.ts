@@ -16,8 +16,9 @@ export type farmsT = {
     housePos:Vector3, 
     models:StructureModel, 
     upgradeSectionInstructions:string, 
-    upgradeSection:StructureUpgradeSection,
+    upgradeSection:StructureUpgradeSection | null,
     addStructureButton:AddFarmButton| null,
+    upgradeLevel:number;
     upgradeMax:number;
     alive:boolean;
 }
@@ -50,8 +51,9 @@ export class StructureFarms extends StructureState implements StructureStateChil
             housePos:farms.otherProps.farm01.housePos,
             models:new StructureModel('Farm01_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm01.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 1st farm`,
-            upgradeSection:new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this)}),
+            upgradeSection:null,
             addStructureButton:null,
+            upgradeLevel:0,
             upgradeMax:this.getUpgradeMax() / 4,
             alive:true
         }
@@ -62,8 +64,9 @@ export class StructureFarms extends StructureState implements StructureStateChil
             housePos:farms.otherProps.farm02.housePos,
             models:new StructureModel('Farm02_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm02.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 2nd farm`,
-            upgradeSection:new StructureUpgradeSection('2nd Farm Upgrades', this,  () => {farmsUpgradeCallBack(this)}),
+            upgradeSection:null,
             addStructureButton:null,
+            upgradeLevel:0,
             upgradeMax:this.getUpgradeMax() / 4,
             alive:false
         }
@@ -74,8 +77,9 @@ export class StructureFarms extends StructureState implements StructureStateChil
             housePos:farms.otherProps.farm03.housePos,
             models:new StructureModel('Farm02_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm03.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 3rd farm`,
-            upgradeSection: new StructureUpgradeSection('3rd Farm Upgrades', this,  () => {farmsUpgradeCallBack(this)}),
+            upgradeSection: null,
             addStructureButton: null,
+            upgradeLevel:0,
             upgradeMax:this.getUpgradeMax() / 4,
             alive:false
         }
@@ -86,11 +90,17 @@ export class StructureFarms extends StructureState implements StructureStateChil
             housePos:farms.otherProps.farm04.housePos,
             models:new StructureModel('Farm02_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm03.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 4th farm`,
-            upgradeSection: new StructureUpgradeSection('4th Farm Upgrades', this,  () => {farmsUpgradeCallBack(this)}),
+            upgradeSection: null,
             addStructureButton: null,
+            upgradeLevel:0,
             upgradeMax:this.getUpgradeMax() / 4,
             alive:false
         }
+
+        this._farm01.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm01, this)});
+        this._farm02.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm02, this)});
+        this._farm03.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm03, this)});
+        this._farm04.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm04, this)});
 
         this._farm02.addStructureButton =  new AddFarmButton('Farm 2', this.getFarm02(), this.getFarm03(), this, this.getScene());
         this._farm03.addStructureButton =  new AddFarmButton('Farm 3', this.getFarm03(), this.getFarm04(), this, this.getScene());
@@ -157,15 +167,15 @@ export class StructureFarms extends StructureState implements StructureStateChil
         }
         
         for (let i in this._allFarms) {
-            
             const farm = this._allFarms[i];
             farm.upgradeSectionInstructions = `Next Upgrade allows ${(this.getScene().mathState.getFarmersMax()/amountAlive).toFixed()} farmers on ${farm.name}`;
             farm.upgradeSection.changeInstructions(farm.upgradeSectionInstructions);
-            //console.log('farms UpgradeCostG:', this.getUpgradeCostGold());
             farm.upgradeSection.changeGoldCost(this.getUpgradeCostGold());
+            
             if (farm.addStructureButton !== null) {
                 farm.addStructureButton.setGoldCostText(`Cost Gold: ${this.getUpgradeCostGold().toFixed()}`);
             }
+
         }
         
     }

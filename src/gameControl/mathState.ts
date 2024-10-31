@@ -196,7 +196,6 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     }
 
     public changeFarmersMax():void {
-        console.log('changeFarmersMaxCalled');
         let total = 0;
 
         total += farmersMaxPerFarm(this._scene.farms.getUpgradeLevel());
@@ -219,11 +218,6 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     public updateStructureOnUpgrade(structure: StructureStateI): void {
         if (DEBUGMODE) {
             console.log(`updating ${this.name} from ${structure.getName()}`);
-            console.log(`${structure.getName()} is now at level ${structure.getUpgradeLevel()}`)
-            console.log(`Cost in Farmers is ${structure.getUpgradeCostFarmers()}`);
-            console.log(`Cost in Gold is ${structure.getUpgradeCostGold()}`);
-            console.log(`The Resource is $${structure.getResourceName()}`);
-            console.log(`The Gold Multiplyer from structure is ${structure.getGoldMultiplyer()}`);
         }
         
         //these should go back to the state to spend the money.

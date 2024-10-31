@@ -55,27 +55,35 @@ export class StructureTavern extends StructureState implements StructureStateChi
             debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
+        this.animateCharacters();
+
+        this._upgradeLevel += 1;
+        this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+        this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+
+        this.notifyObserversOnUpgrade();
+
+        this._upgradeCostFarmers = tavern.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._upgradeCostGold = tavern.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostResources = tavern.nextUpgradeCostInResources(this._upgradeLevel);
+
+        //change models
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            console.log('switch says level is:', this.getUpgradeLevel());
             //change the structures
             switch(this.getUpgradeLevel()) {
+                
                 case 1 :  {
                     this._structureModels.hideModel(0);
                     this._structureModels.showModel(1);
                 }
                 break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
             }
-
-            this.animateCharacters();
-    
-            this._upgradeLevel += 1;
-            this._cycleTime = tavern.resource.cycleTime(this.getUpgradeLevel(), tavern.resource.initialCycleTime,tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
-            this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
-
-            this.notifyObserversOnUpgrade();
-
-            this._upgradeCostFarmers = tavern.nextUpgradeCostInFarmers(this.getUpgradeLevel());
-            this._upgradeCostGold = tavern.nextUpgradeCostInGold(this.getUpgradeLevel());
-            this._upgradeCostResources = tavern.nextUpgradeCostInResources(this._upgradeLevel);
 
         }
     }

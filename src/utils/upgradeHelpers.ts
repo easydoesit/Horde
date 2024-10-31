@@ -49,8 +49,28 @@ export  const checkUpgradeFarmersMax = (farm:StructureStateChildI) => {
     return total;
 }
 
-export const farmsUpgradeCallBack = (farms:StructureFarms) => {
+export const farmsUpgradeCallBack = (farm:farmsT, farms:StructureFarms) => {
     farms.upgradeState();
+
+    farm.upgradeLevel += 1;
+
+    //change models
+    if (farm.upgradeLevel < farm.upgradeMax) {
+        //change the structures
+        switch(farm.upgradeLevel) {
+            
+            case 1 :  {
+                farm.models.hideModel(0);
+                farm.models.showModel(1);
+            }
+            break;
+            default: {
+                console.error(`No models for ${farm.name} at Level ${farm.upgradeLevel}. Get the Art Team to work`);
+            }
+            break;
+        }
+        
+    }
 }
 
 export const farmUpgradeAllowed = (farms:StructureStateChildI) => {

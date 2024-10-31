@@ -103,6 +103,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
                 }
                 //anything you want to do to the state is in the callback
                 if (callback) {
+                    console.log('callback?');
                     callback();
                 }
             } 

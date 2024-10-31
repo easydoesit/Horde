@@ -185,7 +185,10 @@ export class PlayMode extends Scene {
                     console.log("Forge Clicked");
                 }
                 
-                this.forge.getUpgradesWindow().showWindow();;
+                if (!this.forge.getSteward()) {
+                    this.forge.getInSceneGui().requestBarMove();
+                }
+      
             }
 
             if (hit.pickedMesh === this.barracks.getStructureModels().clickZone) {
@@ -194,7 +197,10 @@ export class PlayMode extends Scene {
                     console.log("Barracks Clicked");
                 }
                 
-                this.barracks.getUpgradesWindow().showWindow();
+                if (!this.forge.getSteward()) {
+                    this.forge.getInSceneGui().requestBarMove();
+                }
+      
             }
 
             if (hit.pickedMesh === this.thievesGuild.getStructureModels().clickZone) {
@@ -203,7 +209,10 @@ export class PlayMode extends Scene {
                     console.log("Thieves Guild Clicked");
                 }
                 
-                this.thievesGuild.getUpgradesWindow().showWindow();
+                if (!this.thievesGuild.getSteward()) {
+                    this.thievesGuild.getInSceneGui().requestBarMove();
+                }
+      
             }
 
             if (hit.pickedMesh === this.workShop.getStructureModels().clickZone) {
@@ -212,7 +221,10 @@ export class PlayMode extends Scene {
                     console.log("Workshop Clicked");
                 }
                 
-                this.workShop.getUpgradesWindow().showWindow();
+                if (!this.workShop.getSteward()) {
+                    this.workShop.getInSceneGui().requestBarMove();
+                }
+      
             }
 
             if (hit.pickedMesh === this.tower.getStructureModels().clickZone) {
@@ -221,7 +233,10 @@ export class PlayMode extends Scene {
                     console.log("Tower Clicked");
                 }
                 
-                this.tower.getUpgradesWindow().showWindow();
+                if (!this.tower.getSteward()) {
+                    this.tower.getInSceneGui().requestBarMove();
+                }
+      
             }
 
             if (hit.pickedMesh === this.tavern.getStructureModels().clickZone) {
@@ -230,7 +245,10 @@ export class PlayMode extends Scene {
                     console.log("Tavern Clicked");
                 }
                 
-                this.tavern.getUpgradesWindow().showWindow();
+                if (!this.tavern.getSteward()) {
+                    this.tavern.getInSceneGui().requestBarMove();
+                }
+      
             }
             
 

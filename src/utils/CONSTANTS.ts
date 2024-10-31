@@ -98,7 +98,7 @@ export const farms:StructureConstantsI = {
 };
 
 export const farmersMaxPerFarm = (upgradeLevel:number) => {
-    console.log('farm current Upgrade: ', upgradeLevel);
+
     if (upgradeLevel === 0 ) {
         return 64;
     } else {

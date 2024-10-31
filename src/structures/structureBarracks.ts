@@ -54,29 +54,37 @@ export class StructureBarracks extends StructureState implements StructureStateC
             debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
+        this.animateCharacters();
+
+        //update the variables
+        //these ones are before the notify
+        this._upgradeLevel += 1;
+        this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+        this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
+
+        //update the observers
+        this.notifyObserversOnUpgrade();
+
+        this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
+
+        //change models
         if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            console.log('switch says level is:', this.getUpgradeLevel());
             //change the structures
             switch(this.getUpgradeLevel()) {
+                
                 case 1 :  {
                     this._structureModels.hideModel(0);
                     this._structureModels.showModel(1);
                 }
                 break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
             }
-
-            this.animateCharacters();
-    
-            //update the variables
-            //these ones are before the notify
-            this._upgradeLevel += 1;
-            this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
-            this.changeUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
-
-            //update the observers
-            this.notifyObserversOnUpgrade();
-
-            this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());
-            this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
 
         }
     }
