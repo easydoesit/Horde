@@ -13,6 +13,8 @@ export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
 export type ResourcesT = 'Ore' | 'Weapons' | 'Villages' | 'Loot' | 'Goldbars' | 'Portals' | 'Relics';
 export type StructureNamesT = 'Farms' | 'Farm01' | 'Farm02' | 'Farm03' | 'Farm04' | 'Mine' | 'Forge' | 'Barracks' | 'Thieves Guild' | 'Workshop' | 'Tower' | 'Tavern';
 export type StructureCharactersT = 'farmer' | 'miner' | 'blacksmith' | 'soldier' | 'thief' | 'alchemist' | 'wizard' | 'adventurer';
+export type KingomNamesT = 'Plains' | 'Forest' | 'Tundra' | 'Swamp' | 'Mountains' | 'Coast' | 'Oasis' | 'Tropical' | 'Waterfall' | 'Sky' | 'Moon' | 'Inter-Dimensional';
+
 
 export interface GameStateI {
     state:GameStateT;
@@ -265,3 +267,17 @@ export interface StructureConstantsI {
         [key: string]:any;
     } | null
 }
+
+export type KingdomsT = {
+    name:KingomNamesT
+    kingdomLevel:number;
+    costToUnlockGold:number;
+    costToUnlockFarmers:number;
+    costToUnlockResources:{
+        name:ResourcesT
+        amount:number
+    } | null;
+    baseGoldBoost:number;
+    baseResourceBoost:number;
+    prestigeLumens:number;
+} 

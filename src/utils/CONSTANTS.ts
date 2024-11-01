@@ -1,5 +1,5 @@
 import { Vector3 } from "@babylonjs/core";
-import { StructureConstantsI } from "../../typings";
+import { KingdomsT, StructureConstantsI } from "../../typings";
 
 export const DEBUGMODE = true;
 
@@ -975,6 +975,231 @@ const farmToTavernPath04 = [
 ];
 
 export const farmToTavernPaths = [farmToTavernPath01, farmToTavernPath02, farmToTavernPath03, farmToTavernPath04];
+
+//Kingdoms
+
+const kingdomBaseGoldBoost = (kingdomLevel:number):number => {
+    const targetBoost = 4; 
+    const curveBalance = 25;
+    const level = kingdomLevel;
+    const numKingdoms = 12;
+
+    return targetBoost * (Math.log(level)/Math.log(curveBalance)/numKingdoms);
+}
+
+const kingdomBaseResourceBoost = (kingdomLevel:number):number => {
+    const targetBoost = 2; 
+    const curveBalance = 25;
+    const level = kingdomLevel;
+    const numKingdoms = 12;
+
+    return targetBoost * (Math.log(level)/Math.log(curveBalance)/numKingdoms);
+}
+
+const kingdomLumensEarned = (kingdomLevel:number):number => {
+    const baseLumens = 50;
+    const lumenGrowth = 1.6;
+    const level = kingdomLevel;
+
+    return baseLumens * level * lumenGrowth;
+}
+
+const kingdomGoldGrowthVal = 2.1
+
+export const kingPlains:KingdomsT = {
+    name:'Plains',
+    kingdomLevel: 1,
+    costToUnlockGold:0,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    baseGoldBoost:0,
+    baseResourceBoost:0,
+    prestigeLumens:0,
+}
+
+export const kingForest:KingdomsT = {
+    name:'Forest',
+    kingdomLevel: 2,
+    costToUnlockGold:10000,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    prestigeLumens:0,
+}
+
+export const kingTundra:KingdomsT = {
+    name:'Tundra',
+    kingdomLevel: 3,
+    costToUnlockGold:kingForest.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    prestigeLumens:0,
+}
+
+export const kingSwamp:KingdomsT = {
+    name:'Swamp',
+    kingdomLevel: 4,
+    costToUnlockGold:kingTundra.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    prestigeLumens:0,
+}
+
+export const kingMountains:KingdomsT = {
+    name:'Mountains',
+    kingdomLevel: 5,
+    costToUnlockGold:kingSwamp.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    prestigeLumens:0,
+}
+
+export const kingCoast:KingdomsT = {
+    name:'Coast',
+    kingdomLevel: 6,
+    costToUnlockGold:kingMountains.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    get prestigeLumens() {
+        return kingdomLumensEarned(this.kingdomLevel)
+    }
+}
+
+export const kingOasis:KingdomsT = {
+    name:'Oasis',
+    kingdomLevel: 7,
+    costToUnlockGold:kingCoast.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    get prestigeLumens() {
+        return kingdomLumensEarned(this.kingdomLevel)
+    }
+}
+
+export const kingTropical:KingdomsT = {
+    name:'Tropical',
+    kingdomLevel: 8,
+    costToUnlockGold:kingOasis.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    get prestigeLumens() {
+        return kingdomLumensEarned(this.kingdomLevel)
+    }
+}
+
+export const kingWaterfall:KingdomsT = {
+    name:'Waterfall',
+    kingdomLevel: 9,
+    costToUnlockGold:kingTropical.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    get prestigeLumens() {
+        return kingdomLumensEarned(this.kingdomLevel)
+    }
+}
+
+export const kingSky:KingdomsT = {
+    name:'Sky',
+    kingdomLevel: 10,
+    costToUnlockGold:kingWaterfall.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    get prestigeLumens() {
+        return kingdomLumensEarned(this.kingdomLevel)
+    }
+}
+
+export const kingMoon:KingdomsT = {
+    name:'Moon',
+    kingdomLevel: 11,
+    costToUnlockGold:kingSky.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    get prestigeLumens() {
+        return kingdomLumensEarned(this.kingdomLevel)
+    }
+}
+
+export const kingInterDimensional:KingdomsT = {
+    name:'Inter-Dimensional',
+    kingdomLevel: 11,
+    costToUnlockGold:kingMoon.costToUnlockGold * kingdomGoldGrowthVal,
+    costToUnlockFarmers:0,
+    costToUnlockResources:null,
+    get baseGoldBoost() {
+        return kingdomBaseGoldBoost(this.kingdomLevel);
+    },
+    get baseResourceBoost() {
+        return kingdomBaseResourceBoost(this.kingdomLevel);
+    },
+    get prestigeLumens() {
+        return kingdomLumensEarned(this.kingdomLevel)
+    }
+}
+
+
+
+
+
 
 ////Characters
 
