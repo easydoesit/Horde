@@ -280,7 +280,7 @@ export type KingdomsT = {
     baseGoldBoost:number;
     baseResourceBoost:number;
     prestigeLumens:number;
-    models:string[];
+    models:string[] | null;
 }
 
 export interface KingdomsI {
