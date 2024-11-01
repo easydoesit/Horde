@@ -1,5 +1,5 @@
 import { StructureModel } from "./src/models_structures/structureModels";
-import { Rectangle, ScrollViewer, StackPanel, TextBlock } from "@babylonjs/gui";
+import { ScrollViewer, StackPanel, TextBlock } from "@babylonjs/gui";
 import { PlayMode } from "./src/scenes/playmode";
 import { InSceneStuctureGUI } from "./src/GUI/inSceneStructureGUI";
 import { UpgradeWindow } from "./src/GUI/upgradeWindow";
@@ -270,7 +270,7 @@ export interface StructureConstantsI {
 
 export type KingdomsT = {
     name:KingomNamesT
-    kingdomLevel:number;
+    level:number;
     costToUnlockGold:number;
     costToUnlockFarmers:number;
     costToUnlockResources:{
@@ -280,4 +280,29 @@ export type KingdomsT = {
     baseGoldBoost:number;
     baseResourceBoost:number;
     prestigeLumens:number;
-} 
+    models:string[];
+}
+
+export interface KingdomsI {
+    getName():KingdomsT['name'];
+    getLevel():KingdomsT['level'];
+    
+    getCostToUnlockGold():KingdomsT['costToUnlockGold'];
+    setCostToUnlockGold(newCost:number):void;
+    
+    getCostToUnlockFarmers():KingdomsT['costToUnlockFarmers'];
+    setCostToUnlockFarmers(newCost:number):void;
+    
+    getCostToUnlockResources():KingdomsT['costToUnlockResources'];
+    setCostToUnlockResources(newResources:KingdomsT['costToUnlockResources']):void;
+    
+    getBaseGoldBoost():KingdomsT['baseGoldBoost'];
+    setBaseGoldBoost(newValue:number):void;
+
+    getBaseResourceBoost():KingdomsT['baseResourceBoost'];
+    setBaseResourceBoost(newValue:number):void;
+
+    getPrestigeLumens():KingdomsT['prestigeLumens'];
+    setPrestigeLumens(newValue:number):void;
+
+}
