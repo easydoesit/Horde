@@ -3,11 +3,13 @@ import { PlayMode } from "../../scenes/playmode"
 import { GUIPlay } from "../GUIPlay";
 import { UpgradeWindow } from "../upgradeWindow";
 import { AddStructureButton } from "../structureUpgrades/addStructureButton";
+import { KingdomUpgradeButton } from "./kingdomUpgradeButton";
 
 export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI {
     private _scene:PlayMode;
     private _mathState:MathStateI;
-    private _buttons:{name:string, button:AddStructureButton}[];
+    private _kingdomUpgradeButton:KingdomUpgradeButton;
+    private _structureButtons:{name:string, button:AddStructureButton | KingdomUpgradeButton}[];
 
     constructor(name:string, scene:PlayMode) {
         super(name);
@@ -15,7 +17,11 @@ export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI
         this._scene = scene;
         this._mathState = this._scene.mathState;
         this._gui = this._scene.getAppGui() as GUIPlay;
-        this._buttons = [];
+        this._structureButtons = [];
+
+        this._kingdomUpgradeButton = new KingdomUpgradeButton(this._scene.kingdomState, this._scene);
+
+        this.getPanelContainer().addControl(this._kingdomUpgradeButton);
 
         for(let i in this._scene.allStructures) {
             const structure = this._scene.allStructures[i];
@@ -27,14 +33,14 @@ export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI
                 }
 
                 this.getPanelContainer().addControl(buttonObj.button);
-                this._buttons.push(buttonObj);
+                this._structureButtons.push(buttonObj);
 
             }
         }
 
         this._scene.onBeforeRenderObservable.add(() => {
-            for (let i in this._buttons) {
-                const button = this._buttons[i];
+            for (let i in this._structureButtons) {
+                const button = this._structureButtons[i];
                 const buttonsStructure = this._scene.getStructure(button.name);
                 
                 let buttonVisible = false;

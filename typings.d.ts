@@ -5,7 +5,7 @@ import { InSceneStuctureGUI } from "./src/GUI/inSceneStructureGUI";
 import { UpgradeWindow } from "./src/GUI/upgradeWindow";
 import { AddStructureButton } from "./src/GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "./src/GUI/structureUpgrades/structureUpgradeSection";
-import { Vector3 } from "@babylonjs/core";
+import { AbstractMesh, Vector3 } from "@babylonjs/core";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
@@ -280,12 +280,14 @@ export type KingdomsT = {
     baseGoldBoost:number;
     baseResourceBoost:number;
     prestigeLumens:number;
-    models:string[] | null;
+    importedModels:string[] | null;
 }
 
-export interface KingdomsI {
-    getName():KingdomsT['name'];
+export interface KingdomI {
+    getName():string;
     getLevel():KingdomsT['level'];
+
+    getModels():any[] | null;
     
     getCostToUnlockGold():KingdomsT['costToUnlockGold'];
     setCostToUnlockGold(newCost:number):void;
@@ -305,4 +307,32 @@ export interface KingdomsI {
     getPrestigeLumens():KingdomsT['prestigeLumens'];
     setPrestigeLumens(newValue:number):void;
 
+    setEnabled(bool:boolean):void;
+
+}
+
+export interface KingdomStateI {
+    getName():string;
+
+    attach(observer:KingdomStateObserverI):void;
+    detach(observer:KingdomStateObserverI):void;
+    notify():void;
+    
+    getCurrentKingdom():KingdomI;
+    setCurrentingdom(kingdom:KingdomI):void;
+
+    getNextKingdom():KingdomI;
+    setNextKingdom():void;
+
+    getAllKingdoms():KingdomI[];
+
+    upgrade():void;
+
+    getScene():PlayMode;
+
+}
+
+export interface KingdomStateObserverI {
+    getName():string;
+    onKingomStateUpgrade(kingdom:KingdomI):void;
 }

@@ -3,10 +3,9 @@ import { castlClickBox, castleModels, castlePos, DEBUGMODE, hillModels } from ".
 import { GUIPlay } from "../GUI/GUIPlay";
 import { App } from "../app";
 import { StructureModel } from "../models_structures/structureModels";
-import { PlainsBackground } from "../models_backgrounds/plains_background";
 import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
-import { MathStateI, StructureStateChildI, StructureStateI } from "../../typings";
+import { KingdomStateI, MathStateI, StructureStateChildI, StructureStateI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { AddFarmerUpgradeState } from "../upgradesEpic/addFarmerUpgradeState";
@@ -25,6 +24,7 @@ import { increaseOreValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { IncreaseOreValueState } from "../upgradesStandard/increaseOreVal";
 import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpeed";
 import { StructureFarms } from "../structures/structureFarms";
+import { KingdomState } from "../kingdoms/kingdomState";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -33,6 +33,9 @@ export class PlayMode extends Scene {
 
     //gamepieces 
     private _hill:StructureModel;
+
+    //kingdoms
+    public kingdomState:KingdomStateI;
 
     //interacative
     public castle:StructureModel;
@@ -77,14 +80,13 @@ export class PlayMode extends Scene {
         engine.displayLoadingUI();
         this.clearColor = new Color4(0.15, 0.15, 0.15, 1);
 
-        //temp camera for now TODO - MAKE GAME CAMERA
+        //temp camera for now 
+        //TODO - MAKE GAME CAMERA
         this.mainCamera = new FreeCamera('cameraPlayScreen', new Vector3(-25,5,0), this);
         this.mainCamera.setTarget(new Vector3(0,4,0));
 
-        //lights can be different for each scene
-        //TODO Make all the background art swappable. It's a small app.
-        const mainLight = new DirectionalLight('mainLight', new Vector3(1,-1,1),this);
-        mainLight.intensity = 2;
+        //load the kingdoms
+        this.kingdomState = new KingdomState('kingdomState', this);
 
         //load the starter Castle and position on hill
         this.castle = new StructureModel('Castle', this, castleModels, castlClickBox, castlePos );
@@ -119,9 +121,7 @@ export class PlayMode extends Scene {
 
         //load the hill
         this._hill = new StructureModel('Hill', this, hillModels, null, Vector3.Zero());
-    
-        //load the background
-        const background = new PlainsBackground(this);
+
 
         //standardUpgrades
         this.wheat = new WheatState('Wheat', this);
@@ -139,7 +139,6 @@ export class PlayMode extends Scene {
 
         //load the mathState
         this.mathState = new MathState(this);
-        console.log('mathstate:', this.mathState)
 
         //interact with the scene
         this.onPointerDown = function castRay() {
@@ -151,7 +150,7 @@ export class PlayMode extends Scene {
                 
                 if (DEBUGMODE) {
                     console.log('Farm Clicked');
-                    console.log(this.farms.getUpgradesWindow())
+
                 }
 
                 this.farms.getUpgradesWindow().showWindow();

@@ -1,71 +1,135 @@
-import { KingdomsI, KingdomsT } from "../../typings";
+import { Vector3 } from "@babylonjs/core";
+import { KingdomI, KingdomStateI, KingdomStateObserverI  } from "../../typings";
+import { PlayMode } from "../scenes/playmode";
+import { DEBUGMODE } from "../utils/CONSTANTS";
+import { KingdomForest } from "./kingdomForest";
+import { KingdomPlains} from "./kingdomPlains";
 
-export class KingdomState implements KingdomsI {
-    protected _name:KingdomsT['name'];
-    protected _level:KingdomsT['level'];
-    protected _costToUnlockGold:KingdomsT['costToUnlockGold'];
-    protected _costToUnlockFarmers:KingdomsT['costToUnlockFarmers'];
-    protected _costToUnlockResources:KingdomsT['costToUnlockResources'];
-    protected _baseGoldBoost:KingdomsT['baseGoldBoost'];
-    protected _baseResourceBoost:KingdomsT['baseResourceBoost'];
-    protected _prestigeLumens:KingdomsT['prestigeLumens']
+export class KingdomState implements KingdomStateI {
+    private _name:string;
+    private _scene:PlayMode;
+    private _currentKingdom:KingdomI;
+    private _nextKingdom:KingdomI | null;
+    private _allKingdoms:KingdomI[];
+    private _observers:KingdomStateObserverI[];
 
-    constructor(name:KingdomsT['name']) {
+    private _kingdomPlains:KingdomPlains;
+    private _kingdomForest:KingdomForest;
+
+    constructor(name:string, scene:PlayMode) {
         this._name = name;
+        this._scene = scene;
+        this._allKingdoms = [];
+        this._kingdomPlains = new KingdomPlains(this.getScene());
+        this._kingdomForest = new KingdomForest(this.getScene());
+
+        this._allKingdoms.push(this._kingdomPlains, this._kingdomForest);
+
+        this._currentKingdom = this._kingdomPlains;
+        
+        this.setNextKingdom();
+
+        this._currentKingdom.setEnabled(false);
+        this._observers = [];
+
     }
 
-    public getName(): KingdomsT["name"] {
-        return this._name;
+ 
+    public upgrade(): void {
+        if (DEBUGMODE) {
+            console.log('Kingdom Upgrade Called');
+        }
+
+        this.getCurrentKingdom().setEnabled(false);
+        this.setCurrentingdom(this._nextKingdom);
+        this.getCurrentKingdom().setEnabled(true);
+
+        this.setNextKingdom();
+
+        this._scene.mathState.spendGold(this.getCurrentKingdom().getCostToUnlockGold());
+   
+        this.notify();
     }
 
-    public getLevel(): KingdomsT["level"] {
-        return this._level;
+    //Observers
+    public attach(observer:KingdomStateObserverI):void {
+        const observerExists = this._observers.includes(observer);
+        
+        if(observerExists) {
+            if (DEBUGMODE) {
+                return console.log(`${this.getName()} ${observer.getName()} has been attached already`);
+            }
+        }
+        
+        this._observers.push(observer);
+       
+        if (DEBUGMODE) {
+            console.log(`${this.getName()} attached ${observer.getName()}`);
+        }
+
     }
 
-    public getCostToUnlockGold(): KingdomsT["costToUnlockGold"] {
-        return this._costToUnlockGold;
+    public detach(observer:KingdomStateObserverI) {
+        const observerIndex = this._observers.indexOf(observer);
+
+        if (observerIndex === -1) {
+            if (DEBUGMODE) {
+                return console.log(`No ${observer.getName()} on ${this.getName()}`);
+            }
+            return;
+        }
+
+        this._observers.splice(observerIndex, 1);
+
+        if (DEBUGMODE) {
+            console.log(`Detached ${observer.getName()} from ${this.getName()}`);
+        }
     }
 
-    public setCostToUnlockGold(newCost: number): void {
-        this._costToUnlockGold = newCost;
+    public notify(): void {
+        for(const observer of this._observers) {
+            observer.onKingomStateUpgrade(this._currentKingdom);
+        }
+        
     }
 
-    public getCostToUnlockFarmers(): KingdomsT["costToUnlockFarmers"] {
-        return this._costToUnlockFarmers;
+
+    public getName(): string {
+        return this._name
     }
 
-    public setCostToUnlockFarmers(newCost: number): void {
-        this._costToUnlockFarmers = newCost;
+    public getCurrentKingdom(): KingdomI {
+        return this._currentKingdom
+    }
+    
+    public setCurrentingdom(kingdom: KingdomI): void {
+        this._currentKingdom.setEnabled(false);
+        this._currentKingdom = kingdom;
+        this._currentKingdom.setEnabled(true);
     }
 
-    public getCostToUnlockResources(): KingdomsT["costToUnlockResources"] {
-        return this._costToUnlockResources;
+    public getNextKingdom(): KingdomI {
+        return this._nextKingdom;
     }
 
-    public setCostToUnlockResources(newResources: KingdomsT['costToUnlockResources']): void {
-        this._costToUnlockResources = newResources;
+    public setNextKingdom(): void {
+        console.log('set Next Kingdom Called');
+        for (let i in this._allKingdoms) {
+            const kingdom = this._allKingdoms[i];
+
+            if (kingdom.getLevel() === this._currentKingdom.getLevel() + 1) {
+                this._nextKingdom = kingdom;
+            } else {
+                this._nextKingdom = null;
+            }
+        };
     }
 
-    public getBaseGoldBoost(): KingdomsT["baseGoldBoost"] {
-        return this._baseGoldBoost;
+    public getAllKingdoms(): KingdomI[] {
+        return this._allKingdoms;
     }
 
-    public setBaseGoldBoost(newValue: number): void {
-        this._baseGoldBoost = newValue;
-    }
-
-    public getBaseResourceBoost(): KingdomsT["baseResourceBoost"] {
-        return this._baseResourceBoost;
-    }
-
-    public setBaseResourceBoost(newValue:number): void {
-        this._baseResourceBoost = newValue;
-    }
-    public getPrestigeLumens(): KingdomsT["prestigeLumens"] {
-        return this._prestigeLumens
-    }
-
-    public setPrestigeLumens(newValue: number): void {
-        this._prestigeLumens = newValue;
+    public getScene(): PlayMode {
+        return this._scene;
     }
 }

@@ -13,7 +13,7 @@ export const modelsDir = './models/';
 export const startingLumens = 1000;
 
 //gold
-export const startingGold = 5000;
+export const startingGold = 20000;
 
 //Farmers
 export const startingFarmers = 20000;
@@ -1015,7 +1015,7 @@ export const kingPlains:KingdomsT = {
     baseGoldBoost:0,
     baseResourceBoost:0,
     prestigeLumens:0,
-    models:null,
+    importedModels:['kingdomPlains.glb'],
 }
 
 export const kingForest:KingdomsT = {
@@ -1031,7 +1031,7 @@ export const kingForest:KingdomsT = {
         return kingdomBaseResourceBoost(this.level);
     },
     prestigeLumens:0,
-    models:null,
+    importedModels:['kingdomForest.glb'],
 }
 
 export const kingTundra:KingdomsT = {
@@ -1047,7 +1047,7 @@ export const kingTundra:KingdomsT = {
         return kingdomBaseResourceBoost(this.level);
     },
     prestigeLumens:0,
-    models:null,
+    importedModels:null,
 }
 
 export const kingSwamp:KingdomsT = {
@@ -1063,7 +1063,7 @@ export const kingSwamp:KingdomsT = {
         return kingdomBaseResourceBoost(this.level);
     },
     prestigeLumens:0,
-    models:null,
+    importedModels:null,
 }
 
 export const kingMountains:KingdomsT = {
@@ -1079,7 +1079,7 @@ export const kingMountains:KingdomsT = {
         return kingdomBaseResourceBoost(this.level);
     },
     prestigeLumens:0,
-    models:null,
+    importedModels:null,
 }
 
 export const kingCoast:KingdomsT = {
@@ -1097,7 +1097,7 @@ export const kingCoast:KingdomsT = {
     get prestigeLumens() {
         return kingdomLumensEarned(this.level)
     },
-    models:null,
+    importedModels:null,
 }
 
 export const kingOasis:KingdomsT = {
@@ -1115,7 +1115,7 @@ export const kingOasis:KingdomsT = {
     get prestigeLumens() {
         return kingdomLumensEarned(this.level)
     },
-    models:null,
+    importedModels:null,
 }
 
 export const kingTropical:KingdomsT = {
@@ -1133,7 +1133,7 @@ export const kingTropical:KingdomsT = {
     get prestigeLumens() {
         return kingdomLumensEarned(this.level)
     },
-    models:null,
+    importedModels:null,
 }
 
 export const kingWaterfall:KingdomsT = {
@@ -1151,7 +1151,7 @@ export const kingWaterfall:KingdomsT = {
     get prestigeLumens() {
         return kingdomLumensEarned(this.level)
     },
-    models:null,
+    importedModels:null,
 }
 
 export const kingSky:KingdomsT = {
@@ -1169,7 +1169,7 @@ export const kingSky:KingdomsT = {
     get prestigeLumens() {
         return kingdomLumensEarned(this.level)
     },
-    models:null,
+    importedModels:null,
 }
 
 export const kingMoon:KingdomsT = {
@@ -1187,7 +1187,7 @@ export const kingMoon:KingdomsT = {
     get prestigeLumens() {
         return kingdomLumensEarned(this.level)
     },
-    models:null,
+    importedModels:null,
 }
 
 export const kingInterDimensional:KingdomsT = {
@@ -1205,7 +1205,7 @@ export const kingInterDimensional:KingdomsT = {
     get prestigeLumens() {
         return kingdomLumensEarned(this.level)
     },
-    models:null,
+    importedModels:null,
 }
 
 ////Characters
