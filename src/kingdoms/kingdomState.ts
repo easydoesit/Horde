@@ -47,7 +47,18 @@ export class KingdomState implements KingdomStateI {
         this.setNextKingdom();
 
         this._scene.mathState.spendGold(this.getCurrentKingdom().getCostToUnlockGold());
-   
+        const currentGoldMult = this.getScene().mathState.getGoldMultiplyer();
+        const newGoldMultiplyer = currentGoldMult + (currentGoldMult * this.getCurrentKingdom().getBaseGoldBoost());
+        this._scene.mathState.setGoldMultiplyer(newGoldMultiplyer);
+
+        for (let i in this.getScene().allStructures) {
+            const structure = this.getScene().allStructures[i];
+
+            const oldResourceMult = structure.getResourceMultiplyer();
+            const newResourceMult = oldResourceMult + (oldResourceMult * this.getCurrentKingdom().getBaseResourceBoost());
+            structure.setResourceMultiplyer(newResourceMult); 
+        }
+
         this.notify();
     }
 
