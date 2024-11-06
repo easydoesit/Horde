@@ -307,6 +307,8 @@ export interface KingdomI {
     getPrestigeLumens():KingdomsT['prestigeLumens'];
     setPrestigeLumens(newValue:number):void;
 
+    getHiddenPos():Vector3;
+
     setEnabled(bool:boolean):void;
 
 }

@@ -232,6 +232,7 @@ export class StructureState implements StructureStateI {
     public getUpgradeCostGold(): number {
         return this._upgradeCostGold;    
     }
+
     setUpgradeCostGold(newCost: number): void {
         this._upgradeCostGold = newCost;
     }
@@ -315,7 +316,7 @@ export class StructureState implements StructureStateI {
         }
     }
 
-    public setGoldPerCycle(amount:number) {
+    public setGoldPerCycle(amount:number):void {
         this._goldPerCycle = amount;
     }
 

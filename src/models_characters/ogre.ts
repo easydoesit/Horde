@@ -129,15 +129,15 @@ export class Ogre extends TransformNode {
         }
     }
 
-    public makeUnclickable() {
+    public makeUnclickable():void {
         this.clickable = false;
     }
 
-    public makeClickable() {
+    public makeClickable():void {
         this.clickable = true;
     }
 
-    public ogreAttackMode(on:boolean) {
+    public ogreAttackMode(on:boolean):void {
 
         if(on) {
             this.ogreAttack = true;
@@ -160,17 +160,17 @@ export class Ogre extends TransformNode {
         
     }
 
-    public takeClick() {
+    public takeClick():void {
         if (this.clicksLeft > 0) {
             this.clicksLeft -= 1;
         }
     }
 
-    public resetClicks() {
+    public resetClicks():void {
         this.clicksLeft = ogreClicks;
     }
 
-    public playOgreEnter() {
+    public playOgreEnter():void {
 
         let randomInterval = Math.round(Math.random() * (ogreLoopMaxMin[0] - ogreLoopMaxMin[1]) + ogreLoopMaxMin[1]);
 
@@ -185,7 +185,7 @@ export class Ogre extends TransformNode {
  
     }
 
-    public playOgreExit() {
+    public playOgreExit():void {
         this.makeUnclickable();
         this.ogreAttackMode(false);
         

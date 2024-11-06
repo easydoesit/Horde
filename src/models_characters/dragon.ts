@@ -74,22 +74,22 @@ export class Dragon extends TransformNode {
         }
     }
 
-    private _getPath(list:Vector3[][]) {
+    private _getPath(list:Vector3[][]):Vector3[] {
         
         const index = list[Math.floor(Math.random() * list.length)]
         return index; 
 
     }
 
-    public makeUnclickable() {
+    public makeUnclickable():void {
         this.clickable = false;
     }
 
-    public makeClickable() {
+    public makeClickable():void {
         this.clickable = true;
     }
 
-    public playDragon = () => {
+    public playDragon():void {
 
         let randomInterval = Math.round(Math.random() * (dragonLoopMaxMin[0] - dragonLoopMaxMin[1]) + dragonLoopMaxMin[1]);
         const dragonPath = this._getPath(dragonPaths);
@@ -111,7 +111,7 @@ export class Dragon extends TransformNode {
 
     }
 
-    private _makeAnimation(path:Vector3[], curve:Curve3) {
+    private _maeAnimation(path:Vector3[], curve:Curve3) {
         let debugPath:LinesMesh;
 
         if (DEBUGMODE) {

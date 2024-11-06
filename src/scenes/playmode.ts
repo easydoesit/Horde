@@ -25,6 +25,7 @@ import { IncreaseOreValueState } from "../upgradesStandard/increaseOreVal";
 import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpeed";
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
+import { GUIStartScreen } from "../GUI/GUIStartScreen";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
@@ -64,7 +65,7 @@ export class PlayMode extends Scene {
     public epicUpgradeBaseResource:BaseResourcePercentUpgradeState;
     public epicFasterCycleTimes:StructuresFasterCyclesState;
 
-    //for cloning
+    //characters
     public dragon:Dragon;
     public egg:Egg;
     public ogre:Ogre;
@@ -290,11 +291,11 @@ export class PlayMode extends Scene {
        
     }
 
-    public getApp() {
+    public getApp():App {
         return this._app;
     }
 
-    public getAppGui() {
+    public getAppGui():GUIPlay | GUIStartScreen {
         return this._app.gui;
     }
 
