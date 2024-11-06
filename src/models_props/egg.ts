@@ -19,20 +19,20 @@ export class Egg extends TransformNode {
         this._animeFrameRate = 60;
         this._dragon = dragon;
 
-        this.initialize();
+        this._initialize();
 
     }
 
-    public async initialize():Promise<void> {
+    private async _initialize():Promise<void> {
         
 
-        this.model = await this.createEgg();
+        this.model = await this._createEgg();
 
         this.model.root.parent = this;
         
     }
 
-    async createEgg():Promise<{root:AbstractMesh, allMeshes:AbstractMesh[]}>{
+    private async _createEgg():Promise<{root:AbstractMesh, allMeshes:AbstractMesh[]}>{
         const models = await SceneLoader.ImportMeshAsync('', './models/', 'egg.glb')
         const root = models.meshes[0];
         const allMeshes = root.getChildMeshes();
@@ -76,7 +76,7 @@ export class Egg extends TransformNode {
 
     }
 
-    public async runAnimation() {
+    public async runAnimation():Promise<void>{
         if (DEBUGMODE) {
             console.log('egg falling');
         }

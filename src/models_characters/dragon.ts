@@ -60,7 +60,7 @@ export class Dragon extends TransformNode {
         
     }
 
-    async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}>{
+    private async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}>{
         const models = await SceneLoader.ImportMeshAsync('',this._publicDir, importedModel, this.scene);
         const root = models.meshes[0];
         const allMeshes = root.getChildMeshes();

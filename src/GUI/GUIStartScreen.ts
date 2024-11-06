@@ -50,7 +50,7 @@ export class GUIStartScreen implements GameStateObserverI {
 
     }
 
-    public async updateGameState(gamestate: GameStateI): Promise<void> {
+    public async updateGameState(): Promise<void> {
            
         if(this._app.gameState.state === 'PLAY_MODE') {
     

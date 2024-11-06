@@ -19,10 +19,10 @@ export class StructureModel extends TransformNode {
         this._importedModels = importedModels;
         this.models = [];
         this.gamePosition = gamePosition;
-        this.initialize(clickBox);
+        this._initialize(clickBox);
     }
 
-    public async initialize(clickBox:string):Promise<void> {
+    private async _initialize(clickBox:string):Promise<void> {
         if (DEBUGMODE) {
             console.log(`initializing structure: ${this.name}`);
             //console.log(`${this.name} has a clickbox: ${clickBox}`);
@@ -61,7 +61,7 @@ export class StructureModel extends TransformNode {
 
     }
 
-    async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}> {
+    private async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}> {
         
         const models = await SceneLoader.ImportMeshAsync('',this._modelsDir, importedModel, this.scene);
         const root = models.meshes[0];
@@ -76,7 +76,7 @@ export class StructureModel extends TransformNode {
         }
     }
 
-    public hideModel(modelN:number | string) {
+    public hideModel(modelN:number | string):void {
     
         //if you know where in the array the model is...
         if (typeof modelN === 'number') {
@@ -97,7 +97,7 @@ export class StructureModel extends TransformNode {
 
     }
 
-    public showModel(modelN:number | string) {
+    public showModel(modelN:number | string):void {
         //if you know where in the array the model is...
         if (typeof modelN === 'number') {
             for (let i in this.models[modelN].meshes.allMeshes) {

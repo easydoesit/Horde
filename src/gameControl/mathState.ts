@@ -103,7 +103,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     }
 
     //Gold
-    private setFinalGold() {    
+    private setFinalGold():void {    
         
         const goldPerFrame = this.getGoldPerSecond() * (this._scene.getEngine().getDeltaTime()/1000);
 
@@ -111,7 +111,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     
     }
 
-    public setGoldPerSecond() {
+    public setGoldPerSecond():number {
 
         return (1 + this.getWheatValue()) * this._farmerMultiplyByBaseVal(this.getTotalFarmers()) * this.getGoldMultiplyer();
 
@@ -125,7 +125,7 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         this._totalGold  += amount;
     }
 
-    public spendGold(amount:number) {
+    public spendGold(amount:number):void {
         
         if (this._totalGold - amount >= 0) {
             this._totalGold -= amount;
@@ -161,15 +161,15 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     }
 
     //Farmers
-    public getTotalFarmers() {
+    public getTotalFarmers():number {
         return this._totalFarmers;
     }
 
-    public addFarmers(number:number) {
+    public addFarmers(number:number):void {
        this._totalFarmers += number;
     }
 
-    public spendFarmers(amount:number) {
+    public spendFarmers(amount:number):void {
 
         if(this._totalFarmers - amount >= 0) {
             this._totalFarmers -= amount;
@@ -179,19 +179,19 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
     
     }
 
-    private _farmerMultiplyByBaseVal(totalFarmers:number) {
+    private _farmerMultiplyByBaseVal(totalFarmers:number):number {
         return totalFarmers * farmerBaseValue;
     }
 
-    public makeFarmerRun(number:number) {
+    public makeFarmerRun(number:number):void {
         this._runningFarmers += number;
     }
 
-    public endFarmerRun() {
+    public endFarmerRun():void {
         this._runningFarmers -= 1;
     }
 
-    public getRunningFarmers() {
+    public getRunningFarmers():number {
         return this._runningFarmers;
     }
 

@@ -161,7 +161,7 @@ export class StructureState implements StructureStateI {
         
     }
 
-    public animateCharacters() {
+    public animateCharacters():void {
           //animate characters
           if(this._character) {
             let characterCount = 0;

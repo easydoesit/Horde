@@ -66,12 +66,12 @@ export class InSceneStuctureGUI extends Button {
             if(this._structure.getSteward()) {
                 
                 if(this._structure.getAlive() === true) {
-                    this.moveBar();
+                    this._moveBar();
                 }
 
             } else if (this._barMoveRequested){
                 if(this._structure.getAlive() === true) {
-                    this.moveBar();
+                    this._moveBar();
                 }
             }
 
@@ -79,7 +79,7 @@ export class InSceneStuctureGUI extends Button {
 
     }
         
-    public moveBar() {
+    private _moveBar() {
         this._barMoving = true;
         
         if (this._animatedBar._width.value < 1) {
@@ -103,11 +103,11 @@ export class InSceneStuctureGUI extends Button {
         
     }
 
-    public setInfoText(text:string) {
+    public setInfoText(text:string):void {
         this._infoText.text = text;
     }
 
-    public requestBarMove() {
+    public requestBarMove():void {
         
         if (!this._barMoving) {
             this._barMoveRequested = true;

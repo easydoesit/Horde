@@ -21,8 +21,6 @@ export class App {
     private _inspector:BabInspector;
     public loadingScreen:DefaultLoadingScreen;
 
-    public startScreen:StartScreen;
-
     constructor() {
         // create the canvas html element and attach it to the webpage
         this._canvas = createCanvas();
@@ -71,4 +69,5 @@ export class App {
 
     ///
 }
+
 new App();

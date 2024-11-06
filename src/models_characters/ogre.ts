@@ -48,7 +48,7 @@ export class Ogre extends TransformNode {
         this._keyFramesStartAttackToExit = 700;
         this._keyFramesEndAttackToExit = 820;
 
-        this.initialize();
+        this._initialize();
 
         const transfromPosition = new Animation('ogrePlacementTransform', 'position', 60, Animation.ANIMATIONTYPE_VECTOR3);
 
@@ -77,7 +77,7 @@ export class Ogre extends TransformNode {
 
     }
 
-    public async initialize():Promise<void> {
+    private async _initialize():Promise<void> {
 
         //add all the models to the scene        
         for (let i = 0; i < this._importedModels.length; i++ ) {
@@ -115,7 +115,7 @@ export class Ogre extends TransformNode {
 
     }
 
-    async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}>{
+    private async _createModel(name:string, importedModel:string):Promise<{name:string, meshes:{root:AbstractMesh, allMeshes:AbstractMesh[]}}>{
         const models = await SceneLoader.ImportMeshAsync('',this._publicDir, importedModel, this.scene);
         const root = models.meshes[0];
         const allMeshes = root.getChildMeshes();
