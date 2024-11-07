@@ -117,7 +117,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         this._btnRectGold.top = 35;
         this._upgradeBtn.addControl(this._btnRectGold);
 
-        this._tBCostGold = new TextBlock(`${this.name} cost in Gold`, `${this.getGoldCost()}`);
+        this._tBCostGold = new TextBlock(`${this.name} cost in Gold`, `${this.getGoldCost().toFixed()}`);
         this._tBCostGold.fontFamily = GUIFONT1;
         this._tBCostGold.color = 'gold';
         this._tBCostGold.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
@@ -143,7 +143,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
             this._btnRectFarmers.top = 60;
             this._upgradeBtn.addControl(this._btnRectFarmers);
 
-            this._tBCostFarmers = new TextBlock(`${this.name} cost in Farmers`, `${this.getFarmerCost()}`);
+            this._tBCostFarmers = new TextBlock(`${this.name} cost in Farmers`, `${this.getFarmerCost().toFixed()}`);
             this._tBCostFarmers.fontFamily = GUIFONT1;
             this._tBCostFarmers.color = 'pink';
             this._tBCostFarmers.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
@@ -169,7 +169,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
             this._btnRectResources.top = 85;
             this._upgradeBtn.addControl(this._btnRectResources);
 
-            this._tBCostResources = new TextBlock(`${this.name} cost in Resources`, `${this.getResourceCost()}`);
+            this._tBCostResources = new TextBlock(`${this.name} cost in Resources`, `${this.getResourceCost().toFixed()}`);
             this._tBCostResources.fontFamily = GUIFONT1;
             this._tBCostResources.color = 'orange';
             this._tBCostResources.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
@@ -298,17 +298,17 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
 
         if (this._tBCostGold) {
             this.setGoldCost(structure.getUpgradeCostGold());
-            this._tBCostGold.text = Math.round(this.getGoldCost()).toString();
+            this._tBCostGold.text = this.getGoldCost().toFixed();
         }
         
         if (this._tBCostFarmers) {
             this.setFarmerCost(structure.getUpgradeCostFarmers());
-            this._tBCostFarmers.text = Math.round(this.getFarmerCost()).toString();
+            this._tBCostFarmers.text = this.getFarmerCost().toFixed();
         }
 
         if (this._tBCostResources) {
             this.setResourceCost(structure.getUpgradeCostResources());
-            this._tBCostResources.text = Math.round(this.getResourceCost()).toString();
+            this._tBCostResources.text = this.getResourceCost().toFixed();
         }
         
     }
