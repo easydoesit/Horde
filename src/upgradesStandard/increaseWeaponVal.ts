@@ -11,19 +11,20 @@ export class IncreaseWeaponsValueState extends StandardUpgradeState implements S
         super(name,scene);
         this._maxNumUpgrades = increaseWeaponsValue.upgradeMax;
         this._increment = increaseWeaponsValue.incrementValue;
-        this._structure = this._scene.mine;
+        this._structure = this._scene.forge;
 
         //all of these are updatable
         this._effectValue = increaseWeaponsValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseWeaponsValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        console.log('FORGE UPDATE HERE',this._upgradeCostGold);
         this._upgradeCostFarmers = increaseWeaponsValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
         this._upgradeCostResources = increaseWeaponsValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
         this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseWeaponsValUpgradeCallback()});
-        this._scene.mine.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this._scene.forge.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
@@ -62,20 +63,20 @@ export class IncreaseWeaponsValueState extends StandardUpgradeState implements S
         this._instructions = this._makeInstructions();
         
         //increase the value of Ore
-        const origMultiplyer = this._scene.mine.getResourceMultiplyer();
+        const origMultiplyer = this._scene.forge.getResourceMultiplyer();
         const newMultiplyer = origMultiplyer + this.getEffectValue();
-        this._scene.mine.setResourceMultiplyer(newMultiplyer);
+        this._scene.forge.setResourceMultiplyer(newMultiplyer);
 
         //increase the value of Gold
-        const origGoldPerCycle = this._scene.mine.getGoldPerCycle();
+        const origGoldPerCycle = this._scene.forge.getGoldPerCycle();
         const newGoldPerCycle = origGoldPerCycle + this.getEffectValue();
-        this._scene.mine.setGoldPerCycle(newGoldPerCycle);
+        this._scene.forge.setGoldPerCycle(newGoldPerCycle);
         //notify the observers
         this.notify();
 
         //update insceneGUI
         this._structure.setResourcePerCycle(this._structure.getResourcePerCycle() + (this._structure.getResourcePerCycle() * this._structure.getResourceMultiplyer()/100))
-        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Ore/cycle`)
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Weapons/cycle`)
 
     }
 

@@ -145,6 +145,7 @@ export const increaseWeaponsValue = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
+        console.log('final value:',finalValue);
     
         return finalValue;
     },
