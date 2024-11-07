@@ -111,7 +111,7 @@ export class Dragon extends TransformNode {
 
     }
 
-    private _maeAnimation(path:Vector3[], curve:Curve3) {
+    private _makeAnimation(path:Vector3[], curve:Curve3) {
         let debugPath:LinesMesh;
 
         if (DEBUGMODE) {
