@@ -130,6 +130,7 @@ export class PlayMode extends Scene {
         this.wheat = new WheatState('Wheat', this);
         this.increaseOreValue = new IncreaseOreValueState('Increase Ore Value', this);
         this.increaseMiningSpeed = new IncreaseMiningSpeedState('Increase Mining Speed', this);
+        this.increaseWeaponsValue = new IncreaseWeaponsValueState('Increase Weapon Value', this);
 
         //epic upgrades
         this.allEpicUpgrades = []
