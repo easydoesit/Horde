@@ -23,6 +23,7 @@ import { WheatState } from "../upgradesStandard/wheat";
 import { increaseOreValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { IncreaseOreValueState } from "../upgradesStandard/increaseOreVal";
 import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpeed";
+import { IncreaseWeaponsValueState } from "../upgradesStandard/increaseWeaponVal";
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
 import { GUIStartScreen } from "../GUI/GUIStartScreen";
@@ -57,6 +58,7 @@ export class PlayMode extends Scene {
     public wheat:WheatState;
     public increaseOreValue:IncreaseOreValueState;
     public increaseMiningSpeed:IncreaseMiningSpeedState;
+    public increaseWeaponsValue:IncreaseWeaponsValueState;
 
     //Epic upgrades
     public allEpicUpgrades:any[];
@@ -128,6 +130,7 @@ export class PlayMode extends Scene {
         this.wheat = new WheatState('Wheat', this);
         this.increaseOreValue = new IncreaseOreValueState('Increase Ore Value', this);
         this.increaseMiningSpeed = new IncreaseMiningSpeedState('Increase Mining Speed', this);
+        this.increaseWeaponsValue = new IncreaseWeaponsValueState('Increase Weapon Value', this);
 
         //epic upgrades
         this.allEpicUpgrades = []
