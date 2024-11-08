@@ -197,3 +197,42 @@ export const increaseForgeSpeed = {
         return 0;
     },
 }
+export const increaseVillageValue = {
+    name:'Increase Village Value',
+    structure:'Barracks',
+    incrementValue:0.05,
+    upgradeMax:20,
+
+    effectValue: (upgradeLevel:number, upgradeMax:number, incrementalValue:number) => {
+    
+        if (upgradeLevel === 0) {
+            return 0;
+        }
+
+        const logTarget = 1;
+        const currentLevel = upgradeLevel;
+        const upgradeLimit = upgradeMax; 
+        const curveBalance = 5; 
+        const incrementValue = incrementalValue;
+
+        return logTarget * (Math.log(currentLevel)/Math.log(upgradeLimit)/curveBalance) + incrementValue;
+        
+    },
+
+    nextUpgradeCostGold: (upgradeLevel:number) => {
+        const nextUpgradeLevel = upgradeLevel + 1;
+        const baseGoldCost = 228;
+        const goldCostGrowthCurve = 3.4;
+    
+        let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
+        console.log('final value:',finalValue);
+    
+        return finalValue;
+    },
+    nextUpgradeCostFarmers:(upgradeLevel:number) => {
+        return 0;
+    },
+    nextUpgradeCostResources:(upgradeLevel:number) => {
+        return 0;
+    },
+}

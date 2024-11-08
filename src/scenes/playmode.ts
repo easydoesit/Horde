@@ -25,6 +25,7 @@ import { IncreaseOreValueState } from "../upgradesStandard/increaseOreVal";
 import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpeed";
 import { IncreaseWeaponsValueState } from "../upgradesStandard/increaseWeaponVal";
 import { IncreaseForgeSpeedState } from "../upgradesStandard/increaseForgeSpeed";
+import { IncreaseVillageValueState } from "../upgradesStandard/increaseVillageVal";
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
 import { GUIStartScreen } from "../GUI/GUIStartScreen";
@@ -61,6 +62,7 @@ export class PlayMode extends Scene {
     public increaseMiningSpeed:IncreaseMiningSpeedState;
     public increaseWeaponsValue:IncreaseWeaponsValueState;
     public increaseForgeSpeed:IncreaseForgeSpeedState;
+    public increaseVillageValue:IncreaseVillageValueState;
 
     //Epic upgrades
     public allEpicUpgrades:any[];
