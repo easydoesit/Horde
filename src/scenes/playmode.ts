@@ -136,6 +136,7 @@ export class PlayMode extends Scene {
         this.increaseMiningSpeed = new IncreaseMiningSpeedState('Increase Mining Speed', this);
         this.increaseWeaponsValue = new IncreaseWeaponsValueState('Increase Weapon Value', this);
         this.increaseForgeSpeed = new IncreaseForgeSpeedState('Increase Forge Speed', this);
+        this.increaseVillageValue = new IncreaseVillageValueState('Improved Battle Tactics', this);
 
         //epic upgrades
         this.allEpicUpgrades = []
