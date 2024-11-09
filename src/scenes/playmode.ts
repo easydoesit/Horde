@@ -26,6 +26,7 @@ import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpee
 import { IncreaseWeaponsValueState } from "../upgradesStandard/increaseWeaponVal";
 import { IncreaseForgeSpeedState } from "../upgradesStandard/increaseForgeSpeed";
 import { IncreaseVillageValueState } from "../upgradesStandard/increaseVillageVal";
+import { IncreaseBarracksSpeedState } from "../upgradesStandard/increaseBarracksSpeed";
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
 import { GUIStartScreen } from "../GUI/GUIStartScreen";
@@ -63,6 +64,7 @@ export class PlayMode extends Scene {
     public increaseWeaponsValue:IncreaseWeaponsValueState;
     public increaseForgeSpeed:IncreaseForgeSpeedState;
     public increaseVillageValue:IncreaseVillageValueState;
+    public increaseBarracksSpeed: IncreaseBarracksSpeedState;
 
     //Epic upgrades
     public allEpicUpgrades:any[];
@@ -137,6 +139,7 @@ export class PlayMode extends Scene {
         this.increaseWeaponsValue = new IncreaseWeaponsValueState('Increase Weapon Value', this);
         this.increaseForgeSpeed = new IncreaseForgeSpeedState('Increase Forge Speed', this);
         this.increaseVillageValue = new IncreaseVillageValueState('Improved Battle Tactics', this);
+        this.increaseBarracksSpeed = new IncreaseBarracksSpeedState('Increase Marching Speed', this);
 
         //epic upgrades
         this.allEpicUpgrades = []

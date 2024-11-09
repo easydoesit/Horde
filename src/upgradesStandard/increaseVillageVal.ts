@@ -5,6 +5,8 @@ import { increaseVillageValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
+
+//Increase value upgrade for the Barracks
 export class IncreaseVillageValueState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
