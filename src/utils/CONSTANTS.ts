@@ -63,7 +63,7 @@ export const farms:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//you start with one farm
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 80;
+        const initGoldCost = 160;
         const goldCostGrowthCurve = 3.4;
         const UGLevel = upgradeLevel + 1;
 
@@ -122,14 +122,14 @@ export const mine:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:250, farmers:20, resources:0 , resourceName:null},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 381;
+        const initGoldCost = 493;
         const goldCostGrowthCurve = 4.2;
         const UGLevel = upgradeLevel + 1;
 
         return initGoldCost * goldCostGrowthCurve * UGLevel;
     },
     nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        const initFarmerCost = 630;
+        const initFarmerCost = 330;
         const farmerValueCurve = 4.2;
         const UGLevel = upgradeLevel + 1;
 
@@ -220,14 +220,14 @@ export const forge:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:1000, farmers:80, resources:100, resourceName:'Ore'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 1814;
+        const initGoldCost = 1518;
         const goldCostGrowthCurve = 2.8;
         const UGLevel = upgradeLevel + 1;
 
         return initGoldCost * goldCostGrowthCurve * UGLevel;
     },
     nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        const initFarmerCost = 3969;
+        const initFarmerCost = 1089;
         const farmerValueCurve = 4.2;
         const UGLevel = upgradeLevel + 1;
 
@@ -318,14 +318,14 @@ export const barracks:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:4000, farmers:320, resources:180, resourceName:'Weapons'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 8635;
+        const initGoldCost = 4675;
         const goldCostGrowthCurve = 3.4;
         const UGLevel = upgradeLevel + 1;
 
         return initGoldCost * goldCostGrowthCurve * UGLevel;
     },
     nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        const initFarmerCost = 25005;
+        const initFarmerCost = 3594;
         const farmerValueCurve = 4.2;
         const UGLevel = upgradeLevel + 1;
 
@@ -334,7 +334,7 @@ export const barracks:StructureConstantsI = {
         return finalValue;
     },
     nextUpgradeCostInResources: (upgradeLevel:number) => {
-        const initResourceCost = 476;
+        const initResourceCost = 374;
         const resourceValueCurve = 2.8;
         const UGLevel = upgradeLevel;
 
@@ -416,14 +416,14 @@ export const thievesGuild:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:16000, farmers:1280, resources:324, resourceName:'Villages'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 41103;
+        const initGoldCost = 14399;
         const goldCostGrowthCurve = 3.4;
         const UGLevel = upgradeLevel + 1;
 
         return initGoldCost * goldCostGrowthCurve * UGLevel;
     },
     nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        const initFarmerCost = 157532;
+        const initFarmerCost = 11860;
         const farmerValueCurve = 4.2;
         const UGLevel = upgradeLevel + 1;
 
@@ -432,7 +432,7 @@ export const thievesGuild:StructureConstantsI = {
         return finalValue;
     },
     nextUpgradeCostInResources: (upgradeLevel:number) => {
-        const initResourceCost = 2266;
+        const initResourceCost = 1399;
         const resourceValueCurve = 2.8;
         const UGLevel = upgradeLevel;
 
@@ -514,14 +514,14 @@ export const workShop:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:64000, farmers:5120, resources:583, resourceName:'Loot'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 195650;
+        const initGoldCost = 44349;
         const goldCostGrowthCurve = 3.4;
         const UGLevel = upgradeLevel + 1;
 
         return initGoldCost * goldCostGrowthCurve * UGLevel;
     },
     nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        const initFarmerCost = 25005;
+        const initFarmerCost = 39138;
         const farmerValueCurve = 4.2;
         const UGLevel = upgradeLevel + 1;
 
@@ -530,7 +530,7 @@ export const workShop:StructureConstantsI = {
         return finalValue;
     },
     nextUpgradeCostInResources: (upgradeLevel:number) => {
-        const initResourceCost = 476;
+        const initResourceCost = 5232;
         const resourceValueCurve = 2.8;
         const UGLevel = upgradeLevel;
 
@@ -612,29 +612,29 @@ export const tower:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:256000, farmers:20480, resources:1049, resourceName:'Goldbars'},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 117025;
+        const initGoldCost = 136595;
         const goldCostGrowthCurve = 3.4;
         const UGLevel = upgradeLevel + 1;
 
         return initGoldCost * goldCostGrowthCurve * UGLevel;
     },
     nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        // const initFarmerCost = 3969;
-        // const farmerValueCurve = 4.2;
-        // const UGLevel = upgradeLevel + 1;
+         const initFarmerCost = 129155;
+         const farmerValueCurve = 4.2;
+         const UGLevel = upgradeLevel + 1;
 
-        // let finalValue = initFarmerCost * farmerValueCurve * UGLevel;
+         let finalValue = initFarmerCost * farmerValueCurve * UGLevel;
 
-        return 0;
+        return finalValue;
     },
     nextUpgradeCostInResources: (upgradeLevel:number) => {
-        // const initResourceCost = 100;
-        // const resourceValueCurve = 2.8;
-        // const UGLevel = upgradeLevel;
+         const initResourceCost = 19568;
+         const resourceValueCurve = 2.8;
+         const UGLevel = upgradeLevel;
 
-        // let finalValue = initResourceCost * resourceValueCurve * UGLevel;
+         let finalValue = initResourceCost * resourceValueCurve * UGLevel;
 
-        return 0;
+        return finalValue;
     },
     goldPerCycle: 10240,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
@@ -717,22 +717,22 @@ export const tavern:StructureConstantsI = {
         return initGoldCost * goldCostGrowthCurve * UGLevel;
     },
     nextUpgradeCostInFarmers:(upgradeLevel:number) => {
-        // const initFarmerCost = 3969;
-        // const farmerValueCurve = 4.2;
-        // const UGLevel = upgradeLevel + 1;
+        const initFarmerCost = 420713;
+        const farmerValueCurve = 4.2;
+        const UGLevel = upgradeLevel + 1;
 
-        // let finalValue = initFarmerCost * farmerValueCurve * UGLevel;
+        let finalValue = initFarmerCost * farmerValueCurve * UGLevel;
 
-        return 0;
+        return finalValue;
     },
     nextUpgradeCostInResources: (upgradeLevel:number) => {
-        // const initResourceCost = 100;
-        // const resourceValueCurve = 2.8;
-        // const UGLevel = upgradeLevel;
+        const initResourceCost = 73184;
+         const resourceValueCurve = 2.8;
+         const UGLevel = upgradeLevel;
 
-        // let finalValue = initResourceCost * resourceValueCurve * UGLevel;
+         let finalValue = initResourceCost * resourceValueCurve * UGLevel;
 
-        return 0;
+        return finalValue;
     },
     goldPerCycle: 40960,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
