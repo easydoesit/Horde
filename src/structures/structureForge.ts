@@ -34,7 +34,7 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._resourceAmountPerCycle = forge.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('ForgeSceneGui', this, this.getResourceName());
         this._upgradesWindow = new UpgradeWindow('ForgeUpgradeWindow');
-        //this._upgradeSectionInstructions = `Speeds Up Weapon Resource Creation by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`
+        //this._upgradeSectionInstructions = `Speeds Up Weapon Resource Creation by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%` <-- This is wrong CHECK ALL STRUCTURES
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( forge.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${forge.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', this, () => {this._forgeUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addForgeButton', this, () => {this._forgeAdditionCallback()});
@@ -101,7 +101,7 @@ export class StructureForge extends StructureState implements StructureStateChil
 
         this.getUpgradeSection().setGoldCost(this.getUpgradeCostGold());
         this.getUpgradeSection().setFarmerCost(this.getUpgradeCostFarmers());
-
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 
     private _forgeAdditionCallback() {
@@ -111,7 +111,7 @@ export class StructureForge extends StructureState implements StructureStateChil
 
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
-        
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 
 }

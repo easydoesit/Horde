@@ -283,7 +283,7 @@ export const forge:StructureConstantsI = {
             if (upgradeLevel === 0) {
                 time = seconds;
             } else {
-                time = seconds - (seconds * resourceUpgradeValue);
+                time = seconds - (seconds * resourceUpgradeValue/100);
             }
 
             return time;
