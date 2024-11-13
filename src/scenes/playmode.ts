@@ -221,8 +221,8 @@ export class PlayMode extends Scene {
                     console.log("Barracks Clicked");
                 }
                 
-                if (!this.forge.getSteward()) {
-                    this.forge.getInSceneGui().requestBarMove();
+                if (!this.barracks.getSteward()) {
+                    this.barracks.getInSceneGui().requestBarMove();
                 }
       
             }
