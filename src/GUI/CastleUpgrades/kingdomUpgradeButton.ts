@@ -64,9 +64,9 @@ export class KingdomUpgradeButton extends Button implements KingdomStateObserver
     }
 
     private _makeButtonEnabled() {
-        
+
         if (this._kindomState.getNextKingdom() !== null) {
-            if (this._mathState.getTotalGold() >= this._kindomState.getCurrentKingdom().getCostToUnlockGold()) {
+            if (this._mathState.getTotalGold() >= this._kindomState.getNextKingdom().getCostToUnlockGold()) {
                 this.isEnabled = true;
             } else {
                 this.isEnabled = false;
