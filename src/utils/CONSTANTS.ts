@@ -381,7 +381,7 @@ export const barracks:StructureConstantsI = {
             if (upgradeLevel === 0) {
                 time = seconds;
             } else {
-                time = seconds - (seconds * resourceUpgradeValue);
+                time = seconds - (seconds * resourceUpgradeValue/100);
             }
 
             return time;
@@ -479,7 +479,7 @@ export const thievesGuild:StructureConstantsI = {
             if (upgradeLevel === 0) {
                 time = seconds;
             } else {
-                time = seconds - (seconds * resourceUpgradeValue);
+                time = seconds - (seconds * resourceUpgradeValue/100);
             }
 
             return time;
@@ -577,7 +577,7 @@ export const workShop:StructureConstantsI = {
             if (upgradeLevel === 0) {
                 time = seconds;
             } else {
-                time = seconds - (seconds * resourceUpgradeValue);
+                time = seconds - (seconds * resourceUpgradeValue/100);
             }
 
             return time;
@@ -675,7 +675,7 @@ export const tower:StructureConstantsI = {
             if (upgradeLevel === 0) {
                 time = seconds;
             } else {
-                time = seconds - (seconds * resourceUpgradeValue);
+                time = seconds - (seconds * resourceUpgradeValue/100);
             }
 
             return time;
@@ -773,7 +773,7 @@ export const tavern:StructureConstantsI = {
             if (upgradeLevel === 0) {
                 time = seconds;
             } else {
-                time = seconds - (seconds * resourceUpgradeValue);
+                time = seconds - (seconds * resourceUpgradeValue/100);
             }
 
             return time;
