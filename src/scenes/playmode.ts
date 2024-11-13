@@ -27,6 +27,8 @@ import { IncreaseWeaponsValueState } from "../upgradesStandard/increaseWeaponVal
 import { IncreaseForgeSpeedState } from "../upgradesStandard/increaseForgeSpeed";
 import { IncreaseVillageValueState } from "../upgradesStandard/increaseVillageVal";
 import { IncreaseBarracksSpeedState } from "../upgradesStandard/increaseBarracksSpeed";
+import { IncreaseThievesValueState } from "../upgradesStandard/increaseThievesValue";
+import { IncreaseThievesSpeedState } from "../upgradesStandard/increaseThievesSpeed";
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
 import { GUIStartScreen } from "../GUI/GUIStartScreen";
@@ -65,6 +67,8 @@ export class PlayMode extends Scene {
     public increaseForgeSpeed:IncreaseForgeSpeedState;
     public increaseVillageValue:IncreaseVillageValueState;
     public increaseBarracksSpeed: IncreaseBarracksSpeedState;
+    public increaseThievesValue: IncreaseThievesValueState;
+    public increaseThievesSpeed: IncreaseThievesSpeedState;
 
     //Epic upgrades
     public allEpicUpgrades:any[];
@@ -140,6 +144,8 @@ export class PlayMode extends Scene {
         this.increaseForgeSpeed = new IncreaseForgeSpeedState('Increase Forge Speed', this);
         this.increaseVillageValue = new IncreaseVillageValueState('Improved Battle Tactics', this);
         this.increaseBarracksSpeed = new IncreaseBarracksSpeedState('Increase Marching Speed', this);
+        this.increaseThievesValue = new IncreaseThievesValueState('Bigger Loot Bags', this);
+        this.increaseThievesSpeed = new IncreaseThievesSpeedState('Better Thieves Tools', this);
 
         //epic upgrades
         this.allEpicUpgrades = []
