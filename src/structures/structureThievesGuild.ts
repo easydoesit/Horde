@@ -34,7 +34,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._resourceAmountPerCycle = thievesGuild.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('ThievesGuildSceneGui', this, this._resource);
         this._upgradesWindow = new UpgradeWindow('ThievesGuildUpgradeWindow');
-        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${thievesGuild.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', this, () => {this._thievesGuildUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addThievesGuildButton', this, () => {this._thievesGuildAdditionCallback()});
         this._addStewartButton = new AddStewardButton('addThievesGuildStewardButton', this);
@@ -98,6 +98,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 
     private _thievesGuildAdditionCallback() {
@@ -107,5 +108,6 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 }

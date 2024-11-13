@@ -34,7 +34,7 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._resourceAmountPerCycle = tower.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('TowerSceneGui', this, `${this._resource}`);
         this._upgradesWindow = new UpgradeWindow('TowerUpgradeWindow');
-        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( tower.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${tower.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', this, () => {this._towerUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTowerButton', this, () => {this._towerAdditionCallback()});
         this._addStewartButton = new AddStewardButton('addTowerStewardButton', this);
@@ -100,7 +100,7 @@ export class StructureTower extends StructureState implements StructureStateChil
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
-
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 
     private _towerAdditionCallback() {
@@ -110,5 +110,6 @@ export class StructureTower extends StructureState implements StructureStateChil
         
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 }
