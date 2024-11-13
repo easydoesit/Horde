@@ -52,13 +52,16 @@ export class KingdomState implements KingdomStateI {
         this._scene.mathState.setGoldMultiplyer(newGoldMultiplyer);
 
         for (let i in this.getScene().allStructures) {
-            const structure = this.getScene().allStructures[i];
-
+            const structure = this.getScene().allStructures[i];            
             const oldResourceMult = structure.getResourceMultiplyer();
+
+            structure.kingdomReset();
+
             const newResourceMult = oldResourceMult + (oldResourceMult * this.getCurrentKingdom().getBaseResourceBoost());
             structure.setResourceMultiplyer(newResourceMult); 
         }
 
+        this._scene.mathState.kingdomReset();
         this.notify();
     }
 
