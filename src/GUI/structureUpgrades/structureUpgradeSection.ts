@@ -287,7 +287,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         if (DEBUGMODE) {
             console.log(`${this.name} STRUCTURE upgrade section as observer is updated from ${structure.getName()}.`);
         }
-        //this is incase a bonus for max upgrades has setd in the structure
+        //this is incase a bonus for max upgrades has been in the structure
         if (!structure.getName().includes('Farms')) {
             this.setMaxNumUpgrades(structure.getUpgradeMax());
         } else {
@@ -311,6 +311,10 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
             this._tBCostResources.text = this.getResourceCost().toFixed();
         }
         
+    }
+
+    public reset() {
+        this._upgradeBar.width = 0;
     }
 
 }

@@ -58,7 +58,7 @@ export const farmsUpgradeCallBack = (farm:farmsT, farms:StructureFarms) => {
     if (farm.upgradeLevel < farm.upgradeMax) {
         //change the structures
         switch(farm.upgradeLevel) {
-            
+
             case 1 :  {
                 farm.models.hideModel(0);
                 farm.models.showModel(1);
@@ -71,6 +71,14 @@ export const farmsUpgradeCallBack = (farm:farmsT, farms:StructureFarms) => {
         }
         
     }
+}
+
+export const farmModelsReset = (farm:farmsT) => {
+    for (let i = 1; i <= farm.models.models.length -1; i++) {
+        farm.models.hideModel(i);
+    }
+    farm.models.showModel(0);
+
 }
 
 export const farmUpgradeAllowed = (farms:StructureStateChildI) => {

@@ -58,6 +58,7 @@ export interface MathStateI {
     getWheatValue():number;
     setWheatValue(value:number):void;
 
+    kingdomReset():void;
 }
 
 export interface MathStateObserverI { 
@@ -128,6 +129,8 @@ export interface StructureStateI {
 
     getAnimationPaths():Vector3[][];
     animateCharacters():void;
+
+    kingdomReset():void;
 }
 
 export interface StructureStateChildI extends StructureStateI {

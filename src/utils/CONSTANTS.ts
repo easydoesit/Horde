@@ -13,10 +13,10 @@ export const modelsDir = './models/';
 export const startingLumens = 1000;
 
 //gold
-export const startingGold = 0;
+export const startingGold = 20000;
 
 //Farmers
-export const startingFarmers = 0;
+export const startingFarmers = 2000;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
 
 //Ogre
