@@ -1,15 +1,17 @@
-import { MathStateI, UpgradeWindowI } from "../../../typings";
+import { MathStateI, UpgradeWindowI,CastleUpgradeWindowI } from "../../../typings";
 import { PlayMode } from "../../scenes/playmode"
 import { GUIPlay } from "../GUIPlay";
 import { UpgradeWindow } from "../upgradeWindow";
 import { AddStructureButton } from "../structureUpgrades/addStructureButton";
 import { KingdomUpgradeButton } from "./kingdomUpgradeButton";
 
-export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI {
+export type structureButtonsT = {name:string, button:AddStructureButton | KingdomUpgradeButton};
+
+export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI, CastleUpgradeWindowI {
     private _scene:PlayMode;
     private _mathState:MathStateI;
     private _kingdomUpgradeButton:KingdomUpgradeButton;
-    private _structureButtons:{name:string, button:AddStructureButton | KingdomUpgradeButton}[];
+    private _structureButtons:structureButtonsT[];
 
     constructor(name:string, scene:PlayMode) {
         super(name);
@@ -89,6 +91,10 @@ export class CastleUpgradeWindow extends UpgradeWindow implements UpgradeWindowI
 
         });
 
+    }
+
+    public getStructureButtons(): structureButtonsT[] {
+        return this._structureButtons
     }
 
 }

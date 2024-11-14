@@ -1,9 +1,10 @@
 import { Vector3 } from "@babylonjs/core";
-import { KingdomI, KingdomStateI, KingdomStateObserverI  } from "../../typings";
+import { CastleUpgradeWindowI, KingdomI, KingdomStateI, KingdomStateObserverI  } from "../../typings";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { KingdomForest } from "./kingdomForest";
 import { KingdomPlains} from "./kingdomPlains";
+import { GUIPlay } from "../GUI/GUIPlay";
 
 export class KingdomState implements KingdomStateI {
     private _name:string;
@@ -66,6 +67,16 @@ export class KingdomState implements KingdomStateI {
 
             upgrade.kingdomReset();
 
+        }
+
+        const gui = this.getScene().getAppGui() as GUIPlay
+        const castleUpgadeWindow = gui.castleUpgradeWindow as unknown as CastleUpgradeWindowI
+
+        for (let i in castleUpgadeWindow.getStructureButtons()) {
+            const button =  castleUpgadeWindow.getStructureButtons()[i].button;
+            if (!button.isVisible) {
+                button.isVisible = true;
+            }
         }
         //make sure all the upgrades and structures are reset before resetting mathState.
         this._scene.mathState.kingdomReset();

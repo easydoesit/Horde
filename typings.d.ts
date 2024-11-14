@@ -6,6 +6,7 @@ import { UpgradeWindow } from "./src/GUI/upgradeWindow";
 import { AddStructureButton } from "./src/GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "./src/GUI/structureUpgrades/structureUpgradeSection";
 import { AbstractMesh, Vector3 } from "@babylonjs/core";
+import { structureButtonsT } from "./src/GUI/castleUpgrades/CastleUpgradeWindow";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
@@ -168,6 +169,9 @@ export interface EpicUpgradeStateI {
     
     getIncrement():number;
     getInstructions():string;
+
+    getActive():boolean;
+    setActive(active:boolean):void;
     
 }
 
@@ -342,4 +346,8 @@ export interface KingdomStateI {
 export interface KingdomStateObserverI {
     getName():string;
     onKingomStateUpgrade(kingdom:KingdomI):void;
+}
+
+export interface CastleUpgradeWindowI {
+    getStructureButtons():structureButtonsT[];
 }

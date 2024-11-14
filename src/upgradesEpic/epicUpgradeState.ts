@@ -11,6 +11,7 @@ export class EpicUpgradeState implements EpicUpgradeStateI{
     protected _currentValue: number;
     protected _baseCostLumens:number;
     protected _instructions:string;
+    protected _active:boolean;
 
     constructor(name:string) {
         this.name = name;
@@ -84,5 +85,13 @@ export class EpicUpgradeState implements EpicUpgradeStateI{
 
     protected _setValue():void {   
         this._currentValue = this._currentUpgradeLevel * this._increment;
+    }
+
+    public setActive(active:boolean): void {
+        this._active = active;
+    }
+
+    public getActive(): boolean {
+        return this._active;
     }
 }
