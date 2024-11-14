@@ -1,33 +1,33 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseTavernSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increasePortalSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
-export class IncreaseTavernSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+export class IncreasePortalSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseTavernSpeed.upgradeMax;
-        this._increment = increaseTavernSpeed.incrementValue;
-        this._structure = this._scene.tavern;
+        this._maxNumUpgrades = increasePortalSpeed.upgradeMax;
+        this._increment = increasePortalSpeed.incrementValue;
+        this._structure = this._scene.tower;
 
         //all of these are updatable
-        this._effectValue = increaseTavernSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increasePortalSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseTavernSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        this._upgradeCostFarmers = increaseTavernSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTavernSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increasePortalSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increasePortalSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increasePortalSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
-        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseTavernSpeedUpgradeCallback()});
-        this._scene.tavern.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increasePortalSpeedUpgradeCallback()});
+        this._scene.tower.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseTavernSpeedUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increasePortalSpeedUpgradeAllowed());
         
         });
 
@@ -35,7 +35,7 @@ export class IncreaseTavernSpeedState extends StandardUpgradeState implements St
 
     public updateState():void {
         if (DEBUGMODE) {
-            console.log(`Increase Tavern Speed Update State Called`);
+            console.log(`Increase Tower Speed Update State Called`);
         }
 
         //spend Gold
@@ -53,10 +53,10 @@ export class IncreaseTavernSpeedState extends StandardUpgradeState implements St
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseTavernSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseTavernSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseTavernSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTavernSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increasePortalSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increasePortalSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increasePortalSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increasePortalSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the mining Speed
@@ -69,10 +69,10 @@ export class IncreaseTavernSpeedState extends StandardUpgradeState implements St
 
     }
 
-    private _increaseTavernSpeedUpgradeCallback = () => {
+    private _increasePortalSpeedUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Tavern Upgrade Callback Called');
+            console.log('Increase Tower Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -95,7 +95,7 @@ export class IncreaseTavernSpeedState extends StandardUpgradeState implements St
         
     }
 
-        private _increaseTavernSpeedUpgradeAllowed() {
+        private _increasePortalSpeedUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -105,7 +105,7 @@ export class IncreaseTavernSpeedState extends StandardUpgradeState implements St
 
 
     private _makeInstructions():string {
-        const effectValue = increaseTavernSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increasePortalSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`

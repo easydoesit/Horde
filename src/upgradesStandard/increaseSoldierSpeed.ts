@@ -1,33 +1,33 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseTowerSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increaseSoldierSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
-export class IncreaseTowerSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+export class IncreaseSoldierSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseTowerSpeed.upgradeMax;
-        this._increment = increaseTowerSpeed.incrementValue;
-        this._structure = this._scene.tower;
+        this._maxNumUpgrades = increaseSoldierSpeed.upgradeMax;
+        this._increment = increaseSoldierSpeed.incrementValue;
+        this._structure = this._scene.barracks;
 
         //all of these are updatable
-        this._effectValue = increaseTowerSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increaseSoldierSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseTowerSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        this._upgradeCostFarmers = increaseTowerSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTowerSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increaseSoldierSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseSoldierSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseSoldierSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
-        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseTowerSpeedUpgradeCallback()});
-        this._scene.tower.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseSoldierSpeedUpgradeCallback()});
+        this._scene.barracks.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseTowerSpeedUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseSoldierSpeedUpgradeAllowed());
         
         });
 
@@ -35,7 +35,7 @@ export class IncreaseTowerSpeedState extends StandardUpgradeState implements Sta
 
     public updateState():void {
         if (DEBUGMODE) {
-            console.log(`Increase Tower Speed Update State Called`);
+            console.log(`Increase Barracks Speed Update State Called`);
         }
 
         //spend Gold
@@ -53,10 +53,10 @@ export class IncreaseTowerSpeedState extends StandardUpgradeState implements Sta
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseTowerSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseTowerSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseTowerSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTowerSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increaseSoldierSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseSoldierSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseSoldierSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseSoldierSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the mining Speed
@@ -69,10 +69,10 @@ export class IncreaseTowerSpeedState extends StandardUpgradeState implements Sta
 
     }
 
-    private _increaseTowerSpeedUpgradeCallback = () => {
+    private _increaseSoldierSpeedUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Tower Upgrade Callback Called');
+            console.log('Increase Barracks Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -95,7 +95,7 @@ export class IncreaseTowerSpeedState extends StandardUpgradeState implements Sta
         
     }
 
-        private _increaseTowerSpeedUpgradeAllowed() {
+        private _increaseSoldierSpeedUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -105,7 +105,7 @@ export class IncreaseTowerSpeedState extends StandardUpgradeState implements Sta
 
 
     private _makeInstructions():string {
-        const effectValue = increaseTowerSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increaseSoldierSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`

@@ -238,7 +238,7 @@ export const increaseVillageValue = {
     },
 }
 
-export const increaseBarracksSpeed = {
+export const increaseSoldierSpeed = {
     name:'Increase Barracks Speed',
     structure:'Barracks',
     incrementValue:0.05,
@@ -278,7 +278,7 @@ export const increaseBarracksSpeed = {
     },
 }
 
-export const increaseThievesValue = {
+export const increaseLootValue = {
     name:'Increase Thieves Guild Value',
     structure:'Thieves Guild',
     incrementValue:0.05,
@@ -318,7 +318,7 @@ export const increaseThievesValue = {
     },
 }
 
-export const increaseThievesSpeed = {
+export const increaseLootSpeed = {
     name:'Increase Thieves Guild Speed',
     structure:'Thieves Guild',
     incrementValue:0.05,
@@ -358,7 +358,7 @@ export const increaseThievesSpeed = {
     },
 }
 
-export const increaseWorkshopValue = {
+export const increaseGoldBarValue = {
     name:'Increase Workshop Value',
     structure:'Workshop',
     incrementValue:0.05,
@@ -398,7 +398,7 @@ export const increaseWorkshopValue = {
     },
 }
 
-export const increaseWorkShopSpeed = {
+export const increaseGoldBarSpeed = {
     name:'Increase Workshop Speed',
     structure:'Workshop',
     incrementValue:0.05,
@@ -438,7 +438,7 @@ export const increaseWorkShopSpeed = {
     },
 }
 
-export const increaseTowerValue = {
+export const increasePortalValue = {
     name:'Increase Tower Value',
     structure:'Tower',
     incrementValue:0.05,
@@ -478,7 +478,7 @@ export const increaseTowerValue = {
     },
 }
 
-export const increaseTowerSpeed = {
+export const increasePortalSpeed = {
     name:'Increase Tower Speed',
     structure:'Tower',
     incrementValue:0.05,
@@ -518,7 +518,7 @@ export const increaseTowerSpeed = {
     },
 }
 
-export const increaseTavernValue = {
+export const increaseRelicValue = {
     name:'Increase Tavern Value',
     structure:'Tavern',
     incrementValue:0.05,
@@ -558,7 +558,7 @@ export const increaseTavernValue = {
     },
 }
 
-export const increaseTavernSpeed = {
+export const increaseAdventuringSpeed = {
     name:'Increase Tavern Speed',
     structure:'Tavern',
     incrementValue:0.05,

@@ -1,33 +1,33 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseThievesSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increaseLootSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
-export class IncreaseThievesSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+export class IncreaseLootSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseThievesSpeed.upgradeMax;
-        this._increment = increaseThievesSpeed.incrementValue;
+        this._maxNumUpgrades = increaseLootSpeed.upgradeMax;
+        this._increment = increaseLootSpeed.incrementValue;
         this._structure = this._scene.thievesGuild;
 
         //all of these are updatable
-        this._effectValue = increaseThievesSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increaseLootSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseThievesSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        this._upgradeCostFarmers = increaseThievesSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseThievesSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increaseLootSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseLootSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseLootSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
-        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseThievesSpeedUpgradeCallback()});
+        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseLootSpeedUpgradeCallback()});
         this._scene.thievesGuild.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseThievesSpeedUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseLootSpeedUpgradeAllowed());
         
         });
 
@@ -53,10 +53,10 @@ export class IncreaseThievesSpeedState extends StandardUpgradeState implements S
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseThievesSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseThievesSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseThievesSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseThievesSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increaseLootSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseLootSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseLootSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseLootSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the mining Speed
@@ -69,7 +69,7 @@ export class IncreaseThievesSpeedState extends StandardUpgradeState implements S
 
     }
 
-    private _increaseThievesSpeedUpgradeCallback = () => {
+    private _increaseLootSpeedUpgradeCallback = () => {
         
         if (DEBUGMODE) {
             console.log('Increase Thieves Upgrade Callback Called');
@@ -95,7 +95,7 @@ export class IncreaseThievesSpeedState extends StandardUpgradeState implements S
         
     }
 
-        private _increaseThievesSpeedUpgradeAllowed() {
+        private _increaseLootSpeedUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -105,7 +105,7 @@ export class IncreaseThievesSpeedState extends StandardUpgradeState implements S
 
 
     private _makeInstructions():string {
-        const effectValue = increaseThievesSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increaseLootSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`

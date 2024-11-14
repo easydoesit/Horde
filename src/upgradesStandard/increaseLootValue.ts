@@ -1,36 +1,36 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseTavernValue } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increaseLootValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
 
-//Increase value upgrade for the Tavern
-export class IncreaseTavernValueState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+//Increase value upgrade for the thievesGuild
+export class IncreaseLootValueState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseTavernValue.upgradeMax;
-        this._increment = increaseTavernValue.incrementValue;
-        this._structure = this._scene.tavern;
+        this._maxNumUpgrades = increaseLootValue.upgradeMax;
+        this._increment = increaseLootValue.incrementValue;
+        this._structure = this._scene.thievesGuild;
 
         //all of these are updatable
-        this._effectValue = increaseTavernValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increaseLootValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseTavernValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('Tavern UPDATE HERE',this._upgradeCostGold);
-        this._upgradeCostFarmers = increaseTavernValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTavernValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increaseLootValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        console.log('thievesGuild UPDATE HERE',this._upgradeCostGold);
+        this._upgradeCostFarmers = increaseLootValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseLootValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
-        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseTavernValUpgradeCallback()});
-        this._scene.tavern.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseThievesValUpgradeCallback()});
+        this._scene.thievesGuild.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseTavernValueUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseLootValueUpgradeAllowed());
         
         });
 
@@ -40,7 +40,7 @@ export class IncreaseTavernValueState extends StandardUpgradeState implements St
 
     public updateState():void {
         if (DEBUGMODE) {
-            console.log(`Increase Tavern Value Update State Called`);
+            console.log(`Increase Thieves Value Update State Called`);
         }
 
         //spend Gold
@@ -53,39 +53,39 @@ export class IncreaseTavernValueState extends StandardUpgradeState implements St
         }
         //spend Resources
         if (this.getCostToUpgradeResources() > 0) {
-            console.error('Resources are not available for Increase Tavern Val Upgrade! Change the nextUpgradeCostResources to return 0 or set this line of code in the upgrade State.');
+            console.error('Resources are not available for Increase Thieves Val Upgrade! Change the nextUpgradeCostResources to return 0 or set this line of code in the upgrade State.');
         }
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseTavernValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseTavernValue.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseTavernValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTavernValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increaseLootValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseLootValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseLootValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseLootValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the value of Ore
-        const origMultiplyer = this._scene.tavern.getResourceMultiplyer();
+        const origMultiplyer = this._scene.thievesGuild.getResourceMultiplyer();
         const newMultiplyer = origMultiplyer + this.getEffectValue();
-        this._scene.tavern.setResourceMultiplyer(newMultiplyer);
+        this._scene.thievesGuild.setResourceMultiplyer(newMultiplyer);
 
         //increase the value of Gold
-        const origGoldPerCycle = this._scene.tavern.getGoldPerCycle();
+        const origGoldPerCycle = this._scene.thievesGuild.getGoldPerCycle();
         const newGoldPerCycle = origGoldPerCycle + this.getEffectValue();
-        this._scene.tavern.setGoldPerCycle(newGoldPerCycle);
+        this._scene.thievesGuild.setGoldPerCycle(newGoldPerCycle);
         //notify the observers
         this.notify();
 
         //update insceneGUI
         this._structure.setResourcePerCycle(this._structure.getResourcePerCycle() + (this._structure.getResourcePerCycle() * this._structure.getResourceMultiplyer()/100))
-        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Tavern/cycle`)
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Thieves/cycle`)
 
     }
 
-    private _increaseTavernValUpgradeCallback = () => {
+    private _increaseThievesValUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Tavern Value Upgrade Callback Called');
+            console.log('Increase Thieves Value Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -108,7 +108,7 @@ export class IncreaseTavernValueState extends StandardUpgradeState implements St
         
     }
 
-        private _increaseTavernValueUpgradeAllowed() {
+        private _increaseLootValueUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -118,9 +118,9 @@ export class IncreaseTavernValueState extends StandardUpgradeState implements St
 
 
     private _makeInstructions():string {
-        const effectValue = increaseTavernValue.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increaseLootValue.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
-        return `Next Upgrade raises amount of gold and Tavern per cycle by ${evString}%`
+        return `Next Upgrade raises amount of gold and Thieves per cycle by ${evString}%`
     }
 }

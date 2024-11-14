@@ -1,28 +1,28 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseTowerValue } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increasePortalValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
 
 //Increase value upgrade for the Tower
-export class IncreaseTowerValueState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+export class IncreasePortalValueState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseTowerValue.upgradeMax;
-        this._increment = increaseTowerValue.incrementValue;
+        this._maxNumUpgrades = increasePortalValue.upgradeMax;
+        this._increment = increasePortalValue.incrementValue;
         this._structure = this._scene.tower;
 
         //all of these are updatable
-        this._effectValue = increaseTowerValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increasePortalValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseTowerValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increasePortalValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         console.log('Tower UPDATE HERE',this._upgradeCostGold);
-        this._upgradeCostFarmers = increaseTowerValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTowerValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increasePortalValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increasePortalValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
         this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseTowerValUpgradeCallback()});
@@ -30,7 +30,7 @@ export class IncreaseTowerValueState extends StandardUpgradeState implements Sta
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseTowerValueUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increasePortalValueUpgradeAllowed());
         
         });
 
@@ -58,10 +58,10 @@ export class IncreaseTowerValueState extends StandardUpgradeState implements Sta
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseTowerValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseTowerValue.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseTowerValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseTowerValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increasePortalValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increasePortalValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increasePortalValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increasePortalValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the value of Ore
@@ -108,7 +108,7 @@ export class IncreaseTowerValueState extends StandardUpgradeState implements Sta
         
     }
 
-        private _increaseTowerValueUpgradeAllowed() {
+        private _increasePortalValueUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -118,7 +118,7 @@ export class IncreaseTowerValueState extends StandardUpgradeState implements Sta
 
 
     private _makeInstructions():string {
-        const effectValue = increaseTowerValue.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increasePortalValue.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade raises amount of gold and Tower per cycle by ${evString}%`

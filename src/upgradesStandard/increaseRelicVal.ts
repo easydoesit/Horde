@@ -1,36 +1,36 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseWorkshopValue } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increaseRelicValue } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
 
-//Increase value upgrade for the workshop
-export class IncreaseWorkshopValueState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+//Increase value upgrade for the Tavern
+export class IncreaseRelicValueState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseWorkshopValue.upgradeMax;
-        this._increment = increaseWorkshopValue.incrementValue;
-        this._structure = this._scene.workShop;
+        this._maxNumUpgrades = increaseRelicValue.upgradeMax;
+        this._increment = increaseRelicValue.incrementValue;
+        this._structure = this._scene.tavern;
 
         //all of these are updatable
-        this._effectValue = increaseWorkshopValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increaseRelicValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseWorkshopValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('workShop UPDATE HERE',this._upgradeCostGold);
-        this._upgradeCostFarmers = increaseWorkshopValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseWorkshopValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increaseRelicValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        console.log('Tavern UPDATE HERE',this._upgradeCostGold);
+        this._upgradeCostFarmers = increaseRelicValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseRelicValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
-        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseWorkshopValUpgradeCallback()});
-        this._scene.workShop.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseTavernValUpgradeCallback()});
+        this._scene.tavern.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseWorkshopValueUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseRelicValueUpgradeAllowed());
         
         });
 
@@ -40,7 +40,7 @@ export class IncreaseWorkshopValueState extends StandardUpgradeState implements 
 
     public updateState():void {
         if (DEBUGMODE) {
-            console.log(`Increase Workshop Value Update State Called`);
+            console.log(`Increase Tavern Value Update State Called`);
         }
 
         //spend Gold
@@ -53,39 +53,39 @@ export class IncreaseWorkshopValueState extends StandardUpgradeState implements 
         }
         //spend Resources
         if (this.getCostToUpgradeResources() > 0) {
-            console.error('Resources are not available for Increase Workshop Val Upgrade! Change the nextUpgradeCostResources to return 0 or set this line of code in the upgrade State.');
+            console.error('Resources are not available for Increase Tavern Val Upgrade! Change the nextUpgradeCostResources to return 0 or set this line of code in the upgrade State.');
         }
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseWorkshopValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseWorkshopValue.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseWorkshopValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseWorkshopValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increaseRelicValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseRelicValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseRelicValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseRelicValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the value of Ore
-        const origMultiplyer = this._scene.workShop.getResourceMultiplyer();
+        const origMultiplyer = this._scene.tavern.getResourceMultiplyer();
         const newMultiplyer = origMultiplyer + this.getEffectValue();
-        this._scene.workShop.setResourceMultiplyer(newMultiplyer);
+        this._scene.tavern.setResourceMultiplyer(newMultiplyer);
 
         //increase the value of Gold
-        const origGoldPerCycle = this._scene.workShop.getGoldPerCycle();
+        const origGoldPerCycle = this._scene.tavern.getGoldPerCycle();
         const newGoldPerCycle = origGoldPerCycle + this.getEffectValue();
-        this._scene.workShop.setGoldPerCycle(newGoldPerCycle);
+        this._scene.tavern.setGoldPerCycle(newGoldPerCycle);
         //notify the observers
         this.notify();
 
         //update insceneGUI
         this._structure.setResourcePerCycle(this._structure.getResourcePerCycle() + (this._structure.getResourcePerCycle() * this._structure.getResourceMultiplyer()/100))
-        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Workshop/cycle`)
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Tavern/cycle`)
 
     }
 
-    private _increaseWorkshopValUpgradeCallback = () => {
+    private _increaseTavernValUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Workshop Value Upgrade Callback Called');
+            console.log('Increase Tavern Value Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -108,7 +108,7 @@ export class IncreaseWorkshopValueState extends StandardUpgradeState implements 
         
     }
 
-        private _increaseWorkshopValueUpgradeAllowed() {
+        private _increaseRelicValueUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -118,9 +118,9 @@ export class IncreaseWorkshopValueState extends StandardUpgradeState implements 
 
 
     private _makeInstructions():string {
-        const effectValue = increaseWorkshopValue.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increaseRelicValue.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
-        return `Next Upgrade raises amount of gold and Workshop per cycle by ${evString}%`
+        return `Next Upgrade raises amount of gold and Tavern per cycle by ${evString}%`
     }
 }
