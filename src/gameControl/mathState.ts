@@ -241,4 +241,15 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
         this.addGold(goldPerCycle);
     }
 
+    public kingdomReset(): void {
+        if(DEBUGMODE) {
+            console.log('kingdom Reset in mathstate Called');
+        }
+        this._wheatValue = 0;
+        this._totalFarmers = startingFarmers;
+        this._totalGold = startingGold;
+        this._goldMultiplyer = 1;
+        this.setFarmersMax();
+    }
+
 }

@@ -5,14 +5,15 @@ import { PlayMode } from "../scenes/playmode";
 import { castleToFarmPaths, DEBUGMODE, farms} from "../utils/CONSTANTS";
 import { debugUpgradeState } from "../utils/structuresHelpers";
 import { StructureState } from "./structureState";
-import { checkUpgradeFarmersMax, farmsUpgradeCallBack, farmUpgradeAllowed, farmAdditionAllowed } from "../utils/upgradeHelpers";
+import { checkUpgradeFarmersMax, farmsUpgradeCallBack, farmUpgradeAllowed, farmAdditionAllowed, farmModelsReset } from "../utils/upgradeHelpers";
 import { FarmUpgradeWindow } from "../GUI/farmUpgrades/farmUpgradeWindow";
 import { Vector3 } from "@babylonjs/core";
 import { AddFarmButton } from "../GUI/farmUpgrades/addFarmButton";
 
 export type farmsT = {
     name:string;
-    gamePos:Vector3, 
+    gamePos:Vector3,
+    startPos:Vector3 | null,
     housePos:Vector3, 
     models:StructureModel, 
     upgradeSectionInstructions:string, 
@@ -37,7 +38,6 @@ export class StructureFarms extends StructureState implements StructureStateChil
         this._animationPaths = castleToFarmPaths;
         this._upgradeMax = farms.upgradeMax;
         this._upgradeCostGold = farms.nextUpgradeCostInGold(this.getUpgradeLevel());
-        console.log('farms upgrade cost in gold', this._upgradeCostGold);
         this._upgradeCostFarmers = farms.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = farms.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._upgradesWindow = new FarmUpgradeWindow(`Farm Upgrades`, this._scene);
@@ -48,6 +48,7 @@ export class StructureFarms extends StructureState implements StructureStateChil
         this._farm01 ={
             name:'1st farm',
             gamePos:farms.otherProps.farm01.gamePos,
+            startPos:null,
             housePos:farms.otherProps.farm01.housePos,
             models:new StructureModel('Farm01_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm01.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 1st farm`,
@@ -61,6 +62,7 @@ export class StructureFarms extends StructureState implements StructureStateChil
         this._farm02 ={
             name:'2nd farm',
             gamePos:farms.otherProps.farm02.gamePos,
+            startPos:null,
             housePos:farms.otherProps.farm02.housePos,
             models:new StructureModel('Farm02_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm02.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 2nd farm`,
@@ -74,6 +76,7 @@ export class StructureFarms extends StructureState implements StructureStateChil
         this._farm03 ={
             name:'3rd farm',
             gamePos:farms.otherProps.farm03.gamePos,
+            startPos:null,
             housePos:farms.otherProps.farm03.housePos,
             models:new StructureModel('Farm02_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm03.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 3rd farm`,
@@ -87,6 +90,7 @@ export class StructureFarms extends StructureState implements StructureStateChil
         this._farm04 ={
             name:'4th farm',
             gamePos:farms.otherProps.farm04.gamePos,
+            startPos:null,
             housePos:farms.otherProps.farm04.housePos,
             models:new StructureModel('Farm02_models', this._scene, farms.models, farms.clickbox, farms.otherProps.farm03.gamePos),
             upgradeSectionInstructions: `next Upgrade allows ${checkUpgradeFarmersMax(this).toFixed()} farmers on your 4th farm`,
@@ -98,9 +102,9 @@ export class StructureFarms extends StructureState implements StructureStateChil
         }
 
         this._farm01.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm01, this)});
-        this._farm02.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm02, this)});
-        this._farm03.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm03, this)});
-        this._farm04.upgradeSection = new StructureUpgradeSection('1st Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm04, this)});
+        this._farm02.upgradeSection = new StructureUpgradeSection('2nd Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm02, this)});
+        this._farm03.upgradeSection = new StructureUpgradeSection('3rd Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm03, this)});
+        this._farm04.upgradeSection = new StructureUpgradeSection('4th Farm Upgrades', this,  () => {farmsUpgradeCallBack(this._farm04, this)});
 
         this._farm02.addStructureButton =  new AddFarmButton('Farm 2', this.getFarm02(), this.getFarm03(), this, this.getScene());
         this._farm03.addStructureButton =  new AddFarmButton('Farm 3', this.getFarm03(), this.getFarm04(), this, this.getScene());
@@ -111,20 +115,23 @@ export class StructureFarms extends StructureState implements StructureStateChil
         this.getFarm01().models.position = this.getFarm01().gamePos;
 
         const farm02pos = this.getFarm02().gamePos;
-        this.getFarm02().models.position = new Vector3(farm02pos.x, farm02pos.y - 20, farm02pos.z);
+        this.getFarm02().startPos = new Vector3(farm02pos.x, farm02pos.y - 20, farm02pos.z)
+        this.getFarm02().models.position.copyFrom(this.getFarm02().startPos);
         
         const farm03pos = this.getFarm03().gamePos;
-        this.getFarm03().models.position = new Vector3(farm03pos.x, farm03pos.y - 20, farm03pos.z);
+        this.getFarm03().startPos = new Vector3(farm03pos.x, farm03pos.y - 20, farm03pos.z)
+        this.getFarm03().models.position.copyFrom(this.getFarm03().startPos);
 
         const farm04pos = this.getFarm04().gamePos;
-        this.getFarm04().models.position  = new Vector3(farm04pos.x, farm04pos.y - 20, farm04pos.z);
+        this.getFarm04().startPos = new Vector3(farm04pos.x, farm04pos.y - 20, farm04pos.z)
+        this.getFarm04().models.position.copyFrom(this.getFarm04().startPos);
 
         for (let i in this._allFarms) {
             const farm = this._allFarms[i];
-
+            
             farm.upgradeSection.setInstructions(farm.upgradeSectionInstructions);
             farm.upgradeSection.setMaxNumUpgrades(this.getUpgradeMax()/this.getAllFarms().length);
-        
+            console.log(farm);
         }
 
         this._scene.onBeforeRenderObservable.add(() => {
@@ -142,13 +149,46 @@ export class StructureFarms extends StructureState implements StructureStateChil
         
     }
 
+    private _reset():void {
+        this._upgradeCostGold = farms.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostFarmers = farms.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._upgradeCostResources = farms.nextUpgradeCostInResources(this.getUpgradeLevel());
+        this._goldMultiplyer = farms.goldMultiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+        (this.getUpgradesWindow() as FarmUpgradeWindow).setFarmersMaxText(this.getScene().mathState.getFarmersMax().toFixed());        
+        this.setUpgradeCostGold(farms.nextUpgradeCostInGold(this._upgradeLevel));
+
+        this.notifyObserversOnUpgrade();
+
+        for(let i in this._allFarms) {
+            const farm = this._allFarms[i];
+            farm.upgradeLevel = 0;
+            farmModelsReset(farm);
+            farm.upgradeSection.reset();
+            farm.upgradeSectionInstructions = `Next Upgrade allows ${(this.getScene().mathState.getFarmersMax()).toFixed()} farmers on ${farm.name}`;
+            farm.upgradeSection.setInstructions(farm.upgradeSectionInstructions);
+            farm.upgradeSection.setGoldCost(this.getUpgradeCostGold());
+            
+
+            if (farm.name !== '1st farm') {
+                farm.alive =false;
+                farm.models.position.copyFrom(farm.startPos);
+                farm.upgradeSection.isVisible = false;
+                farm.addStructureButton.isVisible = false;
+            }
+
+            this.getFarm02().addStructureButton.isVisible = true;
+            this.getFarm02().addStructureButton.setGoldCostText(`Cost Gold: ${this.getUpgradeCostGold().toFixed()}`);
+        }
+
+    }
+
     public upgradeState(): void {
         if (DEBUGMODE) {
             debugUpgradeState(this._name, this.getUpgradeLevel());
         }
 
         this._upgradeLevel += 1;
-        this._goldMultiplyer = farms.goldMultiplyer(this.getNextUpgradeLevel(), this.getUpgradeMax());
+        this._goldMultiplyer = farms.goldMultiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
         (this.getUpgradesWindow() as FarmUpgradeWindow).setFarmersMaxText(this.getScene().mathState.getFarmersMax().toFixed());
 
         this.setUpgradeCostGold(farms.nextUpgradeCostInGold(this._upgradeLevel));
@@ -198,6 +238,15 @@ export class StructureFarms extends StructureState implements StructureStateChil
 
     public getAllFarms():farmsT[] {
         return this._allFarms
-    } 
+    }
+
+    protected _kingdomResetUnique() {
+        //overide in child class as it is for any special changes.
+        if (DEBUGMODE) {
+            console.log(`Called _kingdomResetUnique() for ${this.getName()} child structure class.`);
+        }
+
+        this._reset();
+    }
   
 }

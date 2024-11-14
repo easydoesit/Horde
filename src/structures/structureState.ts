@@ -354,12 +354,13 @@ export class StructureState implements StructureStateI {
 
     public moveStructuresToGamePosition():void{
         const gamePos = this.getStructureModels().gamePosition;
-        this.getStructureModels().position = gamePos;
+        this.getStructureModels().position.copyFrom(gamePos);
     }
 
     protected _moveStructureToStartPosition():void {
         const gamePos = this.getStructureModels().gamePosition;
-        this.getStructureModels().position = new Vector3(gamePos.x, gamePos.y -20, gamePos.z);
+        const startPos = new Vector3(gamePos.x, gamePos.y -20, gamePos.z);
+        this.getStructureModels().position.copyFrom(startPos);
     }
 
     public getUpgradeSectionInstructions(): string {
@@ -405,4 +406,24 @@ export class StructureState implements StructureStateI {
     public makeAlive(): void {
         this._alive = true;
     }
-}
+
+    public kingdomReset(): void {
+        this._alive = false;
+        this._totalResourceAmount = 0;
+        this._upgradeLevel = 0; 
+        this._cycleTime = 0;
+        this._goldPerCycle = 0;
+        this._resourceAmountPerCycle = 0;
+        this._goldMultiplyer = 1;
+        this._resourceMultiplyer = 1;
+        this._steward = false;
+        this._kingdomResetUnique();
+    }
+
+    protected _kingdomResetUnique() {
+        //overide in child class as it is for any special changes.
+        if (DEBUGMODE) {
+            console.error(`If you see this message you have not updated the _kingdomResetUnique() for ${this.getName()} child structure class.`);
+        }
+    }
+ }
