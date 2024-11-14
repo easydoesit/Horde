@@ -135,4 +135,10 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
     public getStructure(): StructureStateChildI {
         return this._structure;
     }
+
+    public kingdomReset():void {
+        if (DEBUGMODE) {
+            console.error(`If you are seeing this error then you need to override reset() inside ${this.name} standard upgrade`);
+        }
+    }
 }

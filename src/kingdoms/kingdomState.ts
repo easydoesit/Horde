@@ -61,6 +61,13 @@ export class KingdomState implements KingdomStateI {
             structure.setResourceMultiplyer(newResourceMult); 
         }
 
+        for (let i in this.getScene().allStandardardUpgrades) {
+            const upgrade = this.getScene().allStandardardUpgrades[i];
+
+            upgrade.kingdomReset();
+
+        }
+        //make sure all the upgrades and structures are reset before resetting mathState.
         this._scene.mathState.kingdomReset();
         this.notify();
     }
