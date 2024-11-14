@@ -30,7 +30,11 @@ import { IncreaseBarracksSpeedState } from "../upgradesStandard/increaseBarracks
 import { IncreaseThievesValueState } from "../upgradesStandard/increaseThievesValue";
 import { IncreaseThievesSpeedState } from "../upgradesStandard/increaseThievesSpeed";
 import { IncreaseWorkshopValueState } from "../upgradesStandard/increaseWorkshopVal";
-import { increaseWorkShopSpeedState} from "../upgradesStandard/increaseWorkshopSpeed";
+import { IncreaseWorkShopSpeedState} from "../upgradesStandard/increaseWorkshopSpeed";
+import { IncreaseTowerValueState } from "../upgradesStandard/increaseTowerVal";
+import { IncreaseTowerSpeedState } from "../upgradesStandard/increaseTowerSpeed";
+import { IncreaseTavernValueState } from "../upgradesStandard/increaseTavernVal";
+import { IncreaseTavernSpeedState } from "../upgradesStandard/increaseTavernSpeed";
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
 import { GUIStartScreen } from "../GUI/GUIStartScreen";
@@ -72,7 +76,11 @@ export class PlayMode extends Scene {
     public increaseThievesValue: IncreaseThievesValueState;
     public increaseThievesSpeed: IncreaseThievesSpeedState;
     public increaseWorkshopValue: IncreaseWorkshopValueState;
-    public increaseWorkShopSpeed: increaseWorkShopSpeedState;
+    public increaseWorkShopSpeed: IncreaseWorkShopSpeedState;
+    public increaseTowerValue: IncreaseTowerValueState;
+    public increaseTowerSpeed: IncreaseTowerSpeedState;
+    public increaseTavernValue: IncreaseTavernValueState;
+    public increaseTavernSpeed: IncreaseTavernSpeedState;
 
     //Epic upgrades
     public allEpicUpgrades:any[];
@@ -151,7 +159,11 @@ export class PlayMode extends Scene {
         this.increaseThievesValue = new IncreaseThievesValueState('Bigger Loot Bags', this);
         this.increaseThievesSpeed = new IncreaseThievesSpeedState('Better Thieves Tools', this);
         this.increaseWorkshopValue = new IncreaseWorkshopValueState('Improved Formula',this);
-        this.increaseWorkShopSpeed = new increaseWorkShopSpeedState('Efficent Transformation',this);
+        this.increaseWorkShopSpeed = new IncreaseWorkShopSpeedState('Efficent Transformation',this);
+        this.increaseTowerValue = new IncreaseTowerValueState('Improved Magic Circles',this);
+        this.increaseTowerSpeed = new IncreaseTowerSpeedState('Increase Casting Speed',this);
+        this.increaseTavernValue = new IncreaseTavernValueState('Equipment Enchantments',this);
+        this.increaseTavernSpeed = new IncreaseTavernSpeedState('Buy Magic Items',this);
 
         //epic upgrades
         this.allEpicUpgrades = []

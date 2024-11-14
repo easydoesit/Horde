@@ -1,33 +1,33 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseWorkShopSpeed} from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increaseTowerSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
-export class IncreaseWorkShopSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+export class IncreaseTowerSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseWorkShopSpeed.upgradeMax;
-        this._increment = increaseWorkShopSpeed.incrementValue;
-        this._structure = this._scene.workShop;
+        this._maxNumUpgrades = increaseTowerSpeed.upgradeMax;
+        this._increment = increaseTowerSpeed.incrementValue;
+        this._structure = this._scene.tower;
 
         //all of these are updatable
-        this._effectValue = increaseWorkShopSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increaseTowerSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseWorkShopSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        this._upgradeCostFarmers = increaseWorkShopSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseWorkShopSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increaseTowerSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseTowerSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseTowerSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
-        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseWorkShopSpeedUpgradeCallback()});
-        this._scene.workShop.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseTowerSpeedUpgradeCallback()});
+        this._scene.tower.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseWorkShopSpeedUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseTowerSpeedUpgradeAllowed());
         
         });
 
@@ -35,7 +35,7 @@ export class IncreaseWorkShopSpeedState extends StandardUpgradeState implements 
 
     public updateState():void {
         if (DEBUGMODE) {
-            console.log(`Increase workShop Speed Update State Called`);
+            console.log(`Increase Tower Speed Update State Called`);
         }
 
         //spend Gold
@@ -53,10 +53,10 @@ export class IncreaseWorkShopSpeedState extends StandardUpgradeState implements 
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseWorkShopSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseWorkShopSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseWorkShopSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseWorkShopSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increaseTowerSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseTowerSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseTowerSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseTowerSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the mining Speed
@@ -69,10 +69,10 @@ export class IncreaseWorkShopSpeedState extends StandardUpgradeState implements 
 
     }
 
-    private _increaseWorkShopSpeedUpgradeCallback = () => {
+    private _increaseTowerSpeedUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Workshop Upgrade Callback Called');
+            console.log('Increase Tower Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -95,7 +95,7 @@ export class IncreaseWorkShopSpeedState extends StandardUpgradeState implements 
         
     }
 
-        private _increaseWorkShopSpeedUpgradeAllowed() {
+        private _increaseTowerSpeedUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -105,7 +105,7 @@ export class IncreaseWorkShopSpeedState extends StandardUpgradeState implements 
 
 
     private _makeInstructions():string {
-        const effectValue = increaseWorkShopSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increaseTowerSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`
