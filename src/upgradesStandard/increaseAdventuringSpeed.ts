@@ -1,33 +1,33 @@
 import { StandardUpgradeSection } from "../GUI/standardUpgrades/standardUpgradesSection";
 import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
-import { increaseBarracksSpeed } from "../utils/STANDARDUPGRADESCONSTANTS";
+import { increaseAdventuringSpeed} from "../utils/STANDARDUPGRADESCONSTANTS";
 import { StandardUpgradeState } from "./standardUpgradesState";
 import { StandardUpgradeStateChildI } from "../../typings";
 
-export class IncreaseBarracksSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
+export class IncreaseAdventuringSpeedState extends StandardUpgradeState implements StandardUpgradeStateChildI {
 
     constructor(name:string, scene:PlayMode){
         super(name,scene);
-        this._maxNumUpgrades = increaseBarracksSpeed.upgradeMax;
-        this._increment = increaseBarracksSpeed.incrementValue;
-        this._structure = this._scene.barracks;
+        this._maxNumUpgrades = increaseAdventuringSpeed.upgradeMax;
+        this._increment = increaseAdventuringSpeed.incrementValue;
+        this._structure = this._scene.tavern;
 
         //all of these are updatable
-        this._effectValue = increaseBarracksSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._effectValue = increaseAdventuringSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
         console.log(this._effectValue);
         this._instructions = this._makeInstructions();
-        this._upgradeCostGold = increaseBarracksSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        this._upgradeCostFarmers = increaseBarracksSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseBarracksSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._upgradeCostGold = increaseAdventuringSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseAdventuringSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseAdventuringSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
         //create it's section
-        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseBarracksSpeedUpgradeCallback()});
-        this._scene.barracks.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
+        this._upgradeSection = new StandardUpgradeSection(this.name, this, () => {this._increaseAdventuringSpeedUpgradeCallback()});
+        this._scene.tavern.getUpgradesWindow().getPanelContainer().addControl(this._upgradeSection);
         
         this._scene.onBeforeRenderObservable.add(() => {
         
-            this._upgradeSection.setUpgradableStatus(this._increaseBarracksSpeedUpgradeAllowed());
+            this._upgradeSection.setUpgradableStatus(this._increaseAdventuringSpeedUpgradeAllowed());
         
         });
 
@@ -35,7 +35,7 @@ export class IncreaseBarracksSpeedState extends StandardUpgradeState implements 
 
     public updateState():void {
         if (DEBUGMODE) {
-            console.log(`Increase Barracks Speed Update State Called`);
+            console.log(`Increase Tavern Speed Update State Called`);
         }
 
         //spend Gold
@@ -53,10 +53,10 @@ export class IncreaseBarracksSpeedState extends StandardUpgradeState implements 
 
         //update all the properties here
         this._currentUpgradeLevel += 1;
-        this._effectValue = increaseBarracksSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        this._upgradeCostGold = increaseBarracksSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
-        this._upgradeCostFarmers = increaseBarracksSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
-        this._upgradeCostResources = increaseBarracksSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._effectValue = increaseAdventuringSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseAdventuringSpeed.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseAdventuringSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseAdventuringSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         this._instructions = this._makeInstructions();
         
         //increase the mining Speed
@@ -69,10 +69,10 @@ export class IncreaseBarracksSpeedState extends StandardUpgradeState implements 
 
     }
 
-    private _increaseBarracksSpeedUpgradeCallback = () => {
+    private _increaseAdventuringSpeedUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Barracks Upgrade Callback Called');
+            console.log('Increase Tavern Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -95,7 +95,7 @@ export class IncreaseBarracksSpeedState extends StandardUpgradeState implements 
         
     }
 
-        private _increaseBarracksSpeedUpgradeAllowed() {
+        private _increaseAdventuringSpeedUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -105,7 +105,7 @@ export class IncreaseBarracksSpeedState extends StandardUpgradeState implements 
 
 
     private _makeInstructions():string {
-        const effectValue = increaseBarracksSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
+        const effectValue = increaseAdventuringSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`

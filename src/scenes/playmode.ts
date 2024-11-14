@@ -26,15 +26,15 @@ import { IncreaseMiningSpeedState } from "../upgradesStandard/increaseMiningSpee
 import { IncreaseWeaponsValueState } from "../upgradesStandard/increaseWeaponVal";
 import { IncreaseForgeSpeedState } from "../upgradesStandard/increaseForgeSpeed";
 import { IncreaseVillageValueState } from "../upgradesStandard/increaseVillageVal";
-import { IncreaseBarracksSpeedState } from "../upgradesStandard/increaseBarracksSpeed";
-import { IncreaseThievesValueState } from "../upgradesStandard/increaseThievesValue";
-import { IncreaseThievesSpeedState } from "../upgradesStandard/increaseThievesSpeed";
-import { IncreaseWorkshopValueState } from "../upgradesStandard/increaseWorkshopVal";
-import { IncreaseWorkShopSpeedState} from "../upgradesStandard/increaseWorkshopSpeed";
-import { IncreaseTowerValueState } from "../upgradesStandard/increaseTowerVal";
-import { IncreaseTowerSpeedState } from "../upgradesStandard/increaseTowerSpeed";
-import { IncreaseTavernValueState } from "../upgradesStandard/increaseTavernVal";
-import { IncreaseTavernSpeedState } from "../upgradesStandard/increaseTavernSpeed";
+import { IncreaseSoldierSpeedState } from "../upgradesStandard/increaseSoldierSpeed";
+import { IncreaseLootValueState } from "../upgradesStandard/increaseLootValue";
+import { IncreaseLootSpeedState } from "../upgradesStandard/increaseLootSpeed";
+import { IncreaseGoldBarValueState } from "../upgradesStandard/increaseGoldBarVal";
+import { IncreaseGoldBarSpeedState} from "../upgradesStandard/increaseGoldBarSpeed";
+import { IncreasePortalValueState } from "../upgradesStandard/increasePortalVal";
+import { IncreasePortalSpeedState } from "../upgradesStandard/increasePortalSpeed";
+import { IncreaseRelicValueState } from "../upgradesStandard/increaseRelicVal";
+import { IncreaseAdventuringSpeedState } from "../upgradesStandard/increaseAdventuringSpeed";
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
 import { GUIStartScreen } from "../GUI/GUIStartScreen";
@@ -73,15 +73,15 @@ export class PlayMode extends Scene {
     public increaseWeaponsValue:IncreaseWeaponsValueState;
     public increaseForgeSpeed:IncreaseForgeSpeedState;
     public increaseVillageValue:IncreaseVillageValueState;
-    public increaseBarracksSpeed: IncreaseBarracksSpeedState;
-    public increaseThievesValue: IncreaseThievesValueState;
-    public increaseThievesSpeed: IncreaseThievesSpeedState;
-    public increaseWorkshopValue: IncreaseWorkshopValueState;
-    public increaseWorkShopSpeed: IncreaseWorkShopSpeedState;
-    public increaseTowerValue: IncreaseTowerValueState;
-    public increaseTowerSpeed: IncreaseTowerSpeedState;
-    public increaseTavernValue: IncreaseTavernValueState;
-    public increaseTavernSpeed: IncreaseTavernSpeedState;
+    public increaseSoldierSpeed: IncreaseSoldierSpeedState;
+    public increaseThievesValue: IncreaseLootValueState;
+    public increaseLootSpeed: IncreaseLootSpeedState;
+    public increaseWorkshopValue: IncreaseGoldBarValueState;
+    public increaseWorkShopSpeed: IncreaseGoldBarSpeedState;
+    public increaseTowerValue: IncreasePortalValueState;
+    public increaseTowerSpeed: IncreasePortalSpeedState;
+    public increaseTavernValue: IncreaseRelicValueState;
+    public increaseTavernSpeed: IncreaseAdventuringSpeedState;
 
     //Epic upgrades
     public allEpicUpgrades:any[];
@@ -157,15 +157,15 @@ export class PlayMode extends Scene {
         this.increaseWeaponsValue = new IncreaseWeaponsValueState('Increase Weapon Value', this);
         this.increaseForgeSpeed = new IncreaseForgeSpeedState('Increase Forge Speed', this);
         this.increaseVillageValue = new IncreaseVillageValueState('Improved Battle Tactics', this);
-        this.increaseBarracksSpeed = new IncreaseBarracksSpeedState('Increase Marching Speed', this);
-        this.increaseThievesValue = new IncreaseThievesValueState('Bigger Loot Bags', this);
-        this.increaseThievesSpeed = new IncreaseThievesSpeedState('Better Thieves Tools', this);
-        this.increaseWorkshopValue = new IncreaseWorkshopValueState('Improved Formula',this);
-        this.increaseWorkShopSpeed = new IncreaseWorkShopSpeedState('Efficent Transformation',this);
-        this.increaseTowerValue = new IncreaseTowerValueState('Improved Magic Circles',this);
-        this.increaseTowerSpeed = new IncreaseTowerSpeedState('Increase Casting Speed',this);
-        this.increaseTavernValue = new IncreaseTavernValueState('Equipment Enchantments',this);
-        this.increaseTavernSpeed = new IncreaseTavernSpeedState('Buy Magic Items',this);
+        this.increaseSoldierSpeed = new IncreaseSoldierSpeedState('Increase Marching Speed', this);
+        this.increaseThievesValue = new IncreaseLootValueState('Bigger Loot Bags', this);
+        this.increaseLootSpeed = new IncreaseLootSpeedState('Better Thieves Tools', this);
+        this.increaseWorkshopValue = new IncreaseGoldBarValueState('Improved Formula',this);
+        this.increaseWorkShopSpeed = new IncreaseGoldBarSpeedState('Efficent Transformation',this);
+        this.increaseTowerValue = new IncreasePortalValueState('Improved Magic Circles',this);
+        this.increaseTowerSpeed = new IncreasePortalSpeedState('Increase Casting Speed',this);
+        this.increaseTavernValue = new IncreaseRelicValueState('Equipment Enchantments',this);
+        this.increaseTavernSpeed = new IncreaseAdventuringSpeedState('Buy Magic Items',this);
 
         this.allStandardardUpgrades.push(
             this.wheat,
@@ -174,9 +174,9 @@ export class PlayMode extends Scene {
             this.increaseWeaponsValue,
             this.increaseForgeSpeed,
             this.increaseVillageValue,
-            this.increaseBarracksSpeed,
+            this.increaseSoldierSpeed,
             this.increaseThievesValue,
-            this.increaseThievesSpeed,
+            this.increaseLootSpeed,
             this.increaseWorkshopValue,
             this.increaseWorkShopSpeed,
             this.increaseTowerValue,
