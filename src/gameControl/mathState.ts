@@ -246,8 +246,8 @@ export class MathState implements MathStateI, StructureStateObserverOnUpgradeI, 
             console.log('kingdom Reset in mathstate Called');
         }
         this._wheatValue = 0;
-        this._totalFarmers = 0;
-        this._totalGold = 0;
+        this._totalFarmers = startingFarmers;
+        this._totalGold = startingGold;
         this._goldMultiplyer = 1;
         this.setFarmersMax();
     }

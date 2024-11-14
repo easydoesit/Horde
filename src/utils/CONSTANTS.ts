@@ -16,7 +16,7 @@ export const startingLumens = 1000;
 export const startingGold = 20000;
 
 //Farmers
-export const startingFarmers = 2000;
+export const startingFarmers = 3000;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
 
 //Ogre

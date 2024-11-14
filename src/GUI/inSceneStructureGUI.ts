@@ -114,4 +114,8 @@ export class InSceneStuctureGUI extends Button {
         } 
     }
 
+    public reset():void {
+        this._animatedBar.width = 0;
+    }
+
 }

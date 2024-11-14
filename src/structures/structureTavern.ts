@@ -72,7 +72,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
             console.log('switch says level is:', this.getUpgradeLevel());
             //set the structures
             switch(this.getUpgradeLevel()) {
-                
+
                 case 1 :  {
                     this._structureModels.hideModel(0);
                     this._structureModels.showModel(1);
