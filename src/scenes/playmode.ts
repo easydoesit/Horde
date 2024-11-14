@@ -5,7 +5,7 @@ import { App } from "../app";
 import { StructureModel } from "../models_structures/structureModels";
 import { Dragon } from "../models_characters/dragon";
 import { Egg } from "../models_props/egg";
-import { KingdomStateI, MathStateI, StructureStateChildI, StructureStateI } from "../../typings";
+import { KingdomStateI, MathStateI, StandardUpgradeStateChildI, StructureStateChildI, StructureStateI } from "../../typings";
 import { MathState } from "../gameControl/mathState";
 import { Ogre } from "../models_characters/ogre";
 import { AddFarmerUpgradeState } from "../upgradesEpic/addFarmerUpgradeState";
@@ -66,6 +66,7 @@ export class PlayMode extends Scene {
     public allStructures:StructureStateChildI[];
 
     //standard upgrades
+    public allStandardardUpgrades:StandardUpgradeStateChildI[];
     public wheat:WheatState;
     public increaseOreValue:IncreaseOreValueState;
     public increaseMiningSpeed:IncreaseMiningSpeedState;
@@ -149,6 +150,7 @@ export class PlayMode extends Scene {
 
 
         //standardUpgrades
+        this.allStandardardUpgrades = [];
         this.wheat = new WheatState('Wheat', this);
         this.increaseOreValue = new IncreaseOreValueState('Increase Ore Value', this);
         this.increaseMiningSpeed = new IncreaseMiningSpeedState('Increase Mining Speed', this);
@@ -164,6 +166,24 @@ export class PlayMode extends Scene {
         this.increaseTowerSpeed = new IncreaseTowerSpeedState('Increase Casting Speed',this);
         this.increaseTavernValue = new IncreaseTavernValueState('Equipment Enchantments',this);
         this.increaseTavernSpeed = new IncreaseTavernSpeedState('Buy Magic Items',this);
+
+        this.allStandardardUpgrades.push(
+            this.wheat,
+            this.increaseOreValue,
+            this.increaseMiningSpeed,
+            this.increaseWeaponsValue,
+            this.increaseForgeSpeed,
+            this.increaseVillageValue,
+            this.increaseBarracksSpeed,
+            this.increaseThievesValue,
+            this.increaseThievesSpeed,
+            this.increaseWorkshopValue,
+            this.increaseWorkShopSpeed,
+            this.increaseTowerValue,
+            this.increaseTowerSpeed,
+            this.increaseTavernValue,
+            this.increaseTavernSpeed
+        )
 
         //epic upgrades
         this.allEpicUpgrades = []

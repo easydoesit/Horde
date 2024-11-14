@@ -211,6 +211,8 @@ export interface StandardUpgradeStateI {
     setInstructions(text:string):void;
 
     getStructure():StructureStateChildI;
+
+    kingdomReset():void
     
 }
 
