@@ -87,7 +87,36 @@ export class StructureWorkShop extends StructureState implements StructureStateC
             }
 
         }
-    }   
+    }
+
+    private _reset() {
+        this._resourceUpgradeValue = workShop.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax());
+        this._cycleTime = workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, this.getResourceUpgradeValue());
+        this._goldPerCycle = workShop.goldPerCycle;
+        this._resourceAmountPerCycle = workShop.resource.resourcePerCycle;
+        this._goldMultiplyer = workShop.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
+        
+        this.setUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( workShop.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1, this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${workShop.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
+        
+        this._upgradeCostGold = workShop.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostFarmers = workShop.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._resourceMultiplyer = workShop.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+
+        this.notifyObserversOnUpgrade();
+
+        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
+            this._structureModels.hideModel(i);
+        }
+
+        this._structureModels.showModel(0);
+
+        this._upgradeSection.reset();
+        this._inSceneGui.reset();
+
+        this._moveStructureToStartPosition();
+    }
 
     private _workShopUpgradeCallback() {
         if (DEBUGMODE) {
@@ -110,4 +139,14 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
     }
+
+    protected _kingdomResetUnique() {
+        //overide in child class as it is for any special changes.
+        if (DEBUGMODE) {
+            console.log(`Called _kingdomResetUnique() for ${this.getName()} child structure class.`);
+        }
+
+        this._reset();
+    }
+
 }
