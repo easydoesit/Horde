@@ -34,7 +34,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._resourceAmountPerCycle = tavern.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('TavernSceneGui', this, this._resource);
         this._upgradesWindow = new UpgradeWindow('TavernUpgradeWindow');
-        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Creation by ${tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( tavern.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${tavern.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('TavernUpgradeSection', this, () => {this._tavernUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTavernButton', this, () => {this._tavernAdditionCallback()});
         this._addStewartButton = new AddStewardButton('addTavernStewardButton', this);
@@ -129,6 +129,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
 
     }
 
@@ -139,6 +140,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
         
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 
     protected _kingdomResetUnique() {

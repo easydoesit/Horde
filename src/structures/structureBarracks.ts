@@ -33,7 +33,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._resourceAmountPerCycle = barracks.resource.resourcePerCycle;
         this._inSceneGui = new InSceneStuctureGUI('BarracksSceneGui', this, this.getResourceName());
         this._upgradesWindow = new UpgradeWindow('BarracksUpgradeWindow');
-        this._upgradeSectionInstructions = `Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`;
+        this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( barracks.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${barracks.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('BarrackUpgradeSection', this, () => {this._barracksUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addBarracksButton', this, () => {this._barracksAdditionCallback()});
         this._addStewartButton = new AddStewardButton('addBarracksStewardButton', this);
@@ -128,7 +128,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
-
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
 
     }
 
@@ -139,6 +139,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
 
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
     }
 
     protected _kingdomResetUnique() {
