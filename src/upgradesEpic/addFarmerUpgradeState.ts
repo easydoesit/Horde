@@ -18,6 +18,9 @@ export class AddFarmerUpgradeState extends EpicUpgradeState implements EpicUpgra
     //update Code goes here
 
     public updateState(): void {
+        if (this.getActive() === false) {
+            this.setActive(true);
+        }
         
         if (this._currentUpgradeLevel < this._upgradeNumMax) {
             

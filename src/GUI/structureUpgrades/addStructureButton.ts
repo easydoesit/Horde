@@ -179,4 +179,8 @@ export class AddStructureButton extends Button {
         }
 
     }
+
+    public kingdomReset():void {
+        this.isVisible = true;
+    }
 }
