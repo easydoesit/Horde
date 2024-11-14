@@ -89,6 +89,35 @@ export class StructureBarracks extends StructureState implements StructureStateC
         }
     }
 
+    private _reset() {
+        this._resourceUpgradeValue = barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax());
+        this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, this.getResourceUpgradeValue());
+        this._goldPerCycle = barracks.goldPerCycle;
+        this._resourceAmountPerCycle = barracks.resource.resourcePerCycle;
+        this._goldMultiplyer = barracks.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
+        
+        this.setUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( barracks.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1, this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${barracks.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
+        
+        this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._resourceMultiplyer = barracks.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+
+        this.notifyObserversOnUpgrade();
+
+        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
+            this._structureModels.hideModel(i);
+        }
+
+        this._structureModels.showModel(0);
+
+        this._upgradeSection.reset();
+        this._inSceneGui.reset();
+
+        this._moveStructureToStartPosition();
+    }
+
     private _barracksUpgradeCallback() {
         if (DEBUGMODE) {
             console.log('barracksUpgradeChangeCalled');
@@ -111,5 +140,15 @@ export class StructureBarracks extends StructureState implements StructureStateC
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
     }
+
+    protected _kingdomResetUnique() {
+        //overide in child class as it is for any special changes.
+        if (DEBUGMODE) {
+            console.log(`Called _kingdomResetUnique() for ${this.getName()} child structure class.`);
+        }
+
+        this._reset();
+    }
+
 
 }

@@ -90,6 +90,35 @@ export class StructureForge extends StructureState implements StructureStateChil
         }
     }
 
+    private _reset() {
+        this._resourceUpgradeValue = forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax());
+        this._cycleTime = forge.resource.cycleTime(this._upgradeLevel, forge.resource.initialCycleTime, this.getResourceUpgradeValue());
+        this._goldPerCycle = forge.goldPerCycle;
+        this._resourceAmountPerCycle = forge.resource.resourcePerCycle;
+        this._goldMultiplyer = forge.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
+        
+        this.setUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( forge.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1, this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${forge.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
+        
+        this._upgradeCostGold = forge.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostFarmers = forge.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._resourceMultiplyer = forge.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+
+        this.notifyObserversOnUpgrade();
+
+        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
+            this._structureModels.hideModel(i);
+        }
+
+        this._structureModels.showModel(0);
+
+        this._upgradeSection.reset();
+        this._inSceneGui.reset();
+
+        this._moveStructureToStartPosition();
+    }
+
     private _forgeUpgradeCallback() {
         if (DEBUGMODE) {
             console.log('forgeUpgradeChangeCalled');
@@ -112,5 +141,15 @@ export class StructureForge extends StructureState implements StructureStateChil
         window.hideWindow(); 
     
     }
+
+    protected _kingdomResetUnique() {
+        //overide in child class as it is for any special changes.
+        if (DEBUGMODE) {
+            console.log(`Called _kingdomResetUnique() for ${this.getName()} child structure class.`);
+        }
+
+        this._reset();
+    }
+
 
 }

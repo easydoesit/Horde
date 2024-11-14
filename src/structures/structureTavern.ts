@@ -88,6 +88,35 @@ export class StructureTavern extends StructureState implements StructureStateChi
         }
     }
 
+    private _reset() {
+        this._resourceUpgradeValue = tavern.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax());
+        this._cycleTime = tavern.resource.cycleTime(this._upgradeLevel, tavern.resource.initialCycleTime, this.getResourceUpgradeValue());
+        this._goldPerCycle = tavern.goldPerCycle;
+        this._resourceAmountPerCycle = tavern.resource.resourcePerCycle;
+        this._goldMultiplyer = tavern.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
+        
+        this.setUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( tavern.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1, this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${tavern.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
+        
+        this._upgradeCostGold = tavern.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this._upgradeCostFarmers = tavern.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._resourceMultiplyer = tavern.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
+
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+
+        this.notifyObserversOnUpgrade();
+
+        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
+            this._structureModels.hideModel(i);
+        }
+
+        this._structureModels.showModel(0);
+
+        this._upgradeSection.reset();
+        this._inSceneGui.reset();
+
+        this._moveStructureToStartPosition();
+    }
+
     private _tavernUpgradeCallback() {
         if (DEBUGMODE) {
             console.log('TavernUpgradeChangeCalled');
@@ -111,4 +140,14 @@ export class StructureTavern extends StructureState implements StructureStateChi
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
     }
+
+    protected _kingdomResetUnique() {
+        //overide in child class as it is for any special changes.
+        if (DEBUGMODE) {
+            console.log(`Called _kingdomResetUnique() for ${this.getName()} child structure class.`);
+        }
+
+        this._reset();
+    }
+
 }
