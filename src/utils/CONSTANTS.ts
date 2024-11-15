@@ -10,13 +10,13 @@ export const GUIFONT1 = 'Arial';
 export const modelsDir = './models/';
 
 //lumens
-export const startingLumens = 1000;
+export const startingLumens = 0;
 
 //gold
-export const startingGold = 20000;
+export const startingGold = 0;
 
 //Farmers
-export const startingFarmers = 3000;
+export const startingFarmers = 0;
 export const farmerBaseValue = 0.001; //base amount of gold persecond
 
 //Ogre
