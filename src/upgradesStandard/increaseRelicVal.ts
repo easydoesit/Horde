@@ -17,10 +17,8 @@ export class IncreaseRelicValueState extends StandardUpgradeState implements Sta
 
         //all of these are updatable
         this._effectValue = increaseRelicValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseRelicValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('Tavern UPDATE HERE',this._upgradeCostGold);
         this._upgradeCostFarmers = increaseRelicValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
         this._upgradeCostResources = increaseRelicValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
@@ -40,7 +38,7 @@ export class IncreaseRelicValueState extends StandardUpgradeState implements Sta
 
     public updateState():void {
         if (DEBUGMODE) {
-            console.log(`Increase Tavern Value Update State Called`);
+            console.log(`Increase Relic Value Update State Called`);
         }
 
         //spend Gold
@@ -85,7 +83,7 @@ export class IncreaseRelicValueState extends StandardUpgradeState implements Sta
     private _increaseTavernValUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Tavern Value Upgrade Callback Called');
+            console.log('Increase Relic Value Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -122,5 +120,22 @@ export class IncreaseRelicValueState extends StandardUpgradeState implements Sta
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade raises amount of gold and Tavern per cycle by ${evString}%`
+    }
+
+    public kingdomReset(): void {
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseRelicValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseRelicValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseRelicValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseRelicValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._scene.workShop.setResourceMultiplyer(this.getEffectValue());
+        this._scene.workShop.setGoldPerCycle(this.getEffectValue());
+        
+        this.notify();
+
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Relic/cycle`);
+
     }
 }

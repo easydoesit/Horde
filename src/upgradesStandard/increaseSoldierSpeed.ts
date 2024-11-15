@@ -15,7 +15,6 @@ export class IncreaseSoldierSpeedState extends StandardUpgradeState implements S
 
         //all of these are updatable
         this._effectValue = increaseSoldierSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseSoldierSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         this._upgradeCostFarmers = increaseSoldierSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
@@ -110,4 +109,19 @@ export class IncreaseSoldierSpeedState extends StandardUpgradeState implements S
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`
     }
+
+    public kingdomReset(): void {
+
+        //update all the properties here
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseSoldierSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseSoldierSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseSoldierSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseSoldierSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._structure.setResourceCycleTime(this.getEffectValue());
+
+        this.notify();
+   }
 }

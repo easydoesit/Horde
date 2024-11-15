@@ -120,4 +120,21 @@ export class IncreaseOreValueState extends StandardUpgradeState implements Stand
         
         return `Next Upgrade raises amount of gold and Ore per cycle by ${evString}%`
     }
+
+    public kingdomReset(): void {
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseOreValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseOreValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseOreValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseOreValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._scene.workShop.setResourceMultiplyer(this.getEffectValue());
+        this._scene.workShop.setGoldPerCycle(this.getEffectValue());
+        
+        this.notify();
+
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Ore/cycle`);
+
+    }
 }

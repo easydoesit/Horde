@@ -123,4 +123,21 @@ export class IncreaseLootValueState extends StandardUpgradeState implements Stan
         
         return `Next Upgrade raises amount of gold and Thieves per cycle by ${evString}%`
     }
+
+    public kingdomReset(): void {
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseLootValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseLootValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseLootValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseLootValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._scene.workShop.setResourceMultiplyer(this.getEffectValue());
+        this._scene.workShop.setGoldPerCycle(this.getEffectValue());
+        
+        this.notify();
+
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Loot/cycle`);
+
+    }
 }
