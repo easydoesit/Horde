@@ -47,5 +47,10 @@ export class BaseGoldPercentUpgradeState extends EpicUpgradeState implements Epi
         }
     }
 
+    public kingdomUpdate(): void {
+        this._updateStructures();
+        this.notify();
+    }
+
 
 }

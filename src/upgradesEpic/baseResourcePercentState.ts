@@ -49,4 +49,10 @@ export class BaseResourcePercentUpgradeState extends EpicUpgradeState implements
 
     }
 
+    public kingdomUpdate(): void {
+        this._updateStructures();
+        this.notify();
+    }
+
+
 }

@@ -172,6 +172,8 @@ export interface EpicUpgradeStateI {
 
     getActive():boolean;
     setActive(active:boolean):void;
+
+    kingdomUpdate():void;
     
 }
 

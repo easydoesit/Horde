@@ -94,4 +94,10 @@ export class EpicUpgradeState implements EpicUpgradeStateI{
     public getActive(): boolean {
         return this._active;
     }
+
+    public kingdomUpdate(): void {
+        if (DEBUGMODE) {
+            console.error(`If you are seeing this error then you need to override kindomUpdate() inside ${this.name} epic upgrade`);
+        }
+    }
 }
