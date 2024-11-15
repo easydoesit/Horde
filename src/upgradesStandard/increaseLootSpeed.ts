@@ -15,7 +15,6 @@ export class IncreaseLootSpeedState extends StandardUpgradeState implements Stan
 
         //all of these are updatable
         this._effectValue = increaseLootSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseLootSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         this._upgradeCostFarmers = increaseLootSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
@@ -110,4 +109,19 @@ export class IncreaseLootSpeedState extends StandardUpgradeState implements Stan
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`
     }
+
+    public kingdomReset(): void {
+
+        //update all the properties here
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseLootSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseLootSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseLootSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseLootSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._structure.setResourceCycleTime(this.getEffectValue());
+
+        this.notify();
+   }
 }

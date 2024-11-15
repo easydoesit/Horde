@@ -15,7 +15,6 @@ export class IncreasePortalSpeedState extends StandardUpgradeState implements St
 
         //all of these are updatable
         this._effectValue = increasePortalSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increasePortalSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         this._upgradeCostFarmers = increasePortalSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
@@ -110,4 +109,19 @@ export class IncreasePortalSpeedState extends StandardUpgradeState implements St
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`
     }
+
+    public kingdomReset(): void {
+
+        //update all the properties here
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increasePortalSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increasePortalSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increasePortalSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increasePortalSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._structure.setResourceCycleTime(this.getEffectValue());
+
+        this.notify();
+   }
 }

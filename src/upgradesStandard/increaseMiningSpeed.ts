@@ -15,7 +15,6 @@ export class IncreaseMiningSpeedState extends StandardUpgradeState implements St
 
         //all of these are updatable
         this._effectValue = increaseMiningSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseMiningSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         this._upgradeCostFarmers = increaseMiningSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
@@ -110,4 +109,19 @@ export class IncreaseMiningSpeedState extends StandardUpgradeState implements St
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`
     }
+
+    public kingdomReset(): void {
+
+        //update all the properties here
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseMiningSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseMiningSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseMiningSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseMiningSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._structure.setResourceCycleTime(this.getEffectValue());
+
+        this.notify();
+   }
 }
