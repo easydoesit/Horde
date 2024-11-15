@@ -17,10 +17,8 @@ export class IncreaseGoldBarValueState extends StandardUpgradeState implements S
 
         //all of these are updatable
         this._effectValue = increaseGoldBarValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseGoldBarValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('workShop UPDATE HERE',this._upgradeCostGold);
         this._upgradeCostFarmers = increaseGoldBarValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
         this._upgradeCostResources = increaseGoldBarValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
@@ -78,14 +76,14 @@ export class IncreaseGoldBarValueState extends StandardUpgradeState implements S
 
         //update insceneGUI
         this._structure.setResourcePerCycle(this._structure.getResourcePerCycle() + (this._structure.getResourcePerCycle() * this._structure.getResourceMultiplyer()/100))
-        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Workshop/cycle`)
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Goldbar/cycle`)
 
     }
 
     private _increaseWorkshopValUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Workshop Value Upgrade Callback Called');
+            console.log('Increase Goldbar Value Upgrade Callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
@@ -122,5 +120,22 @@ export class IncreaseGoldBarValueState extends StandardUpgradeState implements S
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade raises amount of gold and Workshop per cycle by ${evString}%`
+    }
+
+    public kingdomReset(): void {
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseGoldBarValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseGoldBarValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseGoldBarValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseGoldBarValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._scene.workShop.setResourceMultiplyer(this.getEffectValue());
+        this._scene.workShop.setGoldPerCycle(this.getEffectValue());
+        
+        this.notify();
+
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Goldbar/cycle`);
+
     }
 }

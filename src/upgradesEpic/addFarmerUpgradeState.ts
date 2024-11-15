@@ -18,6 +18,7 @@ export class AddFarmerUpgradeState extends EpicUpgradeState implements EpicUpgra
     //update Code goes here
 
     public updateState(): void {
+        //we set the state as active on the first purchase.
         if (this.getActive() === false) {
             this.setActive(true);
         }
@@ -30,6 +31,10 @@ export class AddFarmerUpgradeState extends EpicUpgradeState implements EpicUpgra
             this._setValue(); //comes from parent class
             this.notify(); //comes from parent class
         }
+    }
+
+    public kingdomUpdate(): void {
+        this.notify();
     }
 
 }

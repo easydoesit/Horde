@@ -15,7 +15,6 @@ export class IncreaseAdventuringSpeedState extends StandardUpgradeState implemen
 
         //all of these are updatable
         this._effectValue = increaseAdventuringSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseAdventuringSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         this._upgradeCostFarmers = increaseAdventuringSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
@@ -95,7 +94,7 @@ export class IncreaseAdventuringSpeedState extends StandardUpgradeState implemen
         
     }
 
-        private _increaseAdventuringSpeedUpgradeAllowed() {
+    private _increaseAdventuringSpeedUpgradeAllowed() {
         if (this._scene.mathState.getTotalGold() > this.getCostToUpgradeGold() && this._scene.mathState.getTotalFarmers() > this.getCostToUpgradeFarmers()) {
             return true;
         } else {
@@ -103,11 +102,25 @@ export class IncreaseAdventuringSpeedState extends StandardUpgradeState implemen
         }
     }
 
-
     private _makeInstructions():string {
         const effectValue = increaseAdventuringSpeed.effectValue(this.getCurrentUpgradeLevel() + 1, this.getMaxNumUpgrades(), this.getIncrement());
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`
+    }
+
+    public kingdomReset(): void {
+
+         //update all the properties here
+         this._currentUpgradeLevel = 0;
+         this._effectValue = increaseAdventuringSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+         this._upgradeCostGold = increaseAdventuringSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+         this._upgradeCostFarmers = increaseAdventuringSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+         this._upgradeCostResources = increaseAdventuringSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+         this._instructions = this._makeInstructions();
+
+         this._structure.setResourceCycleTime(this.getEffectValue());
+
+         this.notify();
     }
 }

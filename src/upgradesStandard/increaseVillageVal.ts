@@ -17,10 +17,8 @@ export class IncreaseVillageValueState extends StandardUpgradeState implements S
 
         //all of these are updatable
         this._effectValue = increaseVillageValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseVillageValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('barracks UPDATE HERE',this._upgradeCostGold);
         this._upgradeCostFarmers = increaseVillageValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
         this._upgradeCostResources = increaseVillageValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         
@@ -78,7 +76,7 @@ export class IncreaseVillageValueState extends StandardUpgradeState implements S
 
         //update insceneGUI
         this._structure.setResourcePerCycle(this._structure.getResourcePerCycle() + (this._structure.getResourcePerCycle() * this._structure.getResourceMultiplyer()/100))
-        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Village/cycle`)
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Villages/cycle`)
 
     }
 
@@ -122,5 +120,22 @@ export class IncreaseVillageValueState extends StandardUpgradeState implements S
         const evString = (effectValue * 100).toFixed(2);
         
         return `Next Upgrade raises amount of gold and Village per cycle by ${evString}%`
+    }
+
+    public kingdomReset(): void {
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseVillageValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseVillageValue.nextUpgradeCostGold(this._currentUpgradeLevel);
+        this._upgradeCostFarmers = increaseVillageValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseVillageValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._scene.workShop.setResourceMultiplyer(this.getEffectValue());
+        this._scene.workShop.setGoldPerCycle(this.getEffectValue());
+        
+        this.notify();
+
+        this._structure.getInSceneGui().setInfoText(`${this._structure.getResourcePerCycle().toFixed(3)} Villages/cycle`);
+
     }
 }

@@ -15,7 +15,6 @@ export class IncreaseForgeSpeedState extends StandardUpgradeState implements Sta
 
         //all of these are updatable
         this._effectValue = increaseForgeSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseForgeSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         this._upgradeCostFarmers = increaseForgeSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
@@ -110,4 +109,19 @@ export class IncreaseForgeSpeedState extends StandardUpgradeState implements Sta
         
         return `Next Upgrade Speeds up resource Creation by ${evString}%`
     }
+
+    public kingdomReset(): void {
+
+        //update all the properties here
+        this._currentUpgradeLevel = 0;
+        this._effectValue = increaseForgeSpeed.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+        this._upgradeCostGold = increaseForgeSpeed.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
+        this._upgradeCostFarmers = increaseForgeSpeed.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+        this._upgradeCostResources = increaseForgeSpeed.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+        this._instructions = this._makeInstructions();
+
+        this._structure.setResourceCycleTime(this.getEffectValue());
+
+        this.notify();
+   }
 }

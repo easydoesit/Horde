@@ -107,4 +107,21 @@ export class WheatState extends StandardUpgradeState implements StandardUpgradeS
         return `Next Upgrade raises amount of gold per farmer by ${evString}%`
     }
 
+    public kingdomReset(): void {
+            //update all the properties here
+            this._currentUpgradeLevel = 1;
+            this._effectValue = wheat.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
+            this._upgradeCostGold = wheat.nextUpgradeCostGold(this._currentUpgradeLevel);
+            this._upgradeCostFarmers = wheat.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
+            this._upgradeCostResources = wheat.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
+            this._instructions = this._makeInstructions(); 
+    
+            //increase the value of wheat
+            this._scene.mathState.setWheatValue(this.getEffectValue());
+    
+            //notify the observers
+            this.notify();
+
+    }
+
 }
