@@ -48,4 +48,10 @@ export class StructuresFasterCyclesState extends EpicUpgradeState implements Epi
         }
     }
 
+    public kingdomUpdate(): void {
+        this._updateStructures();
+        this.notify();
+    }
+
+
 }

@@ -52,23 +52,19 @@ export class KingdomState implements KingdomStateI {
         const newGoldMultiplyer = currentGoldMult + (currentGoldMult * this.getCurrentKingdom().getBaseGoldBoost());
         this._scene.mathState.setGoldMultiplyer(newGoldMultiplyer);
 
+        //reset all the structures to level 0
         for (let i in this.getScene().allStructures) {
             const structure = this.getScene().allStructures[i];            
             const oldResourceMult = structure.getResourceMultiplyer();
 
             structure.kingdomReset();
-
+            
+            //add the kingdom boost to the resource multiplyer.
             const newResourceMult = oldResourceMult + (oldResourceMult * this.getCurrentKingdom().getBaseResourceBoost());
             structure.setResourceMultiplyer(newResourceMult); 
         }
 
-        for (let i in this.getScene().allStandardardUpgrades) {
-            const upgrade = this.getScene().allStandardardUpgrades[i];
-
-            upgrade.kingdomReset();
-
-        }
-
+        //make it so the structures can be added to the new kingdom.
         const gui = this.getScene().getAppGui() as GUIPlay
         const castleUpgadeWindow = gui.castleUpgradeWindow as unknown as CastleUpgradeWindowI
 
@@ -78,7 +74,29 @@ export class KingdomState implements KingdomStateI {
                 button.isVisible = true;
             }
         }
-        //make sure all the upgrades and structures are reset before resetting mathState.
+
+        //reset all standard upgrades to level 0
+        for (let i in this.getScene().allStandardardUpgrades) {
+            const upgrade = this.getScene().allStandardardUpgrades[i];
+
+            upgrade.kingdomReset();
+
+        }
+
+        //any epic modifiers now need to be added back to the game.
+        for (let i in this.getScene().allEpicUpgrades) {
+            const upgrade = this.getScene().allEpicUpgrades[i];
+
+            if (upgrade.getActive) {
+                //run upgrade
+                upgrade.kingdomUpdate();
+
+            }
+
+        } 
+
+        //reset the mathstate. 
+        //This should be done last as the kingdom and epic modifiers will change how the math is updated.
         this._scene.mathState.kingdomReset();
         this.notify();
     }
