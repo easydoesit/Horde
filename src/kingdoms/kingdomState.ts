@@ -8,6 +8,13 @@ import { KingdomTundra } from "./kingdomTundra";
 import { GUIPlay } from "../GUI/GUIPlay";
 import { KingdomSwamp } from "./kingdomSwamp";
 import { KingdomMountains } from "./kingdomMountains";
+import { KingdomCoast } from "./kingomCoast";
+import { KingdomOasis } from "./kingdomOasis";
+import { KingdomTropical } from "./kingdomTropical";
+import { KingdomWaterfall } from "./kingdomWaterfall";
+import { KingdomSky } from "./kingdomSky";
+import { KingdomMoon } from "./kingdomMoon";
+import {KingdomInterDimensional} from './kingdomInterDimensional'
 
 export class KingdomState implements KingdomStateI {
     private _name:string;
@@ -22,6 +29,13 @@ export class KingdomState implements KingdomStateI {
     private _kingdomTundra:KingdomTundra;
     private _kingdomSwamp:KingdomSwamp;
     private _kingdomMountains:KingdomMountains;
+    private _kingdomCoast:KingdomCoast;
+    private _kingdomOasis:KingdomOasis;
+    private _kingdomTropical:KingdomTropical;
+    private _kingdomWaterfall:KingdomWaterfall;
+    private _kingdomSky:KingdomSky;
+    private _kingdomMoon:KingdomMoon;
+    private _kingdomInterDimensional:KingdomInterDimensional;
 
     constructor(name:string, scene:PlayMode) {
         this._name = name;
@@ -32,6 +46,13 @@ export class KingdomState implements KingdomStateI {
         this._kingdomTundra = new KingdomTundra(this.getScene());
         this._kingdomSwamp = new KingdomSwamp(this.getScene());
         this._kingdomMountains = new KingdomMountains(this.getScene());
+        this._kingdomCoast = new KingdomCoast(this.getScene());
+        this._kingdomOasis = new KingdomOasis(this.getScene());
+        this._kingdomTropical = new KingdomTropical(this.getScene());
+        this._kingdomWaterfall = new KingdomWaterfall(this.getScene());
+        this._kingdomSky = new KingdomSky(this.getScene());
+        this._kingdomMoon = new KingdomMoon(this.getScene());
+        this._kingdomInterDimensional = new KingdomInterDimensional(this.getScene());
 
         this._allKingdoms.push(
             this._kingdomPlains, 
@@ -39,6 +60,13 @@ export class KingdomState implements KingdomStateI {
             this._kingdomTundra,
             this._kingdomSwamp,
             this._kingdomMountains,
+            this._kingdomCoast,
+            this._kingdomOasis,
+            this._kingdomTropical,
+            this._kingdomWaterfall,
+            this._kingdomSky,
+            this._kingdomMoon,
+            this._kingdomInterDimensional
         );
 
         this._currentKingdom = this._kingdomPlains;

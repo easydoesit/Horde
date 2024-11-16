@@ -3,7 +3,7 @@ import { DEBUGMODE, kingInterDimensional } from "../utils/CONSTANTS";
 import { Kingdom } from "./kingdom";
 import { PlayMode } from "../scenes/playmode";
 
-export class kingdomInterDimensional extends Kingdom {
+export class KingdomInterDimensional extends Kingdom {
     private _mainLight:DirectionalLight;
 
     constructor(scene:PlayMode) {
