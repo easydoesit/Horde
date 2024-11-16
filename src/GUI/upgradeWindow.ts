@@ -11,6 +11,7 @@ export class UpgradeWindow extends Rectangle implements UpgradeWindowI{
     protected _panelContainer:StackPanel;
 
     public name:string;
+    structureButtons: any;
 
     constructor(name:string) {
         super(name)

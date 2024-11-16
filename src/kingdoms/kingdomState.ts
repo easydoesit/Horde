@@ -4,7 +4,10 @@ import { PlayMode } from "../scenes/playmode";
 import { DEBUGMODE } from "../utils/CONSTANTS";
 import { KingdomForest } from "./kingdomForest";
 import { KingdomPlains} from "./kingdomPlains";
+import { KingdomTundra } from "./kingdomTundra";
 import { GUIPlay } from "../GUI/GUIPlay";
+import { KingdomSwamp } from "./kingdomSwamp";
+import { KingdomMountains } from "./kingdomMountains";
 
 export class KingdomState implements KingdomStateI {
     private _name:string;
@@ -16,6 +19,9 @@ export class KingdomState implements KingdomStateI {
 
     private _kingdomPlains:KingdomPlains;
     private _kingdomForest:KingdomForest;
+    private _kingdomTundra:KingdomTundra;
+    private _kingdomSwamp:KingdomSwamp;
+    private _kingdomMountains:KingdomMountains;
 
     constructor(name:string, scene:PlayMode) {
         this._name = name;
@@ -23,8 +29,17 @@ export class KingdomState implements KingdomStateI {
         this._allKingdoms = [];
         this._kingdomPlains = new KingdomPlains(this.getScene());
         this._kingdomForest = new KingdomForest(this.getScene());
+        this._kingdomTundra = new KingdomTundra(this.getScene());
+        this._kingdomSwamp = new KingdomSwamp(this.getScene());
+        this._kingdomMountains = new KingdomMountains(this.getScene());
 
-        this._allKingdoms.push(this._kingdomPlains, this._kingdomForest);
+        this._allKingdoms.push(
+            this._kingdomPlains, 
+            this._kingdomForest, 
+            this._kingdomTundra,
+            this._kingdomSwamp,
+            this._kingdomMountains,
+        );
 
         this._currentKingdom = this._kingdomPlains;
         
