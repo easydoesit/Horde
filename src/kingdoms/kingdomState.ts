@@ -207,13 +207,16 @@ export class KingdomState implements KingdomStateI {
 
     public setNextKingdom(): void {
         console.log('set Next Kingdom Called');
-        for (let i in this._allKingdoms) {
+        for (let i=0; i <= this._allKingdoms.length - 1; i++) {
+            
             const kingdom = this._allKingdoms[i];
-
+            
             if (kingdom.getLevel() === this._currentKingdom.getLevel() + 1) {
                 this._nextKingdom = kingdom;
-            } else {
+                return;
+            } else if(kingdom.getLevel() !== this._currentKingdom.getLevel()+ 1 && i === this._allKingdoms.length - 1){
                 this._nextKingdom = null;
+                return;
             }
         };
     }

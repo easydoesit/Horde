@@ -17,10 +17,8 @@ export class IncreasePortalValueState extends StandardUpgradeState implements St
 
         //all of these are updatable
         this._effectValue = increasePortalValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increasePortalValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('Tower UPDATE HERE',this._upgradeCostGold);
         this._upgradeCostFarmers = increasePortalValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
         this._upgradeCostResources = increasePortalValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         

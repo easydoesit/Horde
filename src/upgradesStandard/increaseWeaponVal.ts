@@ -15,10 +15,8 @@ export class IncreaseWeaponsValueState extends StandardUpgradeState implements S
 
         //all of these are updatable
         this._effectValue = increaseWeaponsValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseWeaponsValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('FORGE UPDATE HERE',this._upgradeCostGold);
         this._upgradeCostFarmers = increaseWeaponsValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
         this._upgradeCostResources = increaseWeaponsValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         

@@ -8,6 +8,7 @@ export class KingdomPlains extends Kingdom {
 
     constructor(scene:PlayMode) {
         super(kingPlains.name, scene);
+        this._name = kingPlains.name;
 
         this._level = kingPlains.level;
         

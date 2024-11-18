@@ -71,7 +71,7 @@ export class IncreaseAdventuringSpeedState extends StandardUpgradeState implemen
     private _increaseAdventuringSpeedUpgradeCallback = () => {
         
         if (DEBUGMODE) {
-            console.log('Increase Tavern Upgrade Callback Called');
+            console.log('Increase Adventuring Speed callback Called');
         }
         
         if (this.getCurrentUpgradeLevel() < this.getMaxNumUpgrades()) {
