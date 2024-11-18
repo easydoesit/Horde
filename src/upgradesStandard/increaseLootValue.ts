@@ -17,10 +17,8 @@ export class IncreaseLootValueState extends StandardUpgradeState implements Stan
 
         //all of these are updatable
         this._effectValue = increaseLootValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseLootValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
-        console.log('thievesGuild UPDATE HERE',this._upgradeCostGold);
         this._upgradeCostFarmers = increaseLootValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
         this._upgradeCostResources = increaseLootValue.nextUpgradeCostResources(this.getCurrentUpgradeLevel());
         

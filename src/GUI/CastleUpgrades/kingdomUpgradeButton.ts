@@ -17,6 +17,7 @@ export class KingdomUpgradeButton extends Button implements KingdomStateObserver
         this._mathState = scene.mathState;
         this._kindomState = kingdomState;
         this._kindomState.attach(this);
+        console.log(this._kindomState);
 
         this.background = 'orange';
         this.width = .95;
@@ -57,7 +58,7 @@ export class KingdomUpgradeButton extends Button implements KingdomStateObserver
         if (this._kindomState.getNextKingdom() !== null) {
 
             this._text.text = `Upgrade Your Kingdom to ${this._kindomState.getNextKingdom().getName()}`;
-            this._costGoldText.text = `Gost Gold: ${this._kindomState.getNextKingdom()}`;
+            this._costGoldText.text = `Gost Gold: ${this._kindomState.getNextKingdom().getCostToUnlockGold()}`;
         } else {
             this.isVisible = false;
         }

@@ -15,7 +15,6 @@ export class IncreaseOreValueState extends StandardUpgradeState implements Stand
 
         //all of these are updatable
         this._effectValue = increaseOreValue.effectValue(this.getCurrentUpgradeLevel(), this.getMaxNumUpgrades(), this.getIncrement());
-        console.log(this._effectValue);
         this._instructions = this._makeInstructions();
         this._upgradeCostGold = increaseOreValue.nextUpgradeCostGold(this.getCurrentUpgradeLevel());
         this._upgradeCostFarmers = increaseOreValue.nextUpgradeCostFarmers(this.getCurrentUpgradeLevel());
