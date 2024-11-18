@@ -131,7 +131,6 @@ export class StructureFarms extends StructureState implements StructureStateChil
             
             farm.upgradeSection.setInstructions(farm.upgradeSectionInstructions);
             farm.upgradeSection.setMaxNumUpgrades(this.getUpgradeMax()/this.getAllFarms().length);
-            console.log(farm);
         }
 
         this._scene.onBeforeRenderObservable.add(() => {

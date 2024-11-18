@@ -145,7 +145,6 @@ export const increaseWeaponsValue = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -186,7 +185,6 @@ export const increaseForgeSpeed = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -226,7 +224,6 @@ export const increaseVillageValue = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -266,7 +263,6 @@ export const increaseSoldierSpeed = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -306,7 +302,6 @@ export const increaseLootValue = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -346,7 +341,6 @@ export const increaseLootSpeed = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -386,7 +380,6 @@ export const increaseGoldBarValue = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -426,7 +419,6 @@ export const increaseGoldBarSpeed = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -466,7 +458,6 @@ export const increasePortalValue = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -506,7 +497,6 @@ export const increasePortalSpeed = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -546,7 +536,6 @@ export const increaseRelicValue = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
@@ -586,7 +575,6 @@ export const increaseAdventuringSpeed = {
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
-        console.log('final value:',finalValue);
     
         return finalValue;
     },
