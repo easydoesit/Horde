@@ -38,11 +38,13 @@ import { IncreaseAdventuringSpeedState } from "../upgradesStandard/increaseAdven
 import { StructureFarms } from "../structures/structureFarms";
 import { KingdomState } from "../kingdoms/kingdomState";
 import { GUIStartScreen } from "../GUI/GUIStartScreen";
+import { SaveState } from "../gameControl/saveState";
 
 export class PlayMode extends Scene {
     public mainCamera:FreeCamera;
     private _app:App;
     public mathState:MathStateI;
+    public saveState:SaveState;
 
     //gamepieces 
     private _hill:StructureModel;
@@ -196,6 +198,9 @@ export class PlayMode extends Scene {
 
         //load the mathState
         this.mathState = new MathState(this);
+
+        //load the saveState
+        this.saveState = new SaveState(this);
 
         //interact with the scene
         this.onPointerDown = function castRay() {
