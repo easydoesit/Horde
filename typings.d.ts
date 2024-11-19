@@ -7,6 +7,7 @@ import { AddStructureButton } from "./src/GUI/structureUpgrades/addStructureButt
 import { StructureUpgradeSection } from "./src/GUI/structureUpgrades/structureUpgradeSection";
 import { AbstractMesh, Vector3 } from "@babylonjs/core";
 import { structureButtonsT } from "./src/GUI/castleUpgrades/CastleUpgradeWindow";
+import { SaveState } from "./src/gameControl/saveState";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';

@@ -1,4 +1,4 @@
-import { AdvancedDynamicTexture,  Button, Rectangle, Control, TextBlock, ScrollViewer, StackPanel} from "@babylonjs/gui";
+import { Button, Rectangle, Control, TextBlock, ScrollViewer, StackPanel} from "@babylonjs/gui";
 import { GUIPlay } from "./GUIPlay";
 import { GUIFONT1 } from "../utils/CONSTANTS";
 import { UpgradeWindowI } from "../../typings";

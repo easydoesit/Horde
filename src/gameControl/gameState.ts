@@ -10,6 +10,7 @@ export class GameState implements GameStateI{
         this._name ='gameState'
         this.state = gameState;
         this._observers =[];
+    
     }
 
     public attach(observer:GameStateObserverI):void {

@@ -5,13 +5,18 @@ import { App } from "../app";
 import { GameStateI, GameStateObserverI } from "../../typings";
 import { PlayMode } from "../scenes/playmode";
 import { GUIPlay } from "./GUIPlay";
-import { DEBUGMODE } from "../utils/CONSTANTS";
+import { DEBUGMODE, GUIFONT1 } from "../utils/CONSTANTS";
+import { SaveLoadButton } from "./saveAndLoad/saveLoadButton";
+import { SaveLoadWrapper } from "./saveAndLoad/saveLoadWrapper";
 
 export class GUIStartScreen implements GameStateObserverI {
     public gameGUI:AdvancedDynamicTexture;
     public name:string;
     private _app:App;
     private _scene:Scene;
+    private _startButton:Button
+    private _saveLoadButton:Button;
+    private _saveLoadWindow:SaveLoadWrapper;
 
     private _startScreenWrapper:Rectangle;
 
@@ -32,21 +37,28 @@ export class GUIStartScreen implements GameStateObserverI {
           this._startScreenWrapper.thickness = 1;
           this.gameGUI.addControl(this._startScreenWrapper);
   
-          const startBtn = Button.CreateSimpleButton("start", "Start");
-          startBtn.fontFamily = "Arial";
-          startBtn.width = 0.2
-          startBtn.height = "40px";
-          startBtn.color = "white";
-          startBtn.top = "-360px";
-          startBtn.thickness = 2;
-          startBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+          this._startButton = Button.CreateSimpleButton("start", "Start From Beginning");
+          this._startButton.fontFamily = GUIFONT1;
+          this._startButton.width = 0.2
+          this._startButton.height = "40px";
+          this._startButton.color = "white";
+          this._startButton.top = "-360px";
+          this._startButton.thickness = 2;
+          this._startButton.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
           
-          this._startScreenWrapper.addControl(startBtn);
+          this._startScreenWrapper.addControl(this._startButton);
   
-          startBtn.onPointerDownObservable.add(() => {
+          this._startButton.onPointerClickObservable.add((info) => {
               this._scene.detachControl();
               this._app.gameState.setGameState('PLAY_MODE');
+              this._app.saveState.setActivateSave(true);
           });
+
+          this._saveLoadWindow = new SaveLoadWrapper('Save and Load Files')
+          this.gameGUI.addControl(this._saveLoadWindow);
+          this._saveLoadButton = new SaveLoadButton(this._startScreenWrapper, this._saveLoadWindow);
+
+          this._saveLoadButton.top ='-320px';
 
     }
 

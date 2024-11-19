@@ -10,6 +10,7 @@ import { StartScreen } from "./scenes/start_screen";
 import { GameState } from "./gameControl/gameState";
 import { GUIStartScreen } from "./GUI/GUIStartScreen";
 import { GUIPlay } from "./GUI/GUIPlay";
+import { SaveState } from "./gameControl/saveState";
 
 export class App {
     //General Entire App
@@ -17,6 +18,7 @@ export class App {
     public scene:Scene;
     public gameState:GameState;
     public gui:GUIPlay | GUIStartScreen;
+    public saveState:SaveState
     private _canvas: HTMLCanvasElement;
     private _inspector:BabInspector;
     public loadingScreen:DefaultLoadingScreen;
@@ -32,6 +34,7 @@ export class App {
         this.gameState = new GameState('START_SCREEN');
         this.scene = new StartScreen(this.engine);
         this.gui = new GUIStartScreen(this, this.scene);
+        this.saveState = new SaveState(this);
 
         // add the inspector
         this._inspector = new BabInspector(this.scene);

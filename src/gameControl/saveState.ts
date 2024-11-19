@@ -1,46 +1,93 @@
+import { App } from '../app';
 import { PlayMode } from '../scenes/playmode';
 import { DEBUGMODE } from '../utils/CONSTANTS';
 
 export class SaveState {
+    private _app:App
+    private _activateSave:Boolean
     private _scene:PlayMode;
-
-    constructor(scene:PlayMode) {
-        this._scene = scene;
-
-        this.saveGame();
+    private _fileName:string;
+    private _gameSaveInt:ReturnType<typeof setInterval> | null
+    
+    constructor(app:App) {
+        this._app = app;
+        this._activateSave = false;
+        // this._fileName = filename;
+        // this._scene = scene;
+        this._gameSaveInt = null;
     
     }
 
-    private async saveGame() {
+    private _saveGameInterval() {
+        
+        if (this._activateSave && !this._gameSaveInt) {
 
-        setInterval(() => {
-            if (DEBUGMODE) {
-                console.log('SaveState Interval Started');
+            this._gameSaveInt = setInterval(() => this._saveGame(), 1 * 3 * 1000);
+        
+        } else {
+            clearInterval(this._gameSaveInt);
+            this._gameSaveInt = null;
+        }
+    }
+
+    private async _saveGame() {
+        if (DEBUGMODE) {
+            console.log('SaveGame Called');
+        }
+
+        const gameInfo = {
+            table:[]
+        }
+
+        gameInfo.table.push({test:'Hello File', value:0});
+        const gameSaveJSON = JSON.stringify(gameInfo);
+        console.log(gameSaveJSON);
+
+        fetch('http://localhost:3000/saveFile', {
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:gameSaveJSON
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const gameInfo = {
-                table:[]
-            }
-
-            gameInfo.table.push({test:'Hello File', value:0});
-            const gameSaveJSON = JSON.stringify(gameInfo);
-            console.log(gameSaveJSON);
-
-            fetch('http://localhost:3000/saveFile', {
-                method:'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body:gameSaveJSON
+            debugger;
+            return response.json()
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Server Response', data);
-            })
-            .catch(error => {
-                console.error('Error: ', error);
-            })
+        .then(data => {
+            debugger;
+            console.log('Server Response', data);
+            debugger;
+        })
+        .catch(error => {
+            debugger;
+            console.error('Error: ', error);
+            
+        })
 
-        }, 1 * 15 * 1000)
+    }
+
+    public async loadGame() {
+        if (DEBUGMODE) {
+            console.log('LoadGame Called From Save State');
+        }
+    }
+
+    public setActivateSave(active:boolean):void {
+        this._activateSave = active;
+        if (!active && this._gameSaveInt) {
+        
+            clearInterval(this._gameSaveInt);
+            this._gameSaveInt = null;
+        
+        } else {
+        
+            this._saveGameInterval();
+        
+        }
     }
 
 }

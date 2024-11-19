@@ -6,6 +6,9 @@ export default function createCanvas():HTMLCanvasElement {
         canvas.id = "gameCanvas";
         const canvasPlacement = document.getElementsByClassName('canvasWrapper');
         canvasPlacement[0].appendChild(canvas);
+        canvas.addEventListener('click', (event) => {
+            event.preventDefault();
+        })
     
     return canvas
 }

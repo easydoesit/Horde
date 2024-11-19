@@ -199,9 +199,6 @@ export class PlayMode extends Scene {
         //load the mathState
         this.mathState = new MathState(this);
 
-        //load the saveState
-        this.saveState = new SaveState(this);
-
         //interact with the scene
         this.onPointerDown = function castRay() {
             const ray = this.createPickingRay(this.pointerX, this.pointerY, Matrix.Identity(), this.mainCamera);
