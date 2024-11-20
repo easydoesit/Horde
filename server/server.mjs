@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to my server!');
 });
 
-const path = 'public/saveFiles'
+const path = 'server/saveFiles'
 
 app.post('/saveFile', jsonParser, function (req, res) {
     const body = req.body;
@@ -27,7 +27,7 @@ app.post('/saveFile', jsonParser, function (req, res) {
         fs.mkdirSync(path, {recursive: true});
     }
 
-    fs.writeFileSync('public/saveFiles/saveFile.json', saveFileJSON, (error) => {
+    fs.writeFileSync(`${path}/saveFile.json`, saveFileJSON, (error) => {
         if(error) {
             console.log(error);
         } else {

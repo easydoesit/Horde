@@ -43,27 +43,18 @@ export class SaveState {
         const gameSaveJSON = JSON.stringify(gameInfo);
         console.log(gameSaveJSON);
 
-        fetch('http://localhost:3000/saveFile', {
+        await fetch('http://localhost:3000/saveFile', {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body:gameSaveJSON
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            debugger;
-            return response.json()
-            })
+        .then(response => response.json())
         .then(data => {
-            debugger;
             console.log('Server Response', data);
-            debugger;
         })
         .catch(error => {
-            debugger;
             console.error('Error: ', error);
             
         })

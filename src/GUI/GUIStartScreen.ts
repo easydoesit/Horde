@@ -48,10 +48,11 @@ export class GUIStartScreen implements GameStateObserverI {
           
           this._startScreenWrapper.addControl(this._startButton);
   
-          this._startButton.onPointerClickObservable.add((info) => {
-              this._scene.detachControl();
-              this._app.gameState.setGameState('PLAY_MODE');
-              this._app.saveState.setActivateSave(true);
+          this._startButton.onPointerClickObservable.add(() => {
+                this._scene.detachControl();
+                this._app.gameState.setGameState('PLAY_MODE');
+                this._app.saveState.setActivateSave(true);  
+              
           });
 
           this._saveLoadWindow = new SaveLoadWrapper('Save and Load Files')
