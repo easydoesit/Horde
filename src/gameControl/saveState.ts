@@ -12,7 +12,7 @@ export class SaveState {
     constructor(app:App) {
         this._app = app;
         this._activateSave = false;
-        // this._fileName = filename;
+        this._fileName = '';
         // this._scene = scene;
         this._gameSaveInt = null;
     
@@ -22,7 +22,7 @@ export class SaveState {
         
         if (this._activateSave && !this._gameSaveInt) {
 
-            this._gameSaveInt = setInterval(() => this._saveGame(), 1 * 3 * 1000);
+            this._gameSaveInt = setInterval(() => this._saveGame(), 1 * 15 * 1000);
         
         } else {
             clearInterval(this._gameSaveInt);
@@ -36,10 +36,11 @@ export class SaveState {
         }
 
         const gameInfo = {
-            table:[]
+            fileName:this._fileName,
+            state:[]
         }
 
-        gameInfo.table.push({test:'Hello File', value:0});
+        gameInfo.state.push({test:'Hello File', value:0});
         const gameSaveJSON = JSON.stringify(gameInfo);
         console.log(gameSaveJSON);
 
@@ -79,6 +80,10 @@ export class SaveState {
             this._saveGameInterval();
         
         }
+    }
+    
+    public setFileName(fileName:string): void {
+        this._fileName = fileName;
     }
 
 }

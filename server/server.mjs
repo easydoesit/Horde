@@ -3,8 +3,6 @@ import cors from 'cors';
 import bodyParser from "body-parser";
 import * as fs from 'fs';
 
-
-
 const app = express();
 const port = 3000;
 
@@ -20,14 +18,14 @@ const path = 'server/saveFiles'
 app.post('/saveFile', jsonParser, function (req, res) {
     const body = req.body;
     console.log(body);
-    const saveFileJSON = JSON.stringify(body);
+    const saveFileJSON = JSON.stringify(body.state);
     
 
     if (!fs.existsSync(path)) {
         fs.mkdirSync(path, {recursive: true});
     }
 
-    fs.writeFileSync(`${path}/saveFile.json`, saveFileJSON, (error) => {
+    fs.writeFileSync(`${path}/${body.fileName}.json`, saveFileJSON, (error) => {
         if(error) {
             console.log(error);
         } else {
@@ -50,8 +48,9 @@ app.get('/listSaveFiles', function(req, res) {
         fs.readdirSync(path).forEach(file => {
             files.push(file);
             console.log(file);
-            res.json(files);
         })
+
+        res.json(files);
     }
 
 
