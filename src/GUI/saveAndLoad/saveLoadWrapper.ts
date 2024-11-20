@@ -71,28 +71,47 @@ export class SaveLoadWrapper extends Rectangle {
         }).then(response => response.json())
         .then(data => {
             console.log('Server Response: ', data);
-            for (let i in data) {
-                const fileNameFull = data[i];
-                const fileName = fileNameFull.replace(/\.[^/.]+$/, "");
-                const fileButton = new Button(`${fileName}`);
 
-                fileButton.fontFamily = GUIFONT1;
-                fileButton.width = 0.4
-                fileButton.color = "white";
-                fileButton.thickness = 2;
-                fileButton.height = '60px';
-                fileButton.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-                fileButton.left = -10;
-                const textBlock = new TextBlock(`${fileName}`, `${fileName}`);
-                fileButton.addControl(textBlock);
-                this.getPanelContainer().addControl(fileButton);
+            if(data.body !== 'no files') {
 
+                for (let i in data) {
+                    const fileNameFull = data[i];
+                    const fileName = fileNameFull.replace(/\.[^/.]+$/, "");
+                    const fileButton = new Button(`${fileName}`);
+
+                    fileButton.fontFamily = GUIFONT1;
+                    fileButton.width = 0.4
+                    fileButton.color = "white";
+                    fileButton.thickness = 2;
+                    fileButton.height = '60px';
+                    fileButton.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+                    fileButton.left = -10;
+                    const textBlock = new TextBlock(`${fileName}`, `${fileName}`);
+                    fileButton.addControl(textBlock);
+
+                    fileButton.onPointerClickObservable.add(() => {
+
+                    }) 
+
+                    this.getPanelContainer().addControl(fileButton);
+
+
+
+                }
+            } else {
+                const noFileTextBlock = new TextBlock('no Files', 'No Files Saved')
+                noFileTextBlock.color = 'white';
+                noFileTextBlock.width = .2;
+                noFileTextBlock.height = '60px';
+                this.getPanelContainer().addControl(noFileTextBlock);
             }
 
         })
         .catch(error => {
             console.error('Error: ', error);
         })
+    
+        
     }
 
     public hideWindow():void {

@@ -9,7 +9,6 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
     protected _maxNumUpgrades:number;
     protected _increment:number;
     protected _structure:StructureStateChildI;
-    protected _upgradeMax:number;
     protected _effectValue:number;
     protected _upgradeCostGold:number;
     protected _upgradeCostFarmers:number;

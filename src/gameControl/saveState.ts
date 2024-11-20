@@ -1,3 +1,4 @@
+import { EpicUpgradeStateChildI, MathStateI, StandardUpgradeStateChildI, StructureStateChildI } from '../../typings';
 import { App } from '../app';
 import { PlayMode } from '../scenes/playmode';
 import { DEBUGMODE } from '../utils/CONSTANTS';
@@ -6,6 +7,10 @@ export class SaveState {
     private _app:App
     private _activateSave:Boolean
     private _scene:PlayMode;
+    private _mathState:MathStateI;
+    private _structures:StructureStateChildI[];
+    private _epicUpgrades:EpicUpgradeStateChildI[];
+    private _standardUpgrades:StandardUpgradeStateChildI[];
     private _fileName:string;
     private _gameSaveInt:ReturnType<typeof setInterval> | null
     
@@ -13,7 +18,7 @@ export class SaveState {
         this._app = app;
         this._activateSave = false;
         this._fileName = '';
-        // this._scene = scene;
+
         this._gameSaveInt = null;
     
     }
@@ -35,13 +40,88 @@ export class SaveState {
             console.log('SaveGame Called');
         }
 
+
         const gameInfo = {
             fileName:this._fileName,
-            state:[]
+            mathstate: {
+                farmers:this._mathState.getTotalFarmers(),
+                totalGold:this._mathState.getTotalGold(),
+                goldMultiplyer:this._mathState.getGoldMultiplyer(),
+                totalLumens:this._mathState.getTotalLumens(),
+                wheatValue:this._mathState.getWheatValue(),
+            },
+            structures: [],
+            standardUpgrades: [],
+            epicUpgrades:[],
+
         }
 
-        gameInfo.state.push({test:'Hello File', value:0});
+        for (let i in this._structures) {
+            const structure = this._structures[i];
+
+            if (structure.getAlive()) {
+                const structureInfo = {
+                    name: structure.getName(),
+                    alive: structure.getAlive(),
+                    steward: structure.getSteward(),
+                    upgradeLevel: structure.getUpgradeLevel(),
+                    upgradeCostGold: structure.getUpgradeCostGold(),
+                    upgradeCostFarmers: structure.getUpgradeCostFarmers(),
+                    upgradeCostResources: structure.getUpgradeCostResources(),
+                    resource: structure.getResourceName(),
+                    resourceAmount: structure.getTotalResourceAmount(),
+                    resourceUpgradeValue: structure.getResourceUpgradeValue(),
+                    resourceMultiplyer: structure.getResourceMultiplyer(),
+                    cycleTime: structure.getResourceCycleTime(),
+                    goldPerCycle: structure.getGoldPerCycle(),
+                    resourcePerCycle: structure.getResourcePerCycle(),
+                    goldMultiplyer:structure.getGoldMultiplyer(),
+                }
+            
+            gameInfo.structures.push(structureInfo);
+            
+            }
+            
+        }
+
+        for (let i in this._standardUpgrades) {
+            const upgrade = this._standardUpgrades[i]
+
+            if (upgrade.getCurrentUpgradeLevel() > 0) {
+                const upgradeInfo = {
+                    name:upgrade.name,
+                    increment:upgrade.getIncrement(),
+                    effectValue:upgrade.getEffectValue(),
+                    upgradeCostGold:upgrade.getCostToUpgradeGold(),
+                    upgradeCostFarmers:upgrade.getCostToUpgradeFarmers(),
+                    upgradeCostResources:upgrade.getCostToUpgradeResources(),
+                    upgradeLevel:upgrade.getCurrentUpgradeLevel(),
+                    instructions:upgrade.getInstructions(),
+                }
+
+                gameInfo.standardUpgrades.push(upgradeInfo);
+            }
+        }
+        
+        for (let i in this._epicUpgrades) {
+            const upgrade = this._epicUpgrades[i];
+
+            if (upgrade.getActive()) {
+                const upgradeInfo = {
+                    name:upgrade.name,
+                    costToUpgrade:upgrade.getCostToUpgrade(),
+                    increment:upgrade.getIncrement(),
+                    upgradeLevel:upgrade.getCurrentUpgradeLevel(),
+                    currentValue:upgrade.getCurrentValue(),
+                    instructions:upgrade.getInstructions(),
+                }
+
+                gameInfo.epicUpgrades.push(upgradeInfo);
+            }
+        }
+
         const gameSaveJSON = JSON.stringify(gameInfo);
+        
         console.log(gameSaveJSON);
 
         await fetch('http://localhost:3000/saveFile', {
@@ -70,6 +150,7 @@ export class SaveState {
 
     public setActivateSave(active:boolean):void {
         this._activateSave = active;
+        
         if (!active && this._gameSaveInt) {
         
             clearInterval(this._gameSaveInt);
@@ -86,19 +167,12 @@ export class SaveState {
         this._fileName = fileName;
     }
 
+    public setScene(scene:PlayMode):void {
+        this._scene = scene as PlayMode;
+        this._mathState = this._scene.mathState;
+        this._structures = this._scene.allStructures;
+        this._standardUpgrades = this._scene.allStandardardUpgrades;
+        this._epicUpgrades = this._scene.allEpicUpgrades;
+        
+    };
 }
-
-//timer for 2 mins
-//get farmer amount
-//get gold amount
-//get all resource amounts
-//get gold multiplyers
-//get resource mutliplyers
-//get all structure states
-//get all standardUpgrade States
-//get all epic upgrades States
-//get prestige Level
-
-//create a json string and save
-
-//load a json file and start game

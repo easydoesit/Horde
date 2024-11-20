@@ -16,6 +16,7 @@ export class EpicUpgradeState implements EpicUpgradeStateI{
     constructor(name:string) {
         this.name = name;
         this._observers = [];
+        this._active = false;
     }
 
      //Observers

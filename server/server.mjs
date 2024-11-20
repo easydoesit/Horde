@@ -18,7 +18,7 @@ const path = 'server/saveFiles'
 app.post('/saveFile', jsonParser, function (req, res) {
     const body = req.body;
     console.log(body);
-    const saveFileJSON = JSON.stringify(body.state);
+    const saveFileJSON = JSON.stringify(body);
     
 
     if (!fs.existsSync(path)) {
@@ -46,11 +46,18 @@ app.get('/listSaveFiles', function(req, res) {
         console.log('directory exists');
         
         fs.readdirSync(path).forEach(file => {
-            files.push(file);
-            console.log(file);
+            if (file) {
+                files.push(file);
+            } 
         })
+        
+        if(files.length > 0) {
+            console.log(files.length);
+            res.json(files);
+        } else {
+            res.json({body:'no files', code:200});
+        }
 
-        res.json(files);
     }
 
 

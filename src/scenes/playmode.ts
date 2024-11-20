@@ -344,6 +344,7 @@ export class PlayMode extends Scene {
         .then(() => {
             //change the GUI
             engine.hideLoadingUI();
+            this._app.saveState.setScene(this);
         });
         
        

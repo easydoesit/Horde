@@ -39,6 +39,7 @@ export class StructureState implements StructureStateI {
     protected _upgradeCostGold:number;
     protected _upgradeCostFarmers:number | null;
     protected _upgradeCostResources:number | null;
+    
     protected _initGoldCost:number;
     protected _initFarmerCost:number;
     protected _initResourceCost:number;
