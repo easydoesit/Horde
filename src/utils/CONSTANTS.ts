@@ -17,7 +17,7 @@ export const startingGold = 0;
 
 //Farmers
 export const startingFarmers = 0;
-export const farmerBaseValue = 0.001; //base amount of gold persecond
+export const farmerBaseValue = 0.060; //base amount of gold persecond
 
 //Ogre
 export const ogreCycleTime = 1000; //how fast the ogre ruins farmers milliseconds.

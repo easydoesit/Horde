@@ -22,7 +22,7 @@ export const wheat = {
     
     nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
-        const baseGoldCost = 10;
+        const baseGoldCost = 8;
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
