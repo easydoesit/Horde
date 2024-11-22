@@ -87,25 +87,17 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         this.addControl(this._upgradeBtn);
         
         this._upgradeBtn.onPointerDownObservable.add(() => {
-            //set the size of the upgrade bar
-            const cleanString = this._cleanString(this._upgradeBar.width);
-            const sizeAsFloat = this._makeFloatDivideBy100(cleanString);
             
             if (this.upgradeAble) {
-                this._upgradeBtn.isEnabled = true;
-                if (sizeAsFloat < 1) {
-                    const newSize = this.calcBarSegment(sizeAsFloat);
-                    this._upgradeBar.width = newSize;
-                    
-                    if (newSize >= 1) {
-                        this._upgradeBtn.isEnabled = false;
-                    }
-                }
+                
+                this.setSizeUpgradeBar(structure.getUpgradeLevel());
+
                 //anything you want to do to the state is in the callback
                 if (callback) {
                     console.log('callback?');
                     callback();
                 }
+
             } 
         });
 
@@ -214,28 +206,27 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
 
     private calcBarSegment(currentSize:number) {   
         const amountToAdd = 1 / this._maxNumOfUpgrades;
-        
         const finalSize = currentSize + amountToAdd;
 
         return finalSize;
     
     }
 
-    private _cleanString(string:string | number) {
-        const makeSizeString = string.toString(); 
-        const cleanString = makeSizeString.replace(/\%/g, '');
-        let finalNumber = parseFloat(cleanString);
+    // private _cleanString(string:string | number) {
+    //     const makeSizeString = string.toString(); 
+    //     const cleanString = makeSizeString.replace(/\%/g, '');
+    //     let finalNumber = parseFloat(cleanString);
     
-        if (!finalNumber) {
-            finalNumber = 0;
-        }
+    //     if (!finalNumber) {
+    //         finalNumber = 0;
+    //     }
     
-       return finalNumber;
-    }
+    //    return finalNumber;
+    // }
     
-    private _makeFloatDivideBy100(number:number) {
-        return number/100;
-    }
+    // private _makeFloatDivideBy100(number:number) {
+    //     return number/100;
+    // }
 
     private _makeButtonEnabled() {
         
@@ -313,8 +304,26 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         
     }
 
-    public reset() {
+    public reset():void {
         this._upgradeBar.width = 0;
     }
+
+    public setSizeUpgradeBar(level:number):void {
+
+        const sizeAsFloat = this._maxNumOfUpgrades/level/100;
+        
+        if (sizeAsFloat < 1) {
+            
+            const newSize = this.calcBarSegment(sizeAsFloat);
+            
+            this._upgradeBar.width = newSize;
+            
+            if (newSize >= 1) {
+                this.upgradeAble = false;
+            }
+        
+        }
+
+    };
 
 }

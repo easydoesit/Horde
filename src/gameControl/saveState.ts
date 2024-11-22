@@ -46,7 +46,7 @@ export class SaveState {
 
         const gameInfo = {
             fileName:this._fileName,
-            mathstate: {
+            mathState: {
                 farmers:this._mathState.getTotalFarmers(),
                 totalGold:this._mathState.getTotalGold(),
                 goldMultiplyer:this._mathState.getGoldMultiplyer(),
@@ -188,9 +188,10 @@ export class SaveState {
     }
 
     public setGameWithSaveInfo():void {
-        this._mathState.addFarmers(this._loadInfo.mathstate.farmers);
-        this._mathState.addGold(this._loadInfo.mathstate.totalGold);
-        this._mathState.addLumens(this._loadInfo.mathstate.totalLumens);
+        //set the mathsate values
+        this._mathState.addFarmers(this._loadInfo.mathState.farmers);
+        this._mathState.addGold(this._loadInfo.mathState.totalGold);
+        this._mathState.addLumens(this._loadInfo.mathState.totalLumens);
 
         for (let i = 0; i <= this._loadInfo.structures.length -1; i++) {
             const structureFromInfo = this._loadInfo.structures[i];
@@ -207,13 +208,29 @@ export class SaveState {
 
             }
 
-        //     if(structureFromInfo.alive) {
-        //         const foundStructure = this._scene.allStructures.find((structure) => structure.getName() === structureFromInfo.name);
-        //         foundStructure.setUpgradeLevel(structureFromInfo.upgradeLevel);
-        //         foundStructure.upgradeState();
+            if(structureFromInfo.alive) {
+                const foundStructure = this._scene.allStructures.find((structure) => structure.getName() === structureFromInfo.name);
+                foundStructure.makeAlive();
+                foundStructure.setUpgradeLevel(structureFromInfo.upgradeLevel);
+                foundStructure.setResourceCycleTime(structureFromInfo.cycleTime);
+                foundStructure.setGoldMultiplyer(structureFromInfo.goldMultiplyer);
+                foundStructure.setUpgradeSectionInstructions(structureFromInfo.instructions);
+                foundStructure.setUpgradeCostGold(structureFromInfo.upgradeCostGold);
+                foundStructure.setUpgradeCostFarmers(structureFromInfo.upgradeCostFarmers);
+                foundStructure.setUpgradeCostResources(structureFromInfo.upgradeCostResources);
+                foundStructure.setResourcePerCycle(structureFromInfo.resourcePerCycle);
+                foundStructure.setModels();
 
-        //     }
+                if (foundStructure.getName() !== 'Farms') {
+                    foundStructure.getUpgradeSection().setSizeUpgradeBar(foundStructure.getUpgradeLevel());
+                    foundStructure.getInSceneGui().setInfoText(`${foundStructure.getResourcePerCycle().toFixed(3)} ${foundStructure.getResourceName()}/cycle`);
+                    foundStructure.moveStructuresToGamePosition();    
+                }  
+            }
         }
+        
+        //this needs to be set after the farm is figured out.
+        this._mathState.setFarmersMax();
 
 
 
