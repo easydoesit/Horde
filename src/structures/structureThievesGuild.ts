@@ -38,9 +38,10 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', this, () => {this._thievesGuildUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addThievesGuildButton', this, () => {this._thievesGuildAdditionCallback()});
         this._addStewartButton = new AddStewardButton('addThievesGuildStewardButton', this);
+        
         this._addUpgradePanel();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
@@ -59,33 +60,19 @@ export class StructureThievesGuild extends StructureState implements StructureSt
 
         this._upgradeLevel += 1;
         this._cycleTime = thievesGuild.resource.cycleTime(this._upgradeLevel, thievesGuild.resource.initialCycleTime, thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+        this._goldMultiplyer = thievesGuild.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
         this.setUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
-        //update the observers
-        this.notifyObserversOnUpgrade();
-
+        
         this._upgradeCostGold = thievesGuild.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = thievesGuild.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = thievesGuild.nextUpgradeCostInResources(this.getUpgradeLevel());
 
-        //set models
-        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
-            console.log('switch says level is:', this.getUpgradeLevel());
-            //set the structures
-            switch(this.getUpgradeLevel()) {
-                
-                case 1 :  {
-                    this._structureModels.hideModel(0);
-                    this._structureModels.showModel(1);
-                }
-                break;
+        this.notifyObserversOnUpgrade();
 
-                default: {
-                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
-                }
-                break;
-            }
+        this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
 
-        }
+        this.setModels();
+
     }
 
     private _reset() {
@@ -105,16 +92,14 @@ export class StructureThievesGuild extends StructureState implements StructureSt
 
         this.notifyObserversOnUpgrade();
 
-        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
-            this._structureModels.hideModel(i);
-        }
+        this.setModels();
 
         this._structureModels.showModel(0);
 
         this._upgradeSection.reset();
         this._inSceneGui.reset();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
     }
 
     private _thievesGuildUpgradeCallback() {
@@ -125,9 +110,9 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         //upgrade the State
         this.upgradeState();
 
-        this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
-        this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getUpgradeSection().setGoldCost(this.getUpgradeCostGold());
+        this.getUpgradeSection().setFarmerCost(this.getUpgradeCostFarmers());
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
     }
 
     private _thievesGuildAdditionCallback() {
@@ -137,7 +122,8 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
+    
     }
 
     protected _kingdomResetUnique() {
@@ -147,6 +133,35 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         }
 
         this._reset();
+    }
+
+    public setModels(): void {
+        
+        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            //set the structures
+            switch(this.getUpgradeLevel()) {
+
+                case 0 : {
+                    for (let i = 0; i <= this._structureModels.models.length - 1; i++) {
+                        this._structureModels.hideModel(i);
+                    }
+                    this._structureModels.showModel(0);
+                }
+                break;
+                case 1 :  {
+                    this._structureModels.hideModel(0);
+                    this._structureModels.showModel(1);
+                }
+                break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
+            }
+
+        }
+        
     }
 
 }

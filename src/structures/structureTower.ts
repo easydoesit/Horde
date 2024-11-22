@@ -38,9 +38,10 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', this, () => {this._towerUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTowerButton', this, () => {this._towerAdditionCallback()});
         this._addStewartButton = new AddStewardButton('addTowerStewardButton', this);
+        
         this._addUpgradePanel();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
@@ -57,37 +58,21 @@ export class StructureTower extends StructureState implements StructureStateChil
 
         this.animateCharacters();
 
-        //update the variables
-        //these ones are before the notify
         this._upgradeLevel += 1;
         this._cycleTime =tower.resource.cycleTime(this._upgradeLevel, tower.resource.initialCycleTime, tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+        this._goldMultiplyer = tower.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
         this.setUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
-        //update the observers
-        this.notifyObserversOnUpgrade();
 
         this._upgradeCostGold = tower.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = tower.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = tower.nextUpgradeCostInResources(this.getUpgradeLevel());
 
-        //set models
-        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
-            console.log('switch says level is:', this.getUpgradeLevel());
-            //set the structures
-            switch(this.getUpgradeLevel()) {
-                
-                case 1 :  {
-                    this._structureModels.hideModel(0);
-                    this._structureModels.showModel(1);
-                }
-                break;
+        this.notifyObserversOnUpgrade();
 
-                default: {
-                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
-                }
-                break;
-            }
+        this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
 
-        }
+        this.setModels();
+
     }
     
     private _reset() {
@@ -107,16 +92,13 @@ export class StructureTower extends StructureState implements StructureStateChil
 
         this.notifyObserversOnUpgrade();
 
-        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
-            this._structureModels.hideModel(i);
-        }
-
-        this._structureModels.showModel(0);
+        this.setModels()
 
         this._upgradeSection.reset();
         this._inSceneGui.reset();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
+
     }
 
     private _towerUpgradeCallback() {
@@ -129,7 +111,8 @@ export class StructureTower extends StructureState implements StructureStateChil
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
+    
     }
 
     private _towerAdditionCallback() {
@@ -139,7 +122,8 @@ export class StructureTower extends StructureState implements StructureStateChil
         
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
+    
     }
 
     protected _kingdomResetUnique() {
@@ -149,6 +133,35 @@ export class StructureTower extends StructureState implements StructureStateChil
         }
 
         this._reset();
+    }
+
+    public setModels(): void {
+        
+        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            //set the structures
+            switch(this.getUpgradeLevel()) {
+
+                case 0 : {
+                    for (let i = 0; i <= this._structureModels.models.length - 1; i++) {
+                        this._structureModels.hideModel(i);
+                    }
+                    this._structureModels.showModel(0);
+                }
+                break;
+                case 1 :  {
+                    this._structureModels.hideModel(0);
+                    this._structureModels.showModel(1);
+                }
+                break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
+            }
+
+        }
+        
     }
 
 }

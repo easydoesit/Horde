@@ -345,6 +345,10 @@ export class PlayMode extends Scene {
             //change the GUI
             engine.hideLoadingUI();
             this._app.saveState.setScene(this);
+            if (this._app.saveState.getLoadInfo()) {
+                console.log(this._app.saveState);
+                this._app.saveState.setGameWithSaveInfo();
+            }
         });
         
        

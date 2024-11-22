@@ -39,7 +39,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._addStewartButton = new AddStewardButton('addBarracksStewardButton', this);
         this._addUpgradePanel();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
@@ -56,37 +56,19 @@ export class StructureBarracks extends StructureState implements StructureStateC
 
         this.animateCharacters();
 
-        //update the variables
-        //these ones are before the notify
         this._upgradeLevel += 1;
         this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+        this._goldMultiplyer = barracks.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
         this.setUpgradeSectionInstructions(`Speeds Up ${this._resource} Capture by ${barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
-
-        //update the observers
-        this.notifyObserversOnUpgrade();
 
         this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
 
-        //set models
-        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
-            console.log('switch says level is:', this.getUpgradeLevel());
-            //set the structures
-            switch(this.getUpgradeLevel()) {
-                
-                case 1 :  {
-                    this._structureModels.hideModel(0);
-                    this._structureModels.showModel(1);
-                }
-                break;
+        this.notifyObserversOnUpgrade();
 
-                default: {
-                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
-                }
-                break;
-            }
+        this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
 
-        }
+        this.setModels();
     }
 
     private _reset() {
@@ -105,17 +87,13 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
 
         this.notifyObserversOnUpgrade();
-
-        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
-            this._structureModels.hideModel(i);
-        }
-
-        this._structureModels.showModel(0);
+        
+        this.setModels();
 
         this._upgradeSection.reset();
         this._inSceneGui.reset();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
     }
 
     private _barracksUpgradeCallback() {
@@ -128,7 +106,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
 
     }
 
@@ -139,7 +117,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
 
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
     }
 
     protected _kingdomResetUnique() {
@@ -151,5 +129,33 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._reset();
     }
 
+    public setModels(): void {
+        
+        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            //set the structures
+            switch(this.getUpgradeLevel()) {
+
+                case 0 : {
+                    for (let i = 0; i <= this._structureModels.models.length - 1; i++) {
+                        this._structureModels.hideModel(i);
+                    }
+                    this._structureModels.showModel(0);
+                }
+                break;
+                case 1 :  {
+                    this._structureModels.hideModel(0);
+                    this._structureModels.showModel(1);
+                }
+                break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
+            }
+
+        }
+        
+    }
 
 }

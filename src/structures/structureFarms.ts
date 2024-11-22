@@ -43,6 +43,7 @@ export class StructureFarms extends StructureState implements StructureStateChil
         this._upgradesWindow = new FarmUpgradeWindow(`Farm Upgrades`, this._scene);
         this._addStructureButton = null;
         this._alive = true;
+        this._resource = null;
 
         this._allFarms=[];
 

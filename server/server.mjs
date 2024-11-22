@@ -17,7 +17,6 @@ const path = 'server/saveFiles'
 
 app.post('/saveFile', jsonParser, function (req, res) {
     const body = req.body;
-    console.log(body);
     const saveFileJSON = JSON.stringify(body);
     
 
@@ -52,7 +51,6 @@ app.get('/listSaveFiles', function(req, res) {
         })
         
         if(files.length > 0) {
-            console.log(files.length);
             res.json(files);
         } else {
             res.json({body:'no files', code:200});
@@ -60,7 +58,16 @@ app.get('/listSaveFiles', function(req, res) {
 
     }
 
+});
 
+app.post(`/grabSaveData`, jsonParser, function(req, res) {
+    console.log('grab Save requested');
+
+    const body = req.body;
+    const bodyJSON = JSON.stringify(body);
+    const fileData = fs.readFileSync(`${path}/${body.fileName}`, {encoding:'utf8', flag:'r'});
+
+    res.json(fileData);
 })
 
 app.listen(port, () => {

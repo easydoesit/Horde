@@ -8,6 +8,7 @@ import { GUIPlay } from "./GUIPlay";
 import { DEBUGMODE, GUIFONT1 } from "../utils/CONSTANTS";
 import { SaveLoadButton } from "./saveAndLoad/saveLoadButton";
 import { SaveLoadWrapper } from "./saveAndLoad/saveLoadWrapper";
+import { dateMaker } from "../utils/dateMaker";
 
 export class GUIStartScreen implements GameStateObserverI {
     public gameGUI:AdvancedDynamicTexture;
@@ -88,7 +89,7 @@ export class GUIStartScreen implements GameStateObserverI {
             if(this._saveNameInput.text.length > 4 && !this._saveNameInput.text.includes(' ')) { 
                 this._scene.detachControl();
                 this._app.gameState.setGameState('PLAY_MODE');
-                this._app.saveState.setFileName(this._saveNameInput.text);
+                this._app.saveState.setFileName(`${this._saveNameInput.text}_${dateMaker()}`);
                 this._app.saveState.setActivateSave(true);
             } else {
                 alert('you need more than 4 characters and no spaces');
@@ -113,7 +114,7 @@ export class GUIStartScreen implements GameStateObserverI {
 
         this._startScreenWrapper.addControl(this._saveNameInput);
 
-        this._saveLoadWindow = new SaveLoadWrapper('Save and Load Files')
+        this._saveLoadWindow = new SaveLoadWrapper('Save and Load Files', this._app);
         this.gameGUI.addControl(this._saveLoadWindow);
         this._saveLoadButton = new SaveLoadButton(this._startScreenWrapper, this._saveLoadWindow);
 

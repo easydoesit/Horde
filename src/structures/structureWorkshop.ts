@@ -38,9 +38,10 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', this, () => {this._workShopUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()});
         this._addStewartButton = new AddStewardButton('addWorkshopStewardButton', this);
+        
         this._addUpgradePanel();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
@@ -61,32 +62,14 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._cycleTime =workShop.resource.cycleTime(this._upgradeLevel, workShop.resource.initialCycleTime, workShop.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this.setUpgradeSectionInstructions(`Speeds Up ${this._resource} Creation by ${tower.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
 
-        //update the observers
-        this.notifyObserversOnUpgrade();
-
         this._upgradeCostGold = workShop.nextUpgradeCostInGold(this.getUpgradeLevel());
         this._upgradeCostFarmers = workShop.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostResources = workShop.nextUpgradeCostInResources(this.getUpgradeLevel());
 
-        //set models
-        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
-            console.log('switch says level is:', this.getUpgradeLevel());
-            //set the structures
-            switch(this.getUpgradeLevel()) {
-                
-                case 1 :  {
-                    this._structureModels.hideModel(0);
-                    this._structureModels.showModel(1);
-                }
-                break;
+        this.notifyObserversOnUpgrade();
 
-                default: {
-                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
-                }
-                break;
-            }
+        this.setModels();
 
-        }
     }
 
     private _reset() {
@@ -115,7 +98,7 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._upgradeSection.reset();
         this._inSceneGui.reset();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
     }
 
     private _workShopUpgradeCallback() {
@@ -128,7 +111,8 @@ export class StructureWorkShop extends StructureState implements StructureStateC
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
+    
     }
 
     private _workShopAdditionCallback() {
@@ -138,7 +122,8 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         }
         const window = (this._scene.getAppGui() as GUIPlay).getUpgradeWindow('castleUpgradeWindow') as UpgradeWindow;
         window.hideWindow(); 
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
+   
     }
 
     protected _kingdomResetUnique() {
@@ -148,6 +133,35 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         }
 
         this._reset();
+    }
+
+    public setModels(): void {
+        
+        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            //set the structures
+            switch(this.getUpgradeLevel()) {
+
+                case 0 : {
+                    for (let i = 0; i <= this._structureModels.models.length - 1; i++) {
+                        this._structureModels.hideModel(i);
+                    }
+                    this._structureModels.showModel(0);
+                }
+                break;
+                case 1 :  {
+                    this._structureModels.hideModel(0);
+                    this._structureModels.showModel(1);
+                }
+                break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
+            }
+
+        }
+        
     }
 
 }

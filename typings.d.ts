@@ -85,12 +85,14 @@ export interface StructureStateI {
     getScene():PlayMode;
 
     getUpgradeLevel():number;
+    setUpgradeLevel(level:number):void;
     getNextUpgradeLevel():number;
     getUpgradeMax():number;
     getUpgradeSectionInstructions():string;
     setUpgradeSectionInstructions(newText:string):void;
     
     getUpgradeCostResources():number;
+    setUpgradeCostResources(newCost:number):void;
     getResourceName():ResourcesT | null;
     addResource(amount:number):void;
     removeResource(amount:number):void;
@@ -115,10 +117,12 @@ export interface StructureStateI {
     getInitGoldCost():number;
 
     getUpgradeCostFarmers():number;
+    setUpgradeCostFarmers(newCost:number):void;
     getInitFarmerCost():number;
 
     getStructureModels():StructureModel;
-    moveStructuresToGamePosition():void
+    moveStructuresToGamePosition():void;
+    moveStructureToStartPosition():void;
     
     getInSceneGui():InSceneStuctureGUI;
     getUpgradesWindow():UpgradeWindow;
@@ -133,6 +137,8 @@ export interface StructureStateI {
     animateCharacters():void;
 
     kingdomReset():void;
+
+    setModels():void;
 }
 
 export interface StructureStateChildI extends StructureStateI {

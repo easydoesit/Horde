@@ -94,7 +94,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
             if (this.upgradeAble) {
                 this._upgradeBtn.isEnabled = true;
                 if (sizeAsFloat < 1) {
-                    const newSize = this.calcBarSegment(sizeAsFloat, this._maxNumOfUpgrades);
+                    const newSize = this.calcBarSegment(sizeAsFloat);
                     this._upgradeBar.width = newSize;
                     
                     if (newSize >= 1) {
@@ -212,7 +212,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
 
     }
 
-    private calcBarSegment(currentSize:number, maxNumberOfUpgrades:number) {   
+    private calcBarSegment(currentSize:number) {   
         const amountToAdd = 1 / this._maxNumOfUpgrades;
         
         const finalSize = currentSize + amountToAdd;

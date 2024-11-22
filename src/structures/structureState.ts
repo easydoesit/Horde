@@ -39,7 +39,7 @@ export class StructureState implements StructureStateI {
     protected _upgradeCostGold:number;
     protected _upgradeCostFarmers:number | null;
     protected _upgradeCostResources:number | null;
-    
+
     protected _initGoldCost:number;
     protected _initFarmerCost:number;
     protected _initResourceCost:number;
@@ -230,6 +230,10 @@ export class StructureState implements StructureStateI {
         return this._upgradeCostFarmers;
     }
 
+    public setUpgradeCostFarmers(newCost: number): void {
+        this._upgradeCostFarmers = newCost;
+    }
+
     public getUpgradeCostGold(): number {
         return this._upgradeCostGold;    
     }
@@ -242,8 +246,16 @@ export class StructureState implements StructureStateI {
         return this._upgradeCostResources;
     }
 
+    public setUpgradeCostResources(newCost: number): void {
+        this._upgradeCostResources = newCost;
+    }
+
     public getUpgradeLevel(): number {
         return this._upgradeLevel;
+    }
+
+    public setUpgradeLevel(level: number): void {
+        this._upgradeLevel = level;
     }
 
     public getNextUpgradeLevel(): number {
@@ -358,7 +370,8 @@ export class StructureState implements StructureStateI {
         this.getStructureModels().position.copyFrom(gamePos);
     }
 
-    protected _moveStructureToStartPosition():void {
+
+    public moveStructureToStartPosition():void {
         const gamePos = this.getStructureModels().gamePosition;
         const startPos = new Vector3(gamePos.x, gamePos.y -20, gamePos.z);
         this.getStructureModels().position.copyFrom(startPos);
@@ -427,4 +440,12 @@ export class StructureState implements StructureStateI {
             console.error(`If you see this message you have not updated the _kingdomResetUnique() for ${this.getName()} child structure class.`);
         }
     }
+
+    public setModels(): void {
+        //override in child class
+        if (DEBUGMODE) {
+            console.error(`If you see this message you have not updated the setModel() for ${this.getName()} child structure class.`)
+        }
+    }
+
  }

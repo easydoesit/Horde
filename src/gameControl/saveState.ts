@@ -1,5 +1,6 @@
 import { EpicUpgradeStateChildI, MathStateI, StandardUpgradeStateChildI, StructureStateChildI } from '../../typings';
 import { App } from '../app';
+import { GUIPlay } from '../GUI/GUIPlay';
 import { PlayMode } from '../scenes/playmode';
 import { DEBUGMODE } from '../utils/CONSTANTS';
 
@@ -12,7 +13,9 @@ export class SaveState {
     private _epicUpgrades:EpicUpgradeStateChildI[];
     private _standardUpgrades:StandardUpgradeStateChildI[];
     private _fileName:string;
-    private _gameSaveInt:ReturnType<typeof setInterval> | null
+    private _gameSaveInt:ReturnType<typeof setInterval> | null;
+
+    private _loadInfo:any;
     
     constructor(app:App) {
         this._app = app;
@@ -175,4 +178,44 @@ export class SaveState {
         this._epicUpgrades = this._scene.allEpicUpgrades;
         
     };
+
+    public setLoadInfo(info:any):void {
+        this._loadInfo = info;
+    }
+
+    public getLoadInfo():any {
+        return this._loadInfo;
+    }
+
+    public setGameWithSaveInfo():void {
+        this._mathState.addFarmers(this._loadInfo.mathstate.farmers);
+        this._mathState.addGold(this._loadInfo.mathstate.totalGold);
+        this._mathState.addLumens(this._loadInfo.mathstate.totalLumens);
+
+        for (let i = 0; i <= this._loadInfo.structures.length -1; i++) {
+            const structureFromInfo = this._loadInfo.structures[i];
+            console.log(structureFromInfo);
+            if (structureFromInfo.resource !== null) {
+                const foundStructure = this._scene.allStructures.find((structure) => structure.getName() === structureFromInfo.name);
+
+                foundStructure.addResource(structureFromInfo.resourceAmount);
+                
+                const gui = this._app.gui as GUIPlay;
+                
+                gui.updateStructureOnCycle(foundStructure.getResourceName(),foundStructure.getTotalResourceAmount());
+                console.log(foundStructure);
+
+            }
+
+        //     if(structureFromInfo.alive) {
+        //         const foundStructure = this._scene.allStructures.find((structure) => structure.getName() === structureFromInfo.name);
+        //         foundStructure.setUpgradeLevel(structureFromInfo.upgradeLevel);
+        //         foundStructure.upgradeState();
+
+        //     }
+        }
+
+
+
+    }
 }

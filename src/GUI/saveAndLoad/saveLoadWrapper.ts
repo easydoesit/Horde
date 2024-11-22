@@ -1,15 +1,19 @@
 import { Button, Rectangle, Control, TextBlock, ScrollViewer, StackPanel} from "@babylonjs/gui";
 import { GUIFONT1 } from "../../utils/CONSTANTS";
+import { App } from "../../app";
+import { dateMaker } from "../../utils/dateMaker";
 
 export class SaveLoadWrapper extends Rectangle {
     protected _windowTitle:TextBlock;
+    private _app:App;
     private _closeWindow:Button;
     private _scrollViewer:ScrollViewer;
     private _panelContainer:StackPanel;
 
-    constructor(name:string) {
+    constructor(name:string, app:App) {
         super(name)
         this.name = name;
+        this._app = app;
         this.isVisible = false;
 
         this.width = .5;
@@ -89,21 +93,45 @@ export class SaveLoadWrapper extends Rectangle {
                     const textBlock = new TextBlock(`${fileName}`, `${fileName}`);
                     fileButton.addControl(textBlock);
 
-                    fileButton.onPointerClickObservable.add(() => {
+                    fileButton.onPointerClickObservable.add(async () => {
+                        const thisFileName = {fileName:fileNameFull};
+
+                        const fileNameJSON = JSON.stringify(thisFileName);
+                        console.log(fileNameJSON);
+
+                        await fetch('http://localhost:3000/grabSaveData', {
+                            method:'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: fileNameJSON,
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            const dataObj = JSON.parse(data);
+                            this._app.saveState.setFileName(`${fileName}_${dateMaker()}`);
+                            this._app.saveState.setLoadInfo(dataObj);
+                            this._app.scene.detachControl();
+                            this._app.gameState.setGameState('PLAY_MODE');
+                        })
+                        .catch(error => {
+                            console.error('Error: ', error);
+                            
+                        })
 
                     }) 
 
                     this.getPanelContainer().addControl(fileButton);
 
-
-
                 }
             } else {
+
                 const noFileTextBlock = new TextBlock('no Files', 'No Files Saved')
                 noFileTextBlock.color = 'white';
                 noFileTextBlock.width = .2;
                 noFileTextBlock.height = '60px';
                 this.getPanelContainer().addControl(noFileTextBlock);
+            
             }
 
         })

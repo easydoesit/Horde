@@ -41,7 +41,7 @@ export class StructureMine extends StructureState implements StructureStateChild
 
         this._addUpgradePanel();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
 
         this._scene.onBeforeRenderObservable.add(() => {
 
@@ -64,31 +64,15 @@ export class StructureMine extends StructureState implements StructureStateChild
         this.setUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
     
         this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this.getUpgradeLevel());
+        this._upgradeCostResources = mine.nextUpgradeCostInResources(this.getUpgradeLevel());
         this._upgradeCostGold = mine.nextUpgradeCostInGold(this.getUpgradeLevel());
         
         this.notifyObserversOnUpgrade();
 
         this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
 
-        //set models
-        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
-            console.log('switch says level is:', this.getUpgradeLevel());
-            //set the structures
-            switch(this.getUpgradeLevel()) {
-                
-                case 1 :  {
-                    this._structureModels.hideModel(0);
-                    this._structureModels.showModel(1);
-                }
-                break;
-
-                default: {
-                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
-                }
-                break;
-            }
-
-        }
+        this.setModels();
+       
     }
     
     private _reset() {
@@ -104,20 +88,17 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._resourceMultiplyer = mine.resource.multiplyer(this.getUpgradeLevel(), this.getUpgradeMax());
 
-        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this._resource}/cycle`);
+        this.getInSceneGui().setInfoText(`${this.getResourcePerCycle().toFixed(3)} ${this.getResourceName()}/cycle`);
 
         this.notifyObserversOnUpgrade();
 
-        for (let i = 1; i <= this._structureModels.models.length - 1; i++) {
-            this._structureModels.hideModel(i);
-        }
-
-        this._structureModels.showModel(0);
+        this.setModels();
 
         this._upgradeSection.reset();
         this._inSceneGui.reset();
 
-        this._moveStructureToStartPosition();
+        this.moveStructureToStartPosition();
+
     }
 
     private _mineUpgradeCallback() {
@@ -152,6 +133,35 @@ export class StructureMine extends StructureState implements StructureStateChild
         }
 
         this._reset();
+    }
+
+    public setModels(): void {
+        
+        if (this.getUpgradeLevel() < this.getUpgradeMax()) {
+            //set the structures
+            switch(this.getUpgradeLevel()) {
+
+                case 0 : {
+                    for (let i = 0; i <= this._structureModels.models.length - 1; i++) {
+                        this._structureModels.hideModel(i);
+                    }
+                    this._structureModels.showModel(0);
+                }
+                break;
+                case 1 :  {
+                    this._structureModels.hideModel(0);
+                    this._structureModels.showModel(1);
+                }
+                break;
+
+                default: {
+                    console.error(`No models for ${this.getName()} at Level ${this.getUpgradeLevel()}. Get the Art Team to work`);
+                }
+                break;
+            }
+
+        }
+        
     }
 
 }
