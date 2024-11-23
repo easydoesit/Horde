@@ -3,6 +3,7 @@ import { DEBUGMODE, GUIFONT1 } from "../../utils/CONSTANTS";
 import { PlayMode } from "../../scenes/playmode";
 import { StructureStateChildI, StructureStateI, StructureStateObserverOnUpgradeI } from "../../../typings";
 import { StructureFarms } from "../../structures/structureFarms";
+import { setSizeUpgradeBar } from "../../utils/upgradeHelpers";
 
 export class StructureUpgradeSection extends Rectangle implements StructureStateObserverOnUpgradeI{
     public name:string;
@@ -90,7 +91,7 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
             
             if (this.upgradeAble) {
                 
-                this.setSizeUpgradeBar(structure.getUpgradeLevel());
+                setSizeUpgradeBar(this,structure.getUpgradeLevel(), structure.getUpgradeMax(), this._upgradeBar);
 
                 //anything you want to do to the state is in the callback
                 if (callback) {
@@ -212,22 +213,6 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
     
     }
 
-    // private _cleanString(string:string | number) {
-    //     const makeSizeString = string.toString(); 
-    //     const cleanString = makeSizeString.replace(/\%/g, '');
-    //     let finalNumber = parseFloat(cleanString);
-    
-    //     if (!finalNumber) {
-    //         finalNumber = 0;
-    //     }
-    
-    //    return finalNumber;
-    // }
-    
-    // private _makeFloatDivideBy100(number:number) {
-    //     return number/100;
-    // }
-
     private _makeButtonEnabled() {
         
         if (this.upgradeAble) {
@@ -274,15 +259,13 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         this._tBInstruction.text = this._instructions;
     }
 
+    public setUpgradeAble(setting:boolean) {
+        this.upgradeAble = setting;
+    }
+
     public updateStructureOnUpgrade(structure: StructureStateI): void {
         if (DEBUGMODE) {
             console.log(`${this.name} STRUCTURE upgrade section as observer is updated from ${structure.getName()}.`);
-        }
-        //this is incase a bonus for max upgrades has been in the structure
-        if (!structure.getName().includes('Farms')) {
-            this.setMaxNumUpgrades(structure.getUpgradeMax());
-        } else {
-            this.setMaxNumUpgrades((structure as StructureFarms).getUpgradeMax()/(structure as StructureFarms).getAllFarms().length);
         }
 
         this.setInstructions(structure.getUpgradeSectionInstructions());
@@ -308,22 +291,8 @@ export class StructureUpgradeSection extends Rectangle implements StructureState
         this._upgradeBar.width = 0;
     }
 
-    public setSizeUpgradeBar(level:number):void {
-
-        const sizeAsFloat = this._maxNumOfUpgrades/level/100;
-        
-        if (sizeAsFloat < 1) {
-            
-            const newSize = this.calcBarSegment(sizeAsFloat);
-            
-            this._upgradeBar.width = newSize;
-            
-            if (newSize >= 1) {
-                this.upgradeAble = false;
-            }
-        
-        }
-
-    };
+    public getUpgradeBar():Rectangle {
+        return this._upgradeBar;
+    }
 
 }

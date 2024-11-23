@@ -36,7 +36,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( barracks.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${barracks.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('BarrackUpgradeSection', this, () => {this._barracksUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addBarracksButton', this, () => {this._barracksAdditionCallback()});
-        this._addStewartButton = new AddStewardButton('addBarracksStewardButton', this);
+        this._addStewartButton = new AddStewardButton('StewardButton', this);
         this._addUpgradePanel();
 
         this.moveStructureToStartPosition();
@@ -48,13 +48,15 @@ export class StructureBarracks extends StructureState implements StructureStateC
         })
     }
 
-    public upgradeState(): void {
+    public upgradeState(loadingSave:boolean): void {
         
         if (DEBUGMODE) {
             debugUpgradeState(this._name, this.getUpgradeLevel());
         }
-
-        this.animateCharacters();
+        
+        if (loadingSave === false) {
+            this.animateCharacters();
+        }
 
         this._upgradeLevel += 1;
         this._cycleTime = barracks.resource.cycleTime(this._upgradeLevel, barracks.resource.initialCycleTime, barracks.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
@@ -64,7 +66,9 @@ export class StructureBarracks extends StructureState implements StructureStateC
         this._upgradeCostFarmers = barracks.nextUpgradeCostInFarmers(this.getUpgradeLevel());
         this._upgradeCostGold = barracks.nextUpgradeCostInGold(this.getUpgradeLevel());
 
-        this.notifyObserversOnUpgrade();
+        if (loadingSave === false) {
+            this.notifyObserversOnUpgrade();
+        }
 
         this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
 
@@ -102,7 +106,7 @@ export class StructureBarracks extends StructureState implements StructureStateC
         }
         
         //upgrade the State
-        this.upgradeState();
+        this.upgradeState(false);
 
         this._upgradeSection.setGoldCost(this.getUpgradeCostGold());
         this._upgradeSection.setFarmerCost(this.getUpgradeCostFarmers());

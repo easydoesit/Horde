@@ -15,6 +15,7 @@ export class UpgradeWindow extends Rectangle implements UpgradeWindowI{
 
     constructor(name:string) {
         super(name)
+        console.log(`${this.name} upgradeWindowCreated`);
         this.name = name;
         this.isVisible = false;
 
@@ -74,7 +75,7 @@ export class UpgradeWindow extends Rectangle implements UpgradeWindowI{
     }
 
     public showWindow():void {
-        
+            console.log(`${this.name} is trying to show`);
             this.isVisible = true;
         
     }

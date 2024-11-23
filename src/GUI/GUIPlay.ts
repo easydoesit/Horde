@@ -65,7 +65,7 @@ export class GUIPlay implements GUIPlayI ,GameStateObserverI, MathStateObserverI
             structure.attachObserversCycle(this);
             
             //in Scene UI
-            if (!structure.getName().includes('Farm')) {
+            if (!structure.getName().includes('Farms')) {
                 this.gameGUI.addControl(structure.getInSceneGui());
                 structure.getInSceneGui().linkWithMesh(structure.getStructureModels());
             }

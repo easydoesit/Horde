@@ -1,7 +1,7 @@
 import { Button, Rectangle, TextBlock, Control } from "@babylonjs/gui";
 import { DEBUGMODE, GUIFONT1 } from "../../utils/CONSTANTS";
 import { StandardUpgradeStateChildI, StandardUpgradeStateI, StandardUpgradeStateObserverI} from "../../../typings";
-import { calcBarSegment, cleanString, makeFloatDivideBy100 } from "../../utils/upgradeHelpers";
+import { setSizeUpgradeBar } from "../../utils/upgradeHelpers";
 import { PlayMode } from "../../scenes/playmode";
 
 export class StandardUpgradeSection extends Rectangle implements StandardUpgradeStateObserverI{
@@ -89,18 +89,8 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
             }
 
             if (this.getUpgradeableStatus()) {
-                const cleanedString = cleanString(this._upgradeBar.width);
-                const sizeAsFloat = makeFloatDivideBy100(cleanedString);
-
-                if(sizeAsFloat < 1) {
-                    const newSize = calcBarSegment(sizeAsFloat, this.getMaxNumUpgrades());
-                    this._upgradeBar.width = newSize;
-
-                    if (newSize >= 1) {
-                        this._upgradeBtn.isEnabled = false;
-                    }
-
-                }
+                
+                setSizeUpgradeBar(this, upgrade.getCurrentUpgradeLevel(), upgrade.getMaxNumUpgrades(), this._upgradeBar);
 
                 if (callback) {
                     callback();
@@ -264,7 +254,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         return this._instructions
     } 
 
-    private setInstructions(newText:string) {
+    private _setInstructions(newText:string) {
         this._instructions = newText;
         this._tBInstruction.text = this._instructions;
     }
@@ -276,7 +266,7 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
         
         
         this.setMaxNumUpgrades(upgradeState.getMaxNumUpgrades());
-        this.setInstructions(upgradeState.getInstructions());
+        this._setInstructions(upgradeState.getInstructions());
         
         if (this._tBCostGold) {
             this.setGoldCost(upgradeState.getCostToUpgradeGold());
@@ -292,6 +282,14 @@ export class StandardUpgradeSection extends Rectangle implements StandardUpgrade
             this.setResourceCost(upgradeState.getCostToUpgradeResources());
             this._tBCostResources.text = this.getResourceCost().toFixed(1);
         }
+    }
+
+    public setUpgradeAble(setting:boolean) {
+        this._upgradeAble = setting;
+    }
+
+    public getUpgradeBar():Rectangle {
+        return this._upgradeBar;
     }
 
 }

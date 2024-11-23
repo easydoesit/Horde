@@ -37,7 +37,7 @@ export class StructureWorkShop extends StructureState implements StructureStateC
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( workShop.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${workShop.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('WorkShopUpgradeSection', this, () => {this._workShopUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addWorkShopButton', this, () => {this._workShopAdditionCallback()});
-        this._addStewartButton = new AddStewardButton('addWorkshopStewardButton', this);
+        this._addStewartButton = new AddStewardButton('StewardButton', this);
         
         this._addUpgradePanel();
 

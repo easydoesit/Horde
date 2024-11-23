@@ -38,7 +38,7 @@ export class StructureForge extends StructureState implements StructureStateChil
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( forge.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${forge.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('ForgeUpgradeSection', this, () => {this._forgeUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addForgeButton', this, () => {this._forgeAdditionCallback()});
-        this._addStewartButton = new AddStewardButton('addForgeStewardButton', this);
+        this._addStewartButton = new AddStewardButton('StewardButton', this);
         this._addUpgradePanel();
 
         this.moveStructureToStartPosition();

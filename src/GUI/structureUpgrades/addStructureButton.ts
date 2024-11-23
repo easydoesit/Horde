@@ -2,6 +2,7 @@ import { Button, TextBlock, Control } from"@babylonjs/gui";
 import { GUIFONT1 } from "../../utils/CONSTANTS";
 import { MathStateI, StructureStateChildI } from "../../../typings";
 import { StructureUpgradeSection } from "./structureUpgradeSection";
+import { addStructureFlow } from "../../utils/upgradeHelpers";
 
 export class AddStructureButton extends Button {
     private _mathState:MathStateI;
@@ -126,7 +127,8 @@ export class AddStructureButton extends Button {
                 //if enough resources, farmers and gold proceed
 
                 if(enoughResourses && enoughFarmers && enoughGold) {
-                    this._addStructureFlow(this._structure.getUpgradeSection());
+                    this.isVisible = false;
+                    addStructureFlow(this._structure, false);
                     
                     if (callback) {
                         callback();
@@ -139,46 +141,6 @@ export class AddStructureButton extends Button {
         });
     }
 
-    private _addStructureFlow(upgradeSection:StructureUpgradeSection) {
-        //hide this button
-        this.isVisible = false;
-
-        //move the _structure into view
-        this._structure.moveStructuresToGamePosition();
-        const structure = this._structure.getStructureModels();
-        structure.showModel(0);
-
-        //do the scene animations here
-        this._structure.animateCharacters();
-
-        //make structure alive
-        this._structure.makeAlive();
-
-        //pay for the structure
-        const scene = this._structure.getScene();
-        const mathState = scene.mathState;
-
-        if (this._structure.getInitGoldCost()) {
-            mathState.spendGold(this._structure.getInitGoldCost());
-        }
-        
-        if (this._structure.getInitFarmerCost()) {
-            mathState.spendFarmers(this._structure.getInitFarmerCost());
-        }
-        
-        if (this._structure.getInitResourceCost()) {
-            
-            for (let i in scene.allStructures) {
-                const structure = scene.allStructures[i];
-            
-                if (structure.getResourceName() === this._structure.getInitResourceName()) {
-                    structure.removeResource(this._structure.getInitResourceCost());
-                }
-
-            }
-        }
-
-    }
 
     public kingdomReset():void {
         this.isVisible = true;

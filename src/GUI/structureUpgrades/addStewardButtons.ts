@@ -13,7 +13,7 @@ export class AddStewardButton extends Button {
 
     constructor(name:string, structure:StructureStateChildI) {
         super(name);
-
+        this.name = 'StewardButton';
         this._structure = structure;
         this._scene = structure.getScene();
 

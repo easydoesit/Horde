@@ -2,14 +2,14 @@ import { Vector3 } from "@babylonjs/core";
 import { ResourcesT, StructureCharactersT, StructureNamesT, StructureStateI, StructureStateObserverOnUpgradeI, StructureStateObserverOnCycleI } from "../../typings";
 import { StructureModel } from "../models_structures/structureModels";
 import { PlayMode } from "../scenes/playmode";
-import { DEBUGMODE, modelsDir } from "../utils/CONSTANTS";
+import { DEBUGMODE, modelsDir, farms } from "../utils/CONSTANTS";
 import { Runner } from "../models_characters/runners";
 import { InSceneStuctureGUI } from "../GUI/inSceneStructureGUI";
 import { UpgradeWindow } from "../GUI/upgradeWindow";
 import { AddStructureButton } from "../GUI/structureUpgrades/addStructureButton";
 import { StructureUpgradeSection } from "../GUI/structureUpgrades/structureUpgradeSection";
 import { AddStewardButton } from "../GUI/structureUpgrades/addStewardButtons";
-import { farmsT } from "./structureFarms";
+
 
 export class StructureState implements StructureStateI {
     protected _name:StructureNamesT;
@@ -174,16 +174,7 @@ export class StructureState implements StructureStateI {
             }
             
             //get the farms that have been upgraded
-            const usableFarms:farmsT[] = [];
-    
-            for(let i in this._scene.farms.getAllFarms()) {
-                const farm = this._scene.farms.getAllFarms()[i];
-                
-                if (farm.alive === true) {
-                    usableFarms.push(farm);
-                }
-            }
-            
+            const usableFarms = this._scene.farms.getLiveHouseLocations();        
 
             const intervalAmount = (arraySize:number) => {
                 return 240/arraySize;

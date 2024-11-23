@@ -54,7 +54,7 @@ export class StructureModel extends TransformNode {
             //hide the click zone
             const clickModelMaterial = new MatClickBox(`${this.name}_clickBoxMat`, this.scene);
             this._clickBox.meshes.allMeshes[0].material = clickModelMaterial;
-            this._clickBox.meshes.allMeshes[0].material.alpha = 0;
+            this._clickBox.meshes.allMeshes[0].material.alpha = 0.5;
 
             this.clickZone = this._clickBox.meshes.allMeshes[0];
             }

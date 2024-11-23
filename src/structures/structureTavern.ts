@@ -37,7 +37,7 @@ export class StructureTavern extends StructureState implements StructureStateChi
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( tavern.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${tavern.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('TavernUpgradeSection', this, () => {this._tavernUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTavernButton', this, () => {this._tavernAdditionCallback()});
-        this._addStewartButton = new AddStewardButton('addTavernStewardButton', this);
+        this._addStewartButton = new AddStewardButton('StewardButton', this);
         this._addUpgradePanel();
 
         this.moveStructureToStartPosition();

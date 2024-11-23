@@ -8,6 +8,7 @@ import { StructureUpgradeSection } from "./src/GUI/structureUpgrades/structureUp
 import { AbstractMesh, Vector3 } from "@babylonjs/core";
 import { structureButtonsT } from "./src/GUI/castleUpgrades/CastleUpgradeWindow";
 import { SaveState } from "./src/gameControl/saveState";
+import { StandardUpgradeSection } from "./src/GUI/standardUpgrades/standardUpgradesSection";
 
 
 export type GameStateT = 'START_SCREEN' |'PLAY_MODE' | 'END_SCREEN';
@@ -142,7 +143,7 @@ export interface StructureStateI {
 }
 
 export interface StructureStateChildI extends StructureStateI {
-    upgradeState():void;
+    upgradeState(loadingSave:boolean):void;
 }
 
 export interface StructureStateObserverOnUpgradeI {
@@ -185,7 +186,7 @@ export interface EpicUpgradeStateI {
 }
 
 export interface EpicUpgradeStateChildI extends EpicUpgradeStateI {
-    updateState():void;
+    updateState(loadingSave:boolean):void;
 }
 
 export interface EpicUpgradeStateObserverI {
@@ -206,7 +207,8 @@ export interface StandardUpgradeStateI {
     setMaxNumberUpgrades(value:number):void;
     
     getCurrentUpgradeLevel():number;
-    
+    setCurrentUpgradeLevel(level:number):void;
+
     getCostToUpgradeGold():number;
     setCostToUpgradeGold(amount:number):void;
 
@@ -218,19 +220,24 @@ export interface StandardUpgradeStateI {
     getResourceSource():StructureStateChildI;
 
     getIncrement():number;
+    setIncrement(increment:number):void;
+
     getEffectValue():number;
+    setEffectValue(value:number):void;
 
     getInstructions():string;
     setInstructions(text:string):void;
 
     getStructure():StructureStateChildI;
 
-    kingdomReset():void
+    kingdomReset():void;
+
+    getUpgradeSection():StandardUpgradeSection;
     
 }
 
 export interface StandardUpgradeStateChildI extends StandardUpgradeStateI {
-    updateState():void;
+    updateState(loadingSave:boolean):void;
 }
 
 export interface StandardUpgradeStateObserverI {

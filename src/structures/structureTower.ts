@@ -37,7 +37,7 @@ export class StructureTower extends StructureState implements StructureStateChil
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( tower.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${tower.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('TowerUpgradeSection', this, () => {this._towerUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addTowerButton', this, () => {this._towerAdditionCallback()});
-        this._addStewartButton = new AddStewardButton('addTowerStewardButton', this);
+        this._addStewartButton = new AddStewardButton('StewardButton', this);
         
         this._addUpgradePanel();
 

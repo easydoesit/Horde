@@ -37,7 +37,7 @@ export class StructureThievesGuild extends StructureState implements StructureSt
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( thievesGuild.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${thievesGuild.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('ThievesGuildUpgradeSection', this, () => {this._thievesGuildUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addThievesGuildButton', this, () => {this._thievesGuildAdditionCallback()});
-        this._addStewartButton = new AddStewardButton('addThievesGuildStewardButton', this);
+        this._addStewartButton = new AddStewardButton('StewardButton', this);
         
         this._addUpgradePanel();
 

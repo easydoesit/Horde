@@ -205,7 +205,7 @@ export class PlayMode extends Scene {
 
             const hit = this.pickWithRay(ray);
 
-            if (hit.pickedMesh === this.farms.getFarm01().models.clickZone || hit.pickedMesh === this.farms.getFarm02().models.clickZone ) {
+            if (hit.pickedMesh === this.farms.getStructureModels().clickZone) {
                 
                 if (DEBUGMODE) {
                     console.log('Farm Clicked');

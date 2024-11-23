@@ -1,7 +1,7 @@
 import { Button, Rectangle, TextBlock, Control } from "@babylonjs/gui";
 import { DEBUGMODE, GUIFONT1 } from "../../utils/CONSTANTS";
 import { PlayMode } from "../../scenes/playmode";
-import { makeButtonEnabled, calcBarSegment, cleanString, makeFloatDivideBy100 } from "../../utils/upgradeHelpers";
+import { makeButtonEnabled, calcBarSegment, cleanString, makeFloatDivideBy100, setSizeUpgradeBar } from "../../utils/upgradeHelpers";
 import { EpicUpgradeStateChildI, EpicUpgradeStateI, EpicUpgradeStateObserverI } from "../../../typings";
 
 export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObserverI {
@@ -70,22 +70,14 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
 
             if (this._upgradable) {
                 
-                if(sizeAsFloat < 1) {
-                    const newSize = calcBarSegment(sizeAsFloat, this._maxNumUpgrades);
-                    this._upgradeBar.width = newSize;
-
-                    if (newSize >= 1) {
-                        this._upgradeBtn.isEnabled = false;
-                    }
-
-                }
-
-                this._scene.mathState.spendLumens(this._costInLumens);
-                this._upgrade.updateState();
+                setSizeUpgradeBar(this, this._upgrade.getCurrentUpgradeLevel(), this._upgrade.getUpgradeNumMax(), this._upgradeBar);
 
             }
 
-        });
+            this._scene.mathState.spendLumens(this._costInLumens);
+            this._upgrade.updateState(false);
+
+            });
 
         this._upgradeBtnCostText01 = new TextBlock(`${this.name}_cost`, `costs`);
         this._upgradeBtnCostText01.fontFamily = GUIFONT1;
@@ -141,6 +133,10 @@ export class EpicUpgradeSection extends Rectangle implements EpicUpgradeStateObs
 
         this._costInLumens = upgrade.getCostToUpgrade();
         this._textBlockInstruction.text = upgrade.getInstructions();
+    }
+
+    public setUpgradeAble(setting:boolean) {
+        this._upgradable = setting;
     }
 
 }

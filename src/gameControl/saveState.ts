@@ -1,8 +1,10 @@
+import { Rectangle } from '@babylonjs/gui';
 import { EpicUpgradeStateChildI, MathStateI, StandardUpgradeStateChildI, StructureStateChildI } from '../../typings';
 import { App } from '../app';
 import { GUIPlay } from '../GUI/GUIPlay';
 import { PlayMode } from '../scenes/playmode';
 import { DEBUGMODE } from '../utils/CONSTANTS';
+import { addStructureFlow, setSizeUpgradeBar } from '../utils/upgradeHelpers';
 
 export class SaveState {
     private _app:App
@@ -49,9 +51,9 @@ export class SaveState {
             mathState: {
                 farmers:this._mathState.getTotalFarmers(),
                 totalGold:this._mathState.getTotalGold(),
-                goldMultiplyer:this._mathState.getGoldMultiplyer(),
+                //goldMultiplyer:this._mathState.getGoldMultiplyer(),
                 totalLumens:this._mathState.getTotalLumens(),
-                wheatValue:this._mathState.getWheatValue(),
+                //wheatValue:this._mathState.getWheatValue(),
             },
             structures: [],
             standardUpgrades: [],
@@ -62,65 +64,59 @@ export class SaveState {
         for (let i in this._structures) {
             const structure = this._structures[i];
 
-            if (structure.getAlive()) {
-                const structureInfo = {
-                    name: structure.getName(),
-                    alive: structure.getAlive(),
-                    steward: structure.getSteward(),
-                    upgradeLevel: structure.getUpgradeLevel(),
-                    upgradeCostGold: structure.getUpgradeCostGold(),
-                    upgradeCostFarmers: structure.getUpgradeCostFarmers(),
-                    upgradeCostResources: structure.getUpgradeCostResources(),
-                    resource: structure.getResourceName(),
-                    resourceAmount: structure.getTotalResourceAmount(),
-                    resourceUpgradeValue: structure.getResourceUpgradeValue(),
-                    resourceMultiplyer: structure.getResourceMultiplyer(),
-                    cycleTime: structure.getResourceCycleTime(),
-                    goldPerCycle: structure.getGoldPerCycle(),
-                    resourcePerCycle: structure.getResourcePerCycle(),
-                    goldMultiplyer:structure.getGoldMultiplyer(),
-                }
+            const structureInfo = {
+                name: structure.getName(),
+                alive: structure.getAlive(),
+                steward: structure.getSteward(),
+                upgradeLevel: structure.getUpgradeLevel(),
+                //upgradeCostGold: structure.getUpgradeCostGold(),
+                //upgradeCostFarmers: structure.getUpgradeCostFarmers(),
+                //upgradeCostResources: structure.getUpgradeCostResources(),
+                resource: structure.getResourceName(),
+                resourceAmount: structure.getTotalResourceAmount(),
+                //resourceUpgradeValue: structure.getResourceUpgradeValue(),
+                //resourceMultiplyer: structure.getResourceMultiplyer(),
+                //cycleTime: structure.getResourceCycleTime(),
+                //goldPerCycle: structure.getGoldPerCycle(),
+                //resourcePerCycle: structure.getResourcePerCycle(),
+                //goldMultiplyer:structure.getGoldMultiplyer(),
+            }
             
             gameInfo.structures.push(structureInfo);
             
             }
             
-        }
 
         for (let i in this._standardUpgrades) {
             const upgrade = this._standardUpgrades[i]
 
-            if (upgrade.getCurrentUpgradeLevel() > 0) {
-                const upgradeInfo = {
-                    name:upgrade.name,
-                    increment:upgrade.getIncrement(),
-                    effectValue:upgrade.getEffectValue(),
-                    upgradeCostGold:upgrade.getCostToUpgradeGold(),
-                    upgradeCostFarmers:upgrade.getCostToUpgradeFarmers(),
-                    upgradeCostResources:upgrade.getCostToUpgradeResources(),
-                    upgradeLevel:upgrade.getCurrentUpgradeLevel(),
-                    instructions:upgrade.getInstructions(),
-                }
-
-                gameInfo.standardUpgrades.push(upgradeInfo);
+            const upgradeInfo = {
+                name:upgrade.name,
+                //increment:upgrade.getIncrement(),
+                //effectValue:upgrade.getEffectValue(),
+                //upgradeCostGold:upgrade.getCostToUpgradeGold(),
+                //upgradeCostFarmers:upgrade.getCostToUpgradeFarmers(),
+                //upgradeCostResources:upgrade.getCostToUpgradeResources(),
+                upgradeLevel:upgrade.getCurrentUpgradeLevel(),
+                //instructions:upgrade.getInstructions(),
             }
-        }
+
+            gameInfo.standardUpgrades.push(upgradeInfo);
+            }
         
         for (let i in this._epicUpgrades) {
             const upgrade = this._epicUpgrades[i];
 
-            if (upgrade.getActive()) {
-                const upgradeInfo = {
-                    name:upgrade.name,
-                    costToUpgrade:upgrade.getCostToUpgrade(),
-                    increment:upgrade.getIncrement(),
-                    upgradeLevel:upgrade.getCurrentUpgradeLevel(),
-                    currentValue:upgrade.getCurrentValue(),
-                    instructions:upgrade.getInstructions(),
-                }
+            const upgradeInfo = {
+                name:upgrade.name,
+                //costToUpgrade:upgrade.getCostToUpgrade(),
+                //increment:upgrade.getIncrement(),
+                upgradeLevel:upgrade.getCurrentUpgradeLevel(),
+                //currentValue:upgrade.getCurrentValue(),
+                //instructions:upgrade.getInstructions(),
+            }
 
                 gameInfo.epicUpgrades.push(upgradeInfo);
-            }
         }
 
         const gameSaveJSON = JSON.stringify(gameInfo);
@@ -188,14 +184,30 @@ export class SaveState {
     }
 
     public setGameWithSaveInfo():void {
+        if (DEBUGMODE) {
+            console.log("loading MathState");
+            console.log(this._mathState);
+        }
+        
         //set the mathsate values
-        this._mathState.addFarmers(this._loadInfo.mathState.farmers);
-        this._mathState.addGold(this._loadInfo.mathState.totalGold);
-        this._mathState.addLumens(this._loadInfo.mathState.totalLumens);
+        this._mathState.addFarmers(this.getLoadInfo().mathState.farmers);
+        this._mathState.addGold(this.getLoadInfo().totalGold);
+        this._mathState.addLumens(this.getLoadInfo().mathState.totalLumens);
+        
+        if (DEBUGMODE) {
+            console.log("loaded MathState");
+            console.log(this._mathState);
+        }
+        
+        //this._mathState.setGoldMultiplyer(this._loadInfo.mathState.goldMultiplyer);
 
-        for (let i = 0; i <= this._loadInfo.structures.length -1; i++) {
-            const structureFromInfo = this._loadInfo.structures[i];
-            console.log(structureFromInfo);
+        for (let i = 0; i <= this.getLoadInfo().structures.length -1; i++) {
+            const structureFromInfo = this.getLoadInfo().structures[i];
+            
+            if (DEBUGMODE) { 
+                console.log('saveFile structure Info:', structureFromInfo);
+            }
+
             if (structureFromInfo.resource !== null) {
                 const foundStructure = this._scene.allStructures.find((structure) => structure.getName() === structureFromInfo.name);
 
@@ -204,35 +216,91 @@ export class SaveState {
                 const gui = this._app.gui as GUIPlay;
                 
                 gui.updateStructureOnCycle(foundStructure.getResourceName(),foundStructure.getTotalResourceAmount());
-                console.log(foundStructure);
-
             }
 
             if(structureFromInfo.alive) {
                 const foundStructure = this._scene.allStructures.find((structure) => structure.getName() === structureFromInfo.name);
-                foundStructure.makeAlive();
-                foundStructure.setUpgradeLevel(structureFromInfo.upgradeLevel);
-                foundStructure.setResourceCycleTime(structureFromInfo.cycleTime);
-                foundStructure.setGoldMultiplyer(structureFromInfo.goldMultiplyer);
-                foundStructure.setUpgradeSectionInstructions(structureFromInfo.instructions);
-                foundStructure.setUpgradeCostGold(structureFromInfo.upgradeCostGold);
-                foundStructure.setUpgradeCostFarmers(structureFromInfo.upgradeCostFarmers);
-                foundStructure.setUpgradeCostResources(structureFromInfo.upgradeCostResources);
-                foundStructure.setResourcePerCycle(structureFromInfo.resourcePerCycle);
-                foundStructure.setModels();
-
+            
                 if (foundStructure.getName() !== 'Farms') {
-                    foundStructure.getUpgradeSection().setSizeUpgradeBar(foundStructure.getUpgradeLevel());
-                    foundStructure.getInSceneGui().setInfoText(`${foundStructure.getResourcePerCycle().toFixed(3)} ${foundStructure.getResourceName()}/cycle`);
-                    foundStructure.moveStructuresToGamePosition();    
-                }  
+                    
+                    if (structureFromInfo.steward) {
+                        foundStructure.setSteward(structureFromInfo.steward);
+                        const panelContainer = foundStructure.getUpgradesWindow().getPanelContainer();
+                        const stewardButton = panelContainer.getChildByName('StewardButton');
+                        
+                        stewardButton.isEnabled = false;
+                    }
+
+                    addStructureFlow(foundStructure, true);
+
+                    if (DEBUGMODE) {
+                        console.log("structure added to game:", foundStructure);
+                    }
+                }
+
+                //upgrade the structure to its saved level.
+                for (let count = 0; count <= structureFromInfo.upgradeLevel; count++) {
+                    foundStructure.upgradeState(true);
+
+                    //normally the mathstate would do this as an observer to the upgrade
+                    //but since we don't want to spend any gold, farmers or resources
+                    //we just apply it here.
+                    const newGoldMultiplyer = this._mathState.getGoldMultiplyer() + (this._mathState.getGoldMultiplyer() * foundStructure.getGoldMultiplyer()/100);
+                    this._mathState.setGoldMultiplyer(newGoldMultiplyer);
+                    
+                    if (DEBUGMODE) {
+                        console.log('structure Upgraded:', foundStructure);
+                    }
+                }
             }
         }
-        
+
         //this needs to be set after the farm is figured out.
         this._mathState.setFarmersMax();
 
+        if(DEBUGMODE) {
+            console.log('standard Upgrades Loading');
+        }
+        
+        //standard Upgrades
+        
+        for (let i = 0; i <= this._loadInfo.standardUpgrades.length -1; i++) {
+            const upgradeFromInfo = this._loadInfo.standardUpgrades[i];
+            const foundUpgrade = this._scene.allStandardardUpgrades.find((upgrade) => upgrade.name === upgradeFromInfo.name);
+            
+            if (DEBUGMODE) {
+                console.log('Found Standard Upgrade:', foundUpgrade);
+            }
 
+            if (upgradeFromInfo.upgradeLevel > 0) { 
+                for (let count = 0; count <= upgradeFromInfo.upgradeLevel; count++) {
+                    foundUpgrade.updateState(true);
+                }
+            }
 
+            if (DEBUGMODE) {
+                console.log('Updated Found Standard Upgrade:', foundUpgrade);
+            }
+        }
+
+        console.log('standard Upgrades Loaded:');
+
+        //epic upgrades
+
+        for (let i =0; i <= this._loadInfo.epicUpgrades.length -1; i++) {
+            const upgradeFromInfo = this._loadInfo.epicUpgrades[i];
+            const foundUpgrade = this._scene.allEpicUpgrades.find((upgrade) => upgrade.name === upgradeFromInfo.name);
+
+            if (DEBUGMODE) {
+                console.log('Found Epic Upgrade:', foundUpgrade);
+            }
+
+            if (upgradeFromInfo.upgradeLevel > 0) {
+                for (let count = 0; count<= upgradeFromInfo.upgradeLevel; count ++) {
+                    foundUpgrade.updateState();
+                }
+            }
+
+        }
     }
 }

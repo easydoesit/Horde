@@ -39,26 +39,11 @@ export const castlePos = new Vector3(-.2, 7.3, .4);
 
 export const farms:StructureConstantsI = {
     name: 'Farms',
-    models:['farm01.glb', 'farm02.glb'],
+    models:['farm01.glb', 'farm02.glb','farm03.glb', 'farm04.glb','farm05.glb', 'farm06.glb','farm07.glb', 'farm08.glb',],
     clickbox:'farmClickBox.glb',
-    gamePos:new Vector3(0,.5,-4),
+    gamePos:new Vector3(0,.5,0),
     otherProps: {
-        farm01:{
-            gamePos:new Vector3(0,.5,-4),
-            housePos:new Vector3(-10,1.25,-4)
-        },
-        farm02: {
-            gamePos:new Vector3(0,.5,4),
-            housePos:new Vector3(-10,1.25,4)
-        },
-        farm03:{
-            gamePos:new Vector3(0,.5,-12),
-            housePos:new Vector3(-10,1.25,-10)
-        },
-        farm04:{
-            gamePos:new Vector3(0,.5,12),
-            housePos:new Vector3(-10,1.25,10)
-        }
+        housePositions:[new Vector3(-10,1.25,-4),new Vector3(-10,1.25,4),new Vector3(-10,1.25,-10),new Vector3(-10,1.25,10) ],
     },
     upgradeMax:20,
     initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//you start with one farm
@@ -803,174 +788,174 @@ const castleToFarmPath = [
     new Vector3(-3.7859, 2.5797, -1.9741),
     new Vector3(-4.064, 2.0743, 1.3783),
     new Vector3(-4.9398, 1.318, -0.38271),
-    farms.otherProps.farm01.housePos,
+    farms.otherProps.housePositions[0],
 ]
 
 export const castleToFarmPaths = [castleToFarmPath];
-console.log(farms.otherProps.farm01.housePos.x );
+console.log(farms.otherProps.housePositions[0].x );
 const farmToMinePath01 = [
-    farms.otherProps.farm01.housePos,
-    new Vector3(farms.otherProps.farm01.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[0],
+    new Vector3(farms.otherProps.housePositions[0].x + 2, 1.25, -0.38271),
     mine.gamePos,
     
 ];
 const farmToMinePath02 = [
-    farms.otherProps.farm02.housePos,
-    new Vector3(farms.otherProps.farm02.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[1],
+    new Vector3(farms.otherProps.housePositions[1].x + 2, 1.25, -0.38271),
     mine.gamePos,
 ];
 const farmToMinePath03 = [
-    farms.otherProps.farm03.housePos,
-    new Vector3(farms.otherProps.farm03.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[2],
+    new Vector3(farms.otherProps.housePositions[2].x + 2, 1.25, -0.38271),
     mine.gamePos,
 ];
 const farmToMinePath04 = [
-    farms.otherProps.farm04.housePos,
-    new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[3],
+    new Vector3(farms.otherProps.housePositions[3].x + 2, 1.25, -0.38271),
     mine.gamePos,
 ];
 
 export const farmToMinePaths = [farmToMinePath01, farmToMinePath02, farmToMinePath03, farmToMinePath04];
 
 const farmToForgePath01 = [
-    farms.otherProps.farm01.housePos,
-    new Vector3(farms.otherProps.farm01.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[0],
+    new Vector3(farms.otherProps.housePositions[0].x + 2, 1.25, -0.38271),
     forge.gamePos,
     
 ];
 const farmToForgePath02 = [
-    farms.otherProps.farm02.housePos,
-    new Vector3(farms.otherProps.farm02.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[1],
+    new Vector3(farms.otherProps.housePositions[1].x + 2, 1.25, -0.38271),
     forge.gamePos,
 ];
 const farmToForgePath03 = [
-    farms.otherProps.farm03.housePos,
-    new Vector3(farms.otherProps.farm03.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[2],
+    new Vector3(farms.otherProps.housePositions[2].x + 2, 1.25, -0.38271),
     forge.gamePos,
 ];
 const farmToForgePath04 = [
-    farms.otherProps.farm04.housePos,
-    new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[3],
+    new Vector3(farms.otherProps.housePositions[3].x + 2, 1.25, -0.38271),
     forge.gamePos,
 ];
 
 export const farmToForgePaths = [farmToForgePath01, farmToForgePath02, farmToForgePath03, farmToForgePath04];
 
 const farmToBarracksPath01 = [
-    farms.otherProps.farm01.housePos,
-    new Vector3(farms.otherProps.farm01.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[0],
+    new Vector3(farms.otherProps.housePositions[0].x + 2, 1.25, -0.38271),
     barracks.gamePos,
     
 ];
 const farmToBarracksPath02 = [
-    farms.otherProps.farm02.housePos,
-    new Vector3(farms.otherProps.farm02.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[1],
+    new Vector3(farms.otherProps.housePositions[1].x + 2, 1.25, -0.38271),
     barracks.gamePos,
 ];
 const farmToBarracksPath03 = [
-    farms.otherProps.farm03.housePos,
-    new Vector3(farms.otherProps.farm03.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[2],
+    new Vector3(farms.otherProps.housePositions[2].x + 2, 1.25, -0.38271),
     barracks.gamePos,
 ];
 const farmToBarracksPath04 = [
-    farms.otherProps.farm04.housePos,
-    new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[3],
+    new Vector3(farms.otherProps.housePositions[3].x + 2, 1.25, -0.38271),
     barracks.gamePos,
 ];
 
 export const farmToBarracksPaths = [farmToBarracksPath01, farmToBarracksPath02, farmToBarracksPath03, farmToBarracksPath04];
 
 const farmToThievesGuildPath01 = [
-    farms.otherProps.farm01.housePos,
-    new Vector3(farms.otherProps.farm01.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[0],
+    new Vector3(farms.otherProps.housePositions[0].x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
     
 ];
 const farmToThievesGuildPath02 = [
-    farms.otherProps.farm02.housePos,
-    new Vector3(farms.otherProps.farm02.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[1],
+    new Vector3(farms.otherProps.housePositions[1].x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
 ];
 const farmToThievesGuildPath03 = [
-    farms.otherProps.farm03.housePos,
-    new Vector3(farms.otherProps.farm03.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[2],
+    new Vector3(farms.otherProps.housePositions[2].x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
 ];
 const farmToThievesGuildPath04 = [
-    farms.otherProps.farm04.housePos,
-    new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[3],
+    new Vector3(farms.otherProps.housePositions[3].x + 2, 1.25, -0.38271),
     thievesGuild.gamePos,
 ];
 
 export const farmToThievesGuildPaths = [farmToThievesGuildPath01, farmToThievesGuildPath02, farmToThievesGuildPath03, farmToThievesGuildPath04];
 
 const farmToWorkShopPath01 = [
-    farms.otherProps.farm01.housePos,
-    new Vector3(farms.otherProps.farm01.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[0],
+    new Vector3(farms.otherProps.housePositions[0].x + 2, 1.25, -0.38271),
     workShop.gamePos,
     
 ];
 const farmToWorkShopPath02 = [
-    farms.otherProps.farm02.housePos,
-    new Vector3(farms.otherProps.farm02.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[1],
+    new Vector3(farms.otherProps.housePositions[1].x + 2, 1.25, -0.38271),
     workShop.gamePos,
 ];
 const farmToWorkShopPath03 = [
-    farms.otherProps.farm03.housePos,
-    new Vector3(farms.otherProps.farm03.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[2],
+    new Vector3(farms.otherProps.housePositions[2].x + 2, 1.25, -0.38271),
     workShop.gamePos,
 ];
 const farmToWorkShopPath04 = [
-    farms.otherProps.farm04.housePos,
-    new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[3],
+    new Vector3(farms.otherProps.housePositions[3].x + 2, 1.25, -0.38271),
     workShop.gamePos,
 ];
 
 export const farmToWorkShopPaths = [farmToWorkShopPath01, farmToWorkShopPath02, farmToWorkShopPath03, farmToWorkShopPath04];
 
 const farmToTowerPath01 = [
-    farms.otherProps.farm01.housePos,
-    new Vector3(farms.otherProps.farm01.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[0],
+    new Vector3(farms.otherProps.housePositions[0].x + 2, 1.25, -0.38271),
     tower.gamePos,
     
 ];
 const farmToTowerPath02 = [
-    farms.otherProps.farm02.housePos,
-    new Vector3(farms.otherProps.farm02.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[1],
+    new Vector3(farms.otherProps.housePositions[1].x + 2, 1.25, -0.38271),
     tower.gamePos,
 ];
 const farmToTowerPath03 = [
-    farms.otherProps.farm03.housePos,
-    new Vector3(farms.otherProps.farm03.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[2],
+    new Vector3(farms.otherProps.housePositions[2].x + 2, 1.25, -0.38271),
     tower.gamePos,
 ];
 const farmToTowerPath04 = [
-    farms.otherProps.farm04.housePos,
-    new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[3],
+    new Vector3(farms.otherProps.housePositions[3].x + 2, 1.25, -0.38271),
     tower.gamePos,
 ];
 
 export const farmToTowerPaths = [farmToTowerPath01, farmToTowerPath02, farmToTowerPath03, farmToTowerPath04];
 
 const farmToTavernPath01 = [
-    farms.otherProps.farm01.housePos,
-    new Vector3(farms.otherProps.farm01.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[0],
+    new Vector3(farms.otherProps.housePositions[0].x + 2, 1.25, -0.38271),
     tavern.gamePos,
     
 ];
 const farmToTavernPath02 = [
-    farms.otherProps.farm02.housePos,
-    new Vector3(farms.otherProps.farm02.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[1],
+    new Vector3(farms.otherProps.housePositions[1].x + 2, 1.25, -0.38271),
     tavern.gamePos,
 ];
 const farmToTavernPath03 = [
-    farms.otherProps.farm03.housePos,
-    new Vector3(farms.otherProps.farm03.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[2],
+    new Vector3(farms.otherProps.housePositions[2].x + 2, 1.25, -0.38271),
     tavern.gamePos,
 ];
 const farmToTavernPath04 = [
-    farms.otherProps.farm04.housePos,
-    new Vector3(farms.otherProps.farm04.housePos.x + 2, 1.25, -0.38271),
+    farms.otherProps.housePositions[3],
+    new Vector3(farms.otherProps.housePositions[3].x + 2, 1.25, -0.38271),
     tavern.gamePos,
 ];
 

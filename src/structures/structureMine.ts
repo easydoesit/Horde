@@ -37,7 +37,7 @@ export class StructureMine extends StructureState implements StructureStateChild
         this._upgradeSectionInstructions = `Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`;
         this._upgradeSection = new StructureUpgradeSection('Mine Upgrades', this, () => {this._mineUpgradeCallback()});
         this._addStructureButton = new AddStructureButton('addMineButton', this, () => {this._mineAdditionCallback()});
-        this._addStewartButton = new AddStewardButton('addMineStewardButton', this);
+        this._addStewartButton = new AddStewardButton('StewardButton', this);
 
         this._addUpgradePanel();
 
@@ -50,25 +50,28 @@ export class StructureMine extends StructureState implements StructureStateChild
         })
     }
 
-    public upgradeState(): void {
+    public upgradeState(loadingSave:boolean): void {
         
         if (DEBUGMODE) {
             debugUpgradeState(this._name, this.getUpgradeLevel());
         }
-
-        this.animateCharacters();
+        if (!loadingSave) { 
+            this.animateCharacters();
+        }
 
         this._upgradeLevel += 1;
         this._cycleTime = mine.resource.cycleTime(this.getUpgradeLevel(), mine.resource.initialCycleTime, mine.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this._goldMultiplyer = mine.goldMultiplyer(this.getUpgradeLevel(),this.getUpgradeMax());
         this.setUpgradeSectionInstructions(`Next Upgrade increases ${this.getResourceName()} by ${( mine.resource.resourceUpgradeValue(this.getUpgradeLevel() + 1,this.getUpgradeMax())).toFixed(2)}% & increases the total Gold multiplyer by ${mine.goldMultiplyer(this.getUpgradeLevel() + 1,this.getUpgradeMax()).toFixed(2)}%`);
     
-        this._upgradeCostFarmers = mine.nextUpgradeCostInFarmers(this.getUpgradeLevel());
-        this._upgradeCostResources = mine.nextUpgradeCostInResources(this.getUpgradeLevel());
-        this._upgradeCostGold = mine.nextUpgradeCostInGold(this.getUpgradeLevel());
+        this.setUpgradeCostFarmers(mine.nextUpgradeCostInFarmers(this.getUpgradeLevel()));
+        this.setUpgradeCostResources(mine.nextUpgradeCostInResources(this.getUpgradeLevel()));
+        this.setUpgradeCostGold(mine.nextUpgradeCostInGold(this.getUpgradeLevel()));
         
-        this.notifyObserversOnUpgrade();
-
+        if (!loadingSave) {
+            this.notifyObserversOnUpgrade();
+        }
+        
         this._resourceAmountPerCycle = this.getResourcePerCycle() + (this.getResourcePerCycle() * this.getResourceMultiplyer()/100);
 
         this.setModels();
@@ -107,7 +110,7 @@ export class StructureMine extends StructureState implements StructureStateChild
         }
         
         //upgrade the State
-        this.upgradeState();
+        this.upgradeState(false);
 
         this.getUpgradeSection().setGoldCost(this.getUpgradeCostGold());
         this.getUpgradeSection().setFarmerCost(this.getUpgradeCostFarmers());

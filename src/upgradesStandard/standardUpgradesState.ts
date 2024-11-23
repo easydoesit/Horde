@@ -87,6 +87,10 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         return this._increment
     }
 
+    public setIncrement(increment: number): void {
+        this._increment = increment;
+    }
+
     public getCostToUpgradeGold(): number {
         return this._upgradeCostGold;
     }
@@ -127,8 +131,16 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         return this._currentUpgradeLevel;
     }
 
+    public setCurrentUpgradeLevel(level: number): void {
+        this._currentUpgradeLevel = level;
+    }
+
     public getEffectValue(): number {
         return this._effectValue;
+    }
+
+    public setEffectValue(value: number): void {
+        this._effectValue = value;
     }
 
     public getStructure(): StructureStateChildI {
@@ -139,5 +151,9 @@ export class StandardUpgradeState implements StandardUpgradeStateI {
         if (DEBUGMODE) {
             console.error(`If you are seeing this error then you need to override reset() inside ${this.name} standard upgrade`);
         }
+    }
+
+    public getUpgradeSection(): StandardUpgradeSection {
+        return this._upgradeSection;
     }
 }
