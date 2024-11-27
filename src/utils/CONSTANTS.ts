@@ -17,7 +17,7 @@ export const startingGold = 0;
 
 //Farmers
 export const startingFarmers = 0;
-export const farmerBaseValue = 0.060; //base amount of gold persecond
+export const farmerBaseValue = 0.065; //base amount of gold persecond
 
 //Ogre
 export const ogreCycleTime = 1000; //how fast the ogre ruins farmers milliseconds.
@@ -63,7 +63,7 @@ export const farms:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//you start with one farm
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 160;
+        const initGoldCost = 155;
         const goldCostGrowthCurve = 3.4;
         const UGLevel = upgradeLevel + 1;
 
@@ -120,7 +120,7 @@ export const mine:StructureConstantsI = {
     clickbox:'mineClickBox.glb',
     gamePos:new Vector3(-5,1.25,1),
     upgradeMax:20,
-    initCosts:{gold:250, farmers:20, resources:0 , resourceName:null},
+    initCosts:{gold:200, farmers:20, resources:0 , resourceName:null},
     nextUpgradeCostInGold:(upgradeLevel:number) => {
         const initGoldCost = 493;
         const goldCostGrowthCurve = 4.2;
@@ -140,7 +140,7 @@ export const mine:StructureConstantsI = {
     nextUpgradeCostInResources: (upgradeLevel:number) => {
         return 0
     },
-    goldPerCycle: 10,
+    goldPerCycle: 20,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
         if (upgradeLevel === 0 ) {
             return 0;
@@ -157,7 +157,7 @@ export const mine:StructureConstantsI = {
         }
     },
     character:'miner',
-    stewardCost:980,
+    stewardCost:4120,
     resource: {
         name:'Ore',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -175,7 +175,7 @@ export const mine:StructureConstantsI = {
                 return finalValue;
             }
         },
-        resourcePerCycle:4,
+        resourcePerCycle:7,
         initialCycleTime:5, //seconds
         resourceDependant:null,
         costOfResourceDependant:null,
@@ -244,7 +244,7 @@ export const forge:StructureConstantsI = {
 
         return finalValue;
     },
-    goldPerCycle: 48,
+    goldPerCycle: 70,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
         const logTarget = 1;
         const UGLevel = upgradeLevel;
@@ -257,7 +257,7 @@ export const forge:StructureConstantsI = {
         return finalValue;
     },
     character:'blacksmith',
-    stewardCost:4666,
+    stewardCost:16250,
     resource: {
         name:'Weapons',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -342,7 +342,7 @@ export const barracks:StructureConstantsI = {
 
         return finalValue;
     },
-    goldPerCycle: 160,
+    goldPerCycle: 320,
     goldMultiplyer:(upgradeLevel:number, upgradeLimit:number) => {
         const logTarget = 1;
         const UGLevel = upgradeLevel;
@@ -355,7 +355,7 @@ export const barracks:StructureConstantsI = {
         return finalValue;
     },
     character:'soldier',
-    stewardCost:22210,
+    stewardCost:64350,
     resource: {
         name:'Villages',
         resourceUpgradeValue:(upgradeLevel:number, upgradeLimit:number) => {
@@ -1021,7 +1021,7 @@ export const kingPlains:KingdomsT = {
 export const kingForest:KingdomsT = {
     name:'Forest',
     level: 2,
-    costToUnlockGold:10000,
+    costToUnlockGold:15000,
     costToUnlockFarmers:0,
     costToUnlockResources:null,
     get baseGoldBoost() {

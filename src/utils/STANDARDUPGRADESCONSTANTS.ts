@@ -22,7 +22,7 @@ export const wheat = {
     
     nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
-        const baseGoldCost = 8;
+        const baseGoldCost = 7;
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
@@ -141,7 +141,7 @@ export const increaseWeaponsValue = {
 
     nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
-        const baseGoldCost = 228;
+        const baseGoldCost = 238;
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
@@ -181,7 +181,7 @@ export const increaseForgeSpeed = {
 
     nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
-        const baseGoldCost = 228;
+        const baseGoldCost = 235;
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
@@ -220,7 +220,7 @@ export const increaseVillageValue = {
 
     nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
-        const baseGoldCost = 1085;
+        const baseGoldCost = 1070;
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
@@ -259,7 +259,7 @@ export const increaseSoldierSpeed = {
 
     nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
-        const baseGoldCost = 1085;
+        const baseGoldCost = 1065;
         const goldCostGrowthCurve = 3.4;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
