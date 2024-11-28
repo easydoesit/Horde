@@ -17,7 +17,7 @@ export const startingGold = 0;
 
 //Farmers
 export const startingFarmers = 0;
-export const farmerBaseValue = 0.065; //base amount of gold persecond
+export const farmerBaseValue = 0.064; //base amount of gold persecond
 
 //Ogre
 export const ogreCycleTime = 1000; //how fast the ogre ruins farmers milliseconds.
@@ -63,8 +63,8 @@ export const farms:StructureConstantsI = {
     upgradeMax:20,
     initCosts:{gold:0, farmers:0, resources:0, resourceName:null},//you start with one farm
     nextUpgradeCostInGold:(upgradeLevel:number) => {
-        const initGoldCost = 155;
-        const goldCostGrowthCurve = 3.4;
+        const initGoldCost = 140;
+        const goldCostGrowthCurve = 3.9;
         const UGLevel = upgradeLevel + 1;
 
         return initGoldCost * goldCostGrowthCurve * UGLevel;
@@ -272,7 +272,7 @@ export const forge:StructureConstantsI = {
             return finalValue;
         },
         resourcePerCycle:16,
-        initialCycleTime:5, //seconds'
+        initialCycleTime:12, //seconds'
         resourceDependant:'Ore',
         costOfResourceDependant:10,
         cycleTime:(upgradeLevel:number, initCycleTime:number, resourceUpgradeValue:number) => {
@@ -1244,7 +1244,7 @@ const dragonPath04 = [
 export const dragonPaths = [dragonPath01, dragonPath02, dragonPath03, dragonPath04];
 
 //a random interval for how often a dragon should appear.
-export const dragonLoopMaxMin = [15000, 5000]; //milliseconds
+export const dragonLoopMaxMin = [100000, 60000]; //milliseconds
 
 //egg
 export const eggFallPath = (dragonPosition:Vector3) => {

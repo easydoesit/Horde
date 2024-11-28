@@ -1,8 +1,8 @@
 export const wheat = {
     name:'wheat',
     structure:'Farm01',
-    incrementValue: 0.05,//as percent
-    upgradeMax:20,
+    incrementValue: 0.15,//as percent
+    upgradeMax:80,
     
     effectValue: (upgradeLevel:number, upgradeMax:number, incrementalValue:number) => {
     
@@ -23,7 +23,7 @@ export const wheat = {
     nextUpgradeCostGold: (upgradeLevel:number) => {
         const nextUpgradeLevel = upgradeLevel + 1;
         const baseGoldCost = 7;
-        const goldCostGrowthCurve = 3.4;
+        const goldCostGrowthCurve = 2.2;
     
         let finalValue = baseGoldCost * goldCostGrowthCurve * nextUpgradeLevel;
     
