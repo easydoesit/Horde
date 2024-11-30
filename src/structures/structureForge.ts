@@ -61,7 +61,7 @@ export class StructureForge extends StructureState implements StructureStateChil
         //update the variables
         //these ones are before the notify
         this._upgradeLevel += 1;
-        this._cycleTime = forge.resource.cycleTime(this.getUpgradeLevel(),forge.resource.initialCycleTime, forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
+        //this._cycleTime = forge.resource.cycleTime(this.getUpgradeLevel(),forge.resource.initialCycleTime, forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()));
         this.setUpgradeSectionInstructions(`Speeds Up Weapon Resource Creation by ${forge.resource.resourceUpgradeValue(this.getUpgradeLevel(),this.getUpgradeMax()) * 100}%`);
         //update the observers
         this.notifyObserversOnUpgrade();
